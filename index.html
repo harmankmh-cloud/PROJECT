@@ -1,0 +1,190 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Road Warrior</title>
+    <link rel="stylesheet" href="styles.css" />
+  </head>
+  <body>
+    <header class="hero">
+      <nav class="nav" aria-label="Primary">
+        <a class="brand" href="#top" aria-label="Road Warrior home">
+          <span class="brand__mark">RW</span>
+          <span>Road Warrior</span>
+        </a>
+        <div class="nav__links">
+          <a href="#planner">Planner</a>
+          <a href="#route">Route</a>
+          <a href="#checklist">Checklist</a>
+        </div>
+      </nav>
+
+      <section id="top" class="hero__content">
+        <p class="eyebrow">Plan smarter drives</p>
+        <h1>Keep every mile, stop, and expense under control.</h1>
+        <p class="hero__copy">
+          Road Warrior helps drivers map out a trip, estimate travel costs,
+          and keep a travel-ready checklist in one lightweight dashboard.
+        </p>
+        <div class="hero__actions">
+          <a class="button button--primary" href="#planner">Start planning</a>
+          <a class="button button--ghost" href="#route">View route board</a>
+        </div>
+      </section>
+    </header>
+
+    <main>
+      <section class="section stats" aria-label="Trip summary">
+        <article class="stat-card">
+          <span class="stat-card__label">Total miles</span>
+          <strong id="summaryMiles">0</strong>
+        </article>
+        <article class="stat-card">
+          <span class="stat-card__label">Drive time</span>
+          <strong id="summaryTime">0h</strong>
+        </article>
+        <article class="stat-card">
+          <span class="stat-card__label">Fuel estimate</span>
+          <strong id="summaryFuel">$0</strong>
+        </article>
+        <article class="stat-card">
+          <span class="stat-card__label">Stops planned</span>
+          <strong id="summaryStops">0</strong>
+        </article>
+      </section>
+
+      <section id="planner" class="section layout-grid">
+        <article class="panel">
+          <div class="section-heading">
+            <p class="eyebrow">Trip settings</p>
+            <h2>Build your road plan</h2>
+            <p>
+              Enter your route basics and add planned stops. The dashboard
+              updates instantly and saves in this browser.
+            </p>
+          </div>
+
+          <form id="tripForm" class="form">
+            <label>
+              Trip name
+              <input id="tripName" name="tripName" type="text" value="Cross-country run" />
+            </label>
+            <div class="form__row">
+              <label>
+                Start
+                <input id="startCity" name="startCity" type="text" value="Chicago" />
+              </label>
+              <label>
+                Destination
+                <input id="endCity" name="endCity" type="text" value="Denver" />
+              </label>
+            </div>
+            <div class="form__row">
+              <label>
+                Miles
+                <input id="totalMiles" name="totalMiles" type="number" min="0" step="1" value="1004" />
+              </label>
+              <label>
+                Avg speed
+                <input id="avgSpeed" name="avgSpeed" type="number" min="1" step="1" value="62" />
+              </label>
+            </div>
+            <div class="form__row">
+              <label>
+                MPG
+                <input id="mpg" name="mpg" type="number" min="1" step="0.1" value="27" />
+              </label>
+              <label>
+                Gas price
+                <input id="gasPrice" name="gasPrice" type="number" min="0" step="0.01" value="3.69" />
+              </label>
+            </div>
+            <button class="button button--primary" type="submit">Update trip</button>
+          </form>
+        </article>
+
+        <aside class="panel trip-card" aria-live="polite">
+          <p class="eyebrow">Current plan</p>
+          <h2 id="displayTripName">Cross-country run</h2>
+          <p id="displayRoute">Chicago to Denver</p>
+          <dl>
+            <div>
+              <dt>Fuel needed</dt>
+              <dd id="fuelGallons">0 gal</dd>
+            </div>
+            <div>
+              <dt>Rest windows</dt>
+              <dd id="restWindows">0 suggested</dd>
+            </div>
+            <div>
+              <dt>Budget per mile</dt>
+              <dd id="costPerMile">$0.00</dd>
+            </div>
+          </dl>
+        </aside>
+      </section>
+
+      <section id="route" class="section layout-grid">
+        <article class="panel">
+          <div class="section-heading">
+            <p class="eyebrow">Route board</p>
+            <h2>Add stops</h2>
+          </div>
+          <form id="stopForm" class="form">
+            <label>
+              Stop name
+              <input id="stopName" name="stopName" type="text" placeholder="Fuel, food, hotel..." required />
+            </label>
+            <div class="form__row">
+              <label>
+                Mile marker
+                <input id="stopMile" name="stopMile" type="number" min="0" step="1" placeholder="245" required />
+              </label>
+              <label>
+                Type
+                <select id="stopType" name="stopType">
+                  <option value="Fuel">Fuel</option>
+                  <option value="Food">Food</option>
+                  <option value="Rest">Rest</option>
+                  <option value="Hotel">Hotel</option>
+                  <option value="Delivery">Delivery</option>
+                </select>
+              </label>
+            </div>
+            <button class="button button--primary" type="submit">Add stop</button>
+          </form>
+        </article>
+
+        <article class="panel">
+          <div class="section-heading section-heading--inline">
+            <div>
+              <p class="eyebrow">Next up</p>
+              <h2>Planned stops</h2>
+            </div>
+            <button id="clearStops" class="button button--ghost" type="button">Clear</button>
+          </div>
+          <ol id="stopList" class="stop-list"></ol>
+          <p id="emptyStops" class="empty-state">No stops yet. Add one to build the route.</p>
+        </article>
+      </section>
+
+      <section id="checklist" class="section panel">
+        <div class="section-heading section-heading--inline">
+          <div>
+            <p class="eyebrow">Before you roll</p>
+            <h2>Road warrior checklist</h2>
+          </div>
+          <span id="checklistProgress" class="pill">0 / 0 ready</span>
+        </div>
+        <div id="checklistItems" class="checklist"></div>
+      </section>
+    </main>
+
+    <footer class="footer">
+      <p>Built for fast trip planning. Data is stored locally in your browser.</p>
+    </footer>
+
+    <script src="app.js" defer></script>
+  </body>
+</html>
