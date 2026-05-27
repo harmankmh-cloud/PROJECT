@@ -6,8 +6,15 @@ stop order, ETAs, route progress, and pre-trip checklist readiness.
 
 ## Run locally
 
-Open `index.html` directly in a browser, or serve the folder with any static
-file server:
+Open `index.html` directly in a browser, or serve the folder with the included
+static server:
+
+```bash
+npm start
+```
+
+By default this starts Route Max on `http://localhost:8000`. You can also use
+Python if you prefer:
 
 ```bash
 python3 -m http.server 8000
