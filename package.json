@@ -1,0 +1,18 @@
+{
+  "name": "route-max",
+  "version": "1.0.0",
+  "private": true,
+  "description": "Route Max multi-stop route planner",
+  "main": "index.js",
+  "scripts": {
+    "start": "expo start --host lan",
+    "start:tunnel": "expo start --host tunnel",
+    "start:static": "node server.js",
+    "check": "node --check app.js && node --check server.js && node --check App.js && node --check index.js"
+  },
+  "dependencies": {
+    "expo": "^56.0.5",
+    "react": "^19.2.6",
+    "react-native": "^0.85.3"
+  }
+}
