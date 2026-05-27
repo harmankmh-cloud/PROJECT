@@ -6,18 +6,29 @@ stop order, ETAs, route progress, and pre-trip checklist readiness.
 
 ## Run locally
 
-Open `index.html` directly in a browser, or serve the folder with the included
-static server:
+### Expo Go / mobile
+
+Start the Metro server on port 8081:
 
 ```bash
 npm start
 ```
 
-By default this starts Route Max on `http://localhost:8000`. You can also use
-Python if you prefer:
+Then scan the QR code with Expo Go. The app is served from an `exp://...:8081`
+URL, which is the flow expected by Expo Go.
+
+If your phone still cannot reach the LAN URL, use the tunnel fallback:
 
 ```bash
-python3 -m http.server 8000
+npm run start:tunnel
+```
+
+### Static browser preview
+
+The repo also keeps the static HTML preview available:
+
+```bash
+npm run start:static
 ```
 
 Then visit `http://localhost:8000`.
