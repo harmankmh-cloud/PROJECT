@@ -1,0 +1,173 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>OpenRouter Free Chat</title>
+    <style>
+      :root {
+        color-scheme: light dark;
+        font-family: system-ui, sans-serif;
+      }
+      body {
+        margin: 0;
+        background: #0f1115;
+        color: #eef1f6;
+      }
+      .wrap {
+        max-width: 860px;
+        margin: 0 auto;
+        min-height: 100vh;
+        display: flex;
+        flex-direction: column;
+        padding: 24px;
+        box-sizing: border-box;
+      }
+      h1 {
+        margin: 0 0 8px;
+        font-size: 1.5rem;
+      }
+      .sub {
+        margin: 0 0 20px;
+        color: #9aa4b2;
+      }
+      #log {
+        flex: 1;
+        overflow: auto;
+        border: 1px solid #2a3140;
+        border-radius: 12px;
+        padding: 16px;
+        background: #151922;
+        margin-bottom: 16px;
+      }
+      .msg {
+        margin-bottom: 14px;
+        white-space: pre-wrap;
+        line-height: 1.5;
+      }
+      .msg.user strong {
+        color: #7cc4ff;
+      }
+      .msg.ai strong {
+        color: #8ef0b3;
+      }
+      form {
+        display: flex;
+        gap: 10px;
+      }
+      textarea {
+        flex: 1;
+        min-height: 72px;
+        resize: vertical;
+        border-radius: 10px;
+        border: 1px solid #2a3140;
+        background: #151922;
+        color: inherit;
+        padding: 12px;
+        font: inherit;
+      }
+      button {
+        border: 0;
+        border-radius: 10px;
+        padding: 0 18px;
+        background: #3b82f6;
+        color: white;
+        font: inherit;
+        cursor: pointer;
+      }
+      button:disabled {
+        opacity: 0.6;
+        cursor: not-allowed;
+      }
+      .error {
+        color: #ff8a8a;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="wrap">
+      <h1>OpenRouter Free Chat</h1>
+      <p class="sub">Uses the free <code>openrouter/free</code> router by default.</p>
+      <div id="log"></div>
+      <form id="form">
+        <textarea id="input" placeholder="Ask anything..." required></textarea>
+        <button type="submit" id="send">Send</button>
+      </form>
+    </div>
+    <script>
+      const log = document.getElementById("log");
+      const form = document.getElementById("form");
+      const input = document.getElementById("input");
+      const send = document.getElementById("send");
+      const messages = [];
+
+      function appendMessage(role, text, className = "") {
+        const div = document.createElement("div");
+        div.className = `msg ${role} ${className}`.trim();
+        div.innerHTML = `<strong>${role === "user" ? "You" : "AI"}:</strong> ${text}`;
+        log.appendChild(div);
+        log.scrollTop = log.scrollHeight;
+        return div;
+      }
+
+      form.addEventListener("submit", async (event) => {
+        event.preventDefault();
+        const text = input.value.trim();
+        if (!text) return;
+
+        input.value = "";
+        send.disabled = true;
+        appendMessage("user", text);
+        messages.push({ role: "user", content: text });
+
+        const aiDiv = appendMessage("ai", "");
+        let assistantText = "";
+
+        try {
+          const response = await fetch("/api/chat", {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({ messages }),
+          });
+
+          const reader = response.body.getReader();
+          const decoder = new TextDecoder();
+
+          while (true) {
+            const { value, done } = await reader.read();
+            if (done) break;
+
+            const chunk = decoder.decode(value);
+            for (const line of chunk.split("\n")) {
+              if (!line.startsWith("data: ")) continue;
+              const payload = line.slice(6);
+              if (payload === "[DONE]") continue;
+
+              const data = JSON.parse(payload);
+              if (data.error) {
+                aiDiv.classList.add("error");
+                aiDiv.innerHTML = `<strong>AI:</strong> ${data.error}`;
+                break;
+              }
+              if (data.content) {
+                assistantText += data.content;
+                aiDiv.innerHTML = `<strong>AI:</strong> ${assistantText}`;
+                log.scrollTop = log.scrollHeight;
+              }
+            }
+          }
+
+          if (assistantText) {
+            messages.push({ role: "assistant", content: assistantText });
+          }
+        } catch (error) {
+          aiDiv.classList.add("error");
+          aiDiv.innerHTML = `<strong>AI:</strong> ${error.message}`;
+        } finally {
+          send.disabled = false;
+          input.focus();
+        }
+      });
+    </script>
+  </body>
+</html>
