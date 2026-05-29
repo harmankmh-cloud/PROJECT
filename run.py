@@ -26,15 +26,17 @@ def main() -> None:
     load_dotenv(root / ".env")
 
     if len(sys.argv) < 2:
-        raise SystemExit("Usage: python run.py <cli|web>")
+        raise SystemExit("Usage: python run.py <cli|web|check>")
 
     target = sys.argv[1]
     if target == "cli":
         runpy.run_module("openrouter_chat.cli", run_name="__main__")
     elif target == "web":
         runpy.run_module("openrouter_chat.web", run_name="__main__")
+    elif target == "check":
+        runpy.run_module("openrouter_chat.check", run_name="__main__")
     else:
-        raise SystemExit("Unknown target. Use 'cli' or 'web'.")
+        raise SystemExit("Unknown target. Use 'cli', 'web', or 'check'.")
 
 
 if __name__ == "__main__":

@@ -81,6 +81,17 @@ python run.py web
 - `run.py` — loads `.env` and starts cli/web
 - `setup.sh` — one-command install
 
+## Check your key and list free models
+
+```bash
+source .venv/bin/activate
+python run.py check
+```
+
+This verifies your API key, lists free models you can use, and runs a small test message.
+
+You can also browse models in the browser: https://openrouter.ai/models — filter for **Free**.
+
 ## Troubleshooting
 
 **Missing API key**
