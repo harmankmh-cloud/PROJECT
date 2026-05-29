@@ -57,6 +57,11 @@ OPENROUTER_MODEL=deepseek/deepseek-r1:free
 
 Browse free models at [openrouter.ai/models](https://openrouter.ai/models) and use any model id ending in `:free`.
 
+## Requirements
+
+- Python 3.9 or newer
+- An OpenRouter API key
+
 ## Manual install
 
 ```bash

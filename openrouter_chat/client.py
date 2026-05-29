@@ -1,6 +1,8 @@
+from __future__ import annotations
+
 import json
 import os
-from typing import Generator, Iterable
+from typing import Generator, Iterable, Optional
 
 import httpx
 
@@ -33,7 +35,7 @@ def _headers() -> dict[str, str]:
 
 def chat_stream(
     messages: Iterable[dict[str, str]],
-    model: str | None = None,
+    model: Optional[str] = None,
 ) -> Generator[str, None, None]:
     payload = {
         "model": model or DEFAULT_MODEL,
@@ -69,7 +71,7 @@ def chat_stream(
 
 def chat_once(
     messages: Iterable[dict[str, str]],
-    model: str | None = None,
+    model: Optional[str] = None,
 ) -> str:
     payload = {
         "model": model or DEFAULT_MODEL,
