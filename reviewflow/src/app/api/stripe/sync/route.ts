@@ -3,6 +3,10 @@ import { createClient } from "@/lib/supabase/server";
 import { activateBusinessPlan } from "@/lib/activate-business-plan";
 import { getStripe, isStripeConfigured } from "@/lib/stripe";
 
+export async function GET(request: Request) {
+  return NextResponse.redirect(new URL("/dashboard/billing", request.url));
+}
+
 export async function POST(request: Request) {
   try {
     if (!isStripeConfigured()) {

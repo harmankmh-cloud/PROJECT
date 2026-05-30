@@ -5,6 +5,13 @@ import { updateBusinessFromSubscription } from "@/lib/stripe-subscription";
 
 export const runtime = "nodejs";
 
+export async function GET() {
+  return NextResponse.json({
+    ok: true,
+    message: "ReviewFlow Stripe webhook. Stripe sends POST requests here — do not open in a browser.",
+  });
+}
+
 export async function POST(request: Request) {
   const stripe = getStripe();
   const webhookSecret = process.env.STRIPE_WEBHOOK_SECRET;
