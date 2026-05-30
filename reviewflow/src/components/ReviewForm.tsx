@@ -4,6 +4,7 @@ import { useEffect, useMemo, useState } from "react";
 import type { Business, PromptTemplate, StarRating } from "@/lib/types";
 import { QUICK_NOTE_CHIPS, STAR_OPTIONS, starsLabel } from "@/lib/defaults";
 import { buildFallbackReviewOptions } from "@/lib/review-fallbacks";
+import { useCustomerBack } from "@/components/useCustomerBack";
 
 type Props = {
   business: Business;
@@ -13,6 +14,7 @@ type Props = {
 type Step = "stars" | "notes" | "options";
 
 export function ReviewForm({ business, prompts }: Props) {
+  const { goBack, isLoggedIn, backLabel: dashboardBackLabel } = useCustomerBack();
   const [step, setStep] = useState<Step>("stars");
   const [stars, setStars] = useState<StarRating | null>(null);
   const [notes, setNotes] = useState("");
@@ -175,13 +177,19 @@ export function ReviewForm({ business, prompts }: Props) {
       setStep("stars");
       return;
     }
-    if (window.history.length > 1) {
-      window.history.back();
-    }
+    goBack();
   }
 
   const backLabel =
-    step === "stars" ? "Go back" : step === "notes" ? "Change stars" : done ? "Start over" : "Change notes";
+    step === "stars"
+      ? isLoggedIn
+        ? "Dashboard"
+        : "Go back"
+      : step === "notes"
+        ? "Change stars"
+        : done
+          ? "Start over"
+          : "Change notes";
 
   return (
     <div className="mx-auto w-full max-w-md">
@@ -333,13 +341,10 @@ export function ReviewForm({ business, prompts }: Props) {
                   </div>
                   <button
                     type="button"
-                    onClick={() => {
-                      if (window.history.length > 1) window.history.back();
-                      else resetForm();
-                    }}
+                    onClick={goBack}
                     className="btn-dark w-full py-3"
                   >
-                    ← Back to previous page
+                    ← {dashboardBackLabel}
                   </button>
                   <button type="button" onClick={resetForm} className="btn-ghost w-full py-3">
                     Leave another review

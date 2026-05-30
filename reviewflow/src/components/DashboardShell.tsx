@@ -67,7 +67,6 @@ export function DashboardShell({
         {reviewSlug && (
           <Link
             href={`/r/${reviewSlug}`}
-            target="_blank"
             onClick={() => setMobileOpen(false)}
             className="flex items-center gap-3 rounded-xl px-3 py-2.5 text-sm font-medium text-white/70 transition hover:bg-white/5 hover:text-white"
           >

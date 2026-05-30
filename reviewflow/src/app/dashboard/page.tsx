@@ -34,7 +34,7 @@ export default async function DashboardPage() {
             <h1 className="font-display mt-1 text-3xl text-brand-950 sm:text-4xl">{business.name}</h1>
             <p className="mt-2 text-sm text-stone-500">{business.business_type}</p>
           </div>
-          <Link href={`/r/${business.slug}`} target="_blank" className="btn-dark px-5 py-2.5">
+          <Link href={`/r/${business.slug}`} className="btn-dark px-5 py-2.5">
             View live page ↗
           </Link>
         </header>
