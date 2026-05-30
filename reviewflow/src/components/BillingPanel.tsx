@@ -94,6 +94,13 @@ export function BillingPanel({ business, usage, stripeStatus, success, canceled 
 
           {error && <p className="text-sm text-rose-600">{error}</p>}
 
+          {stripeStatus.ready && (
+            <p className="text-xs text-stone-400">
+              Edited <code>.env.local</code>? Run <code>npm run stop</code> then{" "}
+              <code>npm run smooth</code> before testing again.
+            </p>
+          )}
+
           {!stripeStatus.ready ? (
             <StripeSetupChecklist status={stripeStatus} />
           ) : isPro ? (

@@ -2,6 +2,10 @@
 set -euo pipefail
 cd "$(dirname "$0")/.."
 
+# shellcheck disable=SC1091
+source "$(dirname "$0")/load-env.sh"
+load_env_local "$(pwd)" || true
+
 # Mac / Cursor sometimes injects malloc debug flags — causes spam + extra processes.
 unset MallocStackLogging MallocScribble MallocGuardEdges 2>/dev/null || true
 export NODE_NO_WARNINGS=1

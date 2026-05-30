@@ -47,11 +47,11 @@ export async function POST() {
     }
 
     for (const item of lineItems) {
-      if (item.price.startsWith("prod_")) {
+      if (!item.price.startsWith("price_")) {
         return NextResponse.json(
           {
             error:
-              "Wrong Stripe ID: you used a Product ID (prod_...). Use Price ID (price_...) instead. In Stripe → Product → click the price → copy Price ID into .env.local",
+              "Wrong Stripe ID in .env.local — must be price_..., not prod_.... In Stripe → Product catalog → open product → click the price → copy Price ID. Then run: npm run stop && npm run smooth",
           },
           { status: 400 }
         );
@@ -78,7 +78,11 @@ export async function POST() {
 
     return NextResponse.json({ url: session.url });
   } catch (error) {
-    const message = error instanceof Error ? error.message : "Checkout failed";
+    let message = error instanceof Error ? error.message : "Checkout failed";
+    if (message.includes("No such price") && message.includes("prod_")) {
+      message =
+        "The app is still using a Product ID (prod_...) instead of a Price ID (price_...). Fix .env.local, then fully restart: npm run stop && npm run smooth";
+    }
     return NextResponse.json({ error: message }, { status: 500 });
   }
 }

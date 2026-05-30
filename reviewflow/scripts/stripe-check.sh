@@ -8,13 +8,27 @@ if [[ ! -f .env.local ]]; then
   exit 1
 fi
 
-set -a
+# Warn if the terminal already had Stripe vars before we load the file
+had_setup="${STRIPE_PRICE_SETUP:-}"
+had_monthly="${STRIPE_PRICE_MONTHLY:-}"
+
 # shellcheck disable=SC1091
-source .env.local
-set +a
+source "$(dirname "$0")/load-env.sh"
+load_env_local "$(pwd)"
 
 ok=0
 warn=0
+
+if [[ -n "$had_setup" && "$had_setup" != "$STRIPE_PRICE_SETUP" ]]; then
+  echo "⚠ Terminal had old STRIPE_PRICE_SETUP — .env.local wins for this check."
+  echo "  Run: npm run stop && npm run smooth  (so the app reloads .env.local too)"
+  echo ""
+fi
+if [[ -n "$had_monthly" && "$had_monthly" != "$STRIPE_PRICE_MONTHLY" ]]; then
+  echo "⚠ Terminal had old STRIPE_PRICE_MONTHLY — .env.local wins for this check."
+  echo "  Run: npm run stop && npm run smooth  (so the app reloads .env.local too)"
+  echo ""
+fi
 
 check() {
   local name="$1"
@@ -48,8 +62,13 @@ check "STRIPE_WEBHOOK_SECRET" "$STRIPE_WEBHOOK_SECRET"
 check "SUPABASE_SERVICE_ROLE_KEY" "$SUPABASE_SERVICE_ROLE_KEY"
 
 echo ""
+echo "ID prefixes (must start with price_):"
+echo "  Setup:   ${STRIPE_PRICE_SETUP:0:12}..."
+echo "  Monthly: ${STRIPE_PRICE_MONTHLY:0:12}..."
+echo ""
 if [[ $warn -eq 0 ]]; then
   echo "All set. Restart app, then test at /dashboard/billing"
+  echo "If billing still errors: npm run stop && npm run smooth"
 else
   echo "Fix the ✗ items above."
   echo "Price IDs start with price_ — NOT prod_"
