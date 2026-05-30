@@ -14,18 +14,28 @@ source .env.local
 set +a
 
 ok=0
-missing=0
+warn=0
 
 check() {
   local name="$1"
   local val="${2:-}"
-  if [[ -n "$val" && "$val" != *"your-"* && "$val" != "you@gmail.com" ]]; then
-    echo "✓ $name"
-    ok=$((ok + 1))
-  else
+  if [[ -z "$val" || "$val" == *"your-"* ]]; then
     echo "✗ $name — not set yet"
-    missing=$((missing + 1))
+    warn=$((warn + 1))
+    return
   fi
+  if [[ "$val" == prod_* ]]; then
+    echo "✗ $name — WRONG: prod_... is a Product ID. Use price_... (Price ID)"
+    warn=$((warn + 1))
+    return
+  fi
+  if [[ "$name" == *PRICE* && "$val" != price_* ]]; then
+    echo "✗ $name — must start with price_"
+    warn=$((warn + 1))
+    return
+  fi
+  echo "✓ $name"
+  ok=$((ok + 1))
 }
 
 echo "ReviewFlow Stripe checklist"
@@ -38,8 +48,10 @@ check "STRIPE_WEBHOOK_SECRET" "$STRIPE_WEBHOOK_SECRET"
 check "SUPABASE_SERVICE_ROLE_KEY" "$SUPABASE_SERVICE_ROLE_KEY"
 
 echo ""
-if [[ $missing -eq 0 ]]; then
+if [[ $warn -eq 0 ]]; then
   echo "All set. Restart app, then test at /dashboard/billing"
 else
-  echo "$missing item(s) still needed — open STRIPE_SETUP.md"
+  echo "Fix the ✗ items above."
+  echo "Price IDs start with price_ — NOT prod_"
+  echo "Stripe → Product catalog → open product → click price → copy Price ID"
 fi

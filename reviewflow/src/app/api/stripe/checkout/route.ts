@@ -46,6 +46,18 @@ export async function POST() {
       return NextResponse.json({ error: "Stripe price IDs missing" }, { status: 503 });
     }
 
+    for (const item of lineItems) {
+      if (item.price.startsWith("prod_")) {
+        return NextResponse.json(
+          {
+            error:
+              "Wrong Stripe ID: you used a Product ID (prod_...). Use Price ID (price_...) instead. In Stripe → Product → click the price → copy Price ID into .env.local",
+          },
+          { status: 400 }
+        );
+      }
+    }
+
     const session = await stripe.checkout.sessions.create({
       mode: "subscription",
       customer_email: user.email || undefined,

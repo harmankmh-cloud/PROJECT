@@ -2,8 +2,8 @@ import type { StripeConfigStatus } from "@/lib/stripe-config";
 
 const labels: Record<string, string> = {
   STRIPE_SECRET_KEY: "Stripe secret key (sk_test_...)",
-  STRIPE_PRICE_SETUP: "Setup price ID — $99 one-time (price_...)",
-  STRIPE_PRICE_MONTHLY: "Monthly price ID — $39/mo (price_...)",
+  STRIPE_PRICE_SETUP: "Setup price ID — $99 one-time (must be price_..., NOT prod_...)",
+  STRIPE_PRICE_MONTHLY: "Monthly price ID — $39/mo (must be price_..., NOT prod_...)",
   STRIPE_WEBHOOK_SECRET: "Webhook secret (whsec_...) — run npm run stripe:webhook",
   SUPABASE_SERVICE_ROLE_KEY: "Supabase service role — activates Pro after payment",
 };
@@ -11,8 +11,8 @@ const labels: Record<string, string> = {
 export function StripeSetupChecklist({ status }: { status: StripeConfigStatus }) {
   const items = [
     { key: "STRIPE_SECRET_KEY", ok: status.secretKey },
-    { key: "STRIPE_PRICE_SETUP", ok: status.setupPrice },
-    { key: "STRIPE_PRICE_MONTHLY", ok: status.monthlyPrice },
+    { key: "STRIPE_PRICE_SETUP", ok: status.setupPriceValid },
+    { key: "STRIPE_PRICE_MONTHLY", ok: status.monthlyPriceValid },
     { key: "STRIPE_WEBHOOK_SECRET", ok: status.webhookSecret },
     { key: "SUPABASE_SERVICE_ROLE_KEY", ok: status.serviceRole },
   ];
@@ -32,6 +32,15 @@ export function StripeSetupChecklist({ status }: { status: StripeConfigStatus })
           </li>
         ))}
       </ul>
+      {status.invalid.length > 0 && (
+        <ul className="mt-3 space-y-2 rounded-lg bg-rose-100 px-3 py-2 text-rose-900">
+          {status.invalid.map((msg) => (
+            <li key={msg} className="text-xs leading-relaxed">
+              {msg}
+            </li>
+          ))}
+        </ul>
+      )}
       <p className="mt-3 text-xs text-amber-900/70">
         Terminal check: <code>npm run stripe:check</code>
       </p>
