@@ -151,14 +151,55 @@ export function ReviewForm({ business, prompts }: Props) {
     setDone(false);
   }
 
+  function resetForm() {
+    setStep("stars");
+    setStars(null);
+    setNotes("");
+    setOptions([]);
+    setDraft("");
+    setDone(false);
+    setError("");
+    setSelectedIndex(0);
+  }
+
+  function goToPreviousStep() {
+    if (done) {
+      resetForm();
+      return;
+    }
+    if (step === "options") {
+      setStep("notes");
+      return;
+    }
+    if (step === "notes") {
+      setStep("stars");
+      return;
+    }
+    if (window.history.length > 1) {
+      window.history.back();
+    }
+  }
+
+  const backLabel =
+    step === "stars" ? "Go back" : step === "notes" ? "Change stars" : done ? "Start over" : "Change notes";
+
   return (
     <div className="mx-auto w-full max-w-md">
       <div className="overflow-hidden rounded-[1.75rem] border border-[#e8e2d9] bg-white shadow-[0_20px_60px_rgba(12,18,34,0.12)]">
         <div className="bg-brand-950 px-6 py-5 text-white">
-          <p className="text-xs font-semibold uppercase tracking-widest text-gold-400">
-            Step {stepNumber} of 3
-          </p>
-          <h1 className="font-display mt-1 text-2xl">{business.name}</h1>
+          <div className="mb-3 flex items-center justify-between gap-3">
+            <button
+              type="button"
+              onClick={goToPreviousStep}
+              className="rounded-lg border border-white/20 px-3 py-1.5 text-sm font-medium text-white/90 hover:bg-white/10"
+            >
+              ← {backLabel}
+            </button>
+            <span className="text-xs font-semibold uppercase tracking-widest text-gold-400">
+              Step {stepNumber} of 3
+            </span>
+          </div>
+          <h1 className="font-display text-2xl">{business.name}</h1>
           <p className="mt-1 text-sm text-white/60">Rate your visit, pick a review, post on Google</p>
           <div className="mt-4 flex gap-1">
             {[1, 2, 3].map((n) => (
@@ -199,14 +240,6 @@ export function ReviewForm({ business, prompts }: Props) {
 
           {step === "notes" && stars && (
             <div className="space-y-4">
-              <button
-                type="button"
-                onClick={() => setStep("stars")}
-                className="text-sm font-medium text-stone-500 hover:text-brand-950"
-              >
-                ← Change stars ({stars}/5)
-              </button>
-
               <div className="rounded-xl bg-amber-50 px-4 py-3 text-center text-lg tracking-wider text-gold-600">
                 {starsLabel(stars)}
               </div>
@@ -252,14 +285,6 @@ export function ReviewForm({ business, prompts }: Props) {
 
           {step === "options" && stars && (
             <div className="space-y-4">
-              <button
-                type="button"
-                onClick={() => setStep("notes")}
-                className="text-sm font-medium text-stone-500 hover:text-brand-950"
-              >
-                ← Change my notes
-              </button>
-
               <p className="text-sm font-medium text-brand-950">Pick the review you like best</p>
 
               <div className="space-y-2">
@@ -297,13 +322,28 @@ export function ReviewForm({ business, prompts }: Props) {
               {error && <p className="text-sm text-rose-600">{error}</p>}
 
               {done ? (
-                <div className="rounded-xl bg-emerald-50 px-4 py-3 text-sm text-emerald-800">
-                  <p className="font-semibold">Done! Review copied.</p>
-                  {business.google_review_url ? (
-                    <p className="mt-1">Paste it on Google — and the owner was notified too.</p>
-                  ) : (
-                    <p className="mt-1">Paste it on Google. The owner was notified on their dashboard.</p>
-                  )}
+                <div className="space-y-3">
+                  <div className="rounded-xl bg-emerald-50 px-4 py-3 text-sm text-emerald-800">
+                    <p className="font-semibold">Done! Review copied.</p>
+                    {business.google_review_url ? (
+                      <p className="mt-1">Paste it on Google — the owner was notified too.</p>
+                    ) : (
+                      <p className="mt-1">The owner was notified on their dashboard.</p>
+                    )}
+                  </div>
+                  <button
+                    type="button"
+                    onClick={() => {
+                      if (window.history.length > 1) window.history.back();
+                      else resetForm();
+                    }}
+                    className="btn-dark w-full py-3"
+                  >
+                    ← Back to previous page
+                  </button>
+                  <button type="button" onClick={resetForm} className="btn-ghost w-full py-3">
+                    Leave another review
+                  </button>
                 </div>
               ) : (
                 <>

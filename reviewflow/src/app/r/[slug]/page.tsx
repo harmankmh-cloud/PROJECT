@@ -1,6 +1,7 @@
 import { notFound } from "next/navigation";
 import { createClient } from "@/lib/supabase/server";
 import { ReviewForm } from "@/components/ReviewForm";
+import { CustomerBackBar } from "@/components/CustomerBackBar";
 import type { Business, PromptTemplate } from "@/lib/types";
 
 export default async function CustomerReviewPage({
@@ -26,6 +27,7 @@ export default async function CustomerReviewPage({
 
   return (
     <main className="mesh-bg flex min-h-screen flex-col items-center justify-center px-4 py-10">
+      <CustomerBackBar />
       <ReviewForm
         business={business as Business}
         prompts={(prompts || []) as PromptTemplate[]}
