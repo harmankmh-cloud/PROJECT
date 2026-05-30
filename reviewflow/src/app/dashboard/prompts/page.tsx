@@ -1,5 +1,4 @@
 import { redirect } from "next/navigation";
-import Link from "next/link";
 import { createClient } from "@/lib/supabase/server";
 import { PromptEditor } from "@/components/PromptEditor";
 
@@ -26,15 +25,12 @@ export default async function PromptsPage() {
     .order("experience_level");
 
   return (
-    <main className="min-h-screen bg-zinc-50 px-6 py-10">
+    <main className="px-6 py-10">
       <div className="mx-auto max-w-4xl space-y-6">
-        <Link href="/dashboard" className="text-sm font-medium text-emerald-700">
-          ← Back to dashboard
-        </Link>
         <div>
-          <h1 className="text-3xl font-semibold text-zinc-900">Edit review prompts</h1>
-          <p className="mt-2 text-sm text-zinc-600">
-            Change the button text and AI instructions for each experience level.
+          <h1 className="text-3xl font-bold tracking-tight text-slate-900">Review prompts</h1>
+          <p className="mt-2 text-sm text-slate-600">
+            Customize the button text and AI instructions for each experience level.
           </p>
         </div>
         <PromptEditor businessId={business.id} prompts={prompts || []} />

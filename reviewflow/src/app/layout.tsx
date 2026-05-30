@@ -13,7 +13,10 @@ const geistMono = Geist_Mono({
 });
 
 export const metadata: Metadata = {
-  title: "ReviewFlow — Reviews and local marketing for small businesses",
+  title: {
+    default: "ReviewFlow — Reviews and local marketing for small businesses",
+    template: "%s · ReviewFlow",
+  },
   description:
     "Help customers write honest Google reviews faster with QR codes, AI review drafts, and simple marketing tools.",
 };
@@ -24,11 +27,10 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html
-      lang="en"
-      className={`${geistSans.variable} ${geistMono.variable} h-full antialiased`}
-    >
-      <body className="min-h-full flex flex-col">{children}</body>
+    <html lang="en" className={`${geistSans.variable} ${geistMono.variable} h-full`}>
+      <body className="min-h-full bg-zinc-50 font-sans text-zinc-900 antialiased">
+        {children}
+      </body>
     </html>
   );
 }

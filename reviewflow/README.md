@@ -10,7 +10,9 @@ ReviewFlow helps local businesses get more honest Google reviews and turn good f
   - Great / Good / Okay → public review draft
   - Not good → calm private feedback draft
 - Custom prompt editor for each experience level
-- Dashboard with stats and feedback inbox
+- Dashboard with stats, QR code, feedback inbox, and marketing helpers
+- Business settings page (edit name, type, tone, Google review link)
+- Dashboard navigation with mobile menu and logout
 - AI tools for social captions and review replies (OpenRouter)
 
 ## Stack
@@ -69,6 +71,7 @@ Open http://localhost:3000
 | Sign up | `/signup` |
 | Login | `/login` |
 | Dashboard | `/dashboard` |
+| Settings | `/dashboard/settings` |
 | Prompt editor | `/dashboard/prompts` |
 | Customer review page | `/r/your-business-slug` |
 

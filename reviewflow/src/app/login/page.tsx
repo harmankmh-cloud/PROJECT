@@ -3,12 +3,29 @@ import { AuthForm } from "@/components/Forms";
 
 export default function LoginPage() {
   return (
-    <main className="min-h-screen bg-zinc-50 px-6 py-16">
-      <div className="mx-auto max-w-md space-y-6">
-        <Link href="/" className="text-sm font-medium text-emerald-700">
-          ← Back to ReviewFlow
-        </Link>
-        <AuthForm mode="login" />
+    <main className="flex min-h-screen items-center justify-center bg-gradient-to-b from-slate-50 to-white px-4 py-12">
+      <div className="w-full max-w-md">
+        <div className="mb-8 text-center">
+          <Link href="/" className="inline-flex items-center gap-2 text-slate-900">
+            <div className="flex h-8 w-8 items-center justify-center rounded-lg bg-emerald-600 text-xs font-bold text-white">
+              R
+            </div>
+            <span className="font-semibold">ReviewFlow</span>
+          </Link>
+        </div>
+        <div className="card p-8">
+          <h1 className="text-2xl font-bold text-slate-900">Welcome back</h1>
+          <p className="mt-1 text-sm text-slate-600">Log in to your dashboard</p>
+          <div className="mt-6">
+            <AuthForm mode="login" />
+          </div>
+          <p className="mt-6 text-center text-sm text-slate-600">
+            No account?{" "}
+            <Link href="/signup" className="font-medium text-emerald-700 hover:underline">
+              Sign up free
+            </Link>
+          </p>
+        </div>
       </div>
     </main>
   );

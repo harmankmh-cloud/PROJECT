@@ -76,42 +76,60 @@ export function ReviewForm({ business, prompts }: Props) {
 
   async function handleCopy() {
     if (!draft) return;
-    await navigator.clipboard.writeText(draft);
-    await track(isPrivate ? "private_feedback" : "copy_review");
-    setSaved(true);
+    try {
+      await navigator.clipboard.writeText(draft);
+      await track(isPrivate ? "private_feedback" : "copy_review");
+      setSaved(true);
+    } catch {
+      setError("Could not copy text. Please select and copy manually.");
+    }
   }
 
   async function handleSavePrivate() {
     if (!experience || !draft) return;
 
-    await fetch("/api/feedback", {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({
-        businessId: business.id,
-        experienceLevel: experience,
-        customerNotes: notes,
-        aiDraft: draft,
-        isPrivate: true,
-      }),
-    });
+    setError("");
+    setSaved(false);
 
-    await track("private_feedback");
-    setSaved(true);
+    try {
+      const response = await fetch("/api/feedback", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          businessId: business.id,
+          experienceLevel: experience,
+          customerNotes: notes,
+          aiDraft: draft,
+          isPrivate: true,
+        }),
+      });
+
+      const data = await response.json();
+      if (!response.ok) {
+        throw new Error(data.error || "Could not save feedback");
+      }
+
+      await track("private_feedback");
+      setSaved(true);
+    } catch (err) {
+      setError(err instanceof Error ? err.message : "Could not save feedback");
+    }
   }
 
   return (
-    <div className="mx-auto flex w-full max-w-xl flex-col gap-6 rounded-3xl border border-zinc-200 bg-white p-6 shadow-sm">
-      <div>
-        <p className="text-sm font-medium text-emerald-700">ReviewFlow</p>
-        <h1 className="mt-1 text-2xl font-semibold text-zinc-900">{business.name}</h1>
-        <p className="mt-2 text-sm text-zinc-600">
-          Share honest feedback about your experience. You can edit anything before posting.
+    <div className="card mx-auto flex w-full max-w-xl flex-col gap-6 p-6 sm:p-8">
+      <div className="text-center sm:text-left">
+        <p className="text-xs font-medium uppercase tracking-wider text-emerald-700">
+          Share your experience
+        </p>
+        <h1 className="mt-2 text-2xl font-bold text-slate-900 sm:text-3xl">{business.name}</h1>
+        <p className="mt-2 text-sm leading-relaxed text-slate-600">
+          Your feedback helps us improve. You can edit anything before posting.
         </p>
       </div>
 
       <div>
-        <p className="mb-3 text-sm font-medium text-zinc-800">How was your experience?</p>
+        <p className="mb-3 text-sm font-medium text-slate-800">How was your experience?</p>
         <div className="grid grid-cols-2 gap-3">
           {EXPERIENCE_OPTIONS.map((option) => (
             <button
@@ -123,10 +141,10 @@ export function ReviewForm({ business, prompts }: Props) {
                 setSaved(false);
                 setError("");
               }}
-              className={`rounded-2xl border px-4 py-3 text-sm font-medium transition ${
+              className={`rounded-xl border px-4 py-3 text-sm font-medium transition ${
                 experience === option.level
                   ? "border-emerald-600 bg-emerald-50 text-emerald-800"
-                  : "border-zinc-200 bg-zinc-50 text-zinc-700 hover:border-zinc-300"
+                  : "border-slate-200 bg-slate-50 text-slate-700 hover:border-slate-300"
               }`}
             >
               {option.label}
@@ -137,7 +155,7 @@ export function ReviewForm({ business, prompts }: Props) {
 
       {experience && (
         <div className="space-y-3">
-          <label className="block text-sm font-medium text-zinc-800">
+          <label className="block text-sm font-medium text-slate-800">
             {isPrivate
               ? "Tell us what went wrong so the business can improve"
               : "What did you like or notice?"}
@@ -146,13 +164,13 @@ export function ReviewForm({ business, prompts }: Props) {
             value={notes}
             onChange={(e) => setNotes(e.target.value)}
             placeholder={prompt?.placeholder || "Write a few words about your visit"}
-            className="min-h-28 w-full rounded-2xl border border-zinc-200 px-4 py-3 text-sm text-zinc-900 outline-none ring-emerald-500 focus:ring-2"
+            className="input-field min-h-28 resize-y"
           />
           <button
             type="button"
             onClick={handleGenerate}
             disabled={loading}
-            className="w-full rounded-2xl bg-emerald-600 px-4 py-3 text-sm font-semibold text-white hover:bg-emerald-700 disabled:opacity-60"
+            className="btn-primary w-full py-3"
           >
             {loading ? "Working..." : prompt?.helper_label || "Help me write it"}
           </button>
@@ -162,19 +180,15 @@ export function ReviewForm({ business, prompts }: Props) {
       {error && <p className="text-sm text-red-600">{error}</p>}
 
       {draft && (
-        <div className="space-y-4 rounded-2xl bg-zinc-50 p-4">
-          <p className="text-sm font-medium text-zinc-800">
+        <div className="space-y-4 rounded-xl bg-slate-50 p-4">
+          <p className="text-sm font-medium text-slate-800">
             {isPrivate ? "Private feedback draft" : "Review draft"}
           </p>
-          <p className="whitespace-pre-wrap text-sm leading-6 text-zinc-700">{draft}</p>
-          <p className="text-xs text-zinc-500">Edit this to match your real experience.</p>
+          <p className="whitespace-pre-wrap text-sm leading-6 text-slate-700">{draft}</p>
+          <p className="text-xs text-slate-500">Edit this to match your real experience.</p>
 
           <div className="flex flex-col gap-3">
-            <button
-              type="button"
-              onClick={handleCopy}
-              className="rounded-2xl border border-zinc-300 bg-white px-4 py-3 text-sm font-medium text-zinc-800"
-            >
+            <button type="button" onClick={handleCopy} className="btn-secondary py-3">
               Copy text
             </button>
 
@@ -183,7 +197,7 @@ export function ReviewForm({ business, prompts }: Props) {
                 <button
                   type="button"
                   onClick={handleSavePrivate}
-                  className="rounded-2xl bg-zinc-900 px-4 py-3 text-sm font-semibold text-white"
+                  className="rounded-xl bg-slate-900 px-4 py-3 text-sm font-semibold text-white hover:bg-slate-800"
                 >
                   Send private feedback to business
                 </button>
@@ -193,7 +207,7 @@ export function ReviewForm({ business, prompts }: Props) {
                     target="_blank"
                     rel="noreferrer"
                     onClick={() => track("google_click")}
-                    className="text-center text-sm text-zinc-600 underline"
+                    className="text-center text-sm text-slate-600 underline"
                   >
                     I still want to leave a public Google review
                   </a>
@@ -206,7 +220,7 @@ export function ReviewForm({ business, prompts }: Props) {
                   target="_blank"
                   rel="noreferrer"
                   onClick={() => track("google_click")}
-                  className="rounded-2xl bg-zinc-900 px-4 py-3 text-center text-sm font-semibold text-white"
+                  className="rounded-xl bg-slate-900 px-4 py-3 text-center text-sm font-semibold text-white hover:bg-slate-800"
                 >
                   Open Google review page
                 </a>

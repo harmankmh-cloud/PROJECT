@@ -2,100 +2,101 @@ import Link from "next/link";
 
 export default function HomePage() {
   return (
-    <main className="min-h-screen bg-gradient-to-b from-emerald-50 to-white">
-      <div className="mx-auto flex max-w-6xl flex-col gap-16 px-6 py-16">
-        <header className="flex items-center justify-between">
-          <div>
-            <p className="text-sm font-semibold text-emerald-700">ReviewFlow</p>
-            <p className="text-sm text-zinc-600">Reviews + simple marketing for local businesses</p>
+    <main className="min-h-screen bg-gradient-to-b from-slate-50 via-white to-emerald-50/30">
+      <header className="mx-auto flex max-w-6xl items-center justify-between px-4 py-6 sm:px-6">
+        <div className="flex items-center gap-2.5">
+          <div className="flex h-9 w-9 items-center justify-center rounded-xl bg-emerald-600 text-sm font-bold text-white">
+            R
           </div>
-          <div className="flex gap-3">
-            <Link href="/login" className="rounded-full px-4 py-2 text-sm font-medium text-zinc-700">
-              Log in
+          <span className="text-lg font-semibold text-slate-900">ReviewFlow</span>
+        </div>
+        <div className="flex items-center gap-2 sm:gap-3">
+          <Link href="/login" className="btn-secondary px-4 py-2 text-sm">
+            Log in
+          </Link>
+          <Link href="/signup" className="btn-primary px-4 py-2 text-sm">
+            Start free
+          </Link>
+        </div>
+      </header>
+
+      <section className="mx-auto max-w-6xl px-4 pb-20 pt-8 sm:px-6 sm:pt-16">
+        <div className="mx-auto max-w-3xl text-center">
+          <p className="mb-4 inline-flex items-center rounded-full border border-emerald-200 bg-emerald-50 px-3 py-1 text-xs font-medium text-emerald-800">
+            Built for local businesses in Canada
+          </p>
+          <h1 className="text-4xl font-bold tracking-tight text-slate-900 sm:text-5xl sm:leading-tight">
+            Turn happy customers into{" "}
+            <span className="text-emerald-600">Google reviews</span>
+          </h1>
+          <p className="mt-5 text-lg leading-relaxed text-slate-600">
+            Share a QR code. Customers pick how their visit went. AI writes a
+            natural review draft — and unhappy feedback stays private so you can
+            fix issues before they go public.
+          </p>
+          <div className="mt-8 flex flex-col items-center justify-center gap-3 sm:flex-row">
+            <Link href="/signup" className="btn-primary w-full px-8 py-3.5 text-base sm:w-auto">
+              Create your account
             </Link>
-            <Link
-              href="/signup"
-              className="rounded-full bg-emerald-600 px-4 py-2 text-sm font-semibold text-white"
-            >
-              Start free
+            <Link href="/login" className="btn-secondary w-full px-8 py-3.5 text-base sm:w-auto">
+              I already have an account
             </Link>
           </div>
-        </header>
+        </div>
 
-        <section className="grid gap-10 lg:grid-cols-2 lg:items-center">
-          <div>
-            <h1 className="text-4xl font-semibold tracking-tight text-zinc-900 sm:text-5xl">
-              Help customers write honest Google reviews faster.
-            </h1>
-            <p className="mt-4 text-lg leading-8 text-zinc-600">
-              Give your business a QR code and review link. Customers choose their experience,
-              get help writing a review, and you turn good feedback into social posts.
-            </p>
-            <div className="mt-8 flex flex-wrap gap-3">
-              <Link
-                href="/signup"
-                className="rounded-2xl bg-emerald-600 px-5 py-3 text-sm font-semibold text-white"
-              >
-                Create my review page
-              </Link>
-              <Link
-                href="/login"
-                className="rounded-2xl border border-zinc-300 px-5 py-3 text-sm font-medium text-zinc-800"
-              >
-                Business login
-              </Link>
-            </div>
-          </div>
-
-          <div className="rounded-3xl border border-emerald-100 bg-white p-6 shadow-sm">
-            <p className="text-sm font-medium text-zinc-500">Example customer flow</p>
-            <div className="mt-4 space-y-3 text-sm text-zinc-700">
-              <p>1. Customer scans QR code</p>
-              <p>2. Chooses Great / Good / Okay / Not good</p>
-              <p>3. Types a few words about the visit</p>
-              <p>4. AI helps write a clear review draft</p>
-              <p>5. Customer edits and posts on Google</p>
-            </div>
-          </div>
-        </section>
-
-        <section className="grid gap-6 md:grid-cols-3">
+        <div className="mt-16 grid gap-5 sm:grid-cols-3">
           {[
             {
-              title: "Review helper",
-              text: "Customers get review drafts based on their experience level.",
+              step: "1",
+              title: "Print your QR code",
+              text: "Put it at the counter, on receipts, or in a follow-up text.",
             },
             {
-              title: "Private feedback",
-              text: "Unhappy customers can send calm private feedback before posting publicly.",
+              step: "2",
+              title: "Customer picks their experience",
+              text: "Great, good, okay, or not good — simple and fast on any phone.",
             },
             {
-              title: "Marketing tools",
-              text: "Turn good reviews into social captions and reply drafts.",
+              step: "3",
+              title: "AI helps with the rest",
+              text: "Happy visits get review drafts. Unhappy visits send private feedback to you.",
             },
           ].map((item) => (
-            <div key={item.title} className="rounded-3xl border border-zinc-200 bg-white p-6 shadow-sm">
-              <h2 className="text-lg font-semibold text-zinc-900">{item.title}</h2>
-              <p className="mt-2 text-sm leading-6 text-zinc-600">{item.text}</p>
+            <div key={item.step} className="card p-6">
+              <div className="mb-3 flex h-8 w-8 items-center justify-center rounded-lg bg-emerald-100 text-sm font-bold text-emerald-700">
+                {item.step}
+              </div>
+              <h3 className="font-semibold text-slate-900">{item.title}</h3>
+              <p className="mt-2 text-sm leading-relaxed text-slate-600">{item.text}</p>
             </div>
           ))}
-        </section>
+        </div>
 
-        <section className="rounded-3xl bg-zinc-900 p-8 text-white">
-          <h2 className="text-2xl font-semibold">Simple pricing to start</h2>
-          <p className="mt-2 text-zinc-300">One plan for now while we launch with local businesses.</p>
-          <div className="mt-6 flex flex-wrap items-end gap-6">
+        <div className="mt-16 rounded-2xl border border-slate-200 bg-white p-8 text-center shadow-sm sm:p-10">
+          <h2 className="text-2xl font-bold text-slate-900">Simple pricing</h2>
+          <p className="mt-2 text-slate-600">No contracts. Cancel anytime.</p>
+          <div className="mt-6 flex flex-col items-center justify-center gap-6 sm:flex-row sm:gap-10">
             <div>
-              <p className="text-4xl font-semibold">$39</p>
-              <p className="text-sm text-zinc-300">per month</p>
+              <p className="text-3xl font-bold text-slate-900">$99</p>
+              <p className="text-sm text-slate-500">One-time setup</p>
             </div>
+            <div className="hidden h-12 w-px bg-slate-200 sm:block" />
             <div>
-              <p className="text-2xl font-semibold">$99</p>
-              <p className="text-sm text-zinc-300">one-time setup</p>
+              <p className="text-3xl font-bold text-slate-900">
+                $39<span className="text-lg font-medium text-slate-500">/mo</span>
+              </p>
+              <p className="text-sm text-slate-500">Starter plan</p>
             </div>
           </div>
-        </section>
-      </div>
+          <Link href="/signup" className="btn-primary mt-8 inline-flex px-8 py-3">
+            Get started
+          </Link>
+        </div>
+      </section>
+
+      <footer className="border-t border-slate-200 py-8 text-center text-sm text-slate-500">
+        ReviewFlow — review collection for local businesses
+      </footer>
     </main>
   );
 }

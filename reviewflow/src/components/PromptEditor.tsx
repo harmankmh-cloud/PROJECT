@@ -13,6 +13,7 @@ export function PromptEditor({ businessId, prompts }: Props) {
   const [items, setItems] = useState(prompts);
   const [saving, setSaving] = useState(false);
   const [message, setMessage] = useState("");
+  const [error, setError] = useState("");
 
   function updatePrompt(id: string, field: keyof PromptTemplate, value: string) {
     setItems((current) =>
@@ -23,22 +24,30 @@ export function PromptEditor({ businessId, prompts }: Props) {
   async function handleSave() {
     setSaving(true);
     setMessage("");
+    setError("");
     const supabase = createClient();
 
-    for (const prompt of items) {
-      await supabase
-        .from("prompt_templates")
-        .update({
-          helper_label: prompt.helper_label,
-          placeholder: prompt.placeholder,
-          ai_instruction: prompt.ai_instruction,
-        })
-        .eq("id", prompt.id)
-        .eq("business_id", businessId);
-    }
+    try {
+      for (const prompt of items) {
+        const { error: updateError } = await supabase
+          .from("prompt_templates")
+          .update({
+            helper_label: prompt.helper_label,
+            placeholder: prompt.placeholder,
+            ai_instruction: prompt.ai_instruction,
+          })
+          .eq("id", prompt.id)
+          .eq("business_id", businessId);
 
-    setSaving(false);
-    setMessage("Saved.");
+        if (updateError) throw updateError;
+      }
+
+      setMessage("Prompts saved.");
+    } catch (err) {
+      setError(err instanceof Error ? err.message : "Could not save prompts");
+    } finally {
+      setSaving(false);
+    }
   }
 
   return (
@@ -72,11 +81,12 @@ export function PromptEditor({ businessId, prompts }: Props) {
         type="button"
         onClick={handleSave}
         disabled={saving}
-        className="rounded-2xl bg-emerald-600 px-5 py-3 text-sm font-semibold text-white"
+        className="rounded-2xl bg-emerald-600 px-5 py-3 text-sm font-semibold text-white disabled:opacity-60"
       >
         {saving ? "Saving..." : "Save prompts"}
       </button>
       {message && <p className="text-sm text-emerald-700">{message}</p>}
+      {error && <p className="text-sm text-red-600">{error}</p>}
     </div>
   );
 }

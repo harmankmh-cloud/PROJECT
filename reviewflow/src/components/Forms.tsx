@@ -34,35 +34,35 @@ export function SetupBusinessForm() {
   }
 
   return (
-    <form onSubmit={handleSubmit} className="mx-auto max-w-lg space-y-4 rounded-3xl border border-zinc-200 bg-white p-6 shadow-sm">
-      <h1 className="text-2xl font-semibold text-zinc-900">Set up your business</h1>
-      <p className="text-sm text-zinc-600">This creates your review link and default prompts.</p>
+    <form onSubmit={handleSubmit} className="card mx-auto max-w-lg space-y-4 p-8">
+      <div>
+        <h1 className="text-2xl font-bold text-slate-900">Set up your business</h1>
+        <p className="mt-1 text-sm text-slate-600">
+          This creates your review link, QR code, and default prompts.
+        </p>
+      </div>
       <input
         value={name}
         onChange={(e) => setName(e.target.value)}
         placeholder="Business name"
-        className="w-full rounded-2xl border border-zinc-200 px-4 py-3 text-sm"
+        className="input-field"
         required
       />
       <input
         value={businessType}
         onChange={(e) => setBusinessType(e.target.value)}
         placeholder="Business type (barber, restaurant, cleaner)"
-        className="w-full rounded-2xl border border-zinc-200 px-4 py-3 text-sm"
+        className="input-field"
         required
       />
       <input
         value={googleReviewUrl}
         onChange={(e) => setGoogleReviewUrl(e.target.value)}
         placeholder="Google review link (optional for now)"
-        className="w-full rounded-2xl border border-zinc-200 px-4 py-3 text-sm"
+        className="input-field"
       />
       {error && <p className="text-sm text-red-600">{error}</p>}
-      <button
-        type="submit"
-        disabled={loading}
-        className="w-full rounded-2xl bg-emerald-600 px-4 py-3 text-sm font-semibold text-white"
-      >
+      <button type="submit" disabled={loading} className="btn-primary w-full py-3">
         {loading ? "Creating..." : "Create my review page"}
       </button>
     </form>
@@ -96,7 +96,7 @@ export function AuthForm({ mode }: { mode: "login" | "signup" }) {
 
         if (!result.data.session) {
           setError(
-            "Account created. Check your email to confirm, then use Log in. Or turn off Confirm email in Supabase → Authentication → Email."
+            "Account created. Check your email to confirm, then log in. Or turn off Confirm email in Supabase → Authentication → Email."
           );
           return;
         }
@@ -119,33 +119,28 @@ export function AuthForm({ mode }: { mode: "login" | "signup" }) {
   }
 
   return (
-    <form onSubmit={handleSubmit} className="mx-auto max-w-md space-y-4 rounded-3xl border border-zinc-200 bg-white p-6 shadow-sm">
-      <h1 className="text-2xl font-semibold text-zinc-900">
-        {mode === "signup" ? "Create account" : "Log in"}
-      </h1>
+    <form onSubmit={handleSubmit} className="space-y-4">
       <input
         type="email"
         value={email}
         onChange={(e) => setEmail(e.target.value)}
         placeholder="Email"
-        className="w-full rounded-2xl border border-zinc-200 px-4 py-3 text-sm"
+        className="input-field"
         required
+        autoComplete="email"
       />
       <input
         type="password"
         value={password}
         onChange={(e) => setPassword(e.target.value)}
-        placeholder="Password"
-        className="w-full rounded-2xl border border-zinc-200 px-4 py-3 text-sm"
+        placeholder="Password (6+ characters)"
+        className="input-field"
         required
+        autoComplete={mode === "signup" ? "new-password" : "current-password"}
       />
       {error && <p className="text-sm text-red-600">{error}</p>}
-      <button
-        type="submit"
-        disabled={loading}
-        className="w-full rounded-2xl bg-emerald-600 px-4 py-3 text-sm font-semibold text-white"
-      >
-        {loading ? "Please wait..." : mode === "signup" ? "Sign up" : "Log in"}
+      <button type="submit" disabled={loading} className="btn-primary w-full py-3">
+        {loading ? "Please wait..." : mode === "signup" ? "Create account" : "Log in"}
       </button>
     </form>
   );
