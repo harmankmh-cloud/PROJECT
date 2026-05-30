@@ -5,7 +5,13 @@ import { useRouter } from "next/navigation";
 import type { Business } from "@/lib/types";
 import { INDUSTRY_OPTIONS } from "@/lib/defaults";
 
-export function BusinessSettingsForm({ business }: { business: Business }) {
+export function BusinessSettingsForm({
+  business,
+  simple = true,
+}: {
+  business: Business;
+  simple?: boolean;
+}) {
   const router = useRouter();
   const [name, setName] = useState(business.name);
   const [businessType, setBusinessType] = useState(business.business_type);
@@ -45,9 +51,9 @@ export function BusinessSettingsForm({ business }: { business: Business }) {
 
   return (
     <form onSubmit={handleSubmit} className="surface-card overflow-hidden">
-      <div className="border-b border-[#e8e2d9] bg-brand-950 px-6 py-4">
-        <h1 className="font-display text-lg text-white">Business profile</h1>
-        <p className="mt-0.5 text-sm text-white/60">Your review link does not change when you edit your name</p>
+      <div className="border-b border-[#e8e2d9] bg-white px-6 py-4">
+        <h1 className="font-display text-lg text-brand-950">My business</h1>
+        <p className="mt-0.5 text-sm text-stone-500">Name, industry, and Google link — that&apos;s all you need</p>
       </div>
       <div className="space-y-4 p-6">
         <label className="block space-y-2 text-sm">
@@ -77,15 +83,6 @@ export function BusinessSettingsForm({ business }: { business: Business }) {
         </div>
 
         <label className="block space-y-2 text-sm">
-          <span className="font-semibold text-brand-950">AI writing tone</span>
-          <select value={tone} onChange={(e) => setTone(e.target.value)} className="input-field">
-            <option value="friendly">Friendly & warm</option>
-            <option value="professional">Professional</option>
-            <option value="casual">Casual & fun</option>
-          </select>
-        </label>
-
-        <label className="block space-y-2 text-sm">
           <span className="font-semibold text-brand-950">Google review link</span>
           <input
             value={googleReviewUrl}
@@ -93,7 +90,21 @@ export function BusinessSettingsForm({ business }: { business: Business }) {
             placeholder="https://g.page/r/..."
             className="input-field"
           />
+          <span className="block text-xs text-stone-500">
+            Paste your Google review link so customers can post after copying their draft.
+          </span>
         </label>
+
+        {!simple && (
+          <label className="block space-y-2 text-sm">
+            <span className="font-semibold text-brand-950">AI writing tone</span>
+            <select value={tone} onChange={(e) => setTone(e.target.value)} className="input-field">
+              <option value="friendly">Friendly & warm</option>
+              <option value="professional">Professional</option>
+              <option value="casual">Casual & fun</option>
+            </select>
+          </label>
+        )}
 
         <p className="text-xs text-stone-500">
           Review page: <span className="font-medium">/r/{business.slug}</span>

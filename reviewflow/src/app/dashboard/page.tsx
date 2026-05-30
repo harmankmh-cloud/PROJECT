@@ -25,11 +25,11 @@ export default async function DashboardPage() {
       <div className="mx-auto flex max-w-6xl flex-col gap-8">
         <header>
           <p className="text-xs font-semibold uppercase tracking-widest text-gold-600">
-            Control center
+            Your dashboard
           </p>
           <h1 className="font-display mt-1 text-3xl text-brand-950 sm:text-4xl">{business.name}</h1>
           <p className="mt-2 text-sm text-stone-500">
-            One place to manage reviews, sharing, settings, and billing.
+            Reviews, QR poster, and your plan — simple and ready to use.
           </p>
         </header>
 

@@ -4,32 +4,26 @@ import type { Business, DashboardStats, UsageSummary } from "@/lib/types";
 const sections = [
   {
     href: "/dashboard/reviews",
-    title: "Customer reviews",
-    description: "Read every review, filter by stars, export CSV",
+    title: "My reviews",
+    description: "See customer feedback and export CSV",
     icon: "⭐",
   },
   {
     href: "/dashboard/share",
-    title: "QR & share kit",
-    description: "Download poster, copy text messages and emails",
+    title: "QR & sharing",
+    description: "Download your poster and copy messages",
     icon: "📱",
   },
   {
     href: "/dashboard/settings",
-    title: "Business profile",
-    description: "Name, industry, Google link, AI tone",
+    title: "My business",
+    description: "Update name, industry, and Google link",
     icon: "⚙",
   },
   {
-    href: "/dashboard/prompts",
-    title: "Review scripts",
-    description: "Customize AI for each star rating",
-    icon: "✎",
-  },
-  {
     href: "/dashboard/billing",
-    title: "Plan & billing",
-    description: "Usage limits, upgrade, manage subscription",
+    title: "My plan",
+    description: "Usage this month and upgrade options",
     icon: "◈",
   },
 ];
@@ -47,7 +41,7 @@ export function ControlCenterHub({ business, stats, usage, feedbackTotal, review
     <div className="space-y-8">
       <div className="grid gap-3 sm:grid-cols-2 lg:grid-cols-4">
         <div className="surface-card p-4">
-          <p className="text-xs font-semibold uppercase tracking-wide text-stone-400">Reviews saved</p>
+          <p className="text-xs font-semibold uppercase tracking-wide text-stone-400">Reviews</p>
           <p className="font-display mt-1 text-3xl text-brand-950">{feedbackTotal}</p>
         </div>
         <div className="surface-card p-4">
@@ -67,9 +61,9 @@ export function ControlCenterHub({ business, stats, usage, feedbackTotal, review
       </div>
 
       <div>
-        <h2 className="font-display text-xl text-brand-950">Manage everything</h2>
-        <p className="mt-1 text-sm text-stone-500">Pick a section — each area has its own page.</p>
-        <div className="mt-4 grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
+        <h2 className="font-display text-xl text-brand-950">Quick links</h2>
+        <p className="mt-1 text-sm text-stone-500">Everything you need — kept simple.</p>
+        <div className="mt-4 grid gap-4 sm:grid-cols-2">
           {sections.map((section) => (
             <Link
               key={section.href}
@@ -91,7 +85,7 @@ export function ControlCenterHub({ business, stats, usage, feedbackTotal, review
             className="surface-card group block border-dashed p-5 transition hover:border-gold-500/40"
           >
             <span className="text-2xl">↗</span>
-            <h3 className="mt-3 font-semibold text-brand-950">Preview customer page</h3>
+            <h3 className="mt-3 font-semibold text-brand-950">Preview my page</h3>
             <p className="mt-1 truncate text-sm text-stone-500">{reviewUrl}</p>
             <p className="mt-3 text-sm font-semibold text-gold-600">Open in new tab →</p>
           </Link>

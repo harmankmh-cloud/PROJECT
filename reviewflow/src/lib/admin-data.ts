@@ -65,6 +65,26 @@ export async function getPlatformAdminData(): Promise<AdminBusinessRow[]> {
   return rows;
 }
 
+export async function getAdminBusinessWithPrompts(businessId: string) {
+  const admin = createServiceClient();
+  if (!admin) return null;
+
+  const { data: business } = await admin
+    .from("businesses")
+    .select("*")
+    .eq("id", businessId)
+    .maybeSingle();
+
+  if (!business) return null;
+
+  const { data: prompts } = await admin
+    .from("prompt_templates")
+    .select("*")
+    .eq("business_id", businessId);
+
+  return { business, prompts: prompts || [] };
+}
+
 export async function getPlatformTotals(rows: AdminBusinessRow[]) {
   return {
     businesses: rows.length,

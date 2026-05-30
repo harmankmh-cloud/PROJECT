@@ -6,32 +6,17 @@ import { useState } from "react";
 import { createClient, isSupabaseConfigured } from "@/lib/supabase/client";
 import { BrandLogo } from "@/components/BrandLogo";
 
-/** Simple nav for business owners — no advanced/platform settings */
-const ownerLinks = [
-  { href: "/dashboard", label: "Home", icon: "◉" },
-  { href: "/dashboard/reviews", label: "My reviews", icon: "⭐" },
-  { href: "/dashboard/share", label: "QR & sharing", icon: "📱" },
-  { href: "/dashboard/settings", label: "My business", icon: "⚙" },
-  { href: "/dashboard/billing", label: "My plan", icon: "◈" },
+const adminLinks = [
+  { href: "/admin", label: "Overview", icon: "◉" },
+  { href: "/admin/businesses", label: "All businesses", icon: "🏪" },
+  { href: "/admin/settings", label: "Platform settings", icon: "⚙" },
 ];
 
-export function DashboardShell({
-  businessName,
-  reviewSlug,
-  isPlatformAdmin,
-  children,
-}: {
-  businessName?: string;
-  reviewSlug?: string;
-  isPlatformAdmin?: boolean;
-  children: React.ReactNode;
-}) {
+export function AdminShell({ children }: { children: React.ReactNode }) {
   const pathname = usePathname();
   const router = useRouter();
   const [mobileOpen, setMobileOpen] = useState(false);
   const [loggingOut, setLoggingOut] = useState(false);
-
-  const links = reviewSlug ? ownerLinks : [ownerLinks[0]];
 
   async function handleLogout() {
     if (!isSupabaseConfigured()) {
@@ -54,20 +39,17 @@ export function DashboardShell({
   const sidebar = (
     <div className="flex h-full flex-col">
       <div className="border-b border-white/10 px-5 py-5">
-        <BrandLogo href="/dashboard" light />
-        {businessName ? (
-          <>
-            <p className="mt-3 truncate text-sm font-medium text-white/80">{businessName}</p>
-            <p className="text-xs text-white/40">Business dashboard</p>
-          </>
-        ) : (
-          <p className="mt-3 text-sm text-white/40">Finish setup to go live</p>
-        )}
+        <BrandLogo href="/admin" light />
+        <p className="mt-3 text-sm font-medium text-gold-400">Platform panel</p>
+        <p className="text-xs text-white/40">Full control — all businesses & settings</p>
       </div>
 
       <nav className="flex-1 space-y-1 overflow-y-auto px-3 py-4">
-        {links.map((link) => {
-          const active = pathname === link.href;
+        {adminLinks.map((link) => {
+          const active =
+            link.href === "/admin"
+              ? pathname === "/admin"
+              : pathname === link.href || pathname.startsWith(`${link.href}/`);
           return (
             <Link
               key={link.href}
@@ -75,7 +57,7 @@ export function DashboardShell({
               onClick={() => setMobileOpen(false)}
               className={`flex items-center gap-3 rounded-xl px-3 py-2.5 text-sm font-medium transition ${
                 active
-                  ? "bg-white/10 text-gold-400"
+                  ? "bg-gold-500/20 text-gold-400"
                   : "text-white/70 hover:bg-white/5 hover:text-white"
               }`}
             >
@@ -84,30 +66,19 @@ export function DashboardShell({
             </Link>
           );
         })}
-        {reviewSlug && (
-          <Link
-            href={`/r/${reviewSlug}`}
-            target="_blank"
-            rel="noreferrer"
-            onClick={() => setMobileOpen(false)}
-            className="flex items-center gap-3 rounded-xl px-3 py-2.5 text-sm font-medium text-white/70 transition hover:bg-white/5 hover:text-white"
-          >
-            <span className="text-base opacity-80">↗</span>
-            Preview my page
-          </Link>
-        )}
-      </nav>
 
-      {isPlatformAdmin && (
-        <div className="border-t border-white/10 px-3 py-3">
-          <Link
-            href="/admin"
-            className="flex items-center gap-2 rounded-xl bg-gold-500/15 px-3 py-2.5 text-sm font-semibold text-gold-400 transition hover:bg-gold-500/25"
-          >
-            🛡 Platform panel →
-          </Link>
-        </div>
-      )}
+        <p className="mt-6 px-3 pb-2 text-[10px] font-bold uppercase tracking-widest text-white/30">
+          Switch view
+        </p>
+        <Link
+          href="/dashboard"
+          onClick={() => setMobileOpen(false)}
+          className="flex items-center gap-3 rounded-xl px-3 py-2.5 text-sm font-medium text-white/70 transition hover:bg-white/5 hover:text-white"
+        >
+          <span className="text-base opacity-80">👤</span>
+          Business owner view
+        </Link>
+      </nav>
 
       <div className="border-t border-white/10 p-3">
         <button
@@ -140,7 +111,7 @@ export function DashboardShell({
 
       <div className="flex min-h-screen min-w-0 flex-1 flex-col">
         <header className="flex items-center justify-between border-b border-[#e8e2d9] bg-white/80 px-4 py-3 backdrop-blur lg:hidden">
-          <BrandLogo href="/dashboard" size="sm" />
+          <BrandLogo href="/admin" size="sm" />
           <button type="button" className="btn-ghost px-3 py-2" onClick={() => setMobileOpen(true)}>
             Menu
           </button>

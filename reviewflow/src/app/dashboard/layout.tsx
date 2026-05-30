@@ -25,7 +25,7 @@ export default async function DashboardLayout({
     <DashboardShell
       businessName={business?.name}
       reviewSlug={business?.slug}
-      showPlatformAdmin={isPlatformAdmin(user.email)}
+      isPlatformAdmin={isPlatformAdmin(user.email)}
     >
       {children}
     </DashboardShell>
