@@ -9,7 +9,7 @@ export default function SignupPage() {
         <BrandLogo href="/" light />
         <ul className="space-y-4 text-white/80">
           {[
-            "QR code + review link in minutes",
+            "Print-ready QR poster in minutes",
             "AI drafts that sound human",
             "Private channel for unhappy customers",
             "Share kit: SMS, email, counter sign",

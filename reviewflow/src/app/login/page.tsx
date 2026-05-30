@@ -12,7 +12,7 @@ export default function LoginPage() {
             "1–5 star customer flow on any phone",
             "3 AI review drafts in seconds",
             "Every rating lands on your dashboard",
-            "QR code + share kit ready to print",
+            "Print-ready QR poster + share kit",
           ].map((item) => (
             <li key={item} className="flex items-center gap-3 text-sm">
               <span className="flex h-6 w-6 shrink-0 items-center justify-center rounded-full bg-gold-500/20 text-gold-400">

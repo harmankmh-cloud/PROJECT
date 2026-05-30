@@ -35,9 +35,9 @@ export function FeedbackInbox({ feedback }: { feedback: FeedbackEvent[] }) {
 
   return (
     <div className="surface-card overflow-hidden">
-      <div className="border-b border-[#e8e2d9] bg-brand-950 px-6 py-4 text-white">
-        <h2 className="font-display text-lg">Customer reviews</h2>
-        <p className="mt-0.5 text-sm text-white/60">Every rating saved when customers finish</p>
+      <div className="border-b border-[#e8e2d9] bg-white px-6 py-4">
+        <h2 className="font-display text-lg text-brand-950">Customer reviews</h2>
+        <p className="mt-0.5 text-sm text-stone-500">Every rating saved when customers finish</p>
       </div>
       <div className="border-b border-[#e8e2d9] px-6 py-4">
         <div className="flex flex-wrap gap-2">
@@ -62,7 +62,7 @@ export function FeedbackInbox({ feedback }: { feedback: FeedbackEvent[] }) {
         <div className="px-6 py-12 text-center">
           <p className="text-4xl">⭐</p>
           <p className="mt-3 font-medium text-brand-950">No reviews yet</p>
-          <p className="mt-1 text-sm text-stone-500">Share your QR code to collect your first review.</p>
+          <p className="mt-1 text-sm text-stone-500">Print your poster or share the link to collect your first review.</p>
         </div>
       ) : (
         <div className="divide-y divide-[#e8e2d9]">

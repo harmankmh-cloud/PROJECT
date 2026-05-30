@@ -44,7 +44,7 @@ export function QuickStartGuide({
     {
       done: printedDone,
       title: "Print QR at your counter",
-      detail: "Download QR from dashboard → laminate → place visible",
+      detail: "Download poster from dashboard → print → laminate → place visible",
       onMark: () => {
         localStorage.setItem(STORAGE_PRINT, "1");
         setPrintedMarked(true);

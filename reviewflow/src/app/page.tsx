@@ -97,8 +97,8 @@ export default function HomePage() {
           {[
             {
               n: "01",
-              title: "Print your QR",
-              text: "Counter sign, receipt, text message — Share kit gives you copy-paste templates.",
+              title: "Print your poster",
+              text: "Download a poster with your business name + QR. Share kit has text and email templates too.",
             },
             {
               n: "02",

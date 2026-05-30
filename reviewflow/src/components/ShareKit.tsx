@@ -25,7 +25,7 @@ const templates = (businessName: string, reviewUrl: string) => [
     id: "counter",
     label: "Counter sign",
     icon: "📋",
-    text: `★ LOVED YOUR VISIT?\nScan here — pick your stars and post a Google review in under a minute.\n\n${reviewUrl}`,
+    text: `${businessName}\n\n★ HOW WAS YOUR VISIT?\nScan to pick your stars and leave a Google review — takes under 1 minute.\n\n${reviewUrl}`,
   },
 ];
 
@@ -47,9 +47,9 @@ export function ShareKit({ businessName, reviewUrl }: Props) {
 
   return (
     <div className="surface-card overflow-hidden">
-      <div className="border-b border-[#e8e2d9] bg-brand-950 px-6 py-4 text-white">
-        <h2 className="font-display text-lg">Share kit</h2>
-        <p className="mt-0.5 text-sm text-white/60">Copy-ready messages for customers</p>
+      <div className="border-b border-[#e8e2d9] bg-white px-6 py-4">
+        <h2 className="font-display text-lg text-brand-950">Share kit</h2>
+        <p className="mt-0.5 text-sm text-stone-500">Copy-ready messages with your business name</p>
       </div>
       <div className="space-y-3 p-6">
         {items.map((item) => (
