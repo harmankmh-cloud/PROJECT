@@ -1,13 +1,9 @@
 import "server-only";
 
 import Stripe from "stripe";
+import { getStripeConfigStatus, isStripeConfigured } from "./stripe-config";
 
-export function isStripeConfigured(): boolean {
-  return !!(
-    process.env.STRIPE_SECRET_KEY &&
-    (process.env.STRIPE_PRICE_MONTHLY || process.env.STRIPE_PRICE_SETUP)
-  );
-}
+export { getStripeConfigStatus, isStripeConfigured };
 
 export function getStripe(): Stripe | null {
   const key = process.env.STRIPE_SECRET_KEY;

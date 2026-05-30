@@ -1,8 +1,9 @@
-import { isStripeConfigured } from "@/lib/stripe";
+import { StripeSetupChecklist } from "@/components/StripeSetupChecklist";
+import { getStripeConfigStatus } from "@/lib/stripe-config";
 import { PLAN_LIMITS, PRICING, pricingLabel } from "@/lib/plans";
 
 export default function AdminSettingsPage() {
-  const stripeReady = isStripeConfigured();
+  const stripeStatus = getStripeConfigStatus();
   const supabaseReady = !!(
     process.env.NEXT_PUBLIC_SUPABASE_URL && process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY
   );
@@ -26,7 +27,8 @@ export default function AdminSettingsPage() {
           {[
             { label: "Supabase", ok: supabaseReady, detail: "Database & login" },
             { label: "OpenRouter", ok: openRouterReady, detail: "AI review drafts" },
-            { label: "Stripe", ok: stripeReady, detail: "Payments & subscriptions" },
+            { label: "Stripe checkout", ok: stripeStatus.ready, detail: "Secret key + both price IDs" },
+            { label: "Stripe webhooks", ok: stripeStatus.webhookReady, detail: "Auto-upgrade to Pro after pay" },
           ].map((item) => (
             <div key={item.label} className="flex items-center justify-between px-6 py-4">
               <div>
@@ -43,6 +45,8 @@ export default function AdminSettingsPage() {
             </div>
           ))}
         </div>
+
+        {!stripeStatus.webhookReady && <StripeSetupChecklist status={stripeStatus} />}
 
         <div className="surface-card p-6">
           <h2 className="font-semibold text-brand-950">Pricing & limits</h2>

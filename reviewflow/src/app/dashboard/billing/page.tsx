@@ -1,7 +1,7 @@
 import { BillingPanel } from "@/components/BillingPanel";
 import { UsageMeter } from "@/components/UsageMeter";
 import { getDashboardData } from "@/lib/dashboard-data";
-import { isStripeConfigured } from "@/lib/stripe";
+import { getStripeConfigStatus } from "@/lib/stripe-config";
 import { redirect } from "next/navigation";
 
 export default async function BillingPage({
@@ -11,6 +11,7 @@ export default async function BillingPage({
 }) {
   const params = await searchParams;
   const { business, usage } = await getDashboardData();
+  const stripeStatus = getStripeConfigStatus();
 
   if (!business || !usage) redirect("/dashboard");
 
@@ -18,8 +19,8 @@ export default async function BillingPage({
     <main className="flex-1 px-4 py-8 sm:px-8">
       <div className="mx-auto max-w-2xl space-y-8">
         <header>
-          <p className="text-xs font-semibold uppercase tracking-widest text-gold-600">Billing</p>
-          <h1 className="font-display mt-1 text-3xl text-brand-950">Plan & payments</h1>
+          <p className="text-xs font-semibold uppercase tracking-widest text-gold-600">Your dashboard</p>
+          <h1 className="font-display mt-1 text-3xl text-brand-950">My plan</h1>
           <p className="mt-2 text-sm text-stone-500">Upgrade to collect more reviews each month.</p>
         </header>
 
@@ -28,7 +29,7 @@ export default async function BillingPage({
         <BillingPanel
           business={business}
           usage={usage}
-          stripeReady={isStripeConfigured()}
+          stripeStatus={stripeStatus}
           success={params.success === "1"}
           canceled={params.canceled === "1"}
         />

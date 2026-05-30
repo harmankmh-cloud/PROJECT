@@ -3,17 +3,19 @@
 import { useState } from "react";
 import Link from "next/link";
 import type { Business, UsageSummary } from "@/lib/types";
+import type { StripeConfigStatus } from "@/lib/stripe-config";
 import { PLAN_LIMITS, pricingLabel } from "@/lib/plans";
+import { StripeSetupChecklist } from "@/components/StripeSetupChecklist";
 
 type Props = {
   business: Business;
   usage: UsageSummary;
-  stripeReady: boolean;
+  stripeStatus: StripeConfigStatus;
   success?: boolean;
   canceled?: boolean;
 };
 
-export function BillingPanel({ business, usage, stripeReady, success, canceled }: Props) {
+export function BillingPanel({ business, usage, stripeStatus, success, canceled }: Props) {
   const [loading, setLoading] = useState<"checkout" | "portal" | null>(null);
   const [error, setError] = useState("");
 
@@ -92,16 +94,8 @@ export function BillingPanel({ business, usage, stripeReady, success, canceled }
 
           {error && <p className="text-sm text-rose-600">{error}</p>}
 
-          {!stripeReady ? (
-            <div className="rounded-xl border border-amber-200 bg-amber-50 px-4 py-3 text-sm text-amber-900">
-              <p className="font-semibold">Stripe not configured yet</p>
-              <p className="mt-1">
-                Add <code className="text-xs">STRIPE_SECRET_KEY</code>,{" "}
-                <code className="text-xs">STRIPE_PRICE_SETUP</code>, and{" "}
-                <code className="text-xs">STRIPE_PRICE_MONTHLY</code> to{" "}
-                <code className="text-xs">.env.local</code> to accept payments.
-              </p>
-            </div>
+          {!stripeStatus.ready ? (
+            <StripeSetupChecklist status={stripeStatus} />
           ) : isPro ? (
             <button
               type="button"
@@ -120,6 +114,13 @@ export function BillingPanel({ business, usage, stripeReady, success, canceled }
             >
               {loading === "checkout" ? "Redirecting to Stripe…" : `Upgrade — ${pricingLabel()}`}
             </button>
+          )}
+
+          {stripeStatus.ready && !stripeStatus.webhookReady && (
+            <p className="rounded-xl bg-amber-50 px-3 py-2 text-xs text-amber-900">
+              Payments work, but add webhook + service role so Pro activates automatically after
+              checkout. Run <code>npm run stripe:webhook</code> on your Mac.
+            </p>
           )}
 
           <Link href="/dashboard" className="btn-ghost block w-full py-3 text-center text-sm">
