@@ -81,14 +81,34 @@ export function AuthForm({ mode }: { mode: "login" | "signup" }) {
     setLoading(true);
     setError("");
 
+    if (password.length < 6) {
+      setError("Password must be at least 6 characters.");
+      setLoading(false);
+      return;
+    }
+
     try {
       const supabase = createClient();
-      const result =
-        mode === "signup"
-          ? await supabase.auth.signUp({ email, password })
-          : await supabase.auth.signInWithPassword({ email, password });
 
+      if (mode === "signup") {
+        const result = await supabase.auth.signUp({ email, password });
+        if (result.error) throw result.error;
+
+        if (!result.data.session) {
+          setError(
+            "Account created. Check your email to confirm, then use Log in. Or turn off Confirm email in Supabase → Authentication → Email."
+          );
+          return;
+        }
+
+        router.push("/dashboard");
+        router.refresh();
+        return;
+      }
+
+      const result = await supabase.auth.signInWithPassword({ email, password });
       if (result.error) throw result.error;
+
       router.push("/dashboard");
       router.refresh();
     } catch (err) {
