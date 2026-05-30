@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import Link from "next/link";
 import type { Business, UsageSummary } from "@/lib/types";
 import type { StripeConfigStatus } from "@/lib/stripe-config";
@@ -12,14 +12,54 @@ type Props = {
   usage: UsageSummary;
   stripeStatus: StripeConfigStatus;
   success?: boolean;
+  activated?: boolean;
   canceled?: boolean;
+  sessionId?: string;
 };
 
-export function BillingPanel({ business, usage, stripeStatus, success, canceled }: Props) {
-  const [loading, setLoading] = useState<"checkout" | "portal" | null>(null);
+export function BillingPanel({
+  business,
+  usage,
+  stripeStatus,
+  success,
+  activated,
+  canceled,
+  sessionId,
+}: Props) {
+  const [loading, setLoading] = useState<"checkout" | "portal" | "sync" | null>(null);
   const [error, setError] = useState("");
+  const [syncNote, setSyncNote] = useState("");
 
   const isPro = usage.plan === "active";
+
+  async function activatePro(explicitSessionId?: string) {
+    setLoading("sync");
+    setError("");
+    setSyncNote("");
+    try {
+      const response = await fetch("/api/stripe/sync", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ sessionId: explicitSessionId || sessionId || undefined }),
+      });
+      const data = await response.json();
+      if (!response.ok || !data.updated) {
+        throw new Error(data.error || "Could not activate Pro plan");
+      }
+      window.location.href = "/dashboard/billing?activated=1";
+    } catch (err) {
+      setError(err instanceof Error ? err.message : "Activation failed");
+    } finally {
+      setLoading(null);
+    }
+  }
+
+  useEffect(() => {
+    if (!success || isPro) return;
+    setSyncNote("Checking your payment…");
+    void activatePro(sessionId);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [success, sessionId]);
 
   async function startCheckout() {
     setLoading("checkout");
@@ -53,9 +93,20 @@ export function BillingPanel({ business, usage, stripeStatus, success, canceled 
 
   return (
     <div className="space-y-6">
-      {success && (
+      {success && !isPro && !activated && (
         <div className="rounded-xl bg-emerald-50 px-4 py-3 text-sm text-emerald-800">
-          Payment received — your Pro plan is activating. Refresh in a moment if status hasn&apos;t updated.
+          Payment received — activating your Pro plan…
+          {syncNote && <p className="mt-1 text-emerald-900/80">{syncNote}</p>}
+        </div>
+      )}
+      {activated && (
+        <div className="rounded-xl bg-emerald-50 px-4 py-3 text-sm text-emerald-800">
+          Pro plan is active — you now have 500 reviews per month.
+        </div>
+      )}
+      {success && isPro && !activated && (
+        <div className="rounded-xl bg-emerald-50 px-4 py-3 text-sm text-emerald-800">
+          Payment received — your Pro plan is active.
         </div>
       )}
       {canceled && (
@@ -93,6 +144,24 @@ export function BillingPanel({ business, usage, stripeStatus, success, canceled 
           </div>
 
           {error && <p className="text-sm text-rose-600">{error}</p>}
+
+          {success && !isPro && error && (
+            <button
+              type="button"
+              onClick={() => activatePro()}
+              disabled={loading !== null}
+              className="btn-dark w-full py-3 disabled:opacity-60"
+            >
+              {loading === "sync" ? "Activating…" : "Activate Pro now"}
+            </button>
+          )}
+
+          {success && !isPro && error && (
+            <p className="rounded-xl bg-amber-50 px-3 py-2 text-xs text-amber-900">
+              Also run <code>npm run stripe:webhook</code> in a second terminal, and make sure you ran{" "}
+              <code>migration-billing.sql</code> in Supabase.
+            </p>
+          )}
 
           {stripeStatus.ready && (
             <p className="text-xs text-stone-400">

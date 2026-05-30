@@ -1,47 +1,9 @@
 import { NextResponse } from "next/server";
 import Stripe from "stripe";
-import { createServiceClient } from "@/lib/supabase/admin";
 import { getStripe } from "@/lib/stripe";
+import { updateBusinessFromSubscription } from "@/lib/stripe-subscription";
 
 export const runtime = "nodejs";
-
-async function updateBusinessFromSubscription(
-  businessId: string,
-  subscription: Stripe.Subscription,
-  customerId: string
-) {
-  const admin = createServiceClient();
-  if (!admin) return;
-
-  const status = subscription.status;
-  let plan: "active" | "past_due" | "canceled" | "trial" = "trial";
-
-  if (status === "active" || status === "trialing") plan = "active";
-  else if (status === "past_due" || status === "unpaid") plan = "past_due";
-  else if (status === "canceled" || status === "incomplete_expired") plan = "canceled";
-
-  const payload: Record<string, unknown> = {
-    plan,
-    stripe_customer_id: customerId,
-    stripe_subscription_id: subscription.id,
-    subscription_status: status,
-    updated_at: new Date().toISOString(),
-  };
-
-  if (plan === "active") {
-    const { data: existing } = await admin
-      .from("businesses")
-      .select("setup_paid_at")
-      .eq("id", businessId)
-      .maybeSingle();
-
-    if (!existing?.setup_paid_at) {
-      payload.setup_paid_at = new Date().toISOString();
-    }
-  }
-
-  await admin.from("businesses").update(payload).eq("id", businessId);
-}
 
 export async function POST(request: Request) {
   const stripe = getStripe();
@@ -74,11 +36,15 @@ export async function POST(request: Request) {
 
       if (businessId && session.customer && session.subscription) {
         const subscription = await stripe.subscriptions.retrieve(String(session.subscription));
-        await updateBusinessFromSubscription(
+        const result = await updateBusinessFromSubscription(
           businessId,
           subscription,
           String(session.customer)
         );
+        if (!result.ok) {
+          console.error("[stripe webhook] checkout.session.completed:", result.error);
+          return NextResponse.json({ error: result.error }, { status: 500 });
+        }
       }
     }
 
@@ -91,13 +57,22 @@ export async function POST(request: Request) {
       const customerId = String(subscription.customer);
 
       if (businessId) {
-        await updateBusinessFromSubscription(businessId, subscription, customerId);
+        const result = await updateBusinessFromSubscription(
+          businessId,
+          subscription,
+          customerId
+        );
+        if (!result.ok) {
+          console.error("[stripe webhook] subscription event:", result.error);
+          return NextResponse.json({ error: result.error }, { status: 500 });
+        }
       }
     }
 
     return NextResponse.json({ received: true });
   } catch (error) {
     const message = error instanceof Error ? error.message : "Webhook handler failed";
+    console.error("[stripe webhook]", message);
     return NextResponse.json({ error: message }, { status: 500 });
   }
 }

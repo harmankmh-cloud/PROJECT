@@ -7,7 +7,12 @@ import { redirect } from "next/navigation";
 export default async function BillingPage({
   searchParams,
 }: {
-  searchParams: Promise<{ success?: string; canceled?: string }>;
+  searchParams: Promise<{
+    success?: string;
+    activated?: string;
+    canceled?: string;
+    session_id?: string;
+  }>;
 }) {
   const params = await searchParams;
   const { business, usage } = await getDashboardData();
@@ -31,7 +36,9 @@ export default async function BillingPage({
           usage={usage}
           stripeStatus={stripeStatus}
           success={params.success === "1"}
+          activated={params.activated === "1"}
           canceled={params.canceled === "1"}
+          sessionId={params.session_id}
         />
       </div>
     </main>

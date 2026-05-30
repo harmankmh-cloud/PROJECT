@@ -63,7 +63,7 @@ export async function POST() {
       customer_email: user.email || undefined,
       client_reference_id: business.id,
       line_items: lineItems,
-      success_url: `${appUrl}/dashboard/billing?success=1`,
+      success_url: `${appUrl}/dashboard/billing?success=1&session_id={CHECKOUT_SESSION_ID}`,
       cancel_url: `${appUrl}/dashboard/billing?canceled=1`,
       metadata: {
         business_id: business.id,
