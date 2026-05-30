@@ -3,11 +3,11 @@
   "version": "0.1.0",
   "private": true,
   "scripts": {
-    "dev": "env -u MallocStackLogging -u MallocScribble -u MallocGuardEdges next dev",
-    "dev:lite": "env -u MallocStackLogging -u MallocScribble -u MallocGuardEdges next dev --turbopack false",
-    "stop": "pkill -f 'next dev' || true",
+    "dev": "bash scripts/dev.sh",
+    "smooth": "bash scripts/smooth.sh",
+    "stop": "bash scripts/stop.sh",
     "build": "next build",
-    "start": "next start",
+    "start": "next start -p 3000",
     "lint": "eslint"
   },
   "dependencies": {
