@@ -1,64 +1,125 @@
 "use client";
 
-import QRCode from "qrcode";
 import { useEffect, useState } from "react";
+import { copyToClipboard } from "@/lib/copy";
+import { generateQrOnlyDataUrl, generateQrPosterDataUrl } from "@/lib/qr-poster";
 
 type Props = {
   url: string;
   businessName: string;
 };
 
+function downloadDataUrl(dataUrl: string, filename: string) {
+  const link = document.createElement("a");
+  link.href = dataUrl;
+  link.download = filename;
+  link.click();
+}
+
 export function QrCard({ url, businessName }: Props) {
-  const [dataUrl, setDataUrl] = useState("");
+  const [posterUrl, setPosterUrl] = useState("");
+  const [qrOnlyUrl, setQrOnlyUrl] = useState("");
   const [copied, setCopied] = useState(false);
+  const [error, setError] = useState("");
+  const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    QRCode.toDataURL(url, { margin: 2, width: 280 }).then(setDataUrl).catch(() => undefined);
-  }, [url]);
+    let cancelled = false;
+
+    async function load() {
+      setLoading(true);
+      setError("");
+      try {
+        const [poster, qrOnly] = await Promise.all([
+          generateQrPosterDataUrl({ url, businessName }),
+          generateQrOnlyDataUrl(url),
+        ]);
+        if (!cancelled) {
+          setPosterUrl(poster);
+          setQrOnlyUrl(qrOnly);
+        }
+      } catch {
+        if (!cancelled) setError("Could not generate QR poster. Try refreshing.");
+      } finally {
+        if (!cancelled) setLoading(false);
+      }
+    }
+
+    load();
+    return () => {
+      cancelled = true;
+    };
+  }, [url, businessName]);
 
   async function copyLink() {
+    setError("");
     try {
-      await navigator.clipboard.writeText(url);
+      await copyToClipboard(url);
       setCopied(true);
       setTimeout(() => setCopied(false), 2000);
-    } catch {
-      setCopied(false);
+    } catch (err) {
+      setError(err instanceof Error ? err.message : "Copy failed");
     }
   }
 
-  function downloadQr() {
-    if (!dataUrl) return;
-    const link = document.createElement("a");
-    link.href = dataUrl;
-    link.download = `${businessName.replace(/\s+/g, "-").toLowerCase()}-review-qr.png`;
-    link.click();
+  function downloadPoster() {
+    if (!posterUrl) return;
+    const slug = businessName.replace(/\s+/g, "-").toLowerCase();
+    downloadDataUrl(posterUrl, `${slug}-review-poster.png`);
+  }
+
+  function downloadQrOnly() {
+    if (!qrOnlyUrl) return;
+    const slug = businessName.replace(/\s+/g, "-").toLowerCase();
+    downloadDataUrl(qrOnlyUrl, `${slug}-qr-code.png`);
   }
 
   return (
-    <div className="rounded-3xl border border-zinc-200 bg-white p-6 shadow-sm">
-      <h2 className="text-lg font-semibold text-zinc-900">QR code & review link</h2>
-      <p className="mt-1 text-sm text-zinc-600">Print this or show it at your front desk.</p>
-      {dataUrl ? (
-        <img src={dataUrl} alt={`QR code for ${businessName}`} className="mx-auto mt-4 rounded-xl" />
-      ) : (
-        <div className="mt-4 h-[280px] animate-pulse rounded-xl bg-zinc-100" />
-      )}
-      <p className="mt-4 break-all text-xs text-zinc-500">{url}</p>
-      <div className="mt-4 flex flex-wrap gap-3">
-        <button
-          type="button"
-          onClick={copyLink}
-          className="rounded-2xl border border-zinc-200 px-4 py-2 text-sm font-medium text-zinc-800"
-        >
-          {copied ? "Copied!" : "Copy link"}
-        </button>
-        <button
-          type="button"
-          onClick={downloadQr}
-          disabled={!dataUrl}
-          className="rounded-2xl bg-zinc-900 px-4 py-2 text-sm font-medium text-white disabled:opacity-50"
-        >
-          Download QR
+    <div className="surface-card overflow-hidden">
+      <div className="border-b border-[#e8e2d9] bg-white px-6 py-4">
+        <h2 className="font-display text-lg text-brand-950">Your QR poster</h2>
+        <p className="mt-0.5 text-sm text-stone-500">
+          Includes <span className="font-medium text-brand-950">{businessName}</span> — ready to print
+          at your counter
+        </p>
+      </div>
+      <div className="bg-white p-6">
+        <div className="mx-auto max-w-[320px] overflow-hidden rounded-2xl border border-[#e8e2d9] bg-white shadow-sm">
+          {posterUrl ? (
+            // eslint-disable-next-line @next/next/no-img-element -- poster preview data URL
+            <img
+              src={posterUrl}
+              alt={`Review poster for ${businessName}`}
+              className="mx-auto w-full"
+            />
+          ) : (
+            <div className="aspect-[640/860] animate-pulse bg-cream-dark" />
+          )}
+        </div>
+
+        <p className="mt-4 break-all text-center text-xs text-stone-500">{url}</p>
+        {error && <p className="mt-2 text-center text-xs text-rose-600">{error}</p>}
+
+        <div className="mt-4 flex flex-col gap-2 sm:flex-row">
+          <button
+            type="button"
+            onClick={downloadPoster}
+            disabled={loading || !posterUrl}
+            className="btn-gold flex-1 py-2.5 text-sm disabled:opacity-50"
+          >
+            Download poster
+          </button>
+          <button
+            type="button"
+            onClick={downloadQrOnly}
+            disabled={loading || !qrOnlyUrl}
+            className="btn-ghost flex-1 py-2.5 text-sm disabled:opacity-50"
+          >
+            QR only
+          </button>
+        </div>
+        <button type="button" onClick={copyLink} className="btn-ghost mt-2 w-full py-2.5 text-sm">
+          {copied ? "Link copied!" : "Copy review link"}
         </button>
       </div>
     </div>

@@ -28,6 +28,7 @@ create table if not exists feedback_events (
   id uuid primary key default gen_random_uuid(),
   business_id uuid not null references businesses(id) on delete cascade,
   experience_level text not null,
+  star_rating integer check (star_rating between 1 and 5),
   customer_notes text,
   ai_draft text,
   is_private boolean not null default false,

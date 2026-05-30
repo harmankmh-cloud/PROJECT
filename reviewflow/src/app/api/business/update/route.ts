@@ -1,6 +1,5 @@
 import { NextResponse } from "next/server";
 import { z } from "zod";
-import { slugify } from "@/lib/defaults";
 import { createClient } from "@/lib/supabase/server";
 
 const bodySchema = z.object({
@@ -24,7 +23,7 @@ export async function PATCH(request: Request) {
 
     const { data: business } = await supabase
       .from("businesses")
-      .select("id, slug")
+      .select("id")
       .eq("user_id", user.id)
       .maybeSingle();
 
@@ -32,33 +31,13 @@ export async function PATCH(request: Request) {
       return NextResponse.json({ error: "Business not found" }, { status: 404 });
     }
 
-    const baseSlug = slugify(body.name);
-    let slug = business.slug;
-
-    if (baseSlug && baseSlug !== business.slug) {
-      slug = baseSlug;
-      let suffix = 1;
-      while (true) {
-        const { data: existing } = await supabase
-          .from("businesses")
-          .select("id")
-          .eq("slug", slug)
-          .neq("id", business.id)
-          .maybeSingle();
-        if (!existing) break;
-        slug = `${baseSlug}-${suffix}`;
-        suffix += 1;
-      }
-    }
-
     const { data: updated, error } = await supabase
       .from("businesses")
       .update({
-        name: body.name,
-        business_type: body.businessType,
-        google_review_url: body.googleReviewUrl || null,
+        name: body.name.trim(),
+        business_type: body.businessType.trim(),
+        google_review_url: body.googleReviewUrl?.trim() || null,
         tone: body.tone || "friendly",
-        slug,
         updated_at: new Date().toISOString(),
       })
       .eq("id", business.id)
@@ -72,7 +51,7 @@ export async function PATCH(request: Request) {
     return NextResponse.json({ business: updated });
   } catch (error) {
     if (error instanceof z.ZodError) {
-      return NextResponse.json({ error: "Invalid input" }, { status: 400 });
+      return NextResponse.json({ error: "Invalid input — check Google link format." }, { status: 400 });
     }
     return NextResponse.json({ error: "Failed to update business" }, { status: 500 });
   }

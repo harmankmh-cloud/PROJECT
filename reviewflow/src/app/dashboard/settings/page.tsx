@@ -12,10 +12,17 @@ export default async function SettingsPage() {
   const reviewUrl = `${appUrl}/r/${business.slug}`;
 
   return (
-    <main className="px-6 py-10">
-      <div className="mx-auto grid max-w-6xl gap-8 lg:grid-cols-2">
-        <BusinessSettingsForm business={business} />
-        <QrCard url={reviewUrl} businessName={business.name} />
+    <main className="flex-1 px-4 py-8 sm:px-8">
+      <div className="mx-auto max-w-6xl space-y-8">
+        <header>
+          <p className="text-xs font-semibold uppercase tracking-widest text-gold-600">Settings</p>
+          <h1 className="font-display mt-1 text-3xl text-brand-950">My business</h1>
+          <p className="mt-2 text-sm text-stone-500">Update your name, industry, and Google review link.</p>
+        </header>
+        <div className="grid gap-8 lg:grid-cols-2">
+          <BusinessSettingsForm business={business} />
+          <QrCard url={reviewUrl} businessName={business.name} />
+        </div>
       </div>
     </main>
   );

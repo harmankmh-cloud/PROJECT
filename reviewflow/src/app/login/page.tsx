@@ -1,30 +1,48 @@
 import Link from "next/link";
 import { AuthForm } from "@/components/Forms";
+import { BrandLogo } from "@/components/BrandLogo";
 
 export default function LoginPage() {
   return (
-    <main className="flex min-h-screen items-center justify-center bg-gradient-to-b from-slate-50 to-white px-4 py-12">
-      <div className="w-full max-w-md">
-        <div className="mb-8 text-center">
-          <Link href="/" className="inline-flex items-center gap-2 text-slate-900">
-            <div className="flex h-8 w-8 items-center justify-center rounded-lg bg-emerald-600 text-xs font-bold text-white">
-              R
-            </div>
-            <span className="font-semibold">ReviewFlow</span>
-          </Link>
-        </div>
-        <div className="card p-8">
-          <h1 className="text-2xl font-bold text-slate-900">Welcome back</h1>
-          <p className="mt-1 text-sm text-slate-600">Log in to your dashboard</p>
-          <div className="mt-6">
-            <AuthForm mode="login" />
+    <main className="mesh-bg flex min-h-screen">
+      <div className="hidden w-1/2 flex-col justify-between bg-brand-950 p-12 lg:flex">
+        <BrandLogo href="/" light />
+        <ul className="space-y-4 text-white/80">
+          {[
+            "1–5 star customer flow on any phone",
+            "3 AI review drafts in seconds",
+            "Every rating lands on your dashboard",
+            "Print-ready QR poster + share kit",
+          ].map((item) => (
+            <li key={item} className="flex items-center gap-3 text-sm">
+              <span className="flex h-6 w-6 shrink-0 items-center justify-center rounded-full bg-gold-500/20 text-gold-400">
+                ✓
+              </span>
+              {item}
+            </li>
+          ))}
+        </ul>
+        <p className="text-xs text-white/30">Sign in to your command center</p>
+      </div>
+
+      <div className="flex flex-1 items-center justify-center px-4 py-12">
+        <div className="w-full max-w-md">
+          <div className="mb-8 lg:hidden">
+            <BrandLogo href="/" />
           </div>
-          <p className="mt-6 text-center text-sm text-slate-600">
-            No account?{" "}
-            <Link href="/signup" className="font-medium text-emerald-700 hover:underline">
-              Sign up free
-            </Link>
-          </p>
+          <div className="surface-card p-8">
+            <h1 className="font-display text-2xl text-brand-950">Welcome back</h1>
+            <p className="mt-1 text-sm text-stone-500">Sign in to your command center</p>
+            <div className="mt-6">
+              <AuthForm mode="login" />
+            </div>
+            <p className="mt-6 text-center text-sm text-stone-500">
+              New here?{" "}
+              <Link href="/signup" className="font-semibold text-gold-600 hover:underline">
+                Create free account
+              </Link>
+            </p>
+          </div>
         </div>
       </div>
     </main>
