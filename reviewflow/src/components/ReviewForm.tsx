@@ -3,6 +3,7 @@
 import { useEffect, useMemo, useState } from "react";
 import type { Business, PromptTemplate, StarRating } from "@/lib/types";
 import { QUICK_NOTE_CHIPS, STAR_OPTIONS, starsLabel } from "@/lib/defaults";
+import { buildFallbackReviewOptions } from "@/lib/review-fallbacks";
 
 type Props = {
   business: Business;
@@ -75,9 +76,21 @@ export function ReviewForm({ business, prompts }: Props) {
       const data = await response.json();
       if (!response.ok) throw new Error(data.error || "Could not generate reviews");
 
-      setOptions(data.options || []);
+      let nextOptions: string[] = Array.isArray(data.options)
+        ? data.options.filter((item: unknown) => typeof item === "string" && item.trim().length > 5)
+        : [];
+
+      if (nextOptions.length < 3) {
+        nextOptions = buildFallbackReviewOptions({
+          businessName: business.name,
+          starRating: stars,
+          customerNotes: notes,
+        });
+      }
+
+      setOptions(nextOptions);
       setSelectedIndex(0);
-      setDraft(data.options?.[0] || "");
+      setDraft(nextOptions[0] || "");
       setStep("options");
     } catch (err) {
       setError(err instanceof Error ? err.message : "Something went wrong");

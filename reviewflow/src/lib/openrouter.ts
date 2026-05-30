@@ -1,3 +1,5 @@
+import { buildFallbackReviewOptions } from "./review-fallbacks";
+
 type GenerateReviewInput = {
   businessName: string;
   businessType: string;
@@ -7,75 +9,93 @@ type GenerateReviewInput = {
   customInstruction: string;
 };
 
-const DEFAULT_MODEL = "google/gemini-2.0-flash-001";
+const MODEL_CHAIN = [
+  process.env.OPENROUTER_MODEL,
+  "google/gemini-2.0-flash-001",
+  "openrouter/free",
+].filter(Boolean) as string[];
 
-function getModel() {
-  return process.env.OPENROUTER_MODEL || DEFAULT_MODEL;
+function fallbacks(input: GenerateReviewInput): string[] {
+  return buildFallbackReviewOptions({
+    businessName: input.businessName,
+    starRating: input.starRating,
+    customerNotes: input.customerNotes,
+  });
 }
 
 export async function generateReviewOptions(input: GenerateReviewInput): Promise<string[]> {
+  const backup = fallbacks(input);
   const apiKey = process.env.OPENROUTER_API_KEY;
 
   if (!apiKey) {
-    return [
-      fallbackDraft(input, "warm"),
-      fallbackDraft(input, "short"),
-      fallbackDraft(input, "detailed"),
-    ];
+    return backup;
   }
 
-  const systemPrompt = `You write honest Google reviews for local businesses. Tone: ${input.tone}.
-Rules: never invent facts, never be rude, match the star rating honestly, sound like a real person.
-Return ONLY a JSON array of exactly 3 different review strings. No markdown, no numbering.`;
+  const systemPrompt = `You help customers write honest Google reviews for local businesses.
+Tone: ${input.tone}. Match the star rating honestly. Never invent facts. Never be rude.
+Reply with exactly 3 review options separated by the line --- on its own line. No numbering, no JSON.`;
 
   const userPrompt = `Business: ${input.businessName} (${input.businessType})
 Star rating: ${input.starRating}/5
 Customer notes: ${input.customerNotes}
-Extra instruction: ${input.customInstruction}
+Extra instruction: ${input.customInstruction || "none"}
 
-Write 3 different Google review options (different wording, same honest meaning).`;
+Write 3 different Google review options.`;
 
-  try {
-    const response = await fetch("https://openrouter.ai/api/v1/chat/completions", {
-      method: "POST",
-      headers: {
-        Authorization: `Bearer ${apiKey}`,
-        "Content-Type": "application/json",
-        "HTTP-Referer": process.env.NEXT_PUBLIC_APP_URL || "http://localhost:3000",
-        "X-Title": "ReviewFlow",
-      },
-      body: JSON.stringify({
-        model: getModel(),
-        messages: [
-          { role: "system", content: systemPrompt },
-          { role: "user", content: userPrompt },
-        ],
-        temperature: 0.85,
-        max_tokens: 500,
-      }),
-    });
+  for (const model of MODEL_CHAIN) {
+    try {
+      const response = await fetch("https://openrouter.ai/api/v1/chat/completions", {
+        method: "POST",
+        headers: {
+          Authorization: `Bearer ${apiKey}`,
+          "Content-Type": "application/json",
+          "HTTP-Referer": process.env.NEXT_PUBLIC_APP_URL || "http://localhost:3000",
+          "X-Title": "ReviewFlow",
+        },
+        body: JSON.stringify({
+          model,
+          messages: [
+            { role: "system", content: systemPrompt },
+            { role: "user", content: userPrompt },
+          ],
+          temperature: 0.85,
+          max_tokens: 600,
+        }),
+      });
 
-    if (!response.ok) {
-      return [fallbackDraft(input, "warm"), fallbackDraft(input, "short"), fallbackDraft(input, "detailed")];
+      if (!response.ok) continue;
+
+      const data = await response.json();
+      const raw = data.choices?.[0]?.message?.content?.trim() || "";
+      const parsed = parseReviewOptions(raw);
+
+      if (parsed.length >= 3) return parsed.slice(0, 3);
+      if (parsed.length > 0) {
+        const merged = [...parsed];
+        for (const item of backup) {
+          if (merged.length >= 3) break;
+          if (!merged.includes(item)) merged.push(item);
+        }
+        return merged.slice(0, 3);
+      }
+    } catch {
+      continue;
     }
-
-    const data = await response.json();
-    const raw = data.choices?.[0]?.message?.content?.trim() || "";
-    const parsed = parseOptionsJson(raw);
-
-    if (parsed.length >= 3) return parsed.slice(0, 3);
-    if (parsed.length > 0) {
-      while (parsed.length < 3) parsed.push(fallbackDraft(input, "warm"));
-      return parsed.slice(0, 3);
-    }
-  } catch {
-    /* use fallback below */
   }
 
-  return [fallbackDraft(input, "warm"), fallbackDraft(input, "short"), fallbackDraft(input, "detailed")];
+  return backup;
 }
 
-function parseOptionsJson(raw: string): string[] {
+function parseReviewOptions(raw: string): string[] {
+  if (!raw) return [];
+
+  const byDivider = raw
+    .split(/\n---\n|\n---|\r---\r/)
+    .map((part) => part.replace(/^\d+[\).\s]+/, "").trim())
+    .filter((part) => part.length > 15);
+
+  if (byDivider.length >= 2) return byDivider;
+
   try {
     const cleaned = raw.replace(/^```json?\s*|\s*```$/g, "").trim();
     const parsed = JSON.parse(cleaned);
@@ -83,50 +103,17 @@ function parseOptionsJson(raw: string): string[] {
       return parsed.filter((item) => typeof item === "string" && item.trim().length > 10);
     }
   } catch {
-    const matches = raw.match(/"([^"]{20,})"/g);
-    if (matches) return matches.map((m) => m.slice(1, -1));
+    /* try line split */
   }
+
+  const byLines = raw
+    .split(/\n+/)
+    .map((line) => line.replace(/^\d+[\).\s]+|^[-*]\s+/, "").trim())
+    .filter((line) => line.length > 20);
+
+  if (byLines.length >= 2) return byLines;
+
   return [];
-}
-
-function fallbackDraft(
-  input: GenerateReviewInput,
-  style: "warm" | "short" | "detailed"
-): string {
-  const notes = input.customerNotes.trim();
-  const name = input.businessName;
-  const stars = input.starRating;
-
-  if (stars <= 2) {
-    if (style === "short") return `Disappointed with ${name}. ${notes}`;
-    if (style === "detailed")
-      return `I had a below-average experience at ${name}. ${notes} Hoping they improve.`;
-    return `My visit to ${name} didn't meet expectations. ${notes}`;
-  }
-  if (stars === 3) {
-    if (style === "short") return `${name} was okay. ${notes}`;
-    if (style === "detailed") return `Average experience at ${name}. ${notes} Room to improve.`;
-    return `Decent visit to ${name}. ${notes}`;
-  }
-  if (style === "short") return `Good experience at ${name}. ${notes}`;
-  if (style === "detailed")
-    return `I enjoyed my visit to ${name}. ${notes} Would come back again.`;
-  return `Great experience at ${name}! ${notes} Highly recommend.`;
-}
-
-/** @deprecated Use generateReviewOptions */
-export async function generateReviewDraft(
-  input: GenerateReviewInput & { experienceLevel: string }
-): Promise<string> {
-  const options = await generateReviewOptions({
-    businessName: input.businessName,
-    businessType: input.businessType,
-    tone: input.tone,
-    starRating: input.experienceLevel === "bad" ? 2 : input.experienceLevel === "okay" ? 3 : 5,
-    customerNotes: input.customerNotes,
-    customInstruction: input.customInstruction,
-  });
-  return options[0];
 }
 
 export async function generateSocialCaption(input: {
@@ -134,6 +121,7 @@ export async function generateSocialCaption(input: {
   reviewText: string;
 }): Promise<string> {
   const apiKey = process.env.OPENROUTER_API_KEY;
+  const model = MODEL_CHAIN[0] || "openrouter/free";
 
   if (!apiKey) {
     return `Another happy customer at ${input.businessName}! Thanks for the kind words.`;
@@ -148,7 +136,7 @@ export async function generateSocialCaption(input: {
       "X-Title": "ReviewFlow",
     },
     body: JSON.stringify({
-      model: getModel(),
+      model,
       messages: [
         {
           role: "user",
@@ -173,6 +161,7 @@ export async function generateReviewReply(input: {
   reviewText: string;
 }): Promise<string> {
   const apiKey = process.env.OPENROUTER_API_KEY;
+  const model = MODEL_CHAIN[0] || "openrouter/free";
 
   if (!apiKey) {
     return `Thank you for your feedback! We appreciate you choosing ${input.businessName}.`;
@@ -187,7 +176,7 @@ export async function generateReviewReply(input: {
       "X-Title": "ReviewFlow",
     },
     body: JSON.stringify({
-      model: getModel(),
+      model,
       messages: [
         {
           role: "user",

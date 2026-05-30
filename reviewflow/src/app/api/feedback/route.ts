@@ -1,6 +1,7 @@
 import { NextResponse } from "next/server";
 import { z } from "zod";
 import { starToExperienceLevel } from "@/lib/defaults";
+import { createAnonClient } from "@/lib/supabase/public";
 import { createServiceClient } from "@/lib/supabase/admin";
 
 const bodySchema = z.object({
@@ -11,13 +12,17 @@ const bodySchema = z.object({
   customerName: z.string().optional(),
 });
 
+function getSupabase() {
+  return createServiceClient() ?? createAnonClient();
+}
+
 export async function POST(request: Request) {
   try {
     const body = bodySchema.parse(await request.json());
-    const supabase = createServiceClient();
+    const supabase = getSupabase();
 
     if (!supabase) {
-      return NextResponse.json({ error: "Server not configured" }, { status: 500 });
+      return NextResponse.json({ error: "App not configured" }, { status: 500 });
     }
 
     const experienceLevel = starToExperienceLevel(body.starRating as 1 | 2 | 3 | 4 | 5);
@@ -35,7 +40,15 @@ export async function POST(request: Request) {
     const { error } = await supabase.from("feedback_events").insert(row);
 
     if (error) {
-      return NextResponse.json({ error: error.message }, { status: 500 });
+      if (error.message.includes("star_rating")) {
+        delete row.star_rating;
+        const retry = await supabase.from("feedback_events").insert(row);
+        if (retry.error) {
+          return NextResponse.json({ error: retry.error.message }, { status: 500 });
+        }
+      } else {
+        return NextResponse.json({ error: error.message }, { status: 500 });
+      }
     }
 
     await supabase.from("analytics_events").insert({
