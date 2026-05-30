@@ -5,6 +5,7 @@ import { AiToolsPanel } from "@/components/AiToolsPanel";
 import { ConversionFunnel } from "@/components/ConversionFunnel";
 import { SetupChecklist } from "@/components/SetupChecklist";
 import { ShareKit } from "@/components/ShareKit";
+import { QuickStartGuide } from "@/components/QuickStartGuide";
 import { FeedbackInbox } from "@/components/FeedbackInbox";
 import { getDashboardData } from "@/lib/dashboard-data";
 
@@ -44,6 +45,8 @@ export default async function DashboardPage() {
           hasGoogleLink={!!business.google_review_url}
           hasFeedback={feedback.length > 0}
         />
+
+        <QuickStartGuide reviewUrl={reviewUrl} hasGoogleLink={!!business.google_review_url} />
 
         {stats && <ConversionFunnel stats={stats} />}
 

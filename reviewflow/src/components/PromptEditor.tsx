@@ -2,8 +2,14 @@
 
 import { useState } from "react";
 import type { PromptTemplate } from "@/lib/types";
-import { EXPERIENCE_OPTIONS } from "@/lib/defaults";
 import { createClient } from "@/lib/supabase/client";
+
+const PROMPT_LABELS: Record<string, { stars: string; title: string }> = {
+  great: { stars: "★★★★★", title: "5-star reviews" },
+  good: { stars: "★★★★☆", title: "4-star reviews" },
+  okay: { stars: "★★★☆☆", title: "3-star reviews" },
+  bad: { stars: "★★☆☆☆", title: "1–2 star reviews" },
+};
 
 type Props = {
   businessId: string;
@@ -43,7 +49,7 @@ export function PromptEditor({ businessId, prompts }: Props) {
         if (updateError) throw updateError;
       }
 
-      setMessage("Scripts saved — live on your customer page.");
+      setMessage("Saved — AI will use these for each star rating.");
     } catch (err) {
       setError(err instanceof Error ? err.message : "Could not save prompts");
     } finally {
@@ -54,14 +60,17 @@ export function PromptEditor({ businessId, prompts }: Props) {
   return (
     <div className="space-y-4">
       {items.map((prompt) => {
-        const option = EXPERIENCE_OPTIONS.find((o) => o.level === prompt.experience_level);
+        const label = PROMPT_LABELS[prompt.experience_level] || {
+          stars: "★★★",
+          title: prompt.experience_level,
+        };
         return (
           <div key={prompt.id} className="surface-card overflow-hidden">
             <div className="flex items-center gap-3 border-b border-[#e8e2d9] bg-cream px-6 py-4">
-              <span className="text-2xl">{option?.emoji}</span>
+              <span className="text-lg tracking-wider text-gold-500">{label.stars}</span>
               <div>
-                <h2 className="font-semibold text-brand-950">{option?.label || prompt.experience_level}</h2>
-                <p className="text-xs text-stone-500">{option?.subtitle}</p>
+                <h2 className="font-semibold text-brand-950">{label.title}</h2>
+                <p className="text-xs text-stone-500">AI writing style for this rating</p>
               </div>
             </div>
             <div className="space-y-3 p-6">

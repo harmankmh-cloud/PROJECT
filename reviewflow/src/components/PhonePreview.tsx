@@ -1,6 +1,6 @@
 "use client";
 
-import { EXPERIENCE_OPTIONS } from "@/lib/defaults";
+import { STAR_OPTIONS, starsLabel } from "@/lib/defaults";
 
 export function PhonePreview() {
   return (
@@ -15,34 +15,33 @@ export function PhonePreview() {
             Customer view
           </p>
           <p className="font-display mt-2 text-center text-lg text-brand-950">Mike&apos;s Car Wash</p>
-          <p className="mt-1 text-center text-[11px] text-stone-500">How was your visit?</p>
+          <p className="mt-1 text-center text-[11px] text-stone-500">Tap your star rating</p>
 
-          <div className="mt-4 grid grid-cols-2 gap-2">
-            {EXPERIENCE_OPTIONS.map((option) => (
+          <div className="mt-3 space-y-1.5">
+            {STAR_OPTIONS.slice(0, 3).map((option) => (
               <div
-                key={option.level}
-                className={`rounded-xl border px-2 py-2.5 text-center ${
-                  option.level === "great"
-                    ? "border-amber-300 bg-amber-50 ring-2 ring-amber-400"
+                key={option.stars}
+                className={`flex items-center gap-2 rounded-lg border px-2 py-1.5 ${
+                  option.stars === 5
+                    ? "border-gold-500 bg-amber-50"
                     : "border-[#e8e2d9] bg-white"
                 }`}
               >
-                <span className="text-lg">{option.emoji}</span>
-                <p className="mt-0.5 text-[10px] font-semibold text-brand-950">{option.label}</p>
+                <span className="text-xs tracking-wider text-gold-500">{starsLabel(option.stars)}</span>
+                <span className="text-[10px] font-medium text-brand-950">{option.label}</span>
               </div>
             ))}
           </div>
 
-          <div className="mt-4 rounded-xl border border-[#e8e2d9] bg-white p-3">
-            <p className="text-[10px] text-stone-400">AI review draft</p>
-            <p className="mt-1 text-[11px] leading-relaxed text-stone-600">
-              &ldquo;Fast, spotless wash and friendly team. Best car wash in town — highly
-              recommend.&rdquo;
+          <div className="mt-3 rounded-xl border border-[#e8e2d9] bg-white p-3">
+            <p className="text-[10px] font-bold text-stone-400">3 REVIEW OPTIONS</p>
+            <p className="mt-1 text-[10px] leading-relaxed text-stone-600">
+              Pick one → edit → copy & post on Google
             </p>
           </div>
 
-          <div className="mt-3 rounded-xl bg-brand-950 py-2.5 text-center text-[11px] font-semibold text-white">
-            Copy & open Google
+          <div className="mt-3 rounded-xl bg-brand-950 py-2.5 text-center text-[10px] font-semibold text-white">
+            Copy & open Google ★
           </div>
         </div>
       </div>

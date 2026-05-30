@@ -1,4 +1,4 @@
-import type { ExperienceLevel } from "./types";
+import type { ExperienceLevel, StarRating } from "./types";
 
 export type DefaultPrompt = {
   experience_level: ExperienceLevel;
@@ -10,69 +10,55 @@ export type DefaultPrompt = {
 export const DEFAULT_PROMPTS: DefaultPrompt[] = [
   {
     experience_level: "great",
-    helper_label: "Write my review",
-    placeholder: "What stood out? Fast service, friendly staff, spotless place…",
+    helper_label: "Write my 5-star review",
+    placeholder: "What made it amazing? Service, staff, quality…",
     ai_instruction:
-      "Rewrite the customer notes into a clear, honest, natural Google review. Keep it positive but realistic. Do not invent details that were not mentioned. 2-4 sentences.",
+      "Write an enthusiastic but honest 5-star Google review. 2-4 sentences. Only use facts from the customer notes.",
   },
   {
     experience_level: "good",
-    helper_label: "Polish my review",
-    placeholder: "What went well during your visit?",
+    helper_label: "Write my 4-star review",
+    placeholder: "What did you enjoy about your visit?",
     ai_instruction:
-      "Rewrite the customer notes into a fair, honest Google review. Mostly positive but natural. Do not invent details. 2-4 sentences.",
+      "Write a positive, natural 4-star Google review. Mention one small area to improve if noted. 2-4 sentences. Only use facts from the notes.",
   },
   {
     experience_level: "okay",
-    helper_label: "Help me explain",
-    placeholder: "What was fine, and what could be better?",
+    helper_label: "Write my 3-star review",
+    placeholder: "What was okay and what could be better?",
     ai_instruction:
-      "Rewrite the customer notes into a balanced, honest review. Mention positives and areas to improve without being harsh. Do not invent details. 2-4 sentences.",
+      "Write a balanced, honest 3-star Google review. Mention positives and improvements fairly. 2-4 sentences. Only use facts from the notes.",
   },
   {
     experience_level: "bad",
-    helper_label: "Send private feedback",
-    placeholder: "What went wrong? Be honest — this stays between you and the owner.",
+    helper_label: "Write my honest review",
+    placeholder: "What went wrong? Be specific so the business can improve.",
     ai_instruction:
-      "Rewrite the customer notes into calm private feedback for the business owner. Be honest but not aggressive. Do not escalate tone. Ask for follow-up politely. Do not create a public review draft.",
+      "Write an honest, calm 1-2 star Google review. Be direct but not rude. No insults. 2-4 sentences. Only use facts from the notes. This is a public Google review.",
   },
 ];
 
-export const EXPERIENCE_OPTIONS: {
-  level: ExperienceLevel;
+export const STAR_OPTIONS: {
+  stars: StarRating;
   label: string;
-  emoji: string;
   subtitle: string;
-  color: string;
 }[] = [
-  {
-    level: "great",
-    label: "Loved it",
-    emoji: "🤩",
-    subtitle: "Exceeded expectations",
-    color: "border-amber-300 bg-amber-50 ring-amber-400",
-  },
-  {
-    level: "good",
-    label: "Good visit",
-    emoji: "😊",
-    subtitle: "Happy overall",
-    color: "border-emerald-300 bg-emerald-50 ring-emerald-400",
-  },
-  {
-    level: "okay",
-    label: "It was okay",
-    emoji: "😐",
-    subtitle: "Mixed experience",
-    color: "border-stone-300 bg-stone-50 ring-stone-400",
-  },
-  {
-    level: "bad",
-    label: "Not great",
-    emoji: "😕",
-    subtitle: "Something went wrong",
-    color: "border-rose-300 bg-rose-50 ring-rose-400",
-  },
+  { stars: 5, label: "Excellent", subtitle: "5 stars" },
+  { stars: 4, label: "Good", subtitle: "4 stars" },
+  { stars: 3, label: "Average", subtitle: "3 stars" },
+  { stars: 2, label: "Below average", subtitle: "2 stars" },
+  { stars: 1, label: "Poor", subtitle: "1 star" },
+];
+
+export const QUICK_NOTE_CHIPS = [
+  "Great service",
+  "Friendly staff",
+  "Fast & efficient",
+  "Clean place",
+  "Good value",
+  "Long wait",
+  "Poor communication",
+  "Quality issue",
 ];
 
 export const INDUSTRY_OPTIONS = [
@@ -83,8 +69,20 @@ export const INDUSTRY_OPTIONS = [
   { id: "gym", label: "Gym / fitness", emoji: "💪" },
   { id: "cleaning", label: "Cleaning", emoji: "🧹" },
   { id: "retail", label: "Retail shop", emoji: "🛍️" },
-  { id: "other", label: "Other local business", emoji: "📍" },
+  { id: "other", label: "Other", emoji: "📍" },
 ] as const;
+
+/** Maps 1–5 stars to prompt bucket used in the database. */
+export function starToExperienceLevel(stars: StarRating): ExperienceLevel {
+  if (stars >= 5) return "great";
+  if (stars === 4) return "good";
+  if (stars === 3) return "okay";
+  return "bad";
+}
+
+export function starsLabel(stars: number): string {
+  return "★".repeat(stars) + "☆".repeat(5 - stars);
+}
 
 export function slugify(name: string): string {
   return name
@@ -94,3 +92,12 @@ export function slugify(name: string): string {
     .replace(/^-+|-+$/g, "")
     .slice(0, 48);
 }
+
+/** @deprecated Use STAR_OPTIONS */
+export const EXPERIENCE_OPTIONS = STAR_OPTIONS.map((s) => ({
+  level: starToExperienceLevel(s.stars),
+  label: s.label,
+  emoji: ["🤩", "😊", "😐", "😕", "😞"][5 - s.stars],
+  subtitle: s.subtitle,
+  color: "",
+}));

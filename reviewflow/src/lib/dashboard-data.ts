@@ -32,7 +32,7 @@ export async function getDashboardData() {
     return { user, business: null, prompts: [], feedback: [], stats: null };
   }
 
-  const [promptsResult, feedbackResult, pageViews, googleClicks, publicDrafts, privateFeedback] =
+  const [promptsResult, feedbackResult, pageViews, googleClicks, publicDrafts, ownerNotifications] =
     await Promise.all([
       supabase.from("prompt_templates").select("*").eq("business_id", business.id),
       supabase
@@ -40,17 +40,19 @@ export async function getDashboardData() {
         .select("*")
         .eq("business_id", business.id)
         .order("created_at", { ascending: false })
-        .limit(20),
+        .limit(30),
       countEvents(business.id, "page_view"),
       countEvents(business.id, "google_click"),
       countEvents(business.id, "copy_review"),
-      countEvents(business.id, "private_feedback"),
+      countEvents(business.id, "owner_notification"),
     ]);
+
+  const legacyPrivate = await countEvents(business.id, "private_feedback");
 
   const stats: DashboardStats = {
     pageViews,
     googleClicks,
-    privateFeedback,
+    ownerNotifications: ownerNotifications + legacyPrivate,
     publicDrafts,
   };
 

@@ -27,9 +27,8 @@ export default function HomePage() {
             <span className="text-gold-600">awkward moments</span>
           </h1>
           <p className="mt-5 max-w-lg text-lg leading-relaxed text-stone-600">
-            Customers scan your QR, pick an emoji for their visit, and get a ready-to-post Google
-            review in 30 seconds. Unhappy visits go private — so you fix problems before they hit
-            Google.
+            Customers tap 1–5 stars, get 3 AI review options in seconds, and post on Google. Every
+            rating — good or bad — also lands on your dashboard so you always know what happened.
           </p>
           <div className="mt-8 flex flex-col gap-3 sm:flex-row">
             <Link href="/signup" className="btn-gold px-8 py-3.5 text-base">

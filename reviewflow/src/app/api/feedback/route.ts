@@ -1,13 +1,13 @@
 import { NextResponse } from "next/server";
 import { z } from "zod";
+import { starToExperienceLevel } from "@/lib/defaults";
 import { createServiceClient } from "@/lib/supabase/admin";
 
 const bodySchema = z.object({
   businessId: z.string().uuid(),
-  experienceLevel: z.enum(["great", "good", "okay", "bad"]),
+  starRating: z.number().int().min(1).max(5),
   customerNotes: z.string().optional(),
-  aiDraft: z.string().optional(),
-  isPrivate: z.boolean(),
+  aiDraft: z.string().min(3),
   customerName: z.string().optional(),
 });
 
@@ -20,14 +20,19 @@ export async function POST(request: Request) {
       return NextResponse.json({ error: "Server not configured" }, { status: 500 });
     }
 
-    const { error } = await supabase.from("feedback_events").insert({
+    const experienceLevel = starToExperienceLevel(body.starRating as 1 | 2 | 3 | 4 | 5);
+
+    const row: Record<string, unknown> = {
       business_id: body.businessId,
-      experience_level: body.experienceLevel,
+      experience_level: experienceLevel,
       customer_notes: body.customerNotes || null,
-      ai_draft: body.aiDraft || null,
-      is_private: body.isPrivate,
+      ai_draft: body.aiDraft,
+      is_private: false,
       customer_name: body.customerName || null,
-    });
+      star_rating: body.starRating,
+    };
+
+    const { error } = await supabase.from("feedback_events").insert(row);
 
     if (error) {
       return NextResponse.json({ error: error.message }, { status: 500 });
@@ -35,7 +40,7 @@ export async function POST(request: Request) {
 
     await supabase.from("analytics_events").insert({
       business_id: body.businessId,
-      event_type: body.isPrivate ? "private_feedback" : "copy_review",
+      event_type: "owner_notification",
     });
 
     return NextResponse.json({ ok: true });

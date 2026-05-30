@@ -1,4 +1,5 @@
 export type ExperienceLevel = "great" | "good" | "okay" | "bad";
+export type StarRating = 1 | 2 | 3 | 4 | 5;
 
 export type Business = {
   id: string;
@@ -25,6 +26,7 @@ export type FeedbackEvent = {
   id: string;
   business_id: string;
   experience_level: ExperienceLevel;
+  star_rating: number | null;
   customer_notes: string | null;
   ai_draft: string | null;
   is_private: boolean;
@@ -35,6 +37,6 @@ export type FeedbackEvent = {
 export type DashboardStats = {
   pageViews: number;
   googleClicks: number;
-  privateFeedback: number;
+  ownerNotifications: number;
   publicDrafts: number;
 };

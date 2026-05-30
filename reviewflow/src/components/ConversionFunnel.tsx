@@ -2,10 +2,10 @@ import type { DashboardStats } from "@/lib/types";
 
 export function ConversionFunnel({ stats }: { stats: DashboardStats }) {
   const steps = [
-    { label: "QR scans", value: stats.pageViews, color: "bg-brand-800" },
-    { label: "Drafts copied", value: stats.publicDrafts, color: "bg-gold-500" },
+    { label: "Page visits", value: stats.pageViews, color: "bg-brand-800" },
+    { label: "Reviews copied", value: stats.publicDrafts, color: "bg-gold-500" },
     { label: "Google opened", value: stats.googleClicks, color: "bg-emerald-500" },
-    { label: "Private saved", value: stats.privateFeedback, color: "bg-rose-400" },
+    { label: "Owner notified", value: stats.ownerNotifications, color: "bg-violet-500" },
   ];
 
   const max = Math.max(...steps.map((s) => s.value), 1);
@@ -18,12 +18,12 @@ export function ConversionFunnel({ stats }: { stats: DashboardStats }) {
         <div>
           <h2 className="font-display text-xl text-brand-950">Review funnel</h2>
           <p className="mt-1 text-sm text-stone-500">
-            How customers move from scan to Google review
+            Visits → Google reviews → owner dashboard (all star ratings)
           </p>
         </div>
         <div className="rounded-xl bg-brand-950 px-4 py-2 text-center">
           <p className="text-2xl font-bold text-gold-400">{conversion}%</p>
-          <p className="text-xs text-white/60">Scan → Google</p>
+          <p className="text-xs text-white/60">Visit → Google</p>
         </div>
       </div>
 
