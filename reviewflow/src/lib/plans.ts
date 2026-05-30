@@ -28,3 +28,7 @@ export function planFromSubscriptionStatus(
 export function monthlyLimitForPlan(plan: PlanId): number {
   return PLAN_LIMITS[plan]?.monthlyReviews ?? PLAN_LIMITS.trial.monthlyReviews;
 }
+
+export function pricingLabel() {
+  return `$${PRICING.setupUsd} setup + $${PRICING.monthlyUsd}/mo`;
+}

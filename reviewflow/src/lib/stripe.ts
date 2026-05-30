@@ -1,5 +1,6 @@
+import "server-only";
+
 import Stripe from "stripe";
-import { PRICING } from "./plans";
 
 export function isStripeConfigured(): boolean {
   return !!(
@@ -19,9 +20,4 @@ export function stripePriceIds() {
     setup: process.env.STRIPE_PRICE_SETUP || "",
     monthly: process.env.STRIPE_PRICE_MONTHLY || "",
   };
-}
-
-/** Human-readable pricing for UI when Stripe Price IDs are not set yet */
-export function pricingLabel() {
-  return `$${PRICING.setupUsd} setup + $${PRICING.monthlyUsd}/mo`;
 }

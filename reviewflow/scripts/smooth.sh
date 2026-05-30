@@ -15,6 +15,9 @@ filter_noise() {
   done
 }
 
+echo "Installing dependencies (if needed)..."
+npm install --no-fund --no-audit 2>&1 | filter_noise
+
 echo "Building once (takes ~30 seconds)..."
 npm run build 2>&1 | filter_noise
 

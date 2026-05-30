@@ -3,8 +3,7 @@
 import { useState } from "react";
 import Link from "next/link";
 import type { Business, UsageSummary } from "@/lib/types";
-import { PLAN_LIMITS } from "@/lib/plans";
-import { pricingLabel } from "@/lib/stripe";
+import { PLAN_LIMITS, pricingLabel } from "@/lib/plans";
 
 type Props = {
   business: Business;
