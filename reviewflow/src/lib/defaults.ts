@@ -10,40 +10,81 @@ export type DefaultPrompt = {
 export const DEFAULT_PROMPTS: DefaultPrompt[] = [
   {
     experience_level: "great",
-    helper_label: "Improve my review",
-    placeholder: "What did you like? Example: fast service, friendly staff, clean place",
+    helper_label: "Write my review",
+    placeholder: "What stood out? Fast service, friendly staff, spotless place…",
     ai_instruction:
       "Rewrite the customer notes into a clear, honest, natural Google review. Keep it positive but realistic. Do not invent details that were not mentioned. 2-4 sentences.",
   },
   {
     experience_level: "good",
-    helper_label: "Make my review sound better",
-    placeholder: "What went well? Example: good service, helpful team",
+    helper_label: "Polish my review",
+    placeholder: "What went well during your visit?",
     ai_instruction:
       "Rewrite the customer notes into a fair, honest Google review. Mostly positive but natural. Do not invent details. 2-4 sentences.",
   },
   {
     experience_level: "okay",
-    helper_label: "Make my feedback clear",
-    placeholder: "What was okay and what could improve?",
+    helper_label: "Help me explain",
+    placeholder: "What was fine, and what could be better?",
     ai_instruction:
       "Rewrite the customer notes into a balanced, honest review. Mention positives and areas to improve without being harsh. Do not invent details. 2-4 sentences.",
   },
   {
     experience_level: "bad",
-    helper_label: "Help me explain the issue privately",
-    placeholder: "What went wrong? Example: long wait, poor communication",
+    helper_label: "Send private feedback",
+    placeholder: "What went wrong? Be honest — this stays between you and the owner.",
     ai_instruction:
       "Rewrite the customer notes into calm private feedback for the business owner. Be honest but not aggressive. Do not escalate tone. Ask for follow-up politely. Do not create a public review draft.",
   },
 ];
 
-export const EXPERIENCE_OPTIONS: { level: ExperienceLevel; label: string }[] = [
-  { level: "great", label: "Great" },
-  { level: "good", label: "Good" },
-  { level: "okay", label: "Okay" },
-  { level: "bad", label: "Not good" },
+export const EXPERIENCE_OPTIONS: {
+  level: ExperienceLevel;
+  label: string;
+  emoji: string;
+  subtitle: string;
+  color: string;
+}[] = [
+  {
+    level: "great",
+    label: "Loved it",
+    emoji: "🤩",
+    subtitle: "Exceeded expectations",
+    color: "border-amber-300 bg-amber-50 ring-amber-400",
+  },
+  {
+    level: "good",
+    label: "Good visit",
+    emoji: "😊",
+    subtitle: "Happy overall",
+    color: "border-emerald-300 bg-emerald-50 ring-emerald-400",
+  },
+  {
+    level: "okay",
+    label: "It was okay",
+    emoji: "😐",
+    subtitle: "Mixed experience",
+    color: "border-stone-300 bg-stone-50 ring-stone-400",
+  },
+  {
+    level: "bad",
+    label: "Not great",
+    emoji: "😕",
+    subtitle: "Something went wrong",
+    color: "border-rose-300 bg-rose-50 ring-rose-400",
+  },
 ];
+
+export const INDUSTRY_OPTIONS = [
+  { id: "car-wash", label: "Car wash", emoji: "🚗" },
+  { id: "barber", label: "Barber / salon", emoji: "✂️" },
+  { id: "restaurant", label: "Restaurant", emoji: "🍽️" },
+  { id: "dental", label: "Dental / medical", emoji: "🦷" },
+  { id: "gym", label: "Gym / fitness", emoji: "💪" },
+  { id: "cleaning", label: "Cleaning", emoji: "🧹" },
+  { id: "retail", label: "Retail shop", emoji: "🛍️" },
+  { id: "other", label: "Other local business", emoji: "📍" },
+] as const;
 
 export function slugify(name: string): string {
   return name

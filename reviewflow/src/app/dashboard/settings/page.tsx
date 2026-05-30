@@ -12,7 +12,7 @@ export default async function SettingsPage() {
   const reviewUrl = `${appUrl}/r/${business.slug}`;
 
   return (
-    <main className="px-6 py-10">
+    <main className="flex-1 px-4 py-8 sm:px-8">
       <div className="mx-auto grid max-w-6xl gap-8 lg:grid-cols-2">
         <BusinessSettingsForm business={business} />
         <QrCard url={reviewUrl} businessName={business.name} />

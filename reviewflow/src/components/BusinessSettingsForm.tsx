@@ -28,7 +28,7 @@ export function BusinessSettingsForm({ business }: { business: Business }) {
       });
       const data = await response.json();
       if (!response.ok) throw new Error(data.error || "Update failed");
-      setMessage("Settings saved.");
+      setMessage("Saved — your review page is updated.");
       router.refresh();
     } catch (err) {
       setError(err instanceof Error ? err.message : "Update failed");
@@ -38,65 +38,50 @@ export function BusinessSettingsForm({ business }: { business: Business }) {
   }
 
   return (
-    <form onSubmit={handleSubmit} className="space-y-4 rounded-3xl border border-zinc-200 bg-white p-6 shadow-sm">
-      <div>
-        <h1 className="text-2xl font-semibold text-zinc-900">Business settings</h1>
-        <p className="mt-1 text-sm text-zinc-600">Update your review page details and Google review link.</p>
+    <form onSubmit={handleSubmit} className="surface-card overflow-hidden">
+      <div className="border-b border-[#e8e2d9] bg-brand-950 px-6 py-4">
+        <h1 className="font-display text-lg text-white">Business profile</h1>
+        <p className="mt-0.5 text-sm text-white/60">Changes update your live customer page</p>
       </div>
+      <div className="space-y-4 p-6">
+        <label className="block space-y-2 text-sm">
+          <span className="font-semibold text-brand-950">Business name</span>
+          <input value={name} onChange={(e) => setName(e.target.value)} className="input-field" required />
+        </label>
+        <label className="block space-y-2 text-sm">
+          <span className="font-semibold text-brand-950">Business type</span>
+          <input
+            value={businessType}
+            onChange={(e) => setBusinessType(e.target.value)}
+            className="input-field"
+            required
+          />
+        </label>
+        <label className="block space-y-2 text-sm">
+          <span className="font-semibold text-brand-950">AI writing tone</span>
+          <select value={tone} onChange={(e) => setTone(e.target.value)} className="input-field">
+            <option value="friendly">Friendly & warm</option>
+            <option value="professional">Professional</option>
+            <option value="casual">Casual & fun</option>
+          </select>
+        </label>
+        <label className="block space-y-2 text-sm">
+          <span className="font-semibold text-brand-950">Google review link</span>
+          <input
+            value={googleReviewUrl}
+            onChange={(e) => setGoogleReviewUrl(e.target.value)}
+            placeholder="https://g.page/r/..."
+            className="input-field"
+          />
+        </label>
 
-      <label className="block space-y-2 text-sm">
-        <span className="font-medium text-zinc-800">Business name</span>
-        <input
-          value={name}
-          onChange={(e) => setName(e.target.value)}
-          className="w-full rounded-2xl border border-zinc-200 px-4 py-3"
-          required
-        />
-      </label>
+        {error && <p className="text-sm text-rose-600">{error}</p>}
+        {message && <p className="text-sm text-emerald-700">{message}</p>}
 
-      <label className="block space-y-2 text-sm">
-        <span className="font-medium text-zinc-800">Business type</span>
-        <input
-          value={businessType}
-          onChange={(e) => setBusinessType(e.target.value)}
-          className="w-full rounded-2xl border border-zinc-200 px-4 py-3"
-          required
-        />
-      </label>
-
-      <label className="block space-y-2 text-sm">
-        <span className="font-medium text-zinc-800">Tone</span>
-        <select
-          value={tone}
-          onChange={(e) => setTone(e.target.value)}
-          className="w-full rounded-2xl border border-zinc-200 px-4 py-3"
-        >
-          <option value="friendly">Friendly</option>
-          <option value="professional">Professional</option>
-          <option value="casual">Casual</option>
-        </select>
-      </label>
-
-      <label className="block space-y-2 text-sm">
-        <span className="font-medium text-zinc-800">Google review link</span>
-        <input
-          value={googleReviewUrl}
-          onChange={(e) => setGoogleReviewUrl(e.target.value)}
-          placeholder="https://g.page/r/..."
-          className="w-full rounded-2xl border border-zinc-200 px-4 py-3"
-        />
-      </label>
-
-      {error && <p className="text-sm text-red-600">{error}</p>}
-      {message && <p className="text-sm text-emerald-700">{message}</p>}
-
-      <button
-        type="submit"
-        disabled={loading}
-        className="rounded-2xl bg-emerald-600 px-5 py-3 text-sm font-semibold text-white disabled:opacity-60"
-      >
-        {loading ? "Saving..." : "Save settings"}
-      </button>
+        <button type="submit" disabled={loading} className="btn-gold w-full py-3 disabled:opacity-60">
+          {loading ? "Saving…" : "Save profile"}
+        </button>
+      </div>
     </form>
   );
 }

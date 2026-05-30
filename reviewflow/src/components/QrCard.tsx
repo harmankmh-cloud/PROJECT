@@ -13,7 +13,13 @@ export function QrCard({ url, businessName }: Props) {
   const [copied, setCopied] = useState(false);
 
   useEffect(() => {
-    QRCode.toDataURL(url, { margin: 2, width: 280 }).then(setDataUrl).catch(() => undefined);
+    QRCode.toDataURL(url, {
+      margin: 2,
+      width: 240,
+      color: { dark: "#0c1222", light: "#faf8f500" },
+    })
+      .then(setDataUrl)
+      .catch(() => undefined);
   }, [url]);
 
   async function copyLink() {
@@ -35,31 +41,37 @@ export function QrCard({ url, businessName }: Props) {
   }
 
   return (
-    <div className="rounded-3xl border border-zinc-200 bg-white p-6 shadow-sm">
-      <h2 className="text-lg font-semibold text-zinc-900">QR code & review link</h2>
-      <p className="mt-1 text-sm text-zinc-600">Print this or show it at your front desk.</p>
-      {dataUrl ? (
-        <img src={dataUrl} alt={`QR code for ${businessName}`} className="mx-auto mt-4 rounded-xl" />
-      ) : (
-        <div className="mt-4 h-[280px] animate-pulse rounded-xl bg-zinc-100" />
-      )}
-      <p className="mt-4 break-all text-xs text-zinc-500">{url}</p>
-      <div className="mt-4 flex flex-wrap gap-3">
-        <button
-          type="button"
-          onClick={copyLink}
-          className="rounded-2xl border border-zinc-200 px-4 py-2 text-sm font-medium text-zinc-800"
-        >
-          {copied ? "Copied!" : "Copy link"}
-        </button>
-        <button
-          type="button"
-          onClick={downloadQr}
-          disabled={!dataUrl}
-          className="rounded-2xl bg-zinc-900 px-4 py-2 text-sm font-medium text-white disabled:opacity-50"
-        >
-          Download QR
-        </button>
+    <div className="surface-card overflow-hidden">
+      <div className="border-b border-[#e8e2d9] bg-brand-950 px-6 py-4">
+        <h2 className="font-display text-lg text-white">Your QR code</h2>
+        <p className="mt-0.5 text-sm text-white/60">Print, laminate, or show on a tablet</p>
+      </div>
+      <div className="p-6">
+        <div className="mx-auto max-w-[260px] rounded-2xl border-2 border-dashed border-[#e8e2d9] bg-cream p-4">
+          {dataUrl ? (
+            <img src={dataUrl} alt={`QR code for ${businessName}`} className="mx-auto w-full" />
+          ) : (
+            <div className="aspect-square animate-pulse rounded-xl bg-cream-dark" />
+          )}
+          <p className="mt-3 text-center font-display text-sm text-brand-950">{businessName}</p>
+          <p className="text-center text-[10px] uppercase tracking-widest text-stone-400">
+            Scan to review
+          </p>
+        </div>
+        <p className="mt-4 break-all text-center text-xs text-stone-500">{url}</p>
+        <div className="mt-4 flex gap-2">
+          <button type="button" onClick={copyLink} className="btn-ghost flex-1 py-2.5 text-sm">
+            {copied ? "Copied!" : "Copy link"}
+          </button>
+          <button
+            type="button"
+            onClick={downloadQr}
+            disabled={!dataUrl}
+            className="btn-gold flex-1 py-2.5 text-sm disabled:opacity-50"
+          >
+            Download PNG
+          </button>
+        </div>
       </div>
     </div>
   );

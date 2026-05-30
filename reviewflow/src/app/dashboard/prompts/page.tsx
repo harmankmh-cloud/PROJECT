@@ -25,14 +25,17 @@ export default async function PromptsPage() {
     .order("experience_level");
 
   return (
-    <main className="px-6 py-10">
+    <main className="flex-1 px-4 py-8 sm:px-8">
       <div className="mx-auto max-w-4xl space-y-6">
-        <div>
-          <h1 className="text-3xl font-bold tracking-tight text-slate-900">Review prompts</h1>
-          <p className="mt-2 text-sm text-slate-600">
-            Customize the button text and AI instructions for each experience level.
+        <header>
+          <p className="text-xs font-semibold uppercase tracking-widest text-gold-600">
+            Customization
           </p>
-        </div>
+          <h1 className="font-display mt-1 text-3xl text-brand-950">Review scripts</h1>
+          <p className="mt-2 text-sm text-stone-500">
+            Control what customers see and how AI writes for each experience level.
+          </p>
+        </header>
         <PromptEditor businessId={business.id} prompts={prompts || []} />
       </div>
     </main>

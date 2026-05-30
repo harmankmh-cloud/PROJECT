@@ -6,10 +6,6 @@ type Props = {
   initialText?: string;
 };
 
-async function copyText(text: string) {
-  await navigator.clipboard.writeText(text);
-}
-
 export function AiToolsPanel({ initialText = "" }: Props) {
   const [text, setText] = useState(initialText);
   const [caption, setCaption] = useState("");
@@ -46,76 +42,92 @@ export function AiToolsPanel({ initialText = "" }: Props) {
   }
 
   async function handleCopy(type: "caption" | "reply", value: string) {
-    await copyText(value);
+    await navigator.clipboard.writeText(value);
     setCopied(type);
     setTimeout(() => setCopied(null), 2000);
   }
 
   return (
-    <div className="grid gap-6 lg:grid-cols-2">
-      <div className="rounded-3xl border border-zinc-200 bg-white p-6 shadow-sm">
-        <h2 className="text-lg font-semibold text-zinc-900">Marketing helpers</h2>
-        <p className="mt-1 text-sm text-zinc-600">
-          Paste a good review and create social posts or public replies.
+    <div className="surface-card overflow-hidden">
+      <div className="border-b border-[#e8e2d9] bg-brand-950 px-6 py-4">
+        <h2 className="font-display text-lg text-white">Marketing studio</h2>
+        <p className="mt-0.5 text-sm text-white/60">
+          Turn a great review into social posts and public replies
         </p>
-        <textarea
-          value={text}
-          onChange={(e) => setText(e.target.value)}
-          className="mt-4 min-h-32 w-full rounded-2xl border border-zinc-200 px-4 py-3 text-sm"
-          placeholder="Paste a customer review here"
-        />
-        {error && <p className="mt-3 text-sm text-red-600">{error}</p>}
-        <div className="mt-4 flex flex-wrap gap-3">
-          <button
-            type="button"
-            onClick={() => generate("caption")}
-            disabled={loading !== null}
-            className="rounded-2xl bg-emerald-600 px-4 py-2 text-sm font-semibold text-white disabled:opacity-60"
-          >
-            {loading === "caption" ? "Working..." : "Make social caption"}
-          </button>
-          <button
-            type="button"
-            onClick={() => generate("reply")}
-            disabled={loading !== null}
-            className="rounded-2xl border border-zinc-300 px-4 py-2 text-sm font-medium text-zinc-800 disabled:opacity-60"
-          >
-            {loading === "reply" ? "Working..." : "Make review reply"}
-          </button>
-        </div>
       </div>
+      <div className="grid gap-0 lg:grid-cols-2">
+        <div className="border-b border-[#e8e2d9] p-6 lg:border-b-0 lg:border-r">
+          <textarea
+            value={text}
+            onChange={(e) => setText(e.target.value)}
+            className="input-field min-h-36 resize-y"
+            placeholder="Paste a 5-star review here…"
+          />
+          {error && <p className="mt-3 text-sm text-rose-600">{error}</p>}
+          <div className="mt-4 flex flex-wrap gap-2">
+            <button
+              type="button"
+              onClick={() => generate("caption")}
+              disabled={loading !== null}
+              className="btn-gold py-2.5 text-sm disabled:opacity-60"
+            >
+              {loading === "caption" ? "Writing…" : "Instagram caption"}
+            </button>
+            <button
+              type="button"
+              onClick={() => generate("reply")}
+              disabled={loading !== null}
+              className="btn-ghost py-2.5 text-sm disabled:opacity-60"
+            >
+              {loading === "reply" ? "Writing…" : "Owner reply"}
+            </button>
+          </div>
+        </div>
 
-      <div className="space-y-4">
-        {caption && (
-          <div className="rounded-3xl border border-zinc-200 bg-zinc-50 p-4">
-            <div className="flex items-center justify-between gap-3">
-              <p className="text-sm font-medium text-zinc-800">Social caption</p>
-              <button
-                type="button"
-                onClick={() => handleCopy("caption", caption)}
-                className="text-sm font-medium text-emerald-700"
-              >
-                {copied === "caption" ? "Copied!" : "Copy"}
-              </button>
+        <div className="space-y-4 bg-cream p-6">
+          {caption ? (
+            <div className="rounded-xl border border-[#e8e2d9] bg-white p-4">
+              <div className="flex items-center justify-between gap-2">
+                <p className="text-xs font-bold uppercase tracking-wide text-stone-400">Caption</p>
+                <button
+                  type="button"
+                  onClick={() => handleCopy("caption", caption)}
+                  className="text-sm font-semibold text-gold-600"
+                >
+                  {copied === "caption" ? "Copied!" : "Copy"}
+                </button>
+              </div>
+              <p className="mt-2 whitespace-pre-wrap text-sm leading-relaxed text-stone-700">
+                {caption}
+              </p>
             </div>
-            <p className="mt-2 whitespace-pre-wrap text-sm text-zinc-700">{caption}</p>
-          </div>
-        )}
-        {reply && (
-          <div className="rounded-3xl border border-zinc-200 bg-zinc-50 p-4">
-            <div className="flex items-center justify-between gap-3">
-              <p className="text-sm font-medium text-zinc-800">Review reply</p>
-              <button
-                type="button"
-                onClick={() => handleCopy("reply", reply)}
-                className="text-sm font-medium text-emerald-700"
-              >
-                {copied === "reply" ? "Copied!" : "Copy"}
-              </button>
+          ) : (
+            <div className="rounded-xl border border-dashed border-[#e8e2d9] p-6 text-center text-sm text-stone-400">
+              Caption appears here
             </div>
-            <p className="mt-2 whitespace-pre-wrap text-sm text-zinc-700">{reply}</p>
-          </div>
-        )}
+          )}
+          {reply ? (
+            <div className="rounded-xl border border-[#e8e2d9] bg-white p-4">
+              <div className="flex items-center justify-between gap-2">
+                <p className="text-xs font-bold uppercase tracking-wide text-stone-400">Reply</p>
+                <button
+                  type="button"
+                  onClick={() => handleCopy("reply", reply)}
+                  className="text-sm font-semibold text-gold-600"
+                >
+                  {copied === "reply" ? "Copied!" : "Copy"}
+                </button>
+              </div>
+              <p className="mt-2 whitespace-pre-wrap text-sm leading-relaxed text-stone-700">
+                {reply}
+              </p>
+            </div>
+          ) : (
+            <div className="rounded-xl border border-dashed border-[#e8e2d9] p-6 text-center text-sm text-stone-400">
+              Reply appears here
+            </div>
+          )}
+        </div>
       </div>
     </div>
   );

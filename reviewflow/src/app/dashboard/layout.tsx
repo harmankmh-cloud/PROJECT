@@ -1,6 +1,6 @@
 import { redirect } from "next/navigation";
 import { createClient } from "@/lib/supabase/server";
-import { DashboardNav } from "@/components/DashboardNav";
+import { DashboardShell } from "@/components/DashboardShell";
 
 export default async function DashboardLayout({
   children,
@@ -21,9 +21,8 @@ export default async function DashboardLayout({
     .maybeSingle();
 
   return (
-    <div className="min-h-screen bg-zinc-50">
-      <DashboardNav businessName={business?.name} reviewSlug={business?.slug} />
+    <DashboardShell businessName={business?.name} reviewSlug={business?.slug}>
       {children}
-    </div>
+    </DashboardShell>
   );
 }

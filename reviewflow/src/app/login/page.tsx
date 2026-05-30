@@ -1,30 +1,40 @@
 import Link from "next/link";
 import { AuthForm } from "@/components/Forms";
+import { BrandLogo } from "@/components/BrandLogo";
 
 export default function LoginPage() {
   return (
-    <main className="flex min-h-screen items-center justify-center bg-gradient-to-b from-slate-50 to-white px-4 py-12">
-      <div className="w-full max-w-md">
-        <div className="mb-8 text-center">
-          <Link href="/" className="inline-flex items-center gap-2 text-slate-900">
-            <div className="flex h-8 w-8 items-center justify-center rounded-lg bg-emerald-600 text-xs font-bold text-white">
-              R
-            </div>
-            <span className="font-semibold">ReviewFlow</span>
-          </Link>
+    <main className="mesh-bg flex min-h-screen">
+      <div className="hidden w-1/2 flex-col justify-between bg-brand-950 p-12 lg:flex">
+        <BrandLogo href="/" light />
+        <div>
+          <blockquote className="font-display text-3xl leading-snug text-white">
+            &ldquo;We went from 12 Google reviews to 47 in two months — without awkward asks at
+            checkout.&rdquo;
+          </blockquote>
+          <p className="mt-4 text-sm text-white/50">— Local business owner, BC</p>
         </div>
-        <div className="card p-8">
-          <h1 className="text-2xl font-bold text-slate-900">Welcome back</h1>
-          <p className="mt-1 text-sm text-slate-600">Log in to your dashboard</p>
-          <div className="mt-6">
-            <AuthForm mode="login" />
+        <p className="text-xs text-white/30">ReviewFlow customer preview</p>
+      </div>
+
+      <div className="flex flex-1 items-center justify-center px-4 py-12">
+        <div className="w-full max-w-md">
+          <div className="mb-8 lg:hidden">
+            <BrandLogo href="/" />
           </div>
-          <p className="mt-6 text-center text-sm text-slate-600">
-            No account?{" "}
-            <Link href="/signup" className="font-medium text-emerald-700 hover:underline">
-              Sign up free
-            </Link>
-          </p>
+          <div className="surface-card p-8">
+            <h1 className="font-display text-2xl text-brand-950">Welcome back</h1>
+            <p className="mt-1 text-sm text-stone-500">Sign in to your command center</p>
+            <div className="mt-6">
+              <AuthForm mode="login" />
+            </div>
+            <p className="mt-6 text-center text-sm text-stone-500">
+              New here?{" "}
+              <Link href="/signup" className="font-semibold text-gold-600 hover:underline">
+                Create free account
+              </Link>
+            </p>
+          </div>
         </div>
       </div>
     </main>

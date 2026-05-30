@@ -7,6 +7,7 @@ const bodySchema = z.object({
   name: z.string().min(2).max(80),
   businessType: z.string().min(2).max(80),
   googleReviewUrl: z.string().url().optional().or(z.literal("")),
+  tone: z.enum(["friendly", "professional", "casual"]).optional(),
 });
 
 export async function POST(request: Request) {
@@ -44,7 +45,7 @@ export async function POST(request: Request) {
         slug,
         business_type: body.businessType,
         google_review_url: body.googleReviewUrl || null,
-        tone: "friendly",
+        tone: body.tone || "friendly",
       })
       .select("*")
       .single();

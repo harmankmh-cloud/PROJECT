@@ -25,14 +25,12 @@ export default async function CustomerReviewPage({
     .eq("business_id", business.id);
 
   return (
-    <main className="min-h-screen bg-gradient-to-b from-slate-50 via-white to-emerald-50/20 px-4 py-10 sm:py-16">
+    <main className="mesh-bg flex min-h-screen flex-col items-center justify-center px-4 py-10">
       <ReviewForm
         business={business as Business}
         prompts={(prompts || []) as PromptTemplate[]}
       />
-      <p className="mx-auto mt-8 max-w-xl text-center text-xs text-slate-400">
-        Powered by ReviewFlow
-      </p>
+      <p className="mt-8 text-xs text-stone-400">Powered by ReviewFlow</p>
     </main>
   );
 }

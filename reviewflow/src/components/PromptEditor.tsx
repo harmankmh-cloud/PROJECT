@@ -2,6 +2,7 @@
 
 import { useState } from "react";
 import type { PromptTemplate } from "@/lib/types";
+import { EXPERIENCE_OPTIONS } from "@/lib/defaults";
 import { createClient } from "@/lib/supabase/client";
 
 type Props = {
@@ -42,7 +43,7 @@ export function PromptEditor({ businessId, prompts }: Props) {
         if (updateError) throw updateError;
       }
 
-      setMessage("Prompts saved.");
+      setMessage("Scripts saved — live on your customer page.");
     } catch (err) {
       setError(err instanceof Error ? err.message : "Could not save prompts");
     } finally {
@@ -52,41 +53,50 @@ export function PromptEditor({ businessId, prompts }: Props) {
 
   return (
     <div className="space-y-4">
-      {items.map((prompt) => (
-        <div key={prompt.id} className="rounded-3xl border border-zinc-200 bg-white p-6 shadow-sm">
-          <h2 className="text-lg font-semibold capitalize text-zinc-900">{prompt.experience_level}</h2>
-          <div className="mt-4 space-y-3">
-            <input
-              value={prompt.helper_label}
-              onChange={(e) => updatePrompt(prompt.id, "helper_label", e.target.value)}
-              className="w-full rounded-2xl border border-zinc-200 px-4 py-3 text-sm"
-              placeholder="Button label"
-            />
-            <input
-              value={prompt.placeholder}
-              onChange={(e) => updatePrompt(prompt.id, "placeholder", e.target.value)}
-              className="w-full rounded-2xl border border-zinc-200 px-4 py-3 text-sm"
-              placeholder="Placeholder text"
-            />
-            <textarea
-              value={prompt.ai_instruction}
-              onChange={(e) => updatePrompt(prompt.id, "ai_instruction", e.target.value)}
-              className="min-h-28 w-full rounded-2xl border border-zinc-200 px-4 py-3 text-sm"
-              placeholder="AI instruction"
-            />
+      {items.map((prompt) => {
+        const option = EXPERIENCE_OPTIONS.find((o) => o.level === prompt.experience_level);
+        return (
+          <div key={prompt.id} className="surface-card overflow-hidden">
+            <div className="flex items-center gap-3 border-b border-[#e8e2d9] bg-cream px-6 py-4">
+              <span className="text-2xl">{option?.emoji}</span>
+              <div>
+                <h2 className="font-semibold text-brand-950">{option?.label || prompt.experience_level}</h2>
+                <p className="text-xs text-stone-500">{option?.subtitle}</p>
+              </div>
+            </div>
+            <div className="space-y-3 p-6">
+              <input
+                value={prompt.helper_label}
+                onChange={(e) => updatePrompt(prompt.id, "helper_label", e.target.value)}
+                className="input-field"
+                placeholder="Button label"
+              />
+              <input
+                value={prompt.placeholder}
+                onChange={(e) => updatePrompt(prompt.id, "placeholder", e.target.value)}
+                className="input-field"
+                placeholder="Placeholder text"
+              />
+              <textarea
+                value={prompt.ai_instruction}
+                onChange={(e) => updatePrompt(prompt.id, "ai_instruction", e.target.value)}
+                className="input-field min-h-28 resize-y"
+                placeholder="AI instruction"
+              />
+            </div>
           </div>
-        </div>
-      ))}
+        );
+      })}
       <button
         type="button"
         onClick={handleSave}
         disabled={saving}
-        className="rounded-2xl bg-emerald-600 px-5 py-3 text-sm font-semibold text-white disabled:opacity-60"
+        className="btn-gold px-6 py-3 disabled:opacity-60"
       >
-        {saving ? "Saving..." : "Save prompts"}
+        {saving ? "Saving…" : "Save all scripts"}
       </button>
       {message && <p className="text-sm text-emerald-700">{message}</p>}
-      {error && <p className="text-sm text-red-600">{error}</p>}
+      {error && <p className="text-sm text-rose-600">{error}</p>}
     </div>
   );
 }

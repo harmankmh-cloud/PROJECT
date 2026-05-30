@@ -1,8 +1,17 @@
 @import "tailwindcss";
 
 @theme inline {
-  --font-sans: var(--font-geist-sans);
-  --font-mono: var(--font-geist-mono);
+  --font-sans: var(--font-jakarta);
+  --font-display: var(--font-instrument);
+  --color-brand-950: #0c1222;
+  --color-brand-900: #121a2e;
+  --color-brand-800: #1a2540;
+  --color-brand-700: #243055;
+  --color-gold-400: #fbbf24;
+  --color-gold-500: #f59e0b;
+  --color-gold-600: #d97706;
+  --color-cream: #faf8f5;
+  --color-cream-dark: #f0ebe3;
 }
 
 * {
@@ -11,28 +20,58 @@
 
 body {
   margin: 0;
+  background: var(--color-cream);
+  color: #1a1a1a;
 }
 
 input,
 textarea,
-button {
+button,
+select {
   font: inherit;
 }
 
 @layer components {
-  .card {
-    @apply rounded-2xl border border-slate-200 bg-white shadow-sm;
+  .font-display {
+    font-family: var(--font-instrument), Georgia, serif;
   }
 
-  .btn-primary {
-    @apply inline-flex items-center justify-center rounded-xl bg-emerald-600 px-4 py-2.5 text-sm font-semibold text-white transition hover:bg-emerald-700 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-emerald-500 focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-60;
+  .surface-card {
+    @apply rounded-2xl border border-[#e8e2d9] bg-white shadow-[0_1px_2px_rgba(12,18,34,0.04),0_8px_24px_rgba(12,18,34,0.06)];
   }
 
-  .btn-secondary {
-    @apply inline-flex items-center justify-center rounded-xl border border-slate-200 bg-white px-4 py-2.5 text-sm font-medium text-slate-800 transition hover:bg-slate-50 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-emerald-500 focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-60;
+  .surface-dark {
+    @apply rounded-2xl border border-white/10 bg-brand-900 text-white shadow-xl;
+  }
+
+  .btn-gold {
+    @apply inline-flex items-center justify-center rounded-xl bg-gold-500 px-4 py-2.5 text-sm font-semibold text-brand-950 transition hover:bg-gold-400 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-gold-500 focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-60;
+  }
+
+  .btn-dark {
+    @apply inline-flex items-center justify-center rounded-xl bg-brand-950 px-4 py-2.5 text-sm font-semibold text-white transition hover:bg-brand-800 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brand-800 focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-60;
+  }
+
+  .btn-ghost {
+    @apply inline-flex items-center justify-center rounded-xl border border-[#e8e2d9] bg-white px-4 py-2.5 text-sm font-medium text-brand-950 transition hover:bg-cream focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-gold-500/40 focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-60;
   }
 
   .input-field {
-    @apply w-full rounded-xl border border-slate-200 bg-white px-4 py-3 text-sm text-slate-900 outline-none transition placeholder:text-slate-400 focus:border-emerald-500 focus:ring-2 focus:ring-emerald-500/20;
+    @apply w-full rounded-xl border border-[#e8e2d9] bg-white px-4 py-3 text-sm text-brand-950 outline-none transition placeholder:text-stone-400 focus:border-gold-500 focus:ring-2 focus:ring-gold-500/20;
+  }
+
+  .mesh-bg {
+    background-color: #faf8f5;
+    background-image:
+      radial-gradient(at 0% 0%, rgba(245, 158, 11, 0.08) 0, transparent 50%),
+      radial-gradient(at 100% 0%, rgba(18, 26, 46, 0.06) 0, transparent 45%),
+      radial-gradient(at 50% 100%, rgba(245, 158, 11, 0.05) 0, transparent 40%);
+  }
+
+  .grid-pattern {
+    background-image:
+      linear-gradient(rgba(18, 26, 46, 0.03) 1px, transparent 1px),
+      linear-gradient(90deg, rgba(18, 26, 46, 0.03) 1px, transparent 1px);
+    background-size: 32px 32px;
   }
 }
