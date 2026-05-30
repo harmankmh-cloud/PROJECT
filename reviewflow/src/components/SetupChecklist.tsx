@@ -1,6 +1,4 @@
-"use client";
-
-import { useState } from "react";
+import Link from "next/link";
 
 type Props = {
   businessName: string;
@@ -72,9 +70,12 @@ export function SetupChecklist({ businessName, reviewUrl, hasGoogleLink, hasFeed
               </p>
               <p className="mt-0.5 text-sm text-stone-500">{item.detail}</p>
               {!item.done && item.href && (
-                <a href={item.href} className="mt-2 inline-block text-sm font-semibold text-gold-600 hover:underline">
+                <Link
+                  href={item.href}
+                  className="mt-2 inline-block text-sm font-semibold text-gold-600 hover:underline"
+                >
                   Complete this step →
-                </a>
+                </Link>
               )}
             </div>
           </li>

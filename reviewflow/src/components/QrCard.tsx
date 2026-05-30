@@ -48,8 +48,9 @@ export function QrCard({ url, businessName }: Props) {
       </div>
       <div className="p-6">
         <div className="mx-auto max-w-[260px] rounded-2xl border-2 border-dashed border-[#e8e2d9] bg-cream p-4">
-          {dataUrl ? (
-            <img src={dataUrl} alt={`QR code for ${businessName}`} className="mx-auto w-full" />
+      {dataUrl ? (
+        // eslint-disable-next-line @next/next/no-img-element -- QR data URL from canvas
+        <img src={dataUrl} alt={`QR code for ${businessName}`} className="mx-auto w-full" />
           ) : (
             <div className="aspect-square animate-pulse rounded-xl bg-cream-dark" />
           )}

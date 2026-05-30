@@ -111,7 +111,8 @@ export function ReviewForm({ business, prompts }: Props) {
 
   async function saveToOwner(reviewText: string) {
     if (!stars) return;
-    await fetch("/api/feedback", {
+
+    const response = await fetch("/api/feedback", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({
@@ -121,6 +122,11 @@ export function ReviewForm({ business, prompts }: Props) {
         aiDraft: reviewText,
       }),
     });
+
+    if (!response.ok) {
+      const data = await response.json().catch(() => ({}));
+      throw new Error(data.error || "Could not save review for the business owner.");
+    }
   }
 
   async function handlePostOnGoogle() {
@@ -131,7 +137,13 @@ export function ReviewForm({ business, prompts }: Props) {
 
     try {
       await saveToOwner(draft);
-      await navigator.clipboard.writeText(draft);
+
+      try {
+        await navigator.clipboard.writeText(draft);
+      } catch {
+        throw new Error("Review saved, but copy failed. Select the text and copy manually.");
+      }
+
       await track("copy_review");
 
       if (business.google_review_url) {
@@ -140,8 +152,8 @@ export function ReviewForm({ business, prompts }: Props) {
       }
 
       setDone(true);
-    } catch {
-      setError("Could not copy. Select the text and copy manually.");
+    } catch (err) {
+      setError(err instanceof Error ? err.message : "Something went wrong. Please try again.");
     } finally {
       setSubmitting(false);
     }

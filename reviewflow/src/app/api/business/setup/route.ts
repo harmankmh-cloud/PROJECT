@@ -6,7 +6,7 @@ import { createClient } from "@/lib/supabase/server";
 const bodySchema = z.object({
   name: z.string().min(2).max(80),
   businessType: z.string().min(2).max(80),
-  googleReviewUrl: z.string().url().optional().or(z.literal("")),
+  googleReviewUrl: z.union([z.string().url(), z.literal("")]).optional(),
   tone: z.enum(["friendly", "professional", "casual"]).optional(),
 });
 
@@ -22,11 +22,21 @@ export async function POST(request: Request) {
       return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
     }
 
+    const { data: existingBusiness } = await supabase
+      .from("businesses")
+      .select("id")
+      .eq("user_id", user.id)
+      .maybeSingle();
+
+    if (existingBusiness) {
+      return NextResponse.json({ error: "You already have a business set up." }, { status: 400 });
+    }
+
     const baseSlug = slugify(body.name) || "business";
     let slug = baseSlug;
     let suffix = 1;
 
-    while (true) {
+    while (suffix < 100) {
       const { data: existing } = await supabase
         .from("businesses")
         .select("id")
@@ -44,7 +54,7 @@ export async function POST(request: Request) {
         name: body.name,
         slug,
         business_type: body.businessType,
-        google_review_url: body.googleReviewUrl || null,
+        google_review_url: body.googleReviewUrl?.trim() || null,
         tone: body.tone || "friendly",
       })
       .select("*")
@@ -62,12 +72,17 @@ export async function POST(request: Request) {
       ai_instruction: prompt.ai_instruction,
     }));
 
-    await supabase.from("prompt_templates").insert(prompts);
+    const { error: promptError } = await supabase.from("prompt_templates").insert(prompts);
+
+    if (promptError) {
+      await supabase.from("businesses").delete().eq("id", business.id);
+      return NextResponse.json({ error: promptError.message }, { status: 500 });
+    }
 
     return NextResponse.json({ business });
   } catch (error) {
     if (error instanceof z.ZodError) {
-      return NextResponse.json({ error: "Invalid input" }, { status: 400 });
+      return NextResponse.json({ error: "Check your business name and Google link format." }, { status: 400 });
     }
     return NextResponse.json({ error: "Failed to setup business" }, { status: 500 });
   }

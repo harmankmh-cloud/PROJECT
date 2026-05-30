@@ -74,7 +74,7 @@ export const INDUSTRY_OPTIONS = [
 
 /** Maps 1–5 stars to prompt bucket used in the database. */
 export function starToExperienceLevel(stars: StarRating): ExperienceLevel {
-  if (stars >= 5) return "great";
+  if (stars === 5) return "great";
   if (stars === 4) return "good";
   if (stars === 3) return "okay";
   return "bad";

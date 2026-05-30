@@ -24,7 +24,12 @@ export function BusinessSettingsForm({ business }: { business: Business }) {
       const response = await fetch("/api/business/update", {
         method: "PATCH",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ name, businessType, googleReviewUrl, tone }),
+        body: JSON.stringify({
+          name: name.trim(),
+          businessType: businessType.trim(),
+          googleReviewUrl: googleReviewUrl.trim(),
+          tone,
+        }),
       });
       const data = await response.json();
       if (!response.ok) throw new Error(data.error || "Update failed");

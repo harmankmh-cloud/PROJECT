@@ -25,9 +25,9 @@ export function SetupBusinessForm() {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
-          name,
+          name: name.trim(),
           businessType,
-          googleReviewUrl,
+          googleReviewUrl: googleReviewUrl.trim(),
           tone: "friendly",
         }),
       });
