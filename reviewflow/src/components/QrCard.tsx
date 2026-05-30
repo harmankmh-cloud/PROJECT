@@ -17,8 +17,8 @@ export function QrCard({ url, businessName }: Props) {
   useEffect(() => {
     QRCode.toDataURL(url, {
       margin: 2,
-      width: 240,
-      color: { dark: "#0c1222", light: "#faf8f5ff" },
+      width: 280,
+      color: { dark: "#000000", light: "#ffffff" },
     })
       .then(setDataUrl)
       .catch(() => setError("Could not generate QR code."));
@@ -45,12 +45,12 @@ export function QrCard({ url, businessName }: Props) {
 
   return (
     <div className="surface-card overflow-hidden">
-      <div className="border-b border-[#e8e2d9] bg-brand-950 px-6 py-4">
-        <h2 className="font-display text-lg text-white">Your QR code</h2>
-        <p className="mt-0.5 text-sm text-white/60">Print, laminate, or show on a tablet</p>
+      <div className="border-b border-[#e8e2d9] bg-white px-6 py-4">
+        <h2 className="font-display text-lg text-brand-950">Your QR code</h2>
+        <p className="mt-0.5 text-sm text-stone-500">Print-ready black & white — laminate or show on a tablet</p>
       </div>
-      <div className="p-6">
-        <div className="mx-auto max-w-[260px] rounded-2xl border-2 border-dashed border-[#e8e2d9] bg-cream p-4">
+      <div className="bg-white p-6">
+        <div className="mx-auto max-w-[280px] rounded-2xl border border-[#e8e2d9] bg-white p-4 shadow-sm">
           {dataUrl ? (
             // eslint-disable-next-line @next/next/no-img-element -- QR data URL
             <img src={dataUrl} alt={`QR code for ${businessName}`} className="mx-auto w-full" />

@@ -1,7 +1,6 @@
 import Link from "next/link";
 import { SetupBusinessForm } from "@/components/Forms";
 import { QrCard } from "@/components/QrCard";
-import { AiToolsPanel } from "@/components/AiToolsPanel";
 import { ConversionFunnel } from "@/components/ConversionFunnel";
 import { SetupChecklist } from "@/components/SetupChecklist";
 import { ShareKit } from "@/components/ShareKit";
@@ -59,8 +58,6 @@ export default async function DashboardPage() {
           <QrCard url={reviewUrl} businessName={business.name} />
           <ShareKit businessName={business.name} reviewUrl={reviewUrl} />
         </section>
-
-        <AiToolsPanel />
 
         <FeedbackInbox feedback={feedback} />
       </div>
