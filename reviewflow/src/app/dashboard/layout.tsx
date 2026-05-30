@@ -1,5 +1,6 @@
 import { redirect } from "next/navigation";
 import { createClient } from "@/lib/supabase/server";
+import { isPlatformAdmin } from "@/lib/admin-auth";
 import { DashboardShell } from "@/components/DashboardShell";
 
 export default async function DashboardLayout({
@@ -21,7 +22,11 @@ export default async function DashboardLayout({
     .maybeSingle();
 
   return (
-    <DashboardShell businessName={business?.name} reviewSlug={business?.slug}>
+    <DashboardShell
+      businessName={business?.name}
+      reviewSlug={business?.slug}
+      showPlatformAdmin={isPlatformAdmin(user.email)}
+    >
       {children}
     </DashboardShell>
   );

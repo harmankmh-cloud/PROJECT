@@ -1,16 +1,13 @@
-import Link from "next/link";
 import { SetupBusinessForm } from "@/components/Forms";
-import { QrCard } from "@/components/QrCard";
+import { ControlCenterHub } from "@/components/ControlCenterHub";
 import { ConversionFunnel } from "@/components/ConversionFunnel";
 import { SetupChecklist } from "@/components/SetupChecklist";
-import { ShareKit } from "@/components/ShareKit";
 import { QuickStartGuide } from "@/components/QuickStartGuide";
-import { FeedbackInbox } from "@/components/FeedbackInbox";
 import { UsageMeter } from "@/components/UsageMeter";
 import { getDashboardData } from "@/lib/dashboard-data";
 
 export default async function DashboardPage() {
-  const { business, feedback, feedbackTotal, stats, usage } = await getDashboardData();
+  const { business, feedbackTotal, stats, usage } = await getDashboardData();
 
   if (!business) {
     return (
@@ -26,43 +23,36 @@ export default async function DashboardPage() {
   return (
     <main className="flex-1 px-4 py-8 sm:px-8">
       <div className="mx-auto flex max-w-6xl flex-col gap-8">
-        <header className="flex flex-wrap items-end justify-between gap-4">
-          <div>
-            <p className="text-xs font-semibold uppercase tracking-widest text-gold-600">
-              Command center
-            </p>
-            <h1 className="font-display mt-1 text-3xl text-brand-950 sm:text-4xl">{business.name}</h1>
-            <p className="mt-2 text-sm text-stone-500">{business.business_type}</p>
-          </div>
-          <Link
-            href={`/r/${business.slug}`}
-            target="_blank"
-            rel="noreferrer"
-            className="btn-dark px-5 py-2.5"
-          >
-            View live page ↗
-          </Link>
+        <header>
+          <p className="text-xs font-semibold uppercase tracking-widest text-gold-600">
+            Control center
+          </p>
+          <h1 className="font-display mt-1 text-3xl text-brand-950 sm:text-4xl">{business.name}</h1>
+          <p className="mt-2 text-sm text-stone-500">
+            One place to manage reviews, sharing, settings, and billing.
+          </p>
         </header>
 
         <SetupChecklist
           businessName={business.name}
           reviewUrl={reviewUrl}
           hasGoogleLink={!!business.google_review_url}
-          hasFeedback={feedback.length > 0}
+          hasFeedback={feedbackTotal > 0}
         />
 
-        <QuickStartGuide reviewUrl={reviewUrl} hasGoogleLink={!!business.google_review_url} />
-
-        {stats && <ConversionFunnel stats={stats} />}
+        <ControlCenterHub
+          business={business}
+          stats={stats}
+          usage={usage}
+          feedbackTotal={feedbackTotal}
+          reviewUrl={reviewUrl}
+        />
 
         {usage && <UsageMeter usage={usage} />}
 
-        <section className="grid gap-6 lg:grid-cols-2">
-          <QrCard url={reviewUrl} businessName={business.name} />
-          <ShareKit businessName={business.name} reviewUrl={reviewUrl} />
-        </section>
+        {stats && <ConversionFunnel stats={stats} />}
 
-        <FeedbackInbox initialFeedback={feedback} totalCount={feedbackTotal} />
+        <QuickStartGuide reviewUrl={reviewUrl} hasGoogleLink={!!business.google_review_url} />
       </div>
     </main>
   );

@@ -6,8 +6,10 @@ import { useState } from "react";
 import { createClient, isSupabaseConfigured } from "@/lib/supabase/client";
 import { BrandLogo } from "@/components/BrandLogo";
 
-const allLinks = [
-  { href: "/dashboard", label: "Command center", icon: "◉" },
+const businessLinks = [
+  { href: "/dashboard", label: "Control center", icon: "◉" },
+  { href: "/dashboard/reviews", label: "Customer reviews", icon: "⭐" },
+  { href: "/dashboard/share", label: "QR & share kit", icon: "📱" },
   { href: "/dashboard/settings", label: "Business profile", icon: "⚙" },
   { href: "/dashboard/prompts", label: "Review scripts", icon: "✎" },
   { href: "/dashboard/billing", label: "Plan & billing", icon: "◈" },
@@ -16,10 +18,12 @@ const allLinks = [
 export function DashboardShell({
   businessName,
   reviewSlug,
+  showPlatformAdmin,
   children,
 }: {
   businessName?: string;
   reviewSlug?: string;
+  showPlatformAdmin?: boolean;
   children: React.ReactNode;
 }) {
   const pathname = usePathname();
@@ -27,7 +31,7 @@ export function DashboardShell({
   const [mobileOpen, setMobileOpen] = useState(false);
   const [loggingOut, setLoggingOut] = useState(false);
 
-  const links = reviewSlug ? allLinks : [allLinks[0]];
+  const links = reviewSlug ? businessLinks : [businessLinks[0]];
 
   async function handleLogout() {
     if (!isSupabaseConfigured()) {
@@ -58,7 +62,10 @@ export function DashboardShell({
         )}
       </div>
 
-      <nav className="flex-1 space-y-1 px-3 py-4">
+      <nav className="flex-1 space-y-1 overflow-y-auto px-3 py-4">
+        <p className="px-3 pb-2 text-[10px] font-bold uppercase tracking-widest text-white/30">
+          Your business
+        </p>
         {links.map((link) => {
           const active = pathname === link.href;
           return (
@@ -88,6 +95,26 @@ export function DashboardShell({
             <span className="text-base opacity-80">↗</span>
             Preview customer page
           </Link>
+        )}
+
+        {showPlatformAdmin && (
+          <>
+            <p className="mt-6 px-3 pb-2 text-[10px] font-bold uppercase tracking-widest text-white/30">
+              Platform
+            </p>
+            <Link
+              href="/dashboard/admin"
+              onClick={() => setMobileOpen(false)}
+              className={`flex items-center gap-3 rounded-xl px-3 py-2.5 text-sm font-medium transition ${
+                pathname === "/dashboard/admin"
+                  ? "bg-gold-500/20 text-gold-400"
+                  : "text-white/70 hover:bg-white/5 hover:text-white"
+              }`}
+            >
+              <span className="text-base opacity-80">🛡</span>
+              All businesses
+            </Link>
+          </>
         )}
       </nav>
 
