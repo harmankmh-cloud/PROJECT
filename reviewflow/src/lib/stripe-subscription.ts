@@ -43,7 +43,11 @@ export async function updateBusinessFromSubscription(
   const { error } = await admin.from("businesses").update(payload).eq("id", businessId);
 
   if (error) {
-    const hint = error.message.includes("plan")
+    const needsMigration =
+      error.message.includes("plan") ||
+      error.message.includes("column") ||
+      error.message.includes("stripe_customer_id");
+    const hint = needsMigration
       ? " Run supabase/migration-billing.sql in the Supabase SQL Editor, then try again."
       : "";
     return { ok: false, error: `${error.message}.${hint}` };

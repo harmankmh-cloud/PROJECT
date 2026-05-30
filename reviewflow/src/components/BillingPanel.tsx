@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import Link from "next/link";
 import type { Business, UsageSummary } from "@/lib/types";
 import type { StripeConfigStatus } from "@/lib/stripe-config";
@@ -15,6 +15,7 @@ type Props = {
   activated?: boolean;
   canceled?: boolean;
   sessionId?: string;
+  activationError?: string;
 };
 
 export function BillingPanel({
@@ -25,17 +26,15 @@ export function BillingPanel({
   activated,
   canceled,
   sessionId,
+  activationError,
 }: Props) {
   const [loading, setLoading] = useState<"checkout" | "portal" | "sync" | null>(null);
-  const [error, setError] = useState("");
-  const [syncNote, setSyncNote] = useState("");
-
+  const [error, setError] = useState(activationError || "");
   const isPro = usage.plan === "active";
 
   async function activatePro(explicitSessionId?: string) {
     setLoading("sync");
     setError("");
-    setSyncNote("");
     try {
       const response = await fetch("/api/stripe/sync", {
         method: "POST",
@@ -53,13 +52,6 @@ export function BillingPanel({
       setLoading(null);
     }
   }
-
-  useEffect(() => {
-    if (!success || isPro) return;
-    setSyncNote("Checking your payment…");
-    void activatePro(sessionId);
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [success, sessionId]);
 
   async function startCheckout() {
     setLoading("checkout");
@@ -95,8 +87,7 @@ export function BillingPanel({
     <div className="space-y-6">
       {success && !isPro && !activated && (
         <div className="rounded-xl bg-emerald-50 px-4 py-3 text-sm text-emerald-800">
-          Payment received — activating your Pro plan…
-          {syncNote && <p className="mt-1 text-emerald-900/80">{syncNote}</p>}
+          Payment received — click <strong>Activate Pro</strong> below if your plan has not updated yet.
         </div>
       )}
       {activated && (
@@ -143,24 +134,41 @@ export function BillingPanel({
             </p>
           </div>
 
-          {error && <p className="text-sm text-rose-600">{error}</p>}
+          {error && (
+            <div className="rounded-xl bg-rose-50 px-4 py-3 text-sm text-rose-800">
+              <p className="font-medium">Could not activate Pro</p>
+              <p className="mt-1">{error}</p>
+            </div>
+          )}
 
-          {success && !isPro && error && (
+          {!isPro && stripeStatus.ready && (
             <button
               type="button"
               onClick={() => activatePro()}
               disabled={loading !== null}
               className="btn-dark w-full py-3 disabled:opacity-60"
             >
-              {loading === "sync" ? "Activating…" : "Activate Pro now"}
+              {loading === "sync" ? "Activating…" : "Activate Pro — I already paid"}
             </button>
           )}
 
-          {success && !isPro && error && (
-            <p className="rounded-xl bg-amber-50 px-3 py-2 text-xs text-amber-900">
-              Also run <code>npm run stripe:webhook</code> in a second terminal, and make sure you ran{" "}
-              <code>migration-billing.sql</code> in Supabase.
-            </p>
+          {!isPro && error && (
+            <div className="rounded-xl bg-amber-50 px-3 py-3 text-xs text-amber-950 space-y-2">
+              <p className="font-semibold">Fix checklist:</p>
+              <ol className="list-decimal space-y-1 pl-4">
+                <li>
+                  Supabase → SQL Editor → run <code>migration-billing.sql</code> from the reviewflow
+                  folder
+                </li>
+                <li>
+                  Add <code>SUPABASE_SERVICE_ROLE_KEY</code> to <code>.env.local</code> (Supabase →
+                  Settings → API → service_role)
+                </li>
+                <li>
+                  Restart app: <code>npm run stop && npm run smooth</code>
+                </li>
+              </ol>
+            </div>
           )}
 
           {stripeStatus.ready && (
@@ -182,14 +190,21 @@ export function BillingPanel({
               {loading === "portal" ? "Opening…" : "Manage subscription"}
             </button>
           ) : (
-            <button
-              type="button"
-              onClick={startCheckout}
-              disabled={loading !== null}
-              className="btn-gold w-full py-3.5 disabled:opacity-60"
-            >
-              {loading === "checkout" ? "Redirecting to Stripe…" : `Upgrade — ${pricingLabel()}`}
-            </button>
+            <>
+              <button
+                type="button"
+                onClick={startCheckout}
+                disabled={loading !== null}
+                className="btn-gold w-full py-3.5 disabled:opacity-60"
+              >
+                {loading === "checkout" ? "Redirecting to Stripe…" : `Upgrade — ${pricingLabel()}`}
+              </button>
+              {!isPro && !stripeStatus.ready && (
+                <p className="text-xs text-stone-500 text-center">
+                  Finish Stripe setup above before upgrading.
+                </p>
+              )}
+            </>
           )}
 
           {stripeStatus.ready && !stripeStatus.webhookReady && (

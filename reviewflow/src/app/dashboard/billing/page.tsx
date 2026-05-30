@@ -1,7 +1,9 @@
 import { BillingPanel } from "@/components/BillingPanel";
 import { UsageMeter } from "@/components/UsageMeter";
 import { getDashboardData } from "@/lib/dashboard-data";
+import { activateBusinessPlan } from "@/lib/activate-business-plan";
 import { getStripeConfigStatus } from "@/lib/stripe-config";
+import { getStripe, isStripeConfigured } from "@/lib/stripe";
 import { redirect } from "next/navigation";
 
 export default async function BillingPage({
@@ -15,10 +17,33 @@ export default async function BillingPage({
   }>;
 }) {
   const params = await searchParams;
-  const { business, usage } = await getDashboardData();
+  const { user, business, usage } = await getDashboardData();
   const stripeStatus = getStripeConfigStatus();
 
   if (!business || !usage) redirect("/dashboard");
+
+  let activationError: string | undefined;
+
+  const shouldActivate =
+    params.activated !== "1" &&
+    usage.plan !== "active" &&
+    (params.success === "1" || params.session_id);
+
+  if (shouldActivate && isStripeConfigured()) {
+    const stripe = getStripe();
+    if (stripe) {
+      const result = await activateBusinessPlan(
+        stripe,
+        business,
+        user?.email,
+        params.session_id
+      );
+      if (result.ok) {
+        redirect("/dashboard/billing?activated=1");
+      }
+      activationError = result.error;
+    }
+  }
 
   return (
     <main className="flex-1 px-4 py-8 sm:px-8">
@@ -39,6 +64,7 @@ export default async function BillingPage({
           activated={params.activated === "1"}
           canceled={params.canceled === "1"}
           sessionId={params.session_id}
+          activationError={activationError}
         />
       </div>
     </main>
