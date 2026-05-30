@@ -1,3 +1,4 @@
+import { ActivateProBanner } from "@/components/ActivateProBanner";
 import { BillingPanel } from "@/components/BillingPanel";
 import { UsageMeter } from "@/components/UsageMeter";
 import { getDashboardData } from "@/lib/dashboard-data";
@@ -14,6 +15,7 @@ export default async function BillingPage({
     activated?: string;
     canceled?: string;
     session_id?: string;
+    activation_error?: string;
   }>;
 }) {
   const params = await searchParams;
@@ -22,14 +24,18 @@ export default async function BillingPage({
 
   if (!business || !usage) redirect("/dashboard");
 
-  let activationError: string | undefined;
+  const isPro = usage.plan === "active";
+  let activationError = params.activation_error
+    ? decodeURIComponent(params.activation_error)
+    : undefined;
 
-  const shouldActivate =
+  const shouldAutoActivate =
     params.activated !== "1" &&
-    usage.plan !== "active" &&
-    (params.success === "1" || params.session_id);
+    !isPro &&
+    (params.success === "1" || params.session_id) &&
+    !params.activation_error;
 
-  if (shouldActivate && isStripeConfigured()) {
+  if (shouldAutoActivate && isStripeConfigured()) {
     const stripe = getStripe();
     if (stripe) {
       const result = await activateBusinessPlan(
@@ -55,6 +61,20 @@ export default async function BillingPage({
         </header>
 
         <UsageMeter usage={usage} />
+
+        {params.activated === "1" && (
+          <div className="rounded-xl bg-emerald-50 px-4 py-3 text-sm text-emerald-800">
+            Pro plan is active — you now have 500 reviews per month.
+          </div>
+        )}
+
+        {!isPro && (
+          <ActivateProBanner
+            show
+            sessionId={params.session_id}
+            error={activationError}
+          />
+        )}
 
         <BillingPanel
           business={business}
