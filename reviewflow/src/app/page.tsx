@@ -41,8 +41,8 @@ export default function HomePage() {
           <dl className="mt-10 grid grid-cols-3 gap-4 border-t border-[#e8e2d9] pt-8">
             {[
               ["30 sec", "Average review time"],
-              ["4 paths", "Experience-based flow"],
-              ["Private", "Bad feedback routing"],
+              ["5 stars", "Simple rating flow"],
+              ["Private", "Low ratings to you first"],
             ].map(([value, label]) => (
               <div key={label}>
                 <dt className="font-display text-xl text-brand-950 sm:text-2xl">{value}</dt>
@@ -102,8 +102,8 @@ export default function HomePage() {
             },
             {
               n: "02",
-              title: "Customer picks emoji",
-              text: "Loved it, good, okay, or not great. The flow adapts to how they feel.",
+              title: "Customer picks stars",
+              text: "1 to 5 stars. The flow adapts — low ratings stay private with you first.",
             },
             {
               n: "03",

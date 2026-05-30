@@ -2,8 +2,14 @@
 
 import { useEffect, useMemo, useState } from "react";
 import type { Business, PromptTemplate, StarRating } from "@/lib/types";
-import { QUICK_NOTE_CHIPS, STAR_OPTIONS, starsLabel } from "@/lib/defaults";
+import {
+  STAR_OPTIONS,
+  getPromptForStars,
+  noteChipsForStars,
+  starsLabel,
+} from "@/lib/defaults";
 import { buildFallbackReviewOptions } from "@/lib/review-fallbacks";
+import { copyToClipboard } from "@/lib/copy";
 import { useCustomerBack } from "@/components/useCustomerBack";
 
 type Props = {
@@ -27,6 +33,14 @@ export function ReviewForm({ business, prompts }: Props) {
   const [error, setError] = useState("");
 
   const stepNumber = step === "stars" ? 1 : step === "notes" ? 2 : 3;
+  const prompt = stars ? getPromptForStars(stars, prompts) : undefined;
+  const chips = stars ? noteChipsForStars(stars) : [];
+  const isLowRating = stars !== null && stars <= 2;
+
+  const headerSubtitle = useMemo(() => {
+    if (isLowRating) return "Tell the owner honestly — we'll help you write it clearly.";
+    return "Rate your visit, pick a review, post on Google.";
+  }, [isLowRating]);
 
   useEffect(() => {
     fetch("/api/analytics", {
@@ -35,12 +49,6 @@ export function ReviewForm({ business, prompts }: Props) {
       body: JSON.stringify({ businessId: business.id, eventType: "page_view" }),
     }).catch(() => undefined);
   }, [business.id]);
-
-  const placeholder = useMemo(() => {
-    if (!stars) return "Tell us about your visit…";
-    const level = stars >= 4 ? "great" : stars === 3 ? "okay" : "bad";
-    return prompts.find((p) => p.experience_level === level)?.placeholder || "A few words is enough…";
-  }, [stars, prompts]);
 
   function pickStars(value: StarRating) {
     setStars(value);
@@ -57,7 +65,7 @@ export function ReviewForm({ business, prompts }: Props) {
 
   async function handleGenerate() {
     if (!stars || notes.trim().length < 3) {
-      setError("Tap a star rating and write at least a few words.");
+      setError("Pick a star rating and write at least a few words.");
       return;
     }
 
@@ -120,16 +128,17 @@ export function ReviewForm({ business, prompts }: Props) {
         starRating: stars,
         customerNotes: notes,
         aiDraft: reviewText,
+        isPrivate: isLowRating,
       }),
     });
 
     if (!response.ok) {
       const data = await response.json().catch(() => ({}));
-      throw new Error(data.error || "Could not save review for the business owner.");
+      throw new Error(data.error || "Could not notify the business owner.");
     }
   }
 
-  async function handlePostOnGoogle() {
+  async function handleFinish() {
     if (!draft.trim() || !stars) return;
 
     setSubmitting(true);
@@ -137,18 +146,14 @@ export function ReviewForm({ business, prompts }: Props) {
 
     try {
       await saveToOwner(draft);
-
-      try {
-        await navigator.clipboard.writeText(draft);
-      } catch {
-        throw new Error("Review saved, but copy failed. Select the text and copy manually.");
-      }
-
+      await copyToClipboard(draft);
       await track("copy_review");
 
-      if (business.google_review_url) {
+      if (business.google_review_url && !isLowRating) {
         await track("google_click");
         window.open(business.google_review_url, "_blank", "noopener,noreferrer");
+      } else if (business.google_review_url && isLowRating) {
+        // Low ratings: saved to owner first; Google is optional
       }
 
       setDone(true);
@@ -157,6 +162,12 @@ export function ReviewForm({ business, prompts }: Props) {
     } finally {
       setSubmitting(false);
     }
+  }
+
+  async function handleOpenGoogle() {
+    if (!business.google_review_url) return;
+    await track("google_click");
+    window.open(business.google_review_url, "_blank", "noopener,noreferrer");
   }
 
   function selectOption(index: number) {
@@ -196,12 +207,14 @@ export function ReviewForm({ business, prompts }: Props) {
     step === "stars"
       ? isLoggedIn
         ? "Dashboard"
-        : "Go back"
+        : "Back"
       : step === "notes"
         ? "Change stars"
         : done
           ? "Start over"
           : "Change notes";
+
+  const generateLabel = prompt?.helper_label || "Get 3 review options";
 
   return (
     <div className="mx-auto w-full max-w-md">
@@ -220,7 +233,7 @@ export function ReviewForm({ business, prompts }: Props) {
             </span>
           </div>
           <h1 className="font-display text-2xl">{business.name}</h1>
-          <p className="mt-1 text-sm text-white/60">Rate your visit, pick a review, post on Google</p>
+          <p className="mt-1 text-sm text-white/60">{headerSubtitle}</p>
           <div className="mt-4 flex gap-1">
             {[1, 2, 3].map((n) => (
               <div
@@ -264,12 +277,19 @@ export function ReviewForm({ business, prompts }: Props) {
                 {starsLabel(stars)}
               </div>
 
+              {isLowRating && (
+                <p className="rounded-xl bg-rose-50 px-3 py-2 text-xs text-rose-800">
+                  The owner will see your feedback on their dashboard. You can still post on Google if
+                  you choose.
+                </p>
+              )}
+
               <div>
                 <p className="mb-2 text-xs font-semibold uppercase tracking-wide text-stone-400">
                   Quick picks (tap to add)
                 </p>
                 <div className="flex flex-wrap gap-2">
-                  {QUICK_NOTE_CHIPS.map((chip) => (
+                  {chips.map((chip) => (
                     <button
                       key={chip}
                       type="button"
@@ -285,7 +305,7 @@ export function ReviewForm({ business, prompts }: Props) {
               <textarea
                 value={notes}
                 onChange={(e) => setNotes(e.target.value)}
-                placeholder={placeholder}
+                placeholder={prompt?.placeholder || "A few words is enough…"}
                 className="input-field min-h-28 resize-none"
                 autoFocus
               />
@@ -298,14 +318,14 @@ export function ReviewForm({ business, prompts }: Props) {
                 disabled={loading}
                 className="btn-gold w-full py-3.5"
               >
-                {loading ? "Writing 3 options…" : "Get 3 review options"}
+                {loading ? "Writing 3 options…" : generateLabel}
               </button>
             </div>
           )}
 
           {step === "options" && stars && (
             <div className="space-y-4">
-              <p className="text-sm font-medium text-brand-950">Pick the review you like best</p>
+              <p className="text-sm font-medium text-brand-950">Pick the wording you like best</p>
 
               <div className="space-y-2">
                 {options.map((option, index) => (
@@ -328,7 +348,7 @@ export function ReviewForm({ business, prompts }: Props) {
               </div>
 
               <div>
-                <label className="block text-sm font-medium text-brand-950">Edit before posting</label>
+                <label className="block text-sm font-medium text-brand-950">Edit before finishing</label>
                 <textarea
                   value={draft}
                   onChange={(e) => {
@@ -344,18 +364,20 @@ export function ReviewForm({ business, prompts }: Props) {
               {done ? (
                 <div className="space-y-3">
                   <div className="rounded-xl bg-emerald-50 px-4 py-3 text-sm text-emerald-800">
-                    <p className="font-semibold">Done! Review copied.</p>
-                    {business.google_review_url ? (
-                      <p className="mt-1">Paste it on Google — the owner was notified too.</p>
-                    ) : (
-                      <p className="mt-1">The owner was notified on their dashboard.</p>
+                    <p className="font-semibold">Done — owner notified & text copied.</p>
+                    {!isLowRating && business.google_review_url && (
+                      <p className="mt-1">Paste your review on Google in the tab that opened.</p>
+                    )}
+                    {isLowRating && (
+                      <p className="mt-1">The business owner received your feedback on their dashboard.</p>
                     )}
                   </div>
-                  <button
-                    type="button"
-                    onClick={goBack}
-                    className="btn-dark w-full py-3"
-                  >
+                  {isLowRating && business.google_review_url && (
+                    <button type="button" onClick={handleOpenGoogle} className="btn-ghost w-full py-3">
+                      Still post on Google
+                    </button>
+                  )}
+                  <button type="button" onClick={goBack} className="btn-dark w-full py-3">
                     ← {dashboardBackLabel}
                   </button>
                   <button type="button" onClick={resetForm} className="btn-ghost w-full py-3">
@@ -366,21 +388,22 @@ export function ReviewForm({ business, prompts }: Props) {
                 <>
                   {!business.google_review_url && (
                     <p className="rounded-xl bg-amber-50 px-3 py-2 text-xs text-amber-900">
-                      Google link not set yet — your review is still saved for the owner. Copy and post
-                      on Google manually if you know their page.
+                      Google link not set yet — your feedback is still saved for the owner.
                     </p>
                   )}
                   <button
                     type="button"
-                    onClick={handlePostOnGoogle}
+                    onClick={handleFinish}
                     disabled={submitting || !draft.trim()}
                     className="btn-dark w-full py-3.5 disabled:opacity-60"
                   >
                     {submitting
                       ? "Saving…"
-                      : business.google_review_url
-                        ? "Copy, notify owner & open Google"
-                        : "Copy review & notify owner"}
+                      : isLowRating
+                        ? "Copy & notify owner"
+                        : business.google_review_url
+                          ? "Copy, notify owner & open Google"
+                          : "Copy & notify owner"}
                   </button>
                 </>
               )}

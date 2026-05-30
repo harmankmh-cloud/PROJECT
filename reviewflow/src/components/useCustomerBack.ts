@@ -2,13 +2,14 @@
 
 import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
-import { createClient } from "@/lib/supabase/client";
+import { createClient, isSupabaseConfigured } from "@/lib/supabase/client";
 
 export function useCustomerBack() {
   const router = useRouter();
   const [isLoggedIn, setIsLoggedIn] = useState(false);
 
   useEffect(() => {
+    if (!isSupabaseConfigured()) return;
     const supabase = createClient();
     supabase.auth.getUser().then(({ data }) => {
       setIsLoggedIn(!!data.user);
@@ -20,9 +21,11 @@ export function useCustomerBack() {
       router.push("/dashboard");
       return;
     }
-    if (window.history.length > 1) {
+    if (typeof window !== "undefined" && window.history.length > 1) {
       window.history.back();
+      return;
     }
+    router.push("/");
   }
 
   return {

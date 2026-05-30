@@ -10,6 +10,7 @@ const bodySchema = z.object({
   customerNotes: z.string().optional(),
   aiDraft: z.string().min(3),
   customerName: z.string().optional(),
+  isPrivate: z.boolean().optional(),
 });
 
 function getSupabase() {
@@ -26,13 +27,14 @@ export async function POST(request: Request) {
     }
 
     const experienceLevel = starToExperienceLevel(body.starRating as 1 | 2 | 3 | 4 | 5);
+    const isPrivate = body.isPrivate ?? body.starRating <= 2;
 
     const row: Record<string, unknown> = {
       business_id: body.businessId,
       experience_level: experienceLevel,
       customer_notes: body.customerNotes || null,
       ai_draft: body.aiDraft,
-      is_private: false,
+      is_private: isPrivate,
       customer_name: body.customerName || null,
       star_rating: body.starRating,
     };
@@ -53,7 +55,7 @@ export async function POST(request: Request) {
 
     await supabase.from("analytics_events").insert({
       business_id: body.businessId,
-      event_type: "owner_notification",
+      event_type: isPrivate ? "private_feedback" : "owner_notification",
     });
 
     return NextResponse.json({ ok: true });

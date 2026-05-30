@@ -7,14 +7,22 @@ export default function LoginPage() {
     <main className="mesh-bg flex min-h-screen">
       <div className="hidden w-1/2 flex-col justify-between bg-brand-950 p-12 lg:flex">
         <BrandLogo href="/" light />
-        <div>
-          <blockquote className="font-display text-3xl leading-snug text-white">
-            &ldquo;We went from 12 Google reviews to 47 in two months — without awkward asks at
-            checkout.&rdquo;
-          </blockquote>
-          <p className="mt-4 text-sm text-white/50">— Local business owner, BC</p>
-        </div>
-        <p className="text-xs text-white/30">ReviewFlow customer preview</p>
+        <ul className="space-y-4 text-white/80">
+          {[
+            "1–5 star customer flow on any phone",
+            "3 AI review drafts in seconds",
+            "Every rating lands on your dashboard",
+            "QR code + share kit ready to print",
+          ].map((item) => (
+            <li key={item} className="flex items-center gap-3 text-sm">
+              <span className="flex h-6 w-6 shrink-0 items-center justify-center rounded-full bg-gold-500/20 text-gold-400">
+                ✓
+              </span>
+              {item}
+            </li>
+          ))}
+        </ul>
+        <p className="text-xs text-white/30">Sign in to your command center</p>
       </div>
 
       <div className="flex flex-1 items-center justify-center px-4 py-12">

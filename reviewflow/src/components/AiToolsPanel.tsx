@@ -1,6 +1,7 @@
 "use client";
 
 import { useState } from "react";
+import { copyToClipboard } from "@/lib/copy";
 
 type Props = {
   initialText?: string;
@@ -42,18 +43,21 @@ export function AiToolsPanel({ initialText = "" }: Props) {
   }
 
   async function handleCopy(type: "caption" | "reply", value: string) {
-    await navigator.clipboard.writeText(value);
-    setCopied(type);
-    setTimeout(() => setCopied(null), 2000);
+    setError("");
+    try {
+      await copyToClipboard(value);
+      setCopied(type);
+      setTimeout(() => setCopied(null), 2000);
+    } catch (err) {
+      setError(err instanceof Error ? err.message : "Copy failed");
+    }
   }
 
   return (
     <div className="surface-card overflow-hidden">
       <div className="border-b border-[#e8e2d9] bg-brand-950 px-6 py-4">
         <h2 className="font-display text-lg text-white">Marketing studio</h2>
-        <p className="mt-0.5 text-sm text-white/60">
-          Turn a great review into social posts and public replies
-        </p>
+        <p className="mt-0.5 text-sm text-white/60">Turn reviews into social posts and owner replies</p>
       </div>
       <div className="grid gap-0 lg:grid-cols-2">
         <div className="border-b border-[#e8e2d9] p-6 lg:border-b-0 lg:border-r">
@@ -61,7 +65,7 @@ export function AiToolsPanel({ initialText = "" }: Props) {
             value={text}
             onChange={(e) => setText(e.target.value)}
             className="input-field min-h-36 resize-y"
-            placeholder="Paste a 5-star review here…"
+            placeholder="Paste a customer review here…"
           />
           {error && <p className="mt-3 text-sm text-rose-600">{error}</p>}
           <div className="mt-4 flex flex-wrap gap-2">
@@ -97,9 +101,7 @@ export function AiToolsPanel({ initialText = "" }: Props) {
                   {copied === "caption" ? "Copied!" : "Copy"}
                 </button>
               </div>
-              <p className="mt-2 whitespace-pre-wrap text-sm leading-relaxed text-stone-700">
-                {caption}
-              </p>
+              <p className="mt-2 whitespace-pre-wrap text-sm leading-relaxed text-stone-700">{caption}</p>
             </div>
           ) : (
             <div className="rounded-xl border border-dashed border-[#e8e2d9] p-6 text-center text-sm text-stone-400">
@@ -118,9 +120,7 @@ export function AiToolsPanel({ initialText = "" }: Props) {
                   {copied === "reply" ? "Copied!" : "Copy"}
                 </button>
               </div>
-              <p className="mt-2 whitespace-pre-wrap text-sm leading-relaxed text-stone-700">
-                {reply}
-              </p>
+              <p className="mt-2 whitespace-pre-wrap text-sm leading-relaxed text-stone-700">{reply}</p>
             </div>
           ) : (
             <div className="rounded-xl border border-dashed border-[#e8e2d9] p-6 text-center text-sm text-stone-400">

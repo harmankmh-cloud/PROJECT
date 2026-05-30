@@ -2,6 +2,7 @@
 
 import QRCode from "qrcode";
 import { useEffect, useState } from "react";
+import { copyToClipboard } from "@/lib/copy";
 
 type Props = {
   url: string;
@@ -11,24 +12,26 @@ type Props = {
 export function QrCard({ url, businessName }: Props) {
   const [dataUrl, setDataUrl] = useState("");
   const [copied, setCopied] = useState(false);
+  const [error, setError] = useState("");
 
   useEffect(() => {
     QRCode.toDataURL(url, {
       margin: 2,
       width: 240,
-      color: { dark: "#0c1222", light: "#faf8f500" },
+      color: { dark: "#0c1222", light: "#faf8f5ff" },
     })
       .then(setDataUrl)
-      .catch(() => undefined);
+      .catch(() => setError("Could not generate QR code."));
   }, [url]);
 
   async function copyLink() {
+    setError("");
     try {
-      await navigator.clipboard.writeText(url);
+      await copyToClipboard(url);
       setCopied(true);
       setTimeout(() => setCopied(false), 2000);
-    } catch {
-      setCopied(false);
+    } catch (err) {
+      setError(err instanceof Error ? err.message : "Copy failed");
     }
   }
 
@@ -48,18 +51,17 @@ export function QrCard({ url, businessName }: Props) {
       </div>
       <div className="p-6">
         <div className="mx-auto max-w-[260px] rounded-2xl border-2 border-dashed border-[#e8e2d9] bg-cream p-4">
-      {dataUrl ? (
-        // eslint-disable-next-line @next/next/no-img-element -- QR data URL from canvas
-        <img src={dataUrl} alt={`QR code for ${businessName}`} className="mx-auto w-full" />
+          {dataUrl ? (
+            // eslint-disable-next-line @next/next/no-img-element -- QR data URL
+            <img src={dataUrl} alt={`QR code for ${businessName}`} className="mx-auto w-full" />
           ) : (
             <div className="aspect-square animate-pulse rounded-xl bg-cream-dark" />
           )}
           <p className="mt-3 text-center font-display text-sm text-brand-950">{businessName}</p>
-          <p className="text-center text-[10px] uppercase tracking-widest text-stone-400">
-            Scan to review
-          </p>
+          <p className="text-center text-[10px] uppercase tracking-widest text-stone-400">Scan to review</p>
         </div>
         <p className="mt-4 break-all text-center text-xs text-stone-500">{url}</p>
+        {error && <p className="mt-2 text-center text-xs text-rose-600">{error}</p>}
         <div className="mt-4 flex gap-2">
           <button type="button" onClick={copyLink} className="btn-ghost flex-1 py-2.5 text-sm">
             {copied ? "Copied!" : "Copy link"}

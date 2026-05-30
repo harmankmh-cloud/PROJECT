@@ -1,6 +1,7 @@
 "use client";
 
 import { useState } from "react";
+import { copyToClipboard } from "@/lib/copy";
 
 type Props = {
   businessName: string;
@@ -12,43 +13,45 @@ const templates = (businessName: string, reviewUrl: string) => [
     id: "sms",
     label: "Text message",
     icon: "💬",
-    text: `Hi! Thanks for visiting ${businessName}. We'd love your feedback — takes 30 seconds: ${reviewUrl}`,
+    text: `Hi! Thanks for visiting ${businessName}. Share a quick review — takes 30 seconds: ${reviewUrl}`,
   },
   {
     id: "email",
     label: "Email follow-up",
     icon: "✉️",
-    text: `Subject: How was your visit to ${businessName}?\n\nHi,\n\nThank you for choosing us. If you have a moment, share a quick note about your experience — we'll help you write a Google review if you'd like:\n\n${reviewUrl}\n\nThank you,\n${businessName}`,
+    text: `Subject: How was your visit to ${businessName}?\n\nHi,\n\nThank you for choosing us. Share a quick star rating and we'll help you write a Google review:\n\n${reviewUrl}\n\nThank you,\n${businessName}`,
   },
   {
     id: "counter",
     label: "Counter sign",
     icon: "📋",
-    text: `★ LOVED YOUR VISIT?\nScan here — we'll help you leave a Google review in under a minute.\n\n${reviewUrl}`,
+    text: `★ LOVED YOUR VISIT?\nScan here — pick your stars and post a Google review in under a minute.\n\n${reviewUrl}`,
   },
 ];
 
 export function ShareKit({ businessName, reviewUrl }: Props) {
   const [copied, setCopied] = useState<string | null>(null);
+  const [error, setError] = useState("");
   const items = templates(businessName, reviewUrl);
 
   async function copy(id: string, text: string) {
+    setError("");
     try {
-      await navigator.clipboard.writeText(text);
+      await copyToClipboard(text);
       setCopied(id);
       setTimeout(() => setCopied(null), 2000);
-    } catch {
-      setCopied(null);
+    } catch (err) {
+      setError(err instanceof Error ? err.message : "Copy failed");
     }
   }
 
   return (
-    <div className="surface-card p-6">
-      <h2 className="font-display text-xl text-brand-950">Share kit</h2>
-      <p className="mt-1 text-sm text-stone-500">
-        Copy-ready messages to get customers to your review page
-      </p>
-      <div className="mt-5 space-y-3">
+    <div className="surface-card overflow-hidden">
+      <div className="border-b border-[#e8e2d9] bg-brand-950 px-6 py-4 text-white">
+        <h2 className="font-display text-lg">Share kit</h2>
+        <p className="mt-0.5 text-sm text-white/60">Copy-ready messages for customers</p>
+      </div>
+      <div className="space-y-3 p-6">
         {items.map((item) => (
           <div key={item.id} className="rounded-xl border border-[#e8e2d9] bg-cream p-4">
             <div className="flex items-center justify-between gap-3">
@@ -64,11 +67,10 @@ export function ShareKit({ businessName, reviewUrl }: Props) {
                 {copied === item.id ? "Copied!" : "Copy"}
               </button>
             </div>
-            <p className="mt-3 whitespace-pre-wrap text-xs leading-relaxed text-stone-600">
-              {item.text}
-            </p>
+            <p className="mt-3 whitespace-pre-wrap text-xs leading-relaxed text-stone-600">{item.text}</p>
           </div>
         ))}
+        {error && <p className="text-sm text-rose-600">{error}</p>}
       </div>
     </div>
   );

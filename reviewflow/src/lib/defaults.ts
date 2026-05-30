@@ -1,4 +1,5 @@
 import type { ExperienceLevel, StarRating } from "./types";
+import type { PromptTemplate } from "./types";
 
 export type DefaultPrompt = {
   experience_level: ExperienceLevel;
@@ -34,7 +35,7 @@ export const DEFAULT_PROMPTS: DefaultPrompt[] = [
     helper_label: "Write my honest review",
     placeholder: "What went wrong? Be specific so the business can improve.",
     ai_instruction:
-      "Write an honest, calm 1-2 star Google review. Be direct but not rude. No insults. 2-4 sentences. Only use facts from the notes. This is a public Google review.",
+      "Write an honest, calm 1-2 star Google review. Be direct but not rude. No insults. 2-4 sentences. Only use facts from the notes.",
   },
 ];
 
@@ -50,16 +51,23 @@ export const STAR_OPTIONS: {
   { stars: 1, label: "Poor", subtitle: "1 star" },
 ];
 
-export const QUICK_NOTE_CHIPS = [
+export const POSITIVE_NOTE_CHIPS = [
   "Great service",
   "Friendly staff",
   "Fast & efficient",
   "Clean place",
   "Good value",
+];
+
+export const NEGATIVE_NOTE_CHIPS = [
   "Long wait",
   "Poor communication",
   "Quality issue",
+  "Rude staff",
+  "Overpriced",
 ];
+
+export const NEUTRAL_NOTE_CHIPS = ["It was fine", "Could improve", "Mixed experience"];
 
 export const INDUSTRY_OPTIONS = [
   { id: "car-wash", label: "Car wash", emoji: "🚗" },
@@ -72,7 +80,14 @@ export const INDUSTRY_OPTIONS = [
   { id: "other", label: "Other", emoji: "📍" },
 ] as const;
 
-/** Maps 1–5 stars to prompt bucket used in the database. */
+const PROMPT_ORDER: ExperienceLevel[] = ["great", "good", "okay", "bad"];
+
+export function sortPrompts<T extends { experience_level: ExperienceLevel }>(prompts: T[]): T[] {
+  return [...prompts].sort(
+    (a, b) => PROMPT_ORDER.indexOf(a.experience_level) - PROMPT_ORDER.indexOf(b.experience_level)
+  );
+}
+
 export function starToExperienceLevel(stars: StarRating): ExperienceLevel {
   if (stars === 5) return "great";
   if (stars === 4) return "good";
@@ -84,6 +99,16 @@ export function starsLabel(stars: number): string {
   return "★".repeat(stars) + "☆".repeat(5 - stars);
 }
 
+export function noteChipsForStars(stars: StarRating): string[] {
+  if (stars >= 4) return POSITIVE_NOTE_CHIPS;
+  if (stars === 3) return [...NEUTRAL_NOTE_CHIPS, ...POSITIVE_NOTE_CHIPS.slice(0, 2)];
+  return NEGATIVE_NOTE_CHIPS;
+}
+
+export function getPromptForStars(stars: StarRating, prompts: PromptTemplate[]): PromptTemplate | undefined {
+  return prompts.find((p) => p.experience_level === starToExperienceLevel(stars));
+}
+
 export function slugify(name: string): string {
   return name
     .toLowerCase()
@@ -92,12 +117,3 @@ export function slugify(name: string): string {
     .replace(/^-+|-+$/g, "")
     .slice(0, 48);
 }
-
-/** @deprecated Use STAR_OPTIONS */
-export const EXPERIENCE_OPTIONS = STAR_OPTIONS.map((s) => ({
-  level: starToExperienceLevel(s.stars),
-  label: s.label,
-  emoji: ["🤩", "😊", "😐", "😕", "😞"][5 - s.stars],
-  subtitle: s.subtitle,
-  color: "",
-}));

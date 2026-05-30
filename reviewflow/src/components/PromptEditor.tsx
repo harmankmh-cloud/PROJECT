@@ -2,7 +2,7 @@
 
 import { useState } from "react";
 import type { PromptTemplate } from "@/lib/types";
-import { createClient } from "@/lib/supabase/client";
+import { createClient, isSupabaseConfigured } from "@/lib/supabase/client";
 
 const PROMPT_LABELS: Record<string, { stars: string; title: string }> = {
   great: { stars: "★★★★★", title: "5-star reviews" },
@@ -22,6 +22,15 @@ export function PromptEditor({ businessId, prompts }: Props) {
   const [message, setMessage] = useState("");
   const [error, setError] = useState("");
 
+  if (items.length === 0) {
+    return (
+      <div className="surface-card p-8 text-center">
+        <p className="font-medium text-brand-950">No review scripts found</p>
+        <p className="mt-2 text-sm text-stone-500">Try reloading the page or contact support.</p>
+      </div>
+    );
+  }
+
   function updatePrompt(id: string, field: keyof PromptTemplate, value: string) {
     setItems((current) =>
       current.map((item) => (item.id === id ? { ...item, [field]: value } : item))
@@ -29,6 +38,11 @@ export function PromptEditor({ businessId, prompts }: Props) {
   }
 
   async function handleSave() {
+    if (!isSupabaseConfigured()) {
+      setError("App not configured.");
+      return;
+    }
+
     setSaving(true);
     setMessage("");
     setError("");
@@ -49,7 +63,7 @@ export function PromptEditor({ businessId, prompts }: Props) {
         if (updateError) throw updateError;
       }
 
-      setMessage("Saved — AI will use these for each star rating.");
+      setMessage("Saved — live on your customer page now.");
     } catch (err) {
       setError(err instanceof Error ? err.message : "Could not save prompts");
     } finally {
@@ -70,38 +84,39 @@ export function PromptEditor({ businessId, prompts }: Props) {
               <span className="text-lg tracking-wider text-gold-500">{label.stars}</span>
               <div>
                 <h2 className="font-semibold text-brand-950">{label.title}</h2>
-                <p className="text-xs text-stone-500">AI writing style for this rating</p>
+                <p className="text-xs text-stone-500">Button text + AI instructions</p>
               </div>
             </div>
             <div className="space-y-3 p-6">
-              <input
-                value={prompt.helper_label}
-                onChange={(e) => updatePrompt(prompt.id, "helper_label", e.target.value)}
-                className="input-field"
-                placeholder="Button label"
-              />
-              <input
-                value={prompt.placeholder}
-                onChange={(e) => updatePrompt(prompt.id, "placeholder", e.target.value)}
-                className="input-field"
-                placeholder="Placeholder text"
-              />
-              <textarea
-                value={prompt.ai_instruction}
-                onChange={(e) => updatePrompt(prompt.id, "ai_instruction", e.target.value)}
-                className="input-field min-h-28 resize-y"
-                placeholder="AI instruction"
-              />
+              <label className="block space-y-1 text-sm">
+                <span className="font-medium text-brand-950">Button label (customer sees this)</span>
+                <input
+                  value={prompt.helper_label}
+                  onChange={(e) => updatePrompt(prompt.id, "helper_label", e.target.value)}
+                  className="input-field"
+                />
+              </label>
+              <label className="block space-y-1 text-sm">
+                <span className="font-medium text-brand-950">Placeholder hint</span>
+                <input
+                  value={prompt.placeholder}
+                  onChange={(e) => updatePrompt(prompt.id, "placeholder", e.target.value)}
+                  className="input-field"
+                />
+              </label>
+              <label className="block space-y-1 text-sm">
+                <span className="font-medium text-brand-950">AI instruction</span>
+                <textarea
+                  value={prompt.ai_instruction}
+                  onChange={(e) => updatePrompt(prompt.id, "ai_instruction", e.target.value)}
+                  className="input-field min-h-28 resize-y"
+                />
+              </label>
             </div>
           </div>
         );
       })}
-      <button
-        type="button"
-        onClick={handleSave}
-        disabled={saving}
-        className="btn-gold px-6 py-3 disabled:opacity-60"
-      >
+      <button type="button" onClick={handleSave} disabled={saving} className="btn-gold px-6 py-3 disabled:opacity-60">
         {saving ? "Saving…" : "Save all scripts"}
       </button>
       {message && <p className="text-sm text-emerald-700">{message}</p>}

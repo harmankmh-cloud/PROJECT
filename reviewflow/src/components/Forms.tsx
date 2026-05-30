@@ -1,7 +1,7 @@
 "use client";
 
 import { useState } from "react";
-import { createClient } from "@/lib/supabase/client";
+import { createClient, isSupabaseConfigured } from "@/lib/supabase/client";
 import { useRouter } from "next/navigation";
 import { INDUSTRY_OPTIONS } from "@/lib/defaults";
 
@@ -12,6 +12,17 @@ export function SetupBusinessForm() {
   const [googleReviewUrl, setGoogleReviewUrl] = useState("");
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
+
+  if (!isSupabaseConfigured()) {
+    return (
+      <div className="surface-card mx-auto max-w-lg p-8 text-center">
+        <p className="font-semibold text-brand-950">Setup incomplete</p>
+        <p className="mt-2 text-sm text-stone-600">
+          Add your Supabase keys to <code className="text-xs">.env.local</code> then restart the app.
+        </p>
+      </div>
+    );
+  }
 
   async function handleSubmit(e: React.FormEvent) {
     e.preventDefault();
@@ -46,9 +57,7 @@ export function SetupBusinessForm() {
       <form onSubmit={handleSubmit} className="surface-card overflow-hidden">
         <div className="border-b border-[#e8e2d9] bg-brand-950 px-6 py-6 text-white">
           <h1 className="font-display text-2xl">Set up in one minute</h1>
-          <p className="mt-1 text-sm text-white/60">
-            Name → industry → Google link. That&apos;s it.
-          </p>
+          <p className="mt-1 text-sm text-white/60">Name → industry → Google link. That&apos;s it.</p>
         </div>
 
         <div className="space-y-5 p-6">
@@ -96,10 +105,6 @@ export function SetupBusinessForm() {
               placeholder="https://g.page/r/..."
               className="input-field"
             />
-            <p className="text-xs leading-relaxed text-stone-500">
-              Google Business Profile → Share review form → copy link. Customers use this to post
-              their 1–5 star review.
-            </p>
           </label>
 
           {error && <p className="text-sm text-rose-600">{error}</p>}
@@ -123,11 +128,21 @@ export function AuthForm({ mode }: { mode: "login" | "signup" }) {
   const [password, setPassword] = useState("");
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
+  const [info, setInfo] = useState("");
+
+  if (!isSupabaseConfigured()) {
+    return (
+      <p className="text-sm text-rose-600">
+        App not configured. Add Supabase keys to .env.local and restart.
+      </p>
+    );
+  }
 
   async function handleSubmit(e: React.FormEvent) {
     e.preventDefault();
     setLoading(true);
     setError("");
+    setInfo("");
 
     if (password.length < 6) {
       setError("Password must be at least 6 characters.");
@@ -143,9 +158,7 @@ export function AuthForm({ mode }: { mode: "login" | "signup" }) {
         if (result.error) throw result.error;
 
         if (!result.data.session) {
-          setError(
-            "Account created. Check email to confirm, or turn off Confirm email in Supabase → Authentication."
-          );
+          setInfo("Account created. Check your email to confirm, then sign in.");
           return;
         }
 
@@ -163,6 +176,25 @@ export function AuthForm({ mode }: { mode: "login" | "signup" }) {
       setError(err instanceof Error ? err.message : "Authentication failed");
     } finally {
       setLoading(false);
+    }
+  }
+
+  async function handleForgotPassword() {
+    if (!email.trim()) {
+      setError("Enter your email first, then tap Forgot password.");
+      return;
+    }
+    setError("");
+    setInfo("");
+    try {
+      const supabase = createClient();
+      const { error: resetError } = await supabase.auth.resetPasswordForEmail(email.trim(), {
+        redirectTo: `${window.location.origin}/login`,
+      });
+      if (resetError) throw resetError;
+      setInfo("Password reset email sent. Check your inbox.");
+    } catch (err) {
+      setError(err instanceof Error ? err.message : "Could not send reset email.");
     }
   }
 
@@ -186,7 +218,17 @@ export function AuthForm({ mode }: { mode: "login" | "signup" }) {
         required
         autoComplete={mode === "signup" ? "new-password" : "current-password"}
       />
+      {mode === "login" && (
+        <button
+          type="button"
+          onClick={handleForgotPassword}
+          className="text-sm font-medium text-gold-600 hover:underline"
+        >
+          Forgot password?
+        </button>
+      )}
       {error && <p className="text-sm text-rose-600">{error}</p>}
+      {info && <p className="text-sm text-emerald-700">{info}</p>}
       <button type="submit" disabled={loading} className="btn-gold w-full py-3">
         {loading ? "Please wait…" : mode === "signup" ? "Create account" : "Sign in"}
       </button>

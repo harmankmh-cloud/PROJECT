@@ -3,10 +3,10 @@
 import Link from "next/link";
 import { usePathname, useRouter } from "next/navigation";
 import { useState } from "react";
-import { createClient } from "@/lib/supabase/client";
+import { createClient, isSupabaseConfigured } from "@/lib/supabase/client";
 import { BrandLogo } from "@/components/BrandLogo";
 
-const links = [
+const allLinks = [
   { href: "/dashboard", label: "Command center", icon: "◉" },
   { href: "/dashboard/settings", label: "Business profile", icon: "⚙" },
   { href: "/dashboard/prompts", label: "Review scripts", icon: "✎" },
@@ -26,12 +26,24 @@ export function DashboardShell({
   const [mobileOpen, setMobileOpen] = useState(false);
   const [loggingOut, setLoggingOut] = useState(false);
 
+  const links = reviewSlug ? allLinks : [allLinks[0]];
+
   async function handleLogout() {
+    if (!isSupabaseConfigured()) {
+      router.push("/login");
+      return;
+    }
     setLoggingOut(true);
-    const supabase = createClient();
-    await supabase.auth.signOut();
-    router.push("/login");
-    router.refresh();
+    try {
+      const supabase = createClient();
+      await supabase.auth.signOut();
+      router.push("/login");
+      router.refresh();
+    } catch {
+      router.push("/login");
+    } finally {
+      setLoggingOut(false);
+    }
   }
 
   const sidebar = (
@@ -67,11 +79,13 @@ export function DashboardShell({
         {reviewSlug && (
           <Link
             href={`/r/${reviewSlug}`}
+            target="_blank"
+            rel="noreferrer"
             onClick={() => setMobileOpen(false)}
             className="flex items-center gap-3 rounded-xl px-3 py-2.5 text-sm font-medium text-white/70 transition hover:bg-white/5 hover:text-white"
           >
             <span className="text-base opacity-80">↗</span>
-            Live customer page
+            Preview customer page
           </Link>
         )}
       </nav>
