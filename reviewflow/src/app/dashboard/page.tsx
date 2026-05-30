@@ -6,10 +6,11 @@ import { SetupChecklist } from "@/components/SetupChecklist";
 import { ShareKit } from "@/components/ShareKit";
 import { QuickStartGuide } from "@/components/QuickStartGuide";
 import { FeedbackInbox } from "@/components/FeedbackInbox";
+import { UsageMeter } from "@/components/UsageMeter";
 import { getDashboardData } from "@/lib/dashboard-data";
 
 export default async function DashboardPage() {
-  const { business, feedback, stats } = await getDashboardData();
+  const { business, feedback, feedbackTotal, stats, usage } = await getDashboardData();
 
   if (!business) {
     return (
@@ -54,12 +55,14 @@ export default async function DashboardPage() {
 
         {stats && <ConversionFunnel stats={stats} />}
 
+        {usage && <UsageMeter usage={usage} />}
+
         <section className="grid gap-6 lg:grid-cols-2">
           <QrCard url={reviewUrl} businessName={business.name} />
           <ShareKit businessName={business.name} reviewUrl={reviewUrl} />
         </section>
 
-        <FeedbackInbox feedback={feedback} />
+        <FeedbackInbox initialFeedback={feedback} totalCount={feedbackTotal} />
       </div>
     </main>
   );

@@ -1,8 +1,12 @@
 import { NextResponse } from "next/server";
 import { z } from "zod";
 import { starToExperienceLevel } from "@/lib/defaults";
+import { monthlyLimitForPlan } from "@/lib/plans";
+import { countReviewsThisMonth } from "@/lib/usage";
 import { createAnonClient } from "@/lib/supabase/public";
 import { createServiceClient } from "@/lib/supabase/admin";
+import { createClient } from "@/lib/supabase/server";
+import { resolvePlan } from "@/lib/business-plan";
 
 const bodySchema = z.object({
   businessId: z.string().uuid(),
@@ -13,17 +17,94 @@ const bodySchema = z.object({
   isPrivate: z.boolean().optional(),
 });
 
-function getSupabase() {
+function getPublicSupabase() {
   return createServiceClient() ?? createAnonClient();
+}
+
+export async function GET(request: Request) {
+  try {
+    const supabase = await createClient();
+    const {
+      data: { user },
+    } = await supabase.auth.getUser();
+
+    if (!user) {
+      return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+    }
+
+    const { data: business } = await supabase
+      .from("businesses")
+      .select("id")
+      .eq("user_id", user.id)
+      .maybeSingle();
+
+    if (!business) {
+      return NextResponse.json({ error: "Business not found" }, { status: 404 });
+    }
+
+    const { searchParams } = new URL(request.url);
+    const offset = Math.max(parseInt(searchParams.get("offset") || "0", 10), 0);
+    const limit = Math.min(Math.max(parseInt(searchParams.get("limit") || "20", 10), 1), 100);
+
+    const { data, count, error } = await supabase
+      .from("feedback_events")
+      .select("*", { count: "exact" })
+      .eq("business_id", business.id)
+      .order("created_at", { ascending: false })
+      .range(offset, offset + limit - 1);
+
+    if (error) {
+      return NextResponse.json({ error: error.message }, { status: 500 });
+    }
+
+    return NextResponse.json({
+      feedback: data || [],
+      total: count || 0,
+      offset,
+      limit,
+    });
+  } catch {
+    return NextResponse.json({ error: "Failed to load reviews" }, { status: 500 });
+  }
 }
 
 export async function POST(request: Request) {
   try {
     const body = bodySchema.parse(await request.json());
-    const supabase = getSupabase();
+    const supabase = getPublicSupabase();
 
     if (!supabase) {
       return NextResponse.json({ error: "App not configured" }, { status: 500 });
+    }
+
+    const { data: business, error: businessError } = await supabase
+      .from("businesses")
+      .select("*")
+      .eq("id", body.businessId)
+      .single();
+
+    if (businessError || !business) {
+      return NextResponse.json({ error: "Business not found" }, { status: 404 });
+    }
+
+    const plan = resolvePlan(business);
+    const limit = monthlyLimitForPlan(plan);
+
+    if (limit === 0) {
+      return NextResponse.json(
+        { error: "This business subscription is inactive. Reviews cannot be saved." },
+        { status: 403 }
+      );
+    }
+
+    const used = await countReviewsThisMonth(supabase, body.businessId);
+    if (used >= limit) {
+      return NextResponse.json(
+        {
+          error: `Monthly review limit reached (${limit}). The business owner can upgrade on their dashboard.`,
+        },
+        { status: 429 }
+      );
     }
 
     const experienceLevel = starToExperienceLevel(body.starRating as 1 | 2 | 3 | 4 | 5);

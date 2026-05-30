@@ -10,6 +10,7 @@ const allLinks = [
   { href: "/dashboard", label: "Command center", icon: "◉" },
   { href: "/dashboard/settings", label: "Business profile", icon: "⚙" },
   { href: "/dashboard/prompts", label: "Review scripts", icon: "✎" },
+  { href: "/dashboard/billing", label: "Plan & billing", icon: "◈" },
 ];
 
 export function DashboardShell({
