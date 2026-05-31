@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import { Instrument_Serif, Plus_Jakarta_Sans } from "next/font/google";
+import { DatadogInit } from "@/components/DatadogInit";
 import { BRAND } from "@/lib/brand";
 import "./globals.css";
 
@@ -52,7 +53,10 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en" className={`${jakarta.variable} ${instrument.variable} h-full`}>
-      <body className="min-h-full font-sans antialiased">{children}</body>
+      <body className="min-h-full font-sans antialiased">
+        <DatadogInit />
+        {children}
+      </body>
     </html>
   );
 }
