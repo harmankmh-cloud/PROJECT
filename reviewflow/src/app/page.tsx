@@ -196,6 +196,9 @@ export default function HomePage() {
             <Link href="/help" className="text-teal-400 hover:underline">
               Help & contact
             </Link>
+            <Link href="/trade" className="text-teal-400 hover:underline">
+              Find local trades
+            </Link>
             <Link href="/login" className="text-white/50 hover:text-white">
               Sign in
             </Link>

@@ -1,0 +1,64 @@
+import Link from "next/link";
+import { notFound } from "next/navigation";
+import { ProviderCard } from "@/components/tradelocal/ProviderCard";
+import { TRADE_CITIES, TRADE_LOCAL, cityName } from "@/lib/tradelocal/constants";
+import { getApprovedProviders, getCategoryBySlug, getServiceCategories } from "@/lib/tradelocal/data";
+
+export default async function TradeCategoryPage({
+  params,
+}: {
+  params: Promise<{ city: string; category: string }>;
+}) {
+  const { city, category } = await params;
+  if (!TRADE_CITIES.some((c) => c.slug === city)) notFound();
+
+  const cat = await getCategoryBySlug(category);
+  if (!cat) notFound();
+
+  const providers = await getApprovedProviders({ citySlug: city, categorySlug: category });
+
+  return (
+    <main className="mesh-bg min-h-screen">
+      <header className="site-header px-4 py-4 sm:px-8">
+        <Link href={`/trade/${city}`} className="text-sm font-semibold text-teal-600 hover:underline">
+          ← {cityName(city)}
+        </Link>
+      </header>
+
+      <div className="mx-auto max-w-6xl px-4 py-10 sm:px-8">
+        <p className="section-eyebrow">{TRADE_LOCAL.name}</p>
+        <h1 className="font-display mt-2 text-3xl text-brand-950 sm:text-4xl">
+          {cat.icon} {cat.name} in {cityName(city)}
+        </h1>
+        <p className="mt-2 text-slate-600">
+          {providers.length} listing{providers.length === 1 ? "" : "s"} — tap for phone & WhatsApp.
+        </p>
+
+        {providers.length === 0 ? (
+          <div className="surface-card mt-10 p-8 text-center">
+            <p className="font-medium text-brand-950">No listings yet in this category.</p>
+            <p className="mt-2 text-sm text-slate-600">Be the first — or post what you need.</p>
+            <div className="mt-6 flex flex-wrap justify-center gap-3">
+              <Link href="/trade/join" className="btn-gold px-6 py-3">
+                List my business
+              </Link>
+              <Link href={`/trade/request?city=${city}&category=${category}`} className="btn-ghost px-6 py-3">
+                Post a job
+              </Link>
+            </div>
+          </div>
+        ) : (
+          <div className="mt-10 grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
+            {providers.map((p) => (
+              <ProviderCard key={p.id} provider={p} categoryName={cat.name} />
+            ))}
+          </div>
+        )}
+
+        <p className="mt-10 text-center text-xs text-slate-500">
+          {TRADE_LOCAL.name} provides contacts only. Verify license & insurance before hiring.
+        </p>
+      </div>
+    </main>
+  );
+}
