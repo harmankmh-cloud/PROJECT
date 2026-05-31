@@ -22,7 +22,7 @@ export default async function SettingsPage() {
         </header>
         <div className="grid gap-8 lg:grid-cols-2">
           <BusinessSettingsForm business={business} />
-          <QrCard url={reviewUrl} businessName={business.name} />
+          <QrCard url={reviewUrl} slug={business.slug} businessName={business.name} />
         </div>
       </div>
     </main>

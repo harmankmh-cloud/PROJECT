@@ -23,6 +23,13 @@ export const metadata: Metadata = {
     "QR-powered review collection for local businesses. Route unhappy customers privately, help happy ones post on Google in seconds.",
 };
 
+export const viewport = {
+  width: "device-width",
+  initialScale: 1,
+  maximumScale: 5,
+  userScalable: true,
+};
+
 export default function RootLayout({
   children,
 }: Readonly<{

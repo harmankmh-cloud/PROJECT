@@ -2,11 +2,12 @@
 
 import { useEffect, useMemo, useState } from "react";
 import { copyToClipboard } from "@/lib/copy";
-import { fixReviewUrlForClient } from "@/lib/app-url";
+import { isLocalBrowserOrigin, resolvePublicReviewUrl } from "@/lib/app-url";
 import { generateQrOnlyDataUrl, generateQrPosterDataUrl } from "@/lib/qr-poster";
 
 type Props = {
   url: string;
+  slug: string;
   businessName: string;
 };
 
@@ -17,15 +18,15 @@ function downloadDataUrl(dataUrl: string, filename: string) {
   link.click();
 }
 
-export function QrCard({ url, businessName }: Props) {
+export function QrCard({ url, slug, businessName }: Props) {
   const [posterUrl, setPosterUrl] = useState("");
   const [qrOnlyUrl, setQrOnlyUrl] = useState("");
   const [copied, setCopied] = useState(false);
   const [error, setError] = useState("");
   const [loading, setLoading] = useState(true);
 
-  const reviewUrl = useMemo(() => fixReviewUrlForClient(url), [url]);
-  const hadLocalhost = url !== reviewUrl || url.includes("localhost");
+  const reviewUrl = useMemo(() => resolvePublicReviewUrl(url, slug), [url, slug]);
+  const onLocalhost = isLocalBrowserOrigin();
 
   useEffect(() => {
     let cancelled = false;
@@ -68,14 +69,14 @@ export function QrCard({ url, businessName }: Props) {
 
   function downloadPoster() {
     if (!posterUrl) return;
-    const slug = businessName.replace(/\s+/g, "-").toLowerCase();
-    downloadDataUrl(posterUrl, `${slug}-review-poster.png`);
+    const fileSlug = businessName.replace(/\s+/g, "-").toLowerCase();
+    downloadDataUrl(posterUrl, `${fileSlug}-review-poster.png`);
   }
 
   function downloadQrOnly() {
     if (!qrOnlyUrl) return;
-    const slug = businessName.replace(/\s+/g, "-").toLowerCase();
-    downloadDataUrl(qrOnlyUrl, `${slug}-qr-code.png`);
+    const fileSlug = businessName.replace(/\s+/g, "-").toLowerCase();
+    downloadDataUrl(qrOnlyUrl, `${fileSlug}-qr-code.png`);
   }
 
   return (
@@ -101,9 +102,13 @@ export function QrCard({ url, businessName }: Props) {
         </div>
 
         <p className="mt-4 break-all text-center text-xs text-stone-500">{reviewUrl}</p>
-        {hadLocalhost && (
+        {onLocalhost ? (
+          <p className="mt-2 rounded-lg bg-rose-50 px-3 py-2 text-center text-xs text-rose-900">
+            Do not print from localhost — open your live site on your phone first, then download again.
+          </p>
+        ) : (
           <p className="mt-2 rounded-lg bg-emerald-50 px-3 py-2 text-center text-xs text-emerald-900">
-            QR uses your live website link (not localhost) so customers can scan it on their phone.
+            QR uses your live website link so customers can scan it on their phone.
           </p>
         )}
         {error && <p className="mt-2 text-center text-xs text-rose-600">{error}</p>}
@@ -112,7 +117,7 @@ export function QrCard({ url, businessName }: Props) {
           <button
             type="button"
             onClick={downloadPoster}
-            disabled={loading || !posterUrl}
+            disabled={loading || !posterUrl || onLocalhost}
             className="btn-gold flex-1 py-2.5 text-sm disabled:opacity-50"
           >
             Download poster
@@ -120,7 +125,7 @@ export function QrCard({ url, businessName }: Props) {
           <button
             type="button"
             onClick={downloadQrOnly}
-            disabled={loading || !qrOnlyUrl}
+            disabled={loading || !qrOnlyUrl || onLocalhost}
             className="btn-ghost flex-1 py-2.5 text-sm disabled:opacity-50"
           >
             QR only
