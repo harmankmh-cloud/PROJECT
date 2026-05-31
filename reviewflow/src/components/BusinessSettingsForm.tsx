@@ -2,9 +2,10 @@
 
 import { useState } from "react";
 import { useRouter } from "next/navigation";
+import { IndustryPicker } from "@/components/IndustryPicker";
+import { useGoogleSetup } from "@/components/GoogleSetupModal";
 import type { Business } from "@/lib/types";
 import { BRAND } from "@/lib/brand";
-import { IndustryPicker } from "@/components/IndustryPicker";
 
 export function BusinessSettingsForm({
   business,
@@ -14,6 +15,7 @@ export function BusinessSettingsForm({
   simple?: boolean;
 }) {
   const router = useRouter();
+  const { openGoogleSetup } = useGoogleSetup();
   const [name, setName] = useState(business.name);
   const [businessType, setBusinessType] = useState(business.business_type);
   const [googleReviewUrl, setGoogleReviewUrl] = useState(business.google_review_url || "");
@@ -68,7 +70,16 @@ export function BusinessSettingsForm({
         </div>
 
         <label className="block space-y-2 text-sm">
-          <span className="font-semibold text-brand-950">Google review link</span>
+          <span className="flex flex-wrap items-center justify-between gap-2">
+            <span className="font-semibold text-brand-950">Google review link</span>
+            <button
+              type="button"
+              onClick={openGoogleSetup}
+              className="text-xs font-semibold text-gold-600 hover:underline"
+            >
+              Open setup popup →
+            </button>
+          </span>
           <input
             value={googleReviewUrl}
             onChange={(e) => setGoogleReviewUrl(e.target.value)}

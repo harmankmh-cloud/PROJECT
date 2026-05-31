@@ -1,3 +1,4 @@
+import { GoogleSetupProvider } from "@/components/GoogleSetupModal";
 import { AdminHubBanner } from "@/components/AdminHubBanner";
 import { SetupBusinessForm } from "@/components/Forms";
 import { ControlCenterHub } from "@/components/ControlCenterHub";
@@ -24,41 +25,46 @@ export default async function DashboardPage() {
   const reviewUrl = buildReviewUrl(appUrl, business.slug);
 
   return (
-    <main className="flex-1 px-4 py-8 sm:px-8">
-      <div className="mx-auto flex max-w-6xl flex-col gap-8">
-        <header>
-          <p className="text-xs font-semibold uppercase tracking-widest text-gold-600">
-            Your dashboard
-          </p>
-          <h1 className="font-display mt-1 text-3xl text-brand-950 sm:text-4xl">{business.name}</h1>
-          <p className="mt-2 text-sm text-stone-500">
-            Reviews, QR poster, and your plan — simple and ready to use.
-          </p>
-        </header>
+    <GoogleSetupProvider
+      hasGoogleLink={!!business.google_review_url}
+      initialUrl={business.google_review_url || ""}
+    >
+      <main className="flex-1 px-4 py-8 sm:px-8">
+        <div className="mx-auto flex max-w-6xl flex-col gap-8">
+          <header>
+            <p className="text-xs font-semibold uppercase tracking-widest text-gold-600">
+              Your dashboard
+            </p>
+            <h1 className="font-display mt-1 text-3xl text-brand-950 sm:text-4xl">{business.name}</h1>
+            <p className="mt-2 text-sm text-stone-500">
+              Reviews, QR poster, and your plan — simple and ready to use.
+            </p>
+          </header>
 
-        {isPlatformAdmin(user?.email) && <AdminHubBanner />}
+          {isPlatformAdmin(user?.email) && <AdminHubBanner />}
 
-        <SetupChecklist
-          businessName={business.name}
-          reviewUrl={reviewUrl}
-          hasGoogleLink={!!business.google_review_url}
-          hasFeedback={feedbackTotal > 0}
-        />
+          <SetupChecklist
+            businessName={business.name}
+            reviewUrl={reviewUrl}
+            hasGoogleLink={!!business.google_review_url}
+            hasFeedback={feedbackTotal > 0}
+          />
 
-        <ControlCenterHub
-          business={business}
-          stats={stats}
-          usage={usage}
-          feedbackTotal={feedbackTotal}
-          reviewUrl={reviewUrl}
-        />
+          <ControlCenterHub
+            business={business}
+            stats={stats}
+            usage={usage}
+            feedbackTotal={feedbackTotal}
+            reviewUrl={reviewUrl}
+          />
 
-        {usage && <UsageMeter usage={usage} />}
+          {usage && <UsageMeter usage={usage} />}
 
-        {stats && <ConversionFunnel stats={stats} />}
+          {stats && <ConversionFunnel stats={stats} />}
 
-        <QuickStartGuide reviewUrl={reviewUrl} hasGoogleLink={!!business.google_review_url} />
-      </div>
-    </main>
+          <QuickStartGuide reviewUrl={reviewUrl} hasGoogleLink={!!business.google_review_url} />
+        </div>
+      </main>
+    </GoogleSetupProvider>
   );
 }

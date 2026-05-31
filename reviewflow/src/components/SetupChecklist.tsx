@@ -1,4 +1,6 @@
-import Link from "next/link";
+"use client";
+
+import { useGoogleSetup } from "@/components/GoogleSetupModal";
 
 type Props = {
   businessName: string;
@@ -8,6 +10,7 @@ type Props = {
 };
 
 export function SetupChecklist({ businessName, reviewUrl, hasGoogleLink, hasFeedback }: Props) {
+  const { openGoogleSetup } = useGoogleSetup();
   const items = [
     {
       done: true,
@@ -19,8 +22,9 @@ export function SetupChecklist({ businessName, reviewUrl, hasGoogleLink, hasFeed
       title: "Google review link added",
       detail: hasGoogleLink
         ? "Customers can jump straight to Google"
-        : "Add this in Business profile so reviews actually post",
-      href: "/dashboard/settings",
+        : "Add this so reviews actually post on Google Maps",
+      action: "Fill in popup →",
+      onAction: openGoogleSetup,
     },
     {
       done: hasFeedback,
@@ -69,13 +73,14 @@ export function SetupChecklist({ businessName, reviewUrl, hasGoogleLink, hasFeed
                 {item.title}
               </p>
               <p className="mt-0.5 text-sm text-stone-500">{item.detail}</p>
-              {!item.done && item.href && (
-                <Link
-                  href={item.href}
+              {!item.done && item.onAction && (
+                <button
+                  type="button"
+                  onClick={item.onAction}
                   className="mt-2 inline-block text-sm font-semibold text-gold-600 hover:underline"
                 >
-                  Complete this step →
-                </Link>
+                  {item.action || "Complete this step →"}
+                </button>
               )}
             </div>
           </li>

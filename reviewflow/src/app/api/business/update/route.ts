@@ -3,8 +3,8 @@ import { z } from "zod";
 import { createClient } from "@/lib/supabase/server";
 
 const bodySchema = z.object({
-  name: z.string().min(2).max(80),
-  businessType: z.string().min(2).max(80),
+  name: z.string().min(2).max(80).optional(),
+  businessType: z.string().min(2).max(80).optional(),
   googleReviewUrl: z.union([z.string().url(), z.literal("")]).optional(),
   tone: z.enum(["friendly", "professional", "casual"]).optional(),
 });
@@ -23,7 +23,7 @@ export async function PATCH(request: Request) {
 
     const { data: business } = await supabase
       .from("businesses")
-      .select("id")
+      .select("*")
       .eq("user_id", user.id)
       .maybeSingle();
 
@@ -31,15 +31,18 @@ export async function PATCH(request: Request) {
       return NextResponse.json({ error: "Business not found" }, { status: 404 });
     }
 
+    const patch: Record<string, string | null> = {
+      updated_at: new Date().toISOString(),
+    };
+
+    if (body.name !== undefined) patch.name = body.name.trim();
+    if (body.businessType !== undefined) patch.business_type = body.businessType.trim();
+    if (body.googleReviewUrl !== undefined) patch.google_review_url = body.googleReviewUrl.trim() || null;
+    if (body.tone !== undefined) patch.tone = body.tone;
+
     const { data: updated, error } = await supabase
       .from("businesses")
-      .update({
-        name: body.name.trim(),
-        business_type: body.businessType.trim(),
-        google_review_url: body.googleReviewUrl?.trim() || null,
-        tone: body.tone || "friendly",
-        updated_at: new Date().toISOString(),
-      })
+      .update(patch)
       .eq("id", business.id)
       .select("*")
       .single();

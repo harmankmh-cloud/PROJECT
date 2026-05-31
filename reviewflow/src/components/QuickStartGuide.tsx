@@ -1,7 +1,7 @@
 "use client";
 
-import Link from "next/link";
 import { useSyncExternalStore, useState } from "react";
+import { useGoogleSetup } from "@/components/GoogleSetupModal";
 import { BRAND } from "@/lib/brand";
 
 const STORAGE_PRINT = "reviewflow_printed_qr";
@@ -26,6 +26,7 @@ export function QuickStartGuide({
   reviewUrl: string;
   hasGoogleLink: boolean;
 }) {
+  const { openGoogleSetup } = useGoogleSetup();
   const storedPrinted = useStoredFlag(STORAGE_PRINT);
   const storedTexted = useStoredFlag(STORAGE_TEXTED);
   const [printedMarked, setPrintedMarked] = useState(false);
@@ -39,8 +40,8 @@ export function QuickStartGuide({
       done: hasGoogleLink,
       title: "Add Google review link",
       detail: hasGoogleLink ? "Customers can open Google after copying" : "Required for one-click Google posting",
-      href: "/dashboard/settings",
-      action: "Do this now →",
+      onAction: openGoogleSetup,
+      action: "Open popup & paste link →",
     },
     {
       done: printedDone,
@@ -90,10 +91,14 @@ export function QuickStartGuide({
                 {step.title}
               </p>
               <p className="mt-0.5 text-sm text-stone-500">{step.detail}</p>
-              {!step.done && step.href && (
-                <Link href={step.href} className="mt-2 inline-block text-sm font-semibold text-gold-600 hover:underline">
+              {!step.done && step.onAction && (
+                <button
+                  type="button"
+                  onClick={step.onAction}
+                  className="mt-2 inline-block text-sm font-semibold text-gold-600 hover:underline"
+                >
                   {step.action}
-                </Link>
+                </button>
               )}
               {!step.done && step.onMark && (
                 <button

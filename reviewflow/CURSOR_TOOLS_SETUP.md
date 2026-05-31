@@ -1,68 +1,63 @@
 # Cursor tools setup (Figma + Datadog)
 
-These tools are **pre-configured in this repo**. After you pull the latest code, you only need to **connect** them once in Cursor on your Mac.
+Figma and Datadog are **already configured in this project**. You only need to connect them once on your Mac.
 
 ---
 
-## Step 1 — Pull latest code
+## Easiest way (no command search needed)
 
-In Terminal (or let Cursor sync Git):
+### Step 1 — Quit and reopen Cursor
 
-```bash
-git pull origin main
-```
+1. Press **Cmd + Q** (hold Command, tap Q) — this fully quits Cursor
+2. Open **Cursor** again from your Applications folder or Dock
+3. Open your **PROJECT** folder
 
----
+That replaces “Reload Window” — you do **not** need to search for Developer commands.
 
-## Step 2 — Reload Cursor
+### Step 2 — Connect Figma + Datadog (click only)
 
-1. Press **Cmd + Shift + P**
-2. Type **Developer: Reload Window**
-3. Press **Enter**
+1. Click the **gear icon** ⚙ in Cursor (bottom-left or top-right)
+2. Click **Tools & MCP** (or **MCP**)
+3. Find **figma** → click **Connect** → sign in in the browser
+4. Find **datadog** → click **Connect** → sign in in the browser
 
----
-
-## Step 3 — Connect Figma + Datadog in Cursor
-
-1. Press **Cmd + Shift + P**
-2. Run **Cursor Settings: Tools & MCP**
-3. You should see **figma** and **datadog** listed (from this project’s config)
-4. Click **Connect** / **Authenticate** on each one
-5. Sign in when the browser opens
-
-**Figma:** needs a free [figma.com](https://figma.com) account  
-**Datadog:** needs a free trial at [datadoghq.com](https://www.datadoghq.com) (US site → `datadoghq.com`)
+Done. No command palette needed.
 
 ---
 
-## Step 4 — Datadog on your live site (ratelocal.ca)
+## If you still want the command palette
 
-The app is already wired for Datadog monitoring. Add these in **Vercel → Settings → Environment Variables**:
+Press **Cmd + Shift + P**, then try typing only:
+
+- **reload** (pick anything that says “Reload Window”)
+- **mcp** (pick “Cursor Settings: Tools & MCP”)
+
+If nothing shows up, use **Cmd + Q** and reopen Cursor instead — that always works.
+
+---
+
+## Google review link (in RateLocal — not Cursor)
+
+When you log into **ratelocal.ca/dashboard** without a Google link, a **popup appears automatically**. Paste your Google “Write a review” link and click **Save**.
+
+You can also click **Fill in popup →** on the dashboard checklist anytime.
+
+---
+
+## Datadog on your live site (optional)
+
+Add these in **Vercel → Settings → Environment Variables**, then Redeploy:
 
 | Variable | Where to get it |
 |----------|-----------------|
-| `NEXT_PUBLIC_DATADOG_APPLICATION_ID` | Datadog → UX Monitoring → RUM Applications → Create app → Application ID |
+| `NEXT_PUBLIC_DATADOG_APPLICATION_ID` | Datadog → UX Monitoring → RUM → Create app |
 | `NEXT_PUBLIC_DATADOG_CLIENT_TOKEN` | Same screen → Client Token |
-| `NEXT_PUBLIC_DATADOG_SITE` | `datadoghq.com` (US/Canada) or `datadoghq.eu` (Europe) |
-
-Then **Redeploy** on Vercel.
-
-After that, errors and page visits from ratelocal.ca show up in Datadog, and I can help you search them in chat once Datadog MCP is connected.
+| `NEXT_PUBLIC_DATADOG_SITE` | `datadoghq.com` |
 
 ---
 
 ## Quick test
 
-**Figma connected?** Ask in Cursor chat: *“List my Figma files”*
-
-**Datadog connected?** Ask: *“Show recent errors in Datadog”*
-
-**Site sending data?** Datadog → UX Monitoring → Sessions (after Vercel env vars + redeploy)
-
----
-
-## Still not working?
-
-1. Make sure you opened the **PROJECT** folder in Cursor (not just a single file)
-2. Reload window again (**Cmd + Shift + P** → Reload Window)
-3. Reply with a screenshot of **Tools & MCP** showing figma and datadog status
+- **Figma:** Ask in Cursor chat — *“List my Figma files”*
+- **Datadog:** Ask — *“Show recent errors in Datadog”*
+- **Google popup:** Go to [ratelocal.ca/dashboard](https://ratelocal.ca/dashboard) — popup should appear if Google link is missing
