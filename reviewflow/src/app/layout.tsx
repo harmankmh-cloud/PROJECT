@@ -14,13 +14,28 @@ const instrument = Instrument_Serif({
   weight: "400",
 });
 
+const appUrl =
+  process.env.NEXT_PUBLIC_APP_URL?.replace(/\/$/, "") || "https://ratelocal.ca";
+
 export const metadata: Metadata = {
+  metadataBase: new URL(appUrl),
   title: {
     default: `${BRAND.name} — ${BRAND.tagline}`,
     template: `%s · ${BRAND.name}`,
   },
   description:
     "QR-powered review collection for local businesses. Route unhappy customers privately, help happy ones post on Google in seconds.",
+  openGraph: {
+    title: `${BRAND.name} — ${BRAND.tagline}`,
+    description:
+      "QR-powered review collection for local businesses. Route unhappy customers privately, help happy ones post on Google in seconds.",
+    url: appUrl,
+    siteName: BRAND.name,
+    type: "website",
+  },
+  ...(process.env.GOOGLE_SITE_VERIFICATION
+    ? { verification: { google: process.env.GOOGLE_SITE_VERIFICATION } }
+    : {}),
 };
 
 export const viewport = {
