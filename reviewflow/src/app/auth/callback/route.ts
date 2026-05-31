@@ -1,5 +1,6 @@
 import { NextResponse } from "next/server";
 import type { EmailOtpType } from "@supabase/supabase-js";
+import { isPlatformAdmin } from "@/lib/admin-auth";
 import { completePendingBusinessFromMetadata } from "@/lib/complete-signup";
 import { createClient } from "@/lib/supabase/server";
 
@@ -39,5 +40,11 @@ export async function GET(request: Request) {
 
   await completePendingBusinessFromMetadata(supabase);
 
-  return NextResponse.redirect(`${origin}${next}`);
+  const {
+    data: { user },
+  } = await supabase.auth.getUser();
+
+  const destination = isPlatformAdmin(user?.email) ? "/admin" : next;
+
+  return NextResponse.redirect(`${origin}${destination}`);
 }

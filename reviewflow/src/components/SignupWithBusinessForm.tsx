@@ -82,7 +82,7 @@ export function SignupWithBusinessForm() {
 
       if (result.data.session) {
         await createBusiness(name, businessType, googleReviewUrl);
-        router.push("/dashboard");
+        router.push("/auth/after-login");
         router.refresh();
         return;
       }

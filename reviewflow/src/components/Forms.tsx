@@ -178,7 +178,7 @@ export function AuthForm({ mode }: { mode: "login" | "signup" }) {
       const result = await supabase.auth.signInWithPassword({ email, password });
       if (result.error) throw result.error;
 
-      router.push("/dashboard");
+      router.push("/auth/after-login");
       router.refresh();
     } catch (err) {
       setError(err instanceof Error ? err.message : "Authentication failed");
