@@ -1,3 +1,4 @@
+import { getUserEmailById } from "@/lib/admin-users";
 import { createServiceClient } from "@/lib/supabase/admin";
 import { resolvePlan } from "@/lib/business-plan";
 import { countReviewsThisMonth } from "@/lib/usage";
@@ -108,6 +109,62 @@ export async function getAdminBusinessWithPrompts(businessId: string) {
     .eq("business_id", businessId);
 
   return { business, prompts: prompts || [] };
+}
+
+export type AdminBusinessDetail = {
+  business: Business;
+  ownerEmail: string | null;
+  prompts: unknown[];
+  reviewCount: number;
+  reviewsThisMonth: number;
+  pageViews: number;
+  googleClicks: number;
+  recentFeedback: AdminFeedbackRow[];
+};
+
+export async function getAdminBusinessDetail(businessId: string): Promise<AdminBusinessDetail | null> {
+  const base = await getAdminBusinessWithPrompts(businessId);
+  if (!base) return null;
+
+  const admin = createServiceClient();
+  if (!admin) return null;
+
+  const b = base.business as Business;
+
+  const ownerEmail = await getUserEmailById(b.user_id);
+
+  const [reviewCount, reviewsThisMonth, pageViews, googleClicks, recentFeedback] = await Promise.all([
+    admin
+      .from("feedback_events")
+      .select("*", { count: "exact", head: true })
+      .eq("business_id", b.id)
+      .then((r) => r.count || 0),
+    countReviewsThisMonth(admin, b.id),
+    admin
+      .from("analytics_events")
+      .select("*", { count: "exact", head: true })
+      .eq("business_id", b.id)
+      .eq("event_type", "page_view")
+      .then((r) => r.count || 0),
+    admin
+      .from("analytics_events")
+      .select("*", { count: "exact", head: true })
+      .eq("business_id", b.id)
+      .eq("event_type", "google_click")
+      .then((r) => r.count || 0),
+    getPlatformFeedback(15).then((rows) => rows.filter((row) => row.business_id === b.id)),
+  ]);
+
+  return {
+    business: b,
+    ownerEmail,
+    prompts: base.prompts,
+    reviewCount,
+    reviewsThisMonth,
+    pageViews,
+    googleClicks,
+    recentFeedback,
+  };
 }
 
 export async function getPlatformTotals(rows: AdminBusinessRow[]) {

@@ -1,3 +1,4 @@
+import { AdminAddBusinessForm } from "@/components/AdminAddBusinessForm";
 import { getAppUrl } from "@/lib/app-url-server";
 import { getPlatformAdminData, getPlatformTotals } from "@/lib/admin-data";
 import { PlatformAdminPanel } from "@/components/PlatformAdminPanel";
@@ -16,9 +17,10 @@ export default async function AdminBusinessesPage() {
           </p>
           <h1 className="font-display mt-1 text-3xl text-brand-950">All businesses</h1>
           <p className="mt-2 text-sm text-stone-500">
-            Manage accounts, open customer pages, and edit review scripts per business.
+            Add or remove businesses, fix Google links, scripts, and plans when customers need help.
           </p>
         </header>
+        <AdminAddBusinessForm />
         <PlatformAdminPanel rows={rows} totals={totals} appUrl={appUrl} />
       </div>
     </main>
