@@ -3,7 +3,7 @@
 import { useState } from "react";
 import { createClient, isSupabaseConfigured } from "@/lib/supabase/client";
 import { useRouter } from "next/navigation";
-import { INDUSTRY_OPTIONS } from "@/lib/defaults";
+import { IndustryPicker } from "@/components/IndustryPicker";
 
 export function SetupBusinessForm() {
   const router = useRouter();
@@ -75,23 +75,7 @@ export function SetupBusinessForm() {
 
           <div>
             <span className="text-sm font-semibold text-brand-950">2. Pick your industry</span>
-            <div className="mt-2 grid grid-cols-2 gap-2">
-              {INDUSTRY_OPTIONS.map((industry) => (
-                <button
-                  key={industry.id}
-                  type="button"
-                  onClick={() => setBusinessType(industry.label)}
-                  className={`rounded-xl border p-3 text-left transition ${
-                    businessType === industry.label
-                      ? "border-gold-500 bg-amber-50 ring-2 ring-gold-500/30"
-                      : "border-[#e8e2d9] bg-cream hover:border-gold-500/40"
-                  }`}
-                >
-                  <span className="text-lg">{industry.emoji}</span>
-                  <p className="mt-0.5 text-xs font-medium text-brand-950">{industry.label}</p>
-                </button>
-              ))}
-            </div>
+            <IndustryPicker value={businessType} onChange={setBusinessType} />
           </div>
 
           <label className="block space-y-2">
