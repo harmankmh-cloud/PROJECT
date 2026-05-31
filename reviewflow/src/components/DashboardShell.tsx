@@ -11,6 +11,7 @@ const ownerLinks = [
   { href: "/dashboard", label: "Home", icon: "◉" },
   { href: "/dashboard/reviews", label: "My reviews", icon: "⭐" },
   { href: "/dashboard/share", label: "QR & sharing", icon: "📱" },
+  { href: "/dashboard/calls", label: "CallLocal", icon: "☎" },
   { href: "/dashboard/settings", label: "My business", icon: "⚙" },
   { href: "/dashboard/billing", label: "My plan", icon: "◈" },
   { href: "/dashboard/help", label: "Help & contact", icon: "?" },
