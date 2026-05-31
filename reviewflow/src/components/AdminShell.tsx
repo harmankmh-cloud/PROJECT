@@ -12,6 +12,7 @@ const adminLinks = [
   { href: "/admin/reviews", label: "All reviews", icon: "★" },
   { href: "/admin/activity", label: "Activity", icon: "↻" },
   { href: "/admin/revenue", label: "Revenue & plans", icon: "◈" },
+  { href: "/admin/messages", label: "User messages", icon: "✉" },
   { href: "/admin/settings", label: "Platform settings", icon: "⚙" },
 ];
 

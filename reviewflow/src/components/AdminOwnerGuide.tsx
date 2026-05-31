@@ -102,6 +102,12 @@ export function AdminOwnerGuide() {
             </Link>{' '}
             — your own subscription & usage
           </li>
+          <li>
+            <Link href="/admin/messages" className="font-semibold text-gold-600 hover:underline">
+              User messages
+            </Link>{' '}
+            — help & suggestions from business owners
+          </li>
         </ul>
       </div>
     </div>

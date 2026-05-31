@@ -28,6 +28,11 @@ export default function SignupPage() {
                 Sign in
               </Link>
             </p>
+            <p className="mt-3 text-center text-xs text-slate-400">
+              <Link href="/help" className="hover:text-gold-600 hover:underline">
+                Help & contact
+              </Link>
+            </p>
           </div>
         </div>
       </div>

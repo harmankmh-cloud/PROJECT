@@ -157,8 +157,21 @@ export default function HomePage() {
         </div>
       </section>
 
-      <footer className="border-t border-slate-200/80 py-10 text-center text-sm text-slate-500">
-        {BRAND.footer}
+      <footer className="border-t border-slate-200/80 py-10">
+        <div className="mx-auto flex max-w-6xl flex-col items-center justify-between gap-4 px-4 sm:flex-row sm:px-8">
+          <p className="text-sm text-slate-500">{BRAND.footer}</p>
+          <div className="flex flex-wrap justify-center gap-4 text-sm font-medium">
+            <Link href="/help" className="text-gold-600 hover:underline">
+              Help & contact
+            </Link>
+            <Link href="/login" className="text-slate-500 hover:text-brand-950">
+              Sign in
+            </Link>
+            <Link href="/signup" className="text-slate-500 hover:text-brand-950">
+              Sign up
+            </Link>
+          </div>
+        </div>
       </footer>
     </main>
   );

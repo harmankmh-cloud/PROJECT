@@ -177,6 +177,31 @@ export async function getPlatformExtendedTotals(rows: AdminBusinessRow[]): Promi
   };
 }
 
+export type PlatformMessageRow = {
+  id: string;
+  email: string;
+  name: string | null;
+  business_name: string | null;
+  category: string;
+  message: string;
+  status: string;
+  created_at: string;
+};
+
+export async function getPlatformMessages(limit = 100): Promise<PlatformMessageRow[]> {
+  const admin = createServiceClient();
+  if (!admin) return [];
+
+  const { data, error } = await admin
+    .from("platform_messages")
+    .select("id, email, name, business_name, category, message, status, created_at")
+    .order("created_at", { ascending: false })
+    .limit(limit);
+
+  if (error || !data) return [];
+  return data as PlatformMessageRow[];
+}
+
 export type PlatformActivityRow = {
   id: string;
   type: "signup" | "review" | "plan";

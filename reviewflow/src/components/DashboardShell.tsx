@@ -13,6 +13,7 @@ const ownerLinks = [
   { href: "/dashboard/share", label: "QR & sharing", icon: "📱" },
   { href: "/dashboard/settings", label: "My business", icon: "⚙" },
   { href: "/dashboard/billing", label: "My plan", icon: "◈" },
+  { href: "/dashboard/help", label: "Help & contact", icon: "?" },
 ];
 
 export function DashboardShell({

@@ -38,6 +38,11 @@ export default async function LoginPage({
                 Create free account
               </Link>
             </p>
+            <p className="mt-3 text-center text-xs text-slate-400">
+              <Link href="/help" className="hover:text-gold-600 hover:underline">
+                Help & contact
+              </Link>
+            </p>
           </div>
         </div>
       </div>

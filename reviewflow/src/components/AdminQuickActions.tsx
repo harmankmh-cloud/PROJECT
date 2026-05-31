@@ -71,6 +71,9 @@ export function AdminQuickActions({ appUrl }: Props) {
         <Link href="/admin/activity" className="btn-ghost px-4 py-2 text-sm">
           Activity
         </Link>
+        <Link href="/admin/messages" className="btn-ghost px-4 py-2 text-sm">
+          User messages
+        </Link>
         <a href="/api/admin/export/businesses" className="btn-dark px-4 py-2 text-sm">
           Export businesses CSV
         </a>

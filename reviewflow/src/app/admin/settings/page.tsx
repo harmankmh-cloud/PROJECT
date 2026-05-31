@@ -1,3 +1,4 @@
+import Link from "next/link";
 import { AdminOwnerGuide } from "@/components/AdminOwnerGuide";
 import { SmtpSetupGuide } from "@/components/SmtpSetupGuide";
 import { StripeSetupChecklist } from "@/components/StripeSetupChecklist";
@@ -31,6 +32,18 @@ export default async function AdminSettingsPage() {
         <AdminOwnerGuide />
 
         <SmtpSetupGuide />
+
+        <div className="surface-card p-6">
+          <h2 className="font-semibold text-brand-950">Help inbox (user messages)</h2>
+          <p className="mt-2 text-sm text-stone-600">
+            Run <code className="text-xs">supabase/platform_messages.sql</code> once in Supabase SQL
+            Editor so help form submissions appear under{" "}
+            <Link href="/admin/messages" className="font-semibold text-gold-600 hover:underline">
+              User messages
+            </Link>
+            .
+          </p>
+        </div>
 
         <div className="surface-card divide-y divide-[#e8e2d9]">
           {[
