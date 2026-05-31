@@ -6,3 +6,6 @@ __pycache__/
 reviewflow/node_modules/
 reviewflow/.next/
 reviewflow/.env.local
+tradelocal/node_modules/
+tradelocal/.next/
+tradelocal/.env.local
