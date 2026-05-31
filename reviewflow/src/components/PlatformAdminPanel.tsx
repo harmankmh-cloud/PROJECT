@@ -20,15 +20,21 @@ export function PlatformAdminPanel({ rows, totals, appUrl, compact }: Props) {
     <div className="space-y-8">
       <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
         {[
-          ["Businesses", totals.businesses],
-          ["Total reviews", totals.totalReviews],
-          ["Pro plans", totals.activePlans],
-          ["Free trials", totals.trialPlans],
-        ].map(([label, value]) => (
-          <div key={label as string} className="surface-card p-4">
+          ["Businesses", totals.businesses, "/admin/businesses"],
+          ["Total reviews", totals.totalReviews, "/admin/businesses"],
+          ["Pro plans", totals.activePlans, "/admin/businesses"],
+          ["Free trials", totals.trialPlans, "/admin/businesses"],
+        ].map(([label, value, href]) => (
+          <Link
+            key={label as string}
+            href={href as string}
+            className="surface-card group block p-4 transition hover:border-gold-500/40 hover:shadow-md"
+          >
             <p className="text-xs font-semibold uppercase tracking-wide text-stone-400">{label}</p>
-            <p className="font-display mt-1 text-3xl text-brand-950">{value}</p>
-          </div>
+            <p className="font-display mt-1 text-3xl text-brand-950 group-hover:text-gold-600">
+              {value}
+            </p>
+          </Link>
         ))}
       </div>
 

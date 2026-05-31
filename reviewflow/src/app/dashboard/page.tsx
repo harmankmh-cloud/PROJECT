@@ -1,14 +1,16 @@
+import { AdminHubBanner } from "@/components/AdminHubBanner";
 import { SetupBusinessForm } from "@/components/Forms";
 import { ControlCenterHub } from "@/components/ControlCenterHub";
 import { ConversionFunnel } from "@/components/ConversionFunnel";
 import { SetupChecklist } from "@/components/SetupChecklist";
 import { QuickStartGuide } from "@/components/QuickStartGuide";
 import { UsageMeter } from "@/components/UsageMeter";
+import { isPlatformAdmin } from "@/lib/admin-auth";
 import { buildReviewUrl, getAppUrl } from "@/lib/app-url-server";
 import { getDashboardData } from "@/lib/dashboard-data";
 
 export default async function DashboardPage() {
-  const { business, feedbackTotal, stats, usage } = await getDashboardData();
+  const { user, business, feedbackTotal, stats, usage } = await getDashboardData();
 
   if (!business) {
     return (
@@ -33,6 +35,8 @@ export default async function DashboardPage() {
             Reviews, QR poster, and your plan — simple and ready to use.
           </p>
         </header>
+
+        {isPlatformAdmin(user?.email) && <AdminHubBanner />}
 
         <SetupChecklist
           businessName={business.name}

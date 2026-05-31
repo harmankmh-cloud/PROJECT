@@ -210,8 +210,10 @@ export function BillingPanel({
 
           {stripeStatus.ready && !stripeStatus.webhookReady && (
             <p className="rounded-xl bg-amber-50 px-3 py-2 text-xs text-amber-900">
-              Payments work, but add webhook + service role so Pro activates automatically after
-              checkout. Run <code>npm run stripe:webhook</code> on your Mac.
+              Payments can work, but Pro may not activate automatically until you add a production
+              webhook at <code>/api/stripe/webhook</code> plus{" "}
+              <code>SUPABASE_SERVICE_ROLE_KEY</code> in Vercel. See Platform settings in your admin
+              panel for the exact URL.
             </p>
           )}
 

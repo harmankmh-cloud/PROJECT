@@ -68,15 +68,31 @@ export function AdminShell({ children }: { children: React.ReactNode }) {
         })}
 
         <p className="mt-6 px-3 pb-2 text-[10px] font-bold uppercase tracking-widest text-white/30">
-          Switch view
+          Your business
         </p>
         <Link
           href="/dashboard"
           onClick={() => setMobileOpen(false)}
           className="flex items-center gap-3 rounded-xl px-3 py-2.5 text-sm font-medium text-white/70 transition hover:bg-white/5 hover:text-white"
         >
-          <span className="text-base opacity-80">👤</span>
-          Business owner view
+          <span className="text-base opacity-80">◉</span>
+          Business dashboard
+        </Link>
+        <Link
+          href="/dashboard/billing"
+          onClick={() => setMobileOpen(false)}
+          className="flex items-center gap-3 rounded-xl px-3 py-2.5 text-sm font-medium text-white/70 transition hover:bg-white/5 hover:text-white"
+        >
+          <span className="text-base opacity-80">◈</span>
+          Billing & plans
+        </Link>
+        <Link
+          href="/dashboard/share"
+          onClick={() => setMobileOpen(false)}
+          className="flex items-center gap-3 rounded-xl px-3 py-2.5 text-sm font-medium text-white/70 transition hover:bg-white/5 hover:text-white"
+        >
+          <span className="text-base opacity-80">📱</span>
+          QR & sharing
         </Link>
       </nav>
 

@@ -37,27 +37,51 @@ type Props = {
 };
 
 export function ControlCenterHub({ business, stats, usage, feedbackTotal, reviewUrl }: Props) {
+  const statCards = [
+    {
+      href: "/dashboard/reviews",
+      label: "Reviews",
+      value: String(feedbackTotal),
+      hint: "View all feedback",
+    },
+    {
+      href: "/dashboard/share",
+      label: "Page visits",
+      value: String(stats?.pageViews ?? 0),
+      hint: "QR & sharing",
+    },
+    {
+      href: "/dashboard/share",
+      label: "Google opened",
+      value: String(stats?.googleClicks ?? 0),
+      hint: "Track conversions",
+    },
+    {
+      href: "/dashboard/billing",
+      label: "This month",
+      value: usage ? `${usage.used}/${usage.limit}` : "—",
+      hint: "Plan & usage",
+    },
+  ];
+
   return (
     <div className="space-y-8">
       <div className="grid gap-3 sm:grid-cols-2 lg:grid-cols-4">
-        <div className="surface-card p-4">
-          <p className="text-xs font-semibold uppercase tracking-wide text-stone-400">Reviews</p>
-          <p className="font-display mt-1 text-3xl text-brand-950">{feedbackTotal}</p>
-        </div>
-        <div className="surface-card p-4">
-          <p className="text-xs font-semibold uppercase tracking-wide text-stone-400">Page visits</p>
-          <p className="font-display mt-1 text-3xl text-brand-950">{stats?.pageViews ?? 0}</p>
-        </div>
-        <div className="surface-card p-4">
-          <p className="text-xs font-semibold uppercase tracking-wide text-stone-400">Google opened</p>
-          <p className="font-display mt-1 text-3xl text-brand-950">{stats?.googleClicks ?? 0}</p>
-        </div>
-        <div className="surface-card p-4">
-          <p className="text-xs font-semibold uppercase tracking-wide text-stone-400">This month</p>
-          <p className="font-display mt-1 text-3xl text-brand-950">
-            {usage ? `${usage.used}/${usage.limit}` : "—"}
-          </p>
-        </div>
+        {statCards.map((card) => (
+          <Link
+            key={card.label}
+            href={card.href}
+            className="surface-card group block p-4 transition hover:border-gold-500/40 hover:shadow-md"
+          >
+            <p className="text-xs font-semibold uppercase tracking-wide text-stone-400">{card.label}</p>
+            <p className="font-display mt-1 text-3xl text-brand-950 group-hover:text-gold-600">
+              {card.value}
+            </p>
+            <p className="mt-2 text-xs font-medium text-gold-600 opacity-0 transition group-hover:opacity-100">
+              {card.hint} →
+            </p>
+          </Link>
+        ))}
       </div>
 
       <div>
