@@ -31,13 +31,13 @@ export default async function DashboardPage() {
     >
       <main className="flex-1 px-4 py-8 sm:px-8">
         <div className="mx-auto flex max-w-6xl flex-col gap-8">
-          <header className="dashboard-hero">
+          <header className="dashboard-hero border-l-4 border-l-teal-500">
             <div className="hero-glow -right-8 -top-8 h-32 w-32 bg-teal-400/15" />
             <p className="page-eyebrow relative">Your dashboard</p>
-            <h1 className="font-display relative mt-2 text-3xl text-brand-950 sm:text-4xl">
+            <h1 className="font-display relative mt-2 text-3xl text-brand-950 sm:text-5xl">
               {business.name}
             </h1>
-            <p className="relative mt-2 max-w-xl text-sm text-slate-600">
+            <p className="relative mt-2 max-w-xl text-base text-slate-600">
               Reviews, QR poster, and your plan — everything in one place.
             </p>
             <a

@@ -194,4 +194,45 @@ select {
   .powered-by {
     @apply text-center text-xs font-medium tracking-wide text-slate-400;
   }
+
+  .hero-dark {
+    @apply bg-gradient-to-br from-[#030508] via-brand-950 to-[#0f1a32];
+  }
+
+  .nav-float {
+    @apply rounded-2xl border border-white/10 bg-white/[0.06] shadow-[0_8px_32px_rgba(0,0,0,0.3)] backdrop-blur-xl;
+  }
+
+  .phone-glow-ring {
+    background: radial-gradient(circle, rgba(20, 184, 166, 0.35) 0%, rgba(245, 158, 11, 0.15) 45%, transparent 70%);
+    animation: pulse-glow 4s ease-in-out infinite;
+  }
+
+  .feature-dark-card {
+    @apply rounded-2xl border border-white/[0.08] bg-white/[0.04] backdrop-blur-sm transition duration-300 hover:border-teal-400/30 hover:bg-white/[0.08];
+  }
+
+  .feature-icon-circle {
+    @apply flex h-14 w-14 items-center justify-center rounded-2xl bg-gradient-to-br from-teal-500/25 to-amber-500/20 text-2xl;
+  }
+
+  .star-option-lg {
+    @apply flex w-full items-center gap-4 rounded-2xl border-2 border-slate-200/80 bg-white px-5 py-4 text-left shadow-sm transition duration-200 hover:border-amber-400 hover:shadow-md active:scale-[0.99];
+  }
+
+  .sidebar-accent {
+    box-shadow: inset 4px 0 0 0 #14b8a6;
+  }
+}
+
+@keyframes pulse-glow {
+  0%,
+  100% {
+    opacity: 0.7;
+    transform: scale(1);
+  }
+  50% {
+    opacity: 1;
+    transform: scale(1.05);
+  }
 }
