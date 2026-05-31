@@ -42,6 +42,13 @@ export function AdminQuickActions({ appUrl }: Props) {
           </p>
           <p className="mt-1 text-xs text-slate-500">Marketing & social posts</p>
         </button>
+        <Link
+          href="/admin/businesses"
+          className="rounded-2xl border border-teal-400/30 bg-teal-50/50 p-4 transition hover:border-teal-400/50 hover:shadow-md"
+        >
+          <p className="font-semibold text-brand-950">Add / fix businesses</p>
+          <p className="mt-1 text-xs text-slate-500">Create, edit, or remove customer accounts</p>
+        </Link>
         <a
           href="https://dashboard.stripe.com/dashboard"
           target="_blank"

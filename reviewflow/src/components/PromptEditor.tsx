@@ -14,9 +14,11 @@ const PROMPT_LABELS: Record<string, { stars: string; title: string }> = {
 type Props = {
   businessId: string;
   prompts: PromptTemplate[];
+  /** Platform admin: save via service API (not owner RLS) */
+  adminMode?: boolean;
 };
 
-export function PromptEditor({ businessId, prompts }: Props) {
+export function PromptEditor({ businessId, prompts, adminMode }: Props) {
   const [items, setItems] = useState(prompts);
   const [saving, setSaving] = useState(false);
   const [message, setMessage] = useState("");
@@ -38,17 +40,37 @@ export function PromptEditor({ businessId, prompts }: Props) {
   }
 
   async function handleSave() {
-    if (!isSupabaseConfigured()) {
-      setError("App not configured.");
-      return;
-    }
-
     setSaving(true);
     setMessage("");
     setError("");
-    const supabase = createClient();
 
     try {
+      if (adminMode) {
+        const response = await fetch(`/api/admin/businesses/${businessId}/prompts`, {
+          method: "PATCH",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({
+            prompts: items.map((p) => ({
+              id: p.id,
+              helper_label: p.helper_label,
+              placeholder: p.placeholder,
+              ai_instruction: p.ai_instruction,
+            })),
+          }),
+        });
+        const data = await response.json();
+        if (!response.ok) throw new Error(data.error || "Could not save");
+        setMessage("Saved — live on customer page now.");
+        return;
+      }
+
+      if (!isSupabaseConfigured()) {
+        setError("App not configured.");
+        return;
+      }
+
+      const supabase = createClient();
+
       for (const prompt of items) {
         const { error: updateError } = await supabase
           .from("prompt_templates")

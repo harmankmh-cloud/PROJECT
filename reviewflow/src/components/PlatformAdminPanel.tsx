@@ -73,18 +73,18 @@ export function PlatformAdminPanel({ rows, totals, appUrl, compact }: Props) {
                       <td className="px-4 py-4">
                         <div className="flex flex-wrap gap-2">
                           <Link
+                            href={`/admin/business/${row.id}`}
+                            className="rounded-lg bg-brand-950 px-2.5 py-1 text-xs font-semibold text-white hover:bg-brand-800"
+                          >
+                            Manage
+                          </Link>
+                          <Link
                             href={`${appUrl}/r/${row.slug}`}
                             target="_blank"
                             rel="noreferrer"
                             className="font-semibold text-gold-600 hover:underline"
                           >
                             Page
-                          </Link>
-                          <Link
-                            href={`/admin/business/${row.id}/prompts`}
-                            className="font-semibold text-brand-950 hover:underline"
-                          >
-                            Scripts
                           </Link>
                         </div>
                       </td>
