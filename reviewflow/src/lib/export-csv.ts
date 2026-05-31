@@ -15,6 +15,57 @@ function escapeCsv(value: string): string {
   return value;
 }
 
+export function businessesToCsv(
+  rows: {
+    name: string;
+    slug: string;
+    business_type: string;
+    plan: string;
+    reviewCount: number;
+    pageViews: number;
+    created_at: string;
+  }[]
+): string {
+  const header = ["Name", "Slug", "Industry", "Plan", "Reviews", "Page visits", "Joined"].join(",");
+  const lines = rows.map((row) =>
+    [
+      escapeCsv(row.name),
+      escapeCsv(row.slug),
+      escapeCsv(row.business_type),
+      escapeCsv(row.plan),
+      String(row.reviewCount),
+      String(row.pageViews),
+      escapeCsv(new Date(row.created_at).toLocaleDateString()),
+    ].join(",")
+  );
+  return [header, ...lines].join("\n");
+}
+
+export function platformFeedbackToCsv(
+  rows: {
+    business_name: string;
+    star_rating: number | null;
+    is_private: boolean;
+    customer_notes: string | null;
+    ai_draft: string | null;
+    created_at: string;
+  }[]
+): string {
+  const header = ["Date", "Business", "Stars", "Status", "Customer notes", "Review draft"].join(",");
+  const lines = rows.map((row) => {
+    const status = row.is_private ? "Private (1-2 star)" : "Google ready";
+    return [
+      escapeCsv(new Date(row.created_at).toLocaleString()),
+      escapeCsv(row.business_name),
+      row.star_rating ? String(row.star_rating) : "",
+      escapeCsv(status),
+      escapeCsv(row.customer_notes || ""),
+      escapeCsv(row.ai_draft || ""),
+    ].join(",");
+  });
+  return [header, ...lines].join("\n");
+}
+
 export function feedbackToCsv(rows: FeedbackEvent[]): string {
   const header = ["Date", "Stars", "Status", "Customer notes", "Review draft"].join(",");
   const lines = rows.map((item) => {

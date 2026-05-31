@@ -1,12 +1,15 @@
-import { getPlatformAdminData, getPlatformTotals } from "@/lib/admin-data";
+import { AdminQuickActions } from "@/components/AdminQuickActions";
+import { AdminStatsGrid } from "@/components/AdminStatsGrid";
+import { getPlatformAdminData, getPlatformExtendedTotals } from "@/lib/admin-data";
 import { getAppUrl } from "@/lib/app-url-server";
 import { BRAND } from "@/lib/brand";
-import { PlatformAdminPanel } from "@/components/PlatformAdminPanel";
 
 export default async function AdminOverviewPage() {
   const rows = await getPlatformAdminData();
-  const totals = await getPlatformTotals(rows);
-  const appUrl = await getAppUrl();
+  const [totals, appUrl] = await Promise.all([
+    getPlatformExtendedTotals(rows),
+    getAppUrl(),
+  ]);
 
   return (
     <main className="flex-1 px-4 py-8 sm:px-8">
@@ -20,7 +23,8 @@ export default async function AdminOverviewPage() {
             Your full control centre — every business, plan, and review on {BRAND.name}.
           </p>
         </header>
-        <PlatformAdminPanel rows={rows} totals={totals} appUrl={appUrl} compact />
+        <AdminStatsGrid totals={totals} />
+        <AdminQuickActions appUrl={appUrl} />
       </div>
     </main>
   );
