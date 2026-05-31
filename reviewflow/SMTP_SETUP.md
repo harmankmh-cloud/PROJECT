@@ -93,6 +93,43 @@ Users go straight to dashboard after signup (no email). Good for testing; less p
 
 ---
 
+## “Error sending confirmation email”
+
+This almost always means **Resend rejected the sender**, not that your app is broken.
+
+### Fix A — Verify your domain (for real customers)
+
+1. Open https://resend.com/domains  
+2. Add **ratelocal.ca**  
+3. Copy the DNS records into **Cloudflare** (same as Google Search Console)  
+4. Wait until Resend shows **Verified** (can take a few minutes to 48 hours)  
+5. Supabase SMTP sender must be `hello@ratelocal.ca` (or another address on that domain)  
+6. Save SMTP again and test signup  
+
+### Fix B — Quick test (only your email)
+
+Until the domain is verified:
+
+1. Resend → use sender **`onboarding@resend.dev`** in Supabase SMTP  
+2. Sign up using **only the same email you used for your Resend account**  
+3. Other emails will fail until Fix A is done  
+
+### Fix C — Signups work today (no email)
+
+1. Supabase → **Authentication** → **Providers** → **Email**  
+2. Turn **Confirm email** **OFF**  
+3. Save  
+
+Users go straight to the dashboard — no confirm email needed.
+
+### Also check
+
+- Resend → **Emails** / **Logs** — see the real error (domain not verified, invalid API key, etc.)  
+- Supabase SMTP **Password** = full Resend API key (`re_...`)  
+- Supabase SMTP **Username** = `resend` (not `reviewflow`)  
+
+---
+
 ## If you see “email rate limit exceeded”
 
 - **Short term:** Confirm email **OFF** (Mode A)  

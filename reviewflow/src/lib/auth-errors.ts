@@ -22,8 +22,13 @@ export function friendlyAuthError(message: string): string {
     return "Sign-ups are turned off in Supabase. Contact support.";
   }
 
-  if (lower.includes("smtp") || lower.includes("sending email")) {
-    return "Email could not be sent. The site owner needs to set up SMTP in Supabase (see SMTP_SETUP.md).";
+  if (
+    lower.includes("confirmation email") ||
+    lower.includes("sending email") ||
+    lower.includes("smtp") ||
+    lower.includes("mailer")
+  ) {
+    return "We could not send the confirm email. Usually the sender domain is not verified in Resend yet (hello@ratelocal.ca). Verify ratelocal.ca in Resend → Domains, or turn Confirm email OFF in Supabase for instant signup.";
   }
 
   return message;

@@ -31,6 +31,16 @@ export function SmtpSetupGuide() {
         </p>
       </div>
       <div className="space-y-4 p-6">
+        <div className="rounded-xl border border-rose-200 bg-rose-50 p-4 text-sm text-rose-900">
+          <p className="font-semibold">“Error sending confirmation email”?</p>
+          <p className="mt-1">
+            Verify <strong>ratelocal.ca</strong> in{" "}
+            <a href="https://resend.com/domains" className="font-semibold underline" target="_blank" rel="noreferrer">
+              Resend → Domains
+            </a>
+            , or turn <strong>Confirm email OFF</strong> in Supabase for instant signup.
+          </p>
+        </div>
         {steps.map((step) => (
           <div key={step.title} className="rounded-xl border border-[#e8e2d9] bg-cream p-4">
             <p className="font-semibold text-brand-950">{step.title}</p>
