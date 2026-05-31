@@ -6,27 +6,34 @@ Figma and Datadog need a one-time connect on your Mac. **Graphify is already don
 
 ## Graphify (less tokens — already in the repo)
 
-Graphify turns your codebase into a compact **map** so the AI reads that instead of every file (much cheaper/faster on big projects).
+Graphify turns your codebase into a compact **map** so the AI reads that instead of every file.
 
-**Already set up for you:**
-- Code map built: `reviewflow/graphify-out/` (457 files mapped)
-- Cursor rule added: auto-included in every chat
+**Already set up for you — no install needed:**
+- Code map is in `graphify-out/` (committed to GitHub)
+- Cursor rule in `.cursor/rules/graphify.mdc`
 
-**You don't need to install anything** — just pull latest code and use Cursor.
+After `git pull`, Cursor uses the map automatically. **You can skip all Graphify install steps.**
 
-**Optional refresh** (after big code changes, on your Mac Terminal):
+### Optional: refresh the map on your Mac
+
+Only if you changed lots of code and want to rebuild locally.
+
+**If `pip install graphifyy` fails** (common on Python 3.14+), ignore it — the repo already has the map.
+
+Working install (needs Python 3.10–3.13):
 
 ```bash
-cd reviewflow
-bash scripts/install-graphify.sh
+python3 --version   # must NOT be 3.14+
+pip install graphifyy
+graphify update .
 ```
 
-If you see a `--user` / virtualenv error, either deactivate the venv first (`deactivate`) or run:
+Or use Homebrew Python 3.12:
 
 ```bash
-pip install graphifyy
-graphify cursor install
-graphify update .
+brew install python@3.12
+/opt/homebrew/opt/python@3.12/bin/python3.12 -m pip install graphifyy
+/opt/homebrew/opt/python@3.12/bin/python3.12 -m graphify update .
 ```
 
 ---
