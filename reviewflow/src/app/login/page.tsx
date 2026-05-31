@@ -20,12 +20,12 @@ export default async function LoginPage({
           <div className="mb-8 lg:hidden">
             <BrandLogo href="/" />
           </div>
-          <div className="glass-panel p-8 sm:p-10">
-            <p className="text-xs font-semibold uppercase tracking-[0.2em] text-mint-500">Welcome back</p>
+          <div className="auth-card">
+            <p className="page-eyebrow">Welcome back</p>
             <h1 className="font-display mt-2 text-3xl tracking-tight text-brand-950">Sign in</h1>
             <p className="mt-2 text-sm text-slate-500">One step — your dashboard opens next.</p>
             {message && (
-              <p className="mt-4 rounded-2xl border border-amber-200/80 bg-amber-50/90 px-4 py-3 text-sm text-amber-950">
+              <p className="alert-warning mt-4">
                 {message}
               </p>
             )}

@@ -27,12 +27,14 @@ export default async function CustomerReviewPage({
     .eq("business_id", business.id);
 
   return (
-    <main className="mesh-bg flex min-h-screen flex-col items-center justify-center px-4 py-10">
+    <main className="mesh-bg relative flex min-h-screen flex-col items-center justify-center overflow-hidden px-4 py-10">
+      <div className="hero-glow -left-32 top-0 h-64 w-64 bg-teal-400/12" />
+      <div className="hero-glow right-0 top-20 h-48 w-48 bg-amber-500/10" />
       <ReviewForm
         business={business as Business}
         prompts={sortPrompts((prompts || []) as PromptTemplate[])}
       />
-      <p className="mt-8 text-xs text-stone-400">{BRAND.poweredBy}</p>
+      <p className="powered-by relative mt-8">{BRAND.poweredBy}</p>
     </main>
   );
 }

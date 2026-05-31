@@ -4,43 +4,54 @@ import { STAR_OPTIONS, starsLabel } from "@/lib/defaults";
 
 export function PhonePreview() {
   return (
-    <div className="relative mx-auto w-[280px]">
-      <div className="absolute -inset-6 rounded-[2.75rem] bg-gradient-to-br from-mint-400/25 via-gold-500/20 to-brand-950/10 blur-3xl" />
-      <div className="relative overflow-hidden rounded-[2rem] border border-white/20 bg-brand-950 shadow-[0_30px_80px_rgba(7,11,20,0.45)]">
-        <div className="flex items-center justify-center bg-gradient-to-r from-brand-950 to-brand-900 py-2.5">
-          <div className="h-1.5 w-16 rounded-full bg-white/20" />
+    <div className="relative mx-auto w-[300px] sm:w-[320px]">
+      <div className="absolute -inset-8 rounded-[3rem] bg-gradient-to-br from-teal-400/30 via-amber-400/20 to-brand-950/15 blur-3xl" />
+      <div className="relative overflow-hidden rounded-[2.25rem] border-[3px] border-slate-800/90 bg-brand-950 shadow-[0_40px_100px_-20px_rgba(5,8,16,0.55)] ring-1 ring-white/10">
+        <div className="flex items-center justify-between bg-gradient-to-r from-brand-950 to-brand-800 px-5 py-3">
+          <span className="text-[10px] font-semibold text-white/40">9:41</span>
+          <div className="h-5 w-24 rounded-full bg-black/40 ring-1 ring-white/10" />
+          <span className="text-[10px] text-white/40">●●●</span>
         </div>
-        <div className="bg-gradient-to-b from-cream to-white px-4 pb-6 pt-4">
-          <p className="text-center text-[10px] font-semibold uppercase tracking-[0.2em] text-slate-400">
+        <div className="bg-gradient-to-b from-cream via-white to-slate-50 px-5 pb-7 pt-5">
+          <div className="mb-3 flex justify-center gap-1">
+            {[1, 2, 3].map((n) => (
+              <div
+                key={n}
+                className={`h-1 w-8 rounded-full ${n === 1 ? "bg-gold-500" : "bg-slate-200"}`}
+              />
+            ))}
+          </div>
+          <p className="text-center text-[10px] font-bold uppercase tracking-[0.24em] text-teal-600">
             Customer view
           </p>
-          <p className="font-display mt-2 text-center text-lg text-brand-950">Mike&apos;s Car Wash</p>
-          <p className="mt-1 text-center text-[11px] text-slate-500">Tap your star rating</p>
+          <p className="font-display mt-2 text-center text-xl text-brand-950">Mike&apos;s Car Wash</p>
+          <p className="mt-1 text-center text-xs text-slate-500">How was your visit?</p>
 
-          <div className="mt-3 space-y-1.5">
-            {STAR_OPTIONS.slice(0, 3).map((option) => (
+          <div className="mt-4 space-y-2">
+            {STAR_OPTIONS.map((option) => (
               <div
                 key={option.stars}
-                className={`flex items-center gap-2 rounded-xl border px-2.5 py-2 ${
-                  option.stars === 5
-                    ? "border-mint-400/50 bg-gradient-to-r from-mint-500/10 to-gold-500/10"
-                    : "border-slate-200/80 bg-white"
+                className={`star-option cursor-default py-2.5 ${
+                  option.stars === 5 ? "star-option-highlight" : ""
                 }`}
               >
-                <span className="text-xs tracking-wider text-gold-500">{starsLabel(option.stars)}</span>
-                <span className="text-[10px] font-medium text-brand-950">{option.label}</span>
+                <span className="text-sm tracking-wider text-gold-500">{starsLabel(option.stars)}</span>
+                <span>
+                  <span className="block text-xs font-semibold text-brand-950">{option.label}</span>
+                  <span className="text-[10px] text-slate-500">{option.subtitle}</span>
+                </span>
               </div>
             ))}
           </div>
 
-          <div className="mt-3 rounded-2xl border border-slate-200/80 bg-white p-3 shadow-sm">
-            <p className="text-[10px] font-bold tracking-wide text-slate-400">3 REVIEW OPTIONS</p>
-            <p className="mt-1 text-[10px] leading-relaxed text-slate-600">
-              Pick one → edit → copy & post on Google
+          <div className="mt-4 rounded-2xl border border-slate-200/80 bg-white p-3.5 shadow-sm">
+            <p className="text-[10px] font-bold uppercase tracking-wider text-teal-600">AI draft ready</p>
+            <p className="mt-1.5 text-[11px] leading-relaxed text-slate-600">
+              Pick wording → edit → copy & post on Google in one tap.
             </p>
           </div>
 
-          <div className="btn-gold mt-3 w-full py-2 text-center text-[10px]">Copy & open Google</div>
+          <div className="btn-gold mt-4 w-full py-2.5 text-center text-xs">Copy & open Google</div>
         </div>
       </div>
     </div>

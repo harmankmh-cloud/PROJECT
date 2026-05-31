@@ -71,9 +71,9 @@ export function ControlCenterHub({ business, stats, usage, feedbackTotal, review
           <Link
             key={card.label}
             href={card.href}
-            className="surface-card group block p-4 transition hover:border-gold-500/40 hover:shadow-md"
+            className="stat-card-premium group block"
           >
-            <p className="text-xs font-semibold uppercase tracking-wide text-stone-400">{card.label}</p>
+            <p className="text-xs font-semibold uppercase tracking-wide text-slate-500">{card.label}</p>
             <p className="font-display mt-1 text-3xl text-brand-950 group-hover:text-gold-600">
               {card.value}
             </p>
@@ -92,7 +92,7 @@ export function ControlCenterHub({ business, stats, usage, feedbackTotal, review
             <Link
               key={section.href}
               href={section.href}
-              className="surface-card group block p-5 transition hover:border-gold-500/40 hover:shadow-md"
+              className="surface-card-hover group block p-5"
             >
               <span className="text-2xl">{section.icon}</span>
               <h3 className="mt-3 font-semibold text-brand-950 group-hover:text-gold-600">
@@ -106,7 +106,7 @@ export function ControlCenterHub({ business, stats, usage, feedbackTotal, review
             href={`/r/${business.slug}`}
             target="_blank"
             rel="noreferrer"
-            className="surface-card group block border-dashed p-5 transition hover:border-gold-500/40"
+            className="surface-card-hover group block border-dashed border-teal-400/30 bg-teal-50/20 p-5"
           >
             <span className="text-2xl">↗</span>
             <h3 className="mt-3 font-semibold text-brand-950">Preview my page</h3>

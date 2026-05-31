@@ -13,8 +13,8 @@ export default function SignupPage() {
           <div className="mb-8 lg:hidden">
             <BrandLogo href="/" />
           </div>
-          <div className="glass-panel p-8 sm:p-10">
-            <p className="text-xs font-semibold uppercase tracking-[0.2em] text-mint-500">Get started</p>
+          <div className="auth-card">
+            <p className="page-eyebrow">Get started</p>
             <h1 className="font-display mt-2 text-3xl tracking-tight text-brand-950">Create your account</h1>
             <p className="mt-2 text-sm text-slate-500">
               One sleek form — account + business. Straight to your dashboard.

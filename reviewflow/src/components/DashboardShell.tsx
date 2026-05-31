@@ -136,7 +136,7 @@ export function DashboardShell({
       )}
 
       <div className="flex min-h-screen min-w-0 flex-1 flex-col">
-        <header className="flex items-center justify-between border-b border-slate-200/80 bg-white/70 px-4 py-3 backdrop-blur-xl lg:hidden">
+        <header className="site-header flex items-center justify-between px-4 py-3 lg:hidden">
           <BrandLogo href="/dashboard" size="sm" />
           <button type="button" className="btn-ghost px-3 py-2" onClick={() => setMobileOpen(true)}>
             Menu
