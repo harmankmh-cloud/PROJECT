@@ -1,6 +1,25 @@
-# Cursor tools setup (Figma + Datadog)
+# Cursor tools setup (Figma + Datadog + Graphify)
 
-Figma and Datadog are **already configured in this project**. You only need to connect them once on your Mac.
+Figma and Datadog need a one-time connect on your Mac. **Graphify is already done** in this repo — it helps the AI use less memory and fewer tokens.
+
+---
+
+## Graphify (less tokens — already in the repo)
+
+Graphify turns your codebase into a compact **map** so the AI reads that instead of every file (much cheaper/faster on big projects).
+
+**Already set up for you:**
+- Code map built: `reviewflow/graphify-out/` (457 files mapped)
+- Cursor rule added: auto-included in every chat
+
+**You don't need to install anything** — just pull latest code and use Cursor.
+
+**Optional refresh** (after big code changes, on your Mac Terminal):
+
+```bash
+cd reviewflow
+bash scripts/install-graphify.sh
+```
 
 ---
 
