@@ -21,6 +21,14 @@ cd reviewflow
 bash scripts/install-graphify.sh
 ```
 
+If you see a `--user` / virtualenv error, either deactivate the venv first (`deactivate`) or run:
+
+```bash
+pip install graphifyy
+graphify cursor install
+graphify update .
+```
+
 ---
 
 ## Easiest way (no command search needed)

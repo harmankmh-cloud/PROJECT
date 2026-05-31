@@ -6,9 +6,20 @@ ROOT="$(cd "$(dirname "$0")/.." && pwd)"
 cd "$ROOT"
 
 echo "Installing Graphify (graphifyy on PyPI)..."
-python3 -m pip install --user --upgrade graphifyy
+if [[ -n "${VIRTUAL_ENV:-}" ]]; then
+  # Inside a venv — install there (no --user flag)
+  python3 -m pip install --upgrade graphifyy
+  export PATH="${VIRTUAL_ENV}/bin:${PATH}"
+else
+  python3 -m pip install --user --upgrade graphifyy
+  export PATH="${HOME}/.local/bin:${PATH}"
+fi
 
-export PATH="${HOME}/.local/bin:${PATH}"
+if ! command -v graphify >/dev/null 2>&1; then
+  echo "ERROR: graphify command not found after install."
+  echo "Try: export PATH=\"${PATH}\""
+  exit 1
+fi
 
 echo "Connecting Graphify to Cursor..."
 graphify cursor install
