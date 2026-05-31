@@ -42,7 +42,7 @@ export function SetupChecklist({ businessName, reviewUrl, hasGoogleLink, hasFeed
 
   return (
     <div className="surface-card overflow-hidden">
-      <div className="border-b border-[#e8e2d9] bg-brand-950 px-6 py-4 text-white">
+      <div className="review-header">
         <div className="flex items-center justify-between gap-4">
           <div>
             <h2 className="font-display text-lg">Launch checklist</h2>

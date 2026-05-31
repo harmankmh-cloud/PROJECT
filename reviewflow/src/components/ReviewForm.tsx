@@ -218,8 +218,8 @@ export function ReviewForm({ business, prompts }: Props) {
 
   return (
     <div className="mx-auto w-full max-w-md">
-      <div className="overflow-hidden rounded-[1.85rem] border border-white/60 bg-white/90 shadow-[0_24px_70px_rgba(15,23,42,0.14)] backdrop-blur-xl">
-        <div className="bg-gradient-to-br from-brand-950 via-brand-900 to-[#060a12] px-6 py-5 text-white">
+      <div className="review-shell">
+        <div className="review-header">
           <div className="mb-3 flex items-center justify-between gap-3">
             <button
               type="button"
@@ -256,7 +256,7 @@ export function ReviewForm({ business, prompts }: Props) {
                     key={option.stars}
                     type="button"
                     onClick={() => pickStars(option.stars)}
-                    className="flex w-full items-center gap-4 rounded-xl border border-[#e8e2d9] bg-cream px-4 py-3 text-left transition hover:border-gold-500 hover:bg-amber-50 active:scale-[0.99]"
+                    className={`star-option ${option.stars === 5 ? "star-option-highlight" : ""}`}
                   >
                     <span className="text-lg tracking-wider text-gold-500">
                       {starsLabel(option.stars)}
@@ -278,7 +278,7 @@ export function ReviewForm({ business, prompts }: Props) {
               </div>
 
               {isLowRating && (
-                <p className="rounded-xl bg-rose-50 px-3 py-2 text-xs text-rose-800">
+                <p className="alert-danger">
                   The owner will see your feedback on their dashboard. You can still post on Google if
                   you choose.
                 </p>
@@ -294,7 +294,7 @@ export function ReviewForm({ business, prompts }: Props) {
                       key={chip}
                       type="button"
                       onClick={() => addChip(chip)}
-                      className="rounded-full border border-[#e8e2d9] bg-white px-3 py-1 text-xs font-medium text-brand-950 hover:border-gold-500"
+                      className="chip-tag py-1"
                     >
                       {chip}
                     </button>
@@ -333,10 +333,8 @@ export function ReviewForm({ business, prompts }: Props) {
                     key={index}
                     type="button"
                     onClick={() => selectOption(index)}
-                    className={`w-full rounded-xl border p-3 text-left text-sm leading-relaxed transition ${
-                      selectedIndex === index
-                        ? "border-gold-500 bg-amber-50 ring-2 ring-gold-500/30"
-                        : "border-[#e8e2d9] bg-cream hover:border-gold-500/40"
+                    className={`option-card ${
+                      selectedIndex === index ? "option-card-selected" : ""
                     }`}
                   >
                     <span className="mb-1 block text-[10px] font-bold uppercase tracking-wide text-stone-400">
@@ -363,7 +361,7 @@ export function ReviewForm({ business, prompts }: Props) {
 
               {done ? (
                 <div className="space-y-3">
-                  <div className="rounded-xl bg-emerald-50 px-4 py-3 text-sm text-emerald-800">
+                  <div className="alert-success">
                     <p className="font-semibold">Done — owner notified & text copied.</p>
                     {!isLowRating && business.google_review_url && (
                       <p className="mt-1">Paste your review on Google in the tab that opened.</p>
@@ -387,7 +385,7 @@ export function ReviewForm({ business, prompts }: Props) {
               ) : (
                 <>
                   {!business.google_review_url && (
-                    <p className="rounded-xl bg-amber-50 px-3 py-2 text-xs text-amber-900">
+                    <p className="alert-warning text-xs">
                       Google link not set yet — your feedback is still saved for the owner.
                     </p>
                   )}

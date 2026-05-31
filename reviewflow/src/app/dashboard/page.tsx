@@ -31,14 +31,23 @@ export default async function DashboardPage() {
     >
       <main className="flex-1 px-4 py-8 sm:px-8">
         <div className="mx-auto flex max-w-6xl flex-col gap-8">
-          <header>
-            <p className="text-xs font-semibold uppercase tracking-widest text-gold-600">
-              Your dashboard
+          <header className="dashboard-hero">
+            <div className="hero-glow -right-8 -top-8 h-32 w-32 bg-teal-400/15" />
+            <p className="page-eyebrow relative">Your dashboard</p>
+            <h1 className="font-display relative mt-2 text-3xl text-brand-950 sm:text-4xl">
+              {business.name}
+            </h1>
+            <p className="relative mt-2 max-w-xl text-sm text-slate-600">
+              Reviews, QR poster, and your plan — everything in one place.
             </p>
-            <h1 className="font-display mt-1 text-3xl text-brand-950 sm:text-4xl">{business.name}</h1>
-            <p className="mt-2 text-sm text-stone-500">
-              Reviews, QR poster, and your plan — simple and ready to use.
-            </p>
+            <a
+              href={reviewUrl}
+              target="_blank"
+              rel="noreferrer"
+              className="btn-ghost relative mt-5 inline-flex text-sm"
+            >
+              Preview customer page ↗
+            </a>
           </header>
 
           {isPlatformAdmin(user?.email) && <AdminHubBanner />}

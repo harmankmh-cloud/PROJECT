@@ -11,15 +11,22 @@ export const metadata = {
 export default function HelpPage() {
   return (
     <main className="mesh-bg min-h-screen">
-      <header className="mx-auto flex max-w-3xl items-center justify-between px-4 py-6 sm:px-8">
-        <BrandLogo />
-        <Link href="/login" className="btn-ghost px-4 py-2 text-sm">
-          Sign in
-        </Link>
+      <header className="site-header">
+        <div className="mx-auto flex max-w-3xl items-center justify-between px-4 py-4 sm:px-8">
+          <BrandLogo />
+          <div className="flex gap-2">
+            <Link href="/" className="btn-ghost hidden px-4 py-2 text-sm sm:inline-flex">
+              Home
+            </Link>
+            <Link href="/login" className="btn-gold px-4 py-2 text-sm">
+              Sign in
+            </Link>
+          </div>
+        </div>
       </header>
 
       <div className="mx-auto max-w-3xl px-4 pb-16 sm:px-8">
-        <p className="text-xs font-semibold uppercase tracking-widest text-gold-600">Help center</p>
+        <p className="page-eyebrow">Help center</p>
         <h1 className="font-display mt-2 text-4xl text-brand-950">Help & suggestions</h1>
         <p className="mt-3 text-lg text-slate-600">
           Talk to the {BRAND.name} team — questions about your account, QR codes, billing, or ideas to
@@ -32,7 +39,7 @@ export default function HelpPage() {
             ["💡", "Ideas", "Features you'd love for your shop"],
             ["🐛", "Issues", "Something broken — we'll fix it"],
           ].map(([icon, title, text]) => (
-            <div key={title} className="glass-panel p-5 text-center">
+            <div key={title} className="surface-card-hover p-5 text-center">
               <p className="text-2xl">{icon}</p>
               <p className="mt-2 font-semibold text-brand-950">{title}</p>
               <p className="mt-1 text-xs text-slate-500">{text}</p>
