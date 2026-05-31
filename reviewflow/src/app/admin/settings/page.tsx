@@ -1,3 +1,4 @@
+import { AdminOwnerGuide } from "@/components/AdminOwnerGuide";
 import { StripeSetupChecklist } from "@/components/StripeSetupChecklist";
 import { getAppUrl } from "@/lib/app-url-server";
 import { getStripeConfigStatus } from "@/lib/stripe-config";
@@ -25,6 +26,8 @@ export default async function AdminSettingsPage() {
             Server config and plan rules — only visible in your platform panel.
           </p>
         </header>
+
+        <AdminOwnerGuide />
 
         <div className="surface-card divide-y divide-[#e8e2d9]">
           {[
