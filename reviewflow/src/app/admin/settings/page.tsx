@@ -1,4 +1,5 @@
 import { AdminOwnerGuide } from "@/components/AdminOwnerGuide";
+import { SmtpSetupGuide } from "@/components/SmtpSetupGuide";
 import { StripeSetupChecklist } from "@/components/StripeSetupChecklist";
 import { getAppUrl } from "@/lib/app-url-server";
 import { getStripeConfigStatus } from "@/lib/stripe-config";
@@ -28,6 +29,8 @@ export default async function AdminSettingsPage() {
         </header>
 
         <AdminOwnerGuide />
+
+        <SmtpSetupGuide />
 
         <div className="surface-card divide-y divide-[#e8e2d9]">
           {[

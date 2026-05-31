@@ -2,6 +2,7 @@
 
 import { useState } from "react";
 import { createClient, isSupabaseConfigured } from "@/lib/supabase/client";
+import { friendlyAuthError } from "@/lib/auth-errors";
 import { useRouter } from "next/navigation";
 import { IndustryPicker } from "@/components/IndustryPicker";
 
@@ -165,7 +166,7 @@ export function AuthForm({ mode }: { mode: "login" | "signup" }) {
       router.push("/auth/after-login");
       router.refresh();
     } catch (err) {
-      setError(err instanceof Error ? err.message : "Authentication failed");
+      setError(friendlyAuthError(err instanceof Error ? err.message : "Authentication failed"));
     } finally {
       setLoading(false);
     }
@@ -186,7 +187,7 @@ export function AuthForm({ mode }: { mode: "login" | "signup" }) {
       if (resetError) throw resetError;
       setInfo("Password reset email sent. Check your inbox.");
     } catch (err) {
-      setError(err instanceof Error ? err.message : "Could not send reset email.");
+      setError(friendlyAuthError(err instanceof Error ? err.message : "Could not send reset email."));
     }
   }
 

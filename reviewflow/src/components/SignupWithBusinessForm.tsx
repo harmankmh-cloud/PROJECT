@@ -2,6 +2,7 @@
 
 import { useState } from "react";
 import { createClient, isSupabaseConfigured } from "@/lib/supabase/client";
+import { friendlyAuthError } from "@/lib/auth-errors";
 import { useRouter } from "next/navigation";
 import { IndustryPicker } from "@/components/IndustryPicker";
 
@@ -91,7 +92,7 @@ export function SignupWithBusinessForm() {
         "Almost done — check your email and tap Confirm once. You'll go straight to your dashboard (no need to sign in again)."
       );
     } catch (err) {
-      setError(err instanceof Error ? err.message : "Signup failed");
+      setError(friendlyAuthError(err instanceof Error ? err.message : "Signup failed"));
     } finally {
       setLoading(false);
     }
