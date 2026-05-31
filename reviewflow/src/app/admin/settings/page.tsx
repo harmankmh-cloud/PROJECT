@@ -1,9 +1,12 @@
 import { StripeSetupChecklist } from "@/components/StripeSetupChecklist";
+import { getAppUrl } from "@/lib/app-url-server";
 import { getStripeConfigStatus } from "@/lib/stripe-config";
 import { PLAN_LIMITS, PRICING, pricingLabel } from "@/lib/plans";
 
-export default function AdminSettingsPage() {
+export default async function AdminSettingsPage() {
   const stripeStatus = getStripeConfigStatus();
+  const appUrl = await getAppUrl();
+  const webhookUrl = `${appUrl}/api/stripe/webhook`;
   const supabaseReady = !!(
     process.env.NEXT_PUBLIC_SUPABASE_URL && process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY
   );
@@ -46,7 +49,34 @@ export default function AdminSettingsPage() {
           ))}
         </div>
 
-        {!stripeStatus.webhookReady && <StripeSetupChecklist status={stripeStatus} />}
+        {!stripeStatus.webhookReady && (
+          <StripeSetupChecklist status={stripeStatus} webhookUrl={webhookUrl} />
+        )}
+
+        <div className="surface-card p-6">
+          <h2 className="font-semibold text-brand-950">Stripe Customer Portal</h2>
+          <p className="mt-2 text-sm text-stone-600">
+            Enable in Stripe Dashboard → Settings → Billing → Customer portal → Activate. Required
+            for &quot;Manage subscription&quot; after payment.
+          </p>
+        </div>
+
+        <div className="surface-card p-6">
+          <h2 className="font-semibold text-brand-950">Live payments checklist</h2>
+          <ul className="mt-3 list-decimal space-y-2 pl-5 text-sm text-stone-600">
+            <li>Stripe Dashboard → turn OFF Test mode for real cards</li>
+            <li>
+              Use live keys in Vercel: <code className="text-xs">sk_live_...</code> and live{" "}
+              <code className="text-xs">price_...</code> IDs
+            </li>
+            <li>
+              Webhook endpoint: <code className="text-xs break-all">{webhookUrl}</code>
+            </li>
+            <li>
+              Test card in Test mode only: <code className="text-xs">4242 4242 4242 4242</code>
+            </li>
+          </ul>
+        </div>
 
         <div className="surface-card p-6">
           <h2 className="font-semibold text-brand-950">Pricing & limits</h2>

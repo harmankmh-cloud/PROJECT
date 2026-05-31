@@ -1,6 +1,7 @@
 import { NextResponse } from "next/server";
 import { createClient } from "@/lib/supabase/server";
 import { getAppUrl } from "@/lib/app-url-server";
+import { validateCheckoutPrices } from "@/lib/stripe-prices";
 import { getStripe, isStripeConfigured, stripePriceIds } from "@/lib/stripe";
 
 export async function GET(request: Request) {
@@ -42,32 +43,39 @@ export async function POST() {
 
     const appUrl = await getAppUrl();
     const prices = stripePriceIds();
-    const lineItems: { price: string; quantity: number }[] = [];
 
-    if (prices.monthly) lineItems.push({ price: prices.monthly, quantity: 1 });
-    if (prices.setup) lineItems.push({ price: prices.setup, quantity: 1 });
-
-    if (lineItems.length === 0) {
-      return NextResponse.json({ error: "Stripe price IDs missing" }, { status: 503 });
+    if (!prices.monthly || !prices.setup) {
+      return NextResponse.json({ error: "Stripe price IDs missing in server env" }, { status: 503 });
     }
 
-    for (const item of lineItems) {
-      if (!item.price.startsWith("price_")) {
+    for (const [label, priceId] of [
+      ["STRIPE_PRICE_MONTHLY", prices.monthly],
+      ["STRIPE_PRICE_SETUP", prices.setup],
+    ] as const) {
+      if (!priceId.startsWith("price_")) {
         return NextResponse.json(
           {
-            error:
-              "Wrong Stripe ID in .env.local — must be price_..., not prod_.... In Stripe → Product catalog → open product → click the price → copy Price ID. Then run: npm run stop && npm run smooth",
+            error: `${label} must be price_..., not prod_.... In Stripe → Product catalog → open product → click the price → copy Price ID.`,
           },
           { status: 400 }
         );
       }
     }
 
+    const priceCheck = await validateCheckoutPrices(stripe, prices.setup, prices.monthly);
+    if (!priceCheck.ok) {
+      return NextResponse.json({ error: priceCheck.errors.join(" ") }, { status: 400 });
+    }
+
     const session = await stripe.checkout.sessions.create({
       mode: "subscription",
       customer_email: user.email || undefined,
       client_reference_id: business.id,
-      line_items: lineItems,
+      payment_method_types: ["card"],
+      line_items: [
+        { price: prices.monthly, quantity: 1 },
+        { price: prices.setup, quantity: 1 },
+      ],
       success_url: `${appUrl}/dashboard/billing?success=1&session_id={CHECKOUT_SESSION_ID}`,
       cancel_url: `${appUrl}/dashboard/billing?canceled=1`,
       metadata: {

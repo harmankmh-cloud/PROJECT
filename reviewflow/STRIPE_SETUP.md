@@ -77,9 +77,13 @@ npm run stripe:check
 
 After payment, plan should show **Pro** with **500 reviews/month**.
 
-## Live deploy (Vercel)
+## Live deploy (Vercel + ratelocal.ca)
 
-Add the same env vars in Vercel, then create a webhook endpoint:
-
-- URL: `https://your-domain.com/api/stripe/webhook`
-- Events: `checkout.session.completed`, `customer.subscription.updated`, `customer.subscription.deleted`
+1. Vercel → Project → Settings → Environment Variables — add all Stripe keys
+2. Use **live** keys (`sk_live_...`) and **live** price IDs when ready for real cards
+3. Stripe Dashboard → Developers → Webhooks → Add endpoint:
+   - URL: `https://ratelocal.ca/api/stripe/webhook`
+   - Events: `checkout.session.completed`, `customer.subscription.updated`, `customer.subscription.deleted`
+4. Copy signing secret → Vercel `STRIPE_WEBHOOK_SECRET` → Redeploy
+5. Stripe Dashboard → Settings → Billing → Customer portal → **Activate**
+6. Test mode card (Test mode only): `4242 4242 4242 4242`

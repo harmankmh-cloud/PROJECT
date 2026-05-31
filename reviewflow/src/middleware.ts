@@ -59,9 +59,6 @@ export async function middleware(request: NextRequest) {
   }
 
   if ((pathname === "/login" || pathname === "/signup") && user) {
-    if (isAdminEmail(user.email)) {
-      return NextResponse.redirect(new URL("/admin", request.url));
-    }
     return NextResponse.redirect(new URL("/dashboard", request.url));
   }
 

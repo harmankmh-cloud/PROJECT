@@ -1,6 +1,7 @@
 import { redirect } from "next/navigation";
 import { GoogleDirectQrCard } from "@/components/GoogleDirectQrCard";
 import { QrCard } from "@/components/QrCard";
+import { ReviewLinkTester } from "@/components/ReviewLinkTester";
 import { ShareKit } from "@/components/ShareKit";
 import { buildReviewUrl, getAppUrl } from "@/lib/app-url-server";
 import { getDashboardData } from "@/lib/dashboard-data";
@@ -23,8 +24,11 @@ export default async function SharePage() {
             Smart QR (stars + AI drafts) or direct Google QR — print what fits your counter.
           </p>
         </header>
+
+        <ReviewLinkTester url={reviewUrl} slug={business.slug} businessName={business.name} />
+
         <section className="grid gap-6 lg:grid-cols-2">
-          <QrCard url={reviewUrl} businessName={business.name} />
+          <QrCard url={reviewUrl} slug={business.slug} businessName={business.name} />
           {business.google_review_url ? (
             <GoogleDirectQrCard
               googleReviewUrl={business.google_review_url}
@@ -43,7 +47,7 @@ export default async function SharePage() {
             </div>
           )}
         </section>
-        <ShareKit businessName={business.name} reviewUrl={reviewUrl} />
+        <ShareKit businessName={business.name} reviewUrl={reviewUrl} slug={business.slug} />
       </div>
     </main>
   );

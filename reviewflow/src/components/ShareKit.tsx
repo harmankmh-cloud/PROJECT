@@ -1,11 +1,13 @@
 "use client";
 
-import { useState } from "react";
+import { useMemo, useState } from "react";
 import { copyToClipboard } from "@/lib/copy";
+import { resolvePublicReviewUrl } from "@/lib/app-url";
 
 type Props = {
   businessName: string;
   reviewUrl: string;
+  slug: string;
 };
 
 const templates = (businessName: string, reviewUrl: string) => [
@@ -29,10 +31,11 @@ const templates = (businessName: string, reviewUrl: string) => [
   },
 ];
 
-export function ShareKit({ businessName, reviewUrl }: Props) {
+export function ShareKit({ businessName, reviewUrl, slug }: Props) {
   const [copied, setCopied] = useState<string | null>(null);
   const [error, setError] = useState("");
-  const items = templates(businessName, reviewUrl);
+  const liveReviewUrl = useMemo(() => resolvePublicReviewUrl(reviewUrl, slug), [reviewUrl, slug]);
+  const items = templates(businessName, liveReviewUrl);
 
   async function copy(id: string, text: string) {
     setError("");

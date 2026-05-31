@@ -1,5 +1,5 @@
 import Link from "next/link";
-import { AuthForm } from "@/components/Forms";
+import { SignupWithBusinessForm } from "@/components/SignupWithBusinessForm";
 import { BrandLogo } from "@/components/BrandLogo";
 
 export default function SignupPage() {
@@ -32,9 +32,9 @@ export default function SignupPage() {
           </div>
           <div className="surface-card p-8">
             <h1 className="font-display text-2xl text-brand-950">Create your account</h1>
-            <p className="mt-1 text-sm text-stone-500">Launch your review page in 2 minutes</p>
+            <p className="mt-1 text-sm text-stone-500">One form — account + business. Then straight to your dashboard.</p>
             <div className="mt-6">
-              <AuthForm mode="signup" />
+              <SignupWithBusinessForm />
             </div>
             <p className="mt-6 text-center text-sm text-stone-500">
               Already have an account?{" "}
