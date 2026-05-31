@@ -3,6 +3,7 @@
 import { useState } from "react";
 import { useRouter } from "next/navigation";
 import type { Business } from "@/lib/types";
+import { BRAND } from "@/lib/brand";
 import { INDUSTRY_OPTIONS } from "@/lib/defaults";
 
 export function BusinessSettingsForm({
@@ -91,8 +92,8 @@ export function BusinessSettingsForm({
             className="input-field"
           />
           <span className="block text-xs leading-relaxed text-stone-500">
-            Paste your Google &quot;Write a review&quot; link — not your ReviewFlow link. Customers
-            scan your QR (ReviewFlow page), then open Google after they copy a draft.
+            Paste your Google &quot;Write a review&quot; link — not your {BRAND.name} link. Customers
+            scan your QR ({BRAND.name} page), then open Google after they copy a draft.
           </span>
         </label>
 

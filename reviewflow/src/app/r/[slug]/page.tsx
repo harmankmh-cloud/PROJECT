@@ -3,6 +3,7 @@ import { createClient } from "@/lib/supabase/server";
 import { ReviewForm } from "@/components/ReviewForm";
 import type { Business, PromptTemplate } from "@/lib/types";
 import { sortPrompts } from "@/lib/defaults";
+import { BRAND } from "@/lib/brand";
 
 export default async function CustomerReviewPage({
   params,
@@ -31,7 +32,7 @@ export default async function CustomerReviewPage({
         business={business as Business}
         prompts={sortPrompts((prompts || []) as PromptTemplate[])}
       />
-      <p className="mt-8 text-xs text-stone-400">Powered by ReviewFlow</p>
+      <p className="mt-8 text-xs text-stone-400">{BRAND.poweredBy}</p>
     </main>
   );
 }

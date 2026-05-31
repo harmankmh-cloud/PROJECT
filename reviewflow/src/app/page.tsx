@@ -1,6 +1,7 @@
 import Link from "next/link";
 import { BrandLogo } from "@/components/BrandLogo";
 import { PhonePreview } from "@/components/PhonePreview";
+import { BRAND } from "@/lib/brand";
 
 export default function HomePage() {
   return (
@@ -141,7 +142,7 @@ export default function HomePage() {
       </section>
 
       <footer className="border-t border-[#e8e2d9] py-8 text-center text-sm text-stone-500">
-        ReviewFlow — reputation tools for shops that care
+        {BRAND.footer}
       </footer>
     </main>
   );

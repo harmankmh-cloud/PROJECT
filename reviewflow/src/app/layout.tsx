@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import { Instrument_Serif, Plus_Jakarta_Sans } from "next/font/google";
+import { BRAND } from "@/lib/brand";
 import "./globals.css";
 
 const jakarta = Plus_Jakarta_Sans({
@@ -15,8 +16,8 @@ const instrument = Instrument_Serif({
 
 export const metadata: Metadata = {
   title: {
-    default: "ReviewFlow — Turn visits into Google reviews",
-    template: "%s · ReviewFlow",
+    default: `${BRAND.name} — ${BRAND.tagline}`,
+    template: `%s · ${BRAND.name}`,
   },
   description:
     "QR-powered review collection for local businesses. Route unhappy customers privately, help happy ones post on Google in seconds.",

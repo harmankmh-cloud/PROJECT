@@ -1,6 +1,7 @@
 import { NextResponse } from "next/server";
 import Stripe from "stripe";
 import { getStripe } from "@/lib/stripe";
+import { BRAND } from "@/lib/brand";
 import { updateBusinessFromSubscription } from "@/lib/stripe-subscription";
 
 export const runtime = "nodejs";
@@ -8,7 +9,7 @@ export const runtime = "nodejs";
 export async function GET() {
   return NextResponse.json({
     ok: true,
-    message: "ReviewFlow Stripe webhook. Stripe sends POST requests here — do not open in a browser.",
+    message: `${BRAND.name} Stripe webhook. Stripe sends POST requests here — do not open in a browser.`,
   });
 }
 

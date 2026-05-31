@@ -5,6 +5,7 @@ import Link from "next/link";
 import type { Business, UsageSummary } from "@/lib/types";
 import type { StripeConfigStatus } from "@/lib/stripe-config";
 import { PLAN_LIMITS, pricingLabel } from "@/lib/plans";
+import { BRAND } from "@/lib/brand";
 import { StripeSetupChecklist } from "@/components/StripeSetupChecklist";
 
 type Props = {
@@ -108,7 +109,7 @@ export function BillingPanel({
 
       <div className="surface-card overflow-hidden">
         <div className="border-b border-[#e8e2d9] bg-brand-950 px-6 py-5 text-white">
-          <p className="text-xs font-semibold uppercase tracking-widest text-gold-400">ReviewFlow Pro</p>
+          <p className="text-xs font-semibold uppercase tracking-widest text-gold-400">{BRAND.proPlan}</p>
           <h2 className="font-display mt-1 text-2xl">{pricingLabel()}</h2>
           <p className="mt-2 text-sm text-white/60">One-time setup + monthly subscription</p>
         </div>

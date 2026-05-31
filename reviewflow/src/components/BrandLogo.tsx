@@ -1,4 +1,5 @@
 import Link from "next/link";
+import { BRAND } from "@/lib/brand";
 
 export function BrandLogo({
   href = "/",
@@ -24,7 +25,7 @@ export function BrandLogo({
         ★
       </div>
       <span className={`font-display ${s.text} ${light ? "text-white" : "text-brand-950"}`}>
-        ReviewFlow
+        {BRAND.name}
       </span>
     </Link>
   );

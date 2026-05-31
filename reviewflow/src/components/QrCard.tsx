@@ -81,10 +81,9 @@ export function QrCard({ url, businessName }: Props) {
   return (
     <div className="surface-card overflow-hidden">
       <div className="border-b border-[#e8e2d9] bg-white px-6 py-4">
-        <h2 className="font-display text-lg text-brand-950">Your QR poster</h2>
+        <h2 className="font-display text-lg text-brand-950">Smart review QR (recommended)</h2>
         <p className="mt-0.5 text-sm text-stone-500">
-          Includes <span className="font-medium text-brand-950">{businessName}</span> — ready to print
-          at your counter
+          Stars + AI drafts for <span className="font-medium text-brand-950">{businessName}</span> — then Google
         </p>
       </div>
       <div className="bg-white p-6">

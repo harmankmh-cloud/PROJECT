@@ -1,5 +1,6 @@
 import { getPlatformAdminData, getPlatformTotals } from "@/lib/admin-data";
 import { getAppUrl } from "@/lib/app-url-server";
+import { BRAND } from "@/lib/brand";
 import { PlatformAdminPanel } from "@/components/PlatformAdminPanel";
 
 export default async function AdminOverviewPage() {
@@ -16,7 +17,7 @@ export default async function AdminOverviewPage() {
           </p>
           <h1 className="font-display mt-1 text-3xl text-brand-950">Overview</h1>
           <p className="mt-2 text-sm text-stone-500">
-            Your full control centre — every business, plan, and review on ReviewFlow.
+            Your full control centre — every business, plan, and review on {BRAND.name}.
           </p>
         </header>
         <PlatformAdminPanel rows={rows} totals={totals} appUrl={appUrl} compact />

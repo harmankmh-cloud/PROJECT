@@ -2,6 +2,7 @@
 
 import Link from "next/link";
 import { useSyncExternalStore, useState } from "react";
+import { BRAND } from "@/lib/brand";
 
 const STORAGE_PRINT = "reviewflow_printed_qr";
 const STORAGE_TEXTED = "reviewflow_texted_customer";
@@ -33,7 +34,7 @@ export function QuickStartGuide({
   const textedDone = storedTexted || textedMarked;
 
   const steps = [
-    { done: true, title: "Account created", detail: "You're signed in to ReviewFlow" },
+    { done: true, title: "Account created", detail: `You're signed in to ${BRAND.name}` },
     {
       done: hasGoogleLink,
       title: "Add Google review link",

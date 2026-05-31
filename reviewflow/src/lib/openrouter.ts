@@ -1,3 +1,4 @@
+import { BRAND } from "./brand";
 import { buildFallbackReviewOptions } from "./review-fallbacks";
 
 type GenerateReviewInput = {
@@ -50,7 +51,7 @@ Write 3 different Google review options.`;
           Authorization: `Bearer ${apiKey}`,
           "Content-Type": "application/json",
           "HTTP-Referer": process.env.NEXT_PUBLIC_APP_URL || "http://localhost:3000",
-          "X-Title": "ReviewFlow",
+          "X-Title": BRAND.name,
         },
         body: JSON.stringify({
           model,
@@ -133,7 +134,7 @@ export async function generateSocialCaption(input: {
       Authorization: `Bearer ${apiKey}`,
       "Content-Type": "application/json",
       "HTTP-Referer": process.env.NEXT_PUBLIC_APP_URL || "http://localhost:3000",
-      "X-Title": "ReviewFlow",
+      "X-Title": BRAND.name,
     },
     body: JSON.stringify({
       model,
@@ -173,7 +174,7 @@ export async function generateReviewReply(input: {
       Authorization: `Bearer ${apiKey}`,
       "Content-Type": "application/json",
       "HTTP-Referer": process.env.NEXT_PUBLIC_APP_URL || "http://localhost:3000",
-      "X-Title": "ReviewFlow",
+      "X-Title": BRAND.name,
     },
     body: JSON.stringify({
       model,

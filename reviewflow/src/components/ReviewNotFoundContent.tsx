@@ -3,6 +3,7 @@
 import Link from "next/link";
 import { useCustomerBack } from "@/components/useCustomerBack";
 import { BrandLogo } from "@/components/BrandLogo";
+import { BRAND } from "@/lib/brand";
 
 export function ReviewNotFoundContent() {
   const { isLoggedIn, goBack } = useCustomerBack();
@@ -27,7 +28,7 @@ export function ReviewNotFoundContent() {
             </button>
           )}
           <Link href="/" className="btn-ghost inline-flex justify-center py-3">
-            ReviewFlow home
+            {BRAND.home}
           </Link>
         </div>
       </div>

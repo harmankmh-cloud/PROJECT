@@ -1,8 +1,10 @@
+import { BRAND } from "@/lib/brand";
+
 export type PlanId = "trial" | "active" | "past_due" | "canceled";
 
 export const PLAN_LIMITS: Record<PlanId, { label: string; monthlyReviews: number }> = {
   trial: { label: "Free trial", monthlyReviews: 50 },
-  active: { label: "ReviewFlow Pro", monthlyReviews: 500 },
+  active: { label: BRAND.proPlan, monthlyReviews: 500 },
   past_due: { label: "Payment issue", monthlyReviews: 50 },
   canceled: { label: "Canceled", monthlyReviews: 0 },
 };
