@@ -247,18 +247,18 @@ export function ReviewForm({ business, prompts }: Props) {
         <div className="p-6">
           {step === "stars" && (
             <div className="space-y-4">
-              <p className="text-center text-sm font-medium text-brand-950">
-                How many stars would you give?
+              <p className="text-center text-base font-semibold text-brand-950">
+                How was your visit?
               </p>
-              <div className="space-y-2">
+              <div className="space-y-3">
                 {STAR_OPTIONS.map((option) => (
                   <button
                     key={option.stars}
                     type="button"
                     onClick={() => pickStars(option.stars)}
-                    className={`star-option ${option.stars === 5 ? "star-option-highlight" : ""}`}
+                    className={`star-option-lg ${option.stars === 5 ? "border-teal-400/60 bg-gradient-to-r from-teal-50 to-amber-50 ring-2 ring-teal-400/20" : ""}`}
                   >
-                    <span className="text-lg tracking-wider text-gold-500">
+                    <span className="text-2xl tracking-wider text-gold-500">
                       {starsLabel(option.stars)}
                     </span>
                     <span>

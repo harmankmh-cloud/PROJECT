@@ -16,10 +16,12 @@ export function AuthMarketingPanel({ footer }: { footer: string }) {
       <div className="hero-glow bottom-0 right-0 h-72 w-72 bg-amber-500/15" />
       <div className="relative">
         <BrandLogo href="/" light size="lg" />
-        <h2 className="font-display mt-10 text-3xl leading-tight text-white">
-          More Google reviews.
+        <h2 className="font-display mt-10 text-4xl leading-tight text-white">
+          The review page
           <br />
-          <span className="text-gradient">Fewer public disasters.</span>
+          <span className="bg-gradient-to-r from-amber-200 to-teal-300 bg-clip-text text-transparent">
+            your shop deserves
+          </span>
         </h2>
         <p className="mt-4 max-w-sm text-sm leading-relaxed text-white/50">
           {BRAND.name} gives local businesses a polished QR experience — not a cold Google form.

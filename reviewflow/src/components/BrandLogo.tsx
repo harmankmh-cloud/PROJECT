@@ -20,7 +20,7 @@ export function BrandLogo({
   return (
     <Link href={href} className="group inline-flex items-center gap-3">
       <div
-        className={`${s.box} flex items-center justify-center rounded-2xl bg-gradient-to-br from-gold-400 via-gold-500 to-mint-400 font-bold text-brand-950 shadow-[0_8px_24px_rgba(245,158,11,0.4)] transition duration-300 group-hover:scale-105 group-hover:shadow-[0_12px_28px_rgba(20,184,166,0.35)]`}
+        className={`${s.box} flex items-center justify-center rounded-2xl bg-gradient-to-br from-amber-300 via-gold-500 to-teal-400 font-bold text-brand-950 ring-2 ring-white/20 shadow-[0_8px_28px_rgba(245,158,11,0.55)] transition duration-300 group-hover:scale-105`}
       >
         ★
       </div>
@@ -28,6 +28,11 @@ export function BrandLogo({
         className={`font-display tracking-tight ${s.text} ${light ? "text-white" : "text-brand-950"}`}
       >
         {BRAND.name}
+        {size === "lg" && !light && (
+          <span className="mt-0.5 block font-sans text-[10px] font-semibold uppercase tracking-[0.2em] text-teal-600">
+            Reviews made easy
+          </span>
+        )}
       </span>
     </Link>
   );

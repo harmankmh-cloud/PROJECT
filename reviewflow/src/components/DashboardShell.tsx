@@ -121,7 +121,7 @@ export function DashboardShell({
 
   return (
     <div className="min-h-screen bg-cream lg:flex">
-      <aside className="sidebar-shell hidden w-64 shrink-0 lg:block">{sidebar}</aside>
+      <aside className="sidebar-shell sidebar-accent hidden w-64 shrink-0 lg:block">{sidebar}</aside>
 
       {mobileOpen && (
         <div className="fixed inset-0 z-50 lg:hidden">
@@ -131,7 +131,7 @@ export function DashboardShell({
             onClick={() => setMobileOpen(false)}
             aria-label="Close menu"
           />
-          <aside className="sidebar-shell relative h-full w-72 shadow-2xl">{sidebar}</aside>
+          <aside className="sidebar-shell sidebar-accent relative h-full w-72 shadow-2xl">{sidebar}</aside>
         </div>
       )}
 
