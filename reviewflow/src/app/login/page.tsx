@@ -2,7 +2,14 @@ import Link from "next/link";
 import { AuthForm } from "@/components/Forms";
 import { BrandLogo } from "@/components/BrandLogo";
 
-export default function LoginPage() {
+export default async function LoginPage({
+  searchParams,
+}: {
+  searchParams: Promise<{ message?: string }>;
+}) {
+  const params = await searchParams;
+  const message = params.message ? decodeURIComponent(params.message) : "";
+
   return (
     <main className="mesh-bg flex min-h-screen">
       <div className="hidden w-1/2 flex-col justify-between bg-brand-950 p-12 lg:flex">
@@ -32,7 +39,10 @@ export default function LoginPage() {
           </div>
           <div className="surface-card p-8">
             <h1 className="font-display text-2xl text-brand-950">Welcome back</h1>
-            <p className="mt-1 text-sm text-stone-500">Sign in to your command center</p>
+            <p className="mt-1 text-sm text-stone-500">Sign in once — your dashboard opens next</p>
+            {message && (
+              <p className="mt-4 rounded-xl bg-amber-50 px-3 py-3 text-sm text-amber-950">{message}</p>
+            )}
             <div className="mt-6">
               <AuthForm mode="login" />
             </div>

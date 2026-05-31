@@ -154,11 +154,19 @@ export function AuthForm({ mode }: { mode: "login" | "signup" }) {
       const supabase = createClient();
 
       if (mode === "signup") {
-        const result = await supabase.auth.signUp({ email, password });
+        const result = await supabase.auth.signUp({
+          email,
+          password,
+          options: {
+            emailRedirectTo: `${window.location.origin}/auth/callback?next=/dashboard`,
+          },
+        });
         if (result.error) throw result.error;
 
         if (!result.data.session) {
-          setInfo("Account created. Check your email to confirm, then sign in.");
+          setInfo(
+            "Check your email and tap Confirm once — you'll go straight to your dashboard."
+          );
           return;
         }
 
@@ -189,7 +197,7 @@ export function AuthForm({ mode }: { mode: "login" | "signup" }) {
     try {
       const supabase = createClient();
       const { error: resetError } = await supabase.auth.resetPasswordForEmail(email.trim(), {
-        redirectTo: `${window.location.origin}/login`,
+        redirectTo: `${window.location.origin}/auth/callback?next=/dashboard/settings`,
       });
       if (resetError) throw resetError;
       setInfo("Password reset email sent. Check your inbox.");
