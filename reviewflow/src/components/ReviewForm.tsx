@@ -218,8 +218,8 @@ export function ReviewForm({ business, prompts }: Props) {
 
   return (
     <div className="mx-auto w-full max-w-md">
-      <div className="overflow-hidden rounded-[1.75rem] border border-[#e8e2d9] bg-white shadow-[0_20px_60px_rgba(12,18,34,0.12)]">
-        <div className="bg-brand-950 px-6 py-5 text-white">
+      <div className="overflow-hidden rounded-[1.85rem] border border-white/60 bg-white/90 shadow-[0_24px_70px_rgba(15,23,42,0.14)] backdrop-blur-xl">
+        <div className="bg-gradient-to-br from-brand-950 via-brand-900 to-[#060a12] px-6 py-5 text-white">
           <div className="mb-3 flex items-center justify-between gap-3">
             <button
               type="button"

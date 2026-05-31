@@ -220,8 +220,12 @@ export function AuthForm({ mode }: { mode: "login" | "signup" }) {
         </button>
       )}
       {error && <p className="text-sm text-rose-600">{error}</p>}
-      {info && <p className="text-sm text-emerald-700">{info}</p>}
-      <button type="submit" disabled={loading} className="btn-gold w-full py-3">
+      {info && (
+        <p className="rounded-2xl border border-emerald-200/80 bg-emerald-50/90 px-4 py-3 text-sm text-emerald-800">
+          {info}
+        </p>
+      )}
+      <button type="submit" disabled={loading} className="btn-gold w-full py-3.5">
         {loading ? "Please wait…" : mode === "signup" ? "Create account" : "Sign in"}
       </button>
     </form>

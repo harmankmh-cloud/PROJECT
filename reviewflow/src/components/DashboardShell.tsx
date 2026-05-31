@@ -73,11 +73,7 @@ export function DashboardShell({
               key={link.href}
               href={link.href}
               onClick={() => setMobileOpen(false)}
-              className={`flex items-center gap-3 rounded-xl px-3 py-2.5 text-sm font-medium transition ${
-                active
-                  ? "bg-white/10 text-gold-400"
-                  : "text-white/70 hover:bg-white/5 hover:text-white"
-              }`}
+              className={`nav-item ${active ? "nav-item-active" : ""}`}
             >
               <span className="text-base opacity-80">{link.icon}</span>
               {link.label}
@@ -90,7 +86,7 @@ export function DashboardShell({
             target="_blank"
             rel="noreferrer"
             onClick={() => setMobileOpen(false)}
-            className="flex items-center gap-3 rounded-xl px-3 py-2.5 text-sm font-medium text-white/70 transition hover:bg-white/5 hover:text-white"
+            className="nav-item"
           >
             <span className="text-base opacity-80">↗</span>
             Preview my page
@@ -102,7 +98,7 @@ export function DashboardShell({
         <div className="border-t border-white/10 px-3 py-3">
           <Link
             href="/admin"
-            className="flex items-center gap-2 rounded-xl bg-gold-500/15 px-3 py-2.5 text-sm font-semibold text-gold-400 transition hover:bg-gold-500/25"
+            className="flex items-center gap-2 rounded-2xl bg-gradient-to-r from-gold-500/20 to-mint-500/15 px-3.5 py-2.5 text-sm font-semibold text-mint-400 transition hover:from-gold-500/30 hover:to-mint-500/25"
           >
             🛡 Platform panel →
           </Link>
@@ -124,7 +120,7 @@ export function DashboardShell({
 
   return (
     <div className="min-h-screen bg-cream lg:flex">
-      <aside className="hidden w-64 shrink-0 bg-brand-950 lg:block">{sidebar}</aside>
+      <aside className="sidebar-shell hidden w-64 shrink-0 lg:block">{sidebar}</aside>
 
       {mobileOpen && (
         <div className="fixed inset-0 z-50 lg:hidden">
@@ -134,12 +130,12 @@ export function DashboardShell({
             onClick={() => setMobileOpen(false)}
             aria-label="Close menu"
           />
-          <aside className="relative h-full w-72 bg-brand-950 shadow-2xl">{sidebar}</aside>
+          <aside className="sidebar-shell relative h-full w-72 shadow-2xl">{sidebar}</aside>
         </div>
       )}
 
       <div className="flex min-h-screen min-w-0 flex-1 flex-col">
-        <header className="flex items-center justify-between border-b border-[#e8e2d9] bg-white/80 px-4 py-3 backdrop-blur lg:hidden">
+        <header className="flex items-center justify-between border-b border-slate-200/80 bg-white/70 px-4 py-3 backdrop-blur-xl lg:hidden">
           <BrandLogo href="/dashboard" size="sm" />
           <button type="button" className="btn-ghost px-3 py-2" onClick={() => setMobileOpen(true)}>
             Menu

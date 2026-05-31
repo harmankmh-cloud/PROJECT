@@ -1,44 +1,30 @@
 import Link from "next/link";
+import { AuthMarketingPanel } from "@/components/AuthMarketingPanel";
 import { SignupWithBusinessForm } from "@/components/SignupWithBusinessForm";
 import { BrandLogo } from "@/components/BrandLogo";
 
 export default function SignupPage() {
   return (
     <main className="mesh-bg flex min-h-screen">
-      <div className="hidden w-1/2 flex-col justify-between bg-brand-950 p-12 lg:flex">
-        <BrandLogo href="/" light />
-        <ul className="space-y-4 text-white/80">
-          {[
-            "Print-ready QR poster in minutes",
-            "AI drafts that sound human",
-            "Private channel for unhappy customers",
-            "Share kit: SMS, email, counter sign",
-          ].map((item) => (
-            <li key={item} className="flex items-center gap-3 text-sm">
-              <span className="flex h-6 w-6 shrink-0 items-center justify-center rounded-full bg-gold-500/20 text-gold-400">
-                ✓
-              </span>
-              {item}
-            </li>
-          ))}
-        </ul>
-        <p className="text-xs text-white/30">No credit card required to start</p>
-      </div>
+      <AuthMarketingPanel footer="No credit card required to start" />
 
       <div className="flex flex-1 items-center justify-center px-4 py-12">
-        <div className="w-full max-w-md">
+        <div className="w-full max-w-lg">
           <div className="mb-8 lg:hidden">
             <BrandLogo href="/" />
           </div>
-          <div className="surface-card p-8">
-            <h1 className="font-display text-2xl text-brand-950">Create your account</h1>
-            <p className="mt-1 text-sm text-stone-500">One form — account + business. Then straight to your dashboard.</p>
-            <div className="mt-6">
+          <div className="glass-panel p-8 sm:p-10">
+            <p className="text-xs font-semibold uppercase tracking-[0.2em] text-mint-500">Get started</p>
+            <h1 className="font-display mt-2 text-3xl tracking-tight text-brand-950">Create your account</h1>
+            <p className="mt-2 text-sm text-slate-500">
+              One sleek form — account + business. Straight to your dashboard.
+            </p>
+            <div className="mt-8">
               <SignupWithBusinessForm />
             </div>
-            <p className="mt-6 text-center text-sm text-stone-500">
+            <p className="mt-8 text-center text-sm text-slate-500">
               Already have an account?{" "}
-              <Link href="/login" className="font-semibold text-gold-600 hover:underline">
+              <Link href="/login" className="link-accent">
                 Sign in
               </Link>
             </p>
