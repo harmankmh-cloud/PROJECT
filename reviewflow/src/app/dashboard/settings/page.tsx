@@ -1,6 +1,7 @@
 import { redirect } from "next/navigation";
 import { GoogleSetupProvider } from "@/components/GoogleSetupModal";
 import { BusinessSettingsForm } from "@/components/BusinessSettingsForm";
+import { DeleteBusinessPanel } from "@/components/DeleteBusinessPanel";
 import { QrCard } from "@/components/QrCard";
 import { buildReviewUrl, getAppUrl } from "@/lib/app-url-server";
 import { getDashboardData } from "@/lib/dashboard-data";
@@ -30,6 +31,7 @@ export default async function SettingsPage() {
             <BusinessSettingsForm business={business} />
             <QrCard url={reviewUrl} slug={business.slug} businessName={business.name} />
           </div>
+          <DeleteBusinessPanel business={business} />
         </div>
       </main>
     </GoogleSetupProvider>
