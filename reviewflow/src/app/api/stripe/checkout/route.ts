@@ -1,5 +1,6 @@
 import { NextResponse } from "next/server";
 import { createClient } from "@/lib/supabase/server";
+import { getAppUrl } from "@/lib/app-url-server";
 import { getStripe, isStripeConfigured, stripePriceIds } from "@/lib/stripe";
 
 export async function GET(request: Request) {
@@ -39,7 +40,7 @@ export async function POST() {
       return NextResponse.json({ error: "Create your business first" }, { status: 404 });
     }
 
-    const appUrl = process.env.NEXT_PUBLIC_APP_URL || "http://localhost:3000";
+    const appUrl = await getAppUrl();
     const prices = stripePriceIds();
     const lineItems: { price: string; quantity: number }[] = [];
 

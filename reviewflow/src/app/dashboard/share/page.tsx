@@ -1,6 +1,7 @@
 import { redirect } from "next/navigation";
 import { QrCard } from "@/components/QrCard";
 import { ShareKit } from "@/components/ShareKit";
+import { buildReviewUrl, getAppUrl } from "@/lib/app-url-server";
 import { getDashboardData } from "@/lib/dashboard-data";
 
 export default async function SharePage() {
@@ -8,8 +9,8 @@ export default async function SharePage() {
 
   if (!business) redirect("/dashboard");
 
-  const appUrl = process.env.NEXT_PUBLIC_APP_URL || "http://localhost:3000";
-  const reviewUrl = `${appUrl}/r/${business.slug}`;
+  const appUrl = await getAppUrl();
+  const reviewUrl = buildReviewUrl(appUrl, business.slug);
 
   return (
     <main className="flex-1 px-4 py-8 sm:px-8">

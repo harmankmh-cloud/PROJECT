@@ -1,7 +1,8 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { copyToClipboard } from "@/lib/copy";
+import { fixReviewUrlForClient } from "@/lib/app-url";
 import { generateQrOnlyDataUrl, generateQrPosterDataUrl } from "@/lib/qr-poster";
 
 type Props = {
@@ -23,6 +24,9 @@ export function QrCard({ url, businessName }: Props) {
   const [error, setError] = useState("");
   const [loading, setLoading] = useState(true);
 
+  const reviewUrl = useMemo(() => fixReviewUrlForClient(url), [url]);
+  const hadLocalhost = url !== reviewUrl || url.includes("localhost");
+
   useEffect(() => {
     let cancelled = false;
 
@@ -31,8 +35,8 @@ export function QrCard({ url, businessName }: Props) {
       setError("");
       try {
         const [poster, qrOnly] = await Promise.all([
-          generateQrPosterDataUrl({ url, businessName }),
-          generateQrOnlyDataUrl(url),
+          generateQrPosterDataUrl({ url: reviewUrl, businessName }),
+          generateQrOnlyDataUrl(reviewUrl),
         ]);
         if (!cancelled) {
           setPosterUrl(poster);
@@ -49,12 +53,12 @@ export function QrCard({ url, businessName }: Props) {
     return () => {
       cancelled = true;
     };
-  }, [url, businessName]);
+  }, [reviewUrl, businessName]);
 
   async function copyLink() {
     setError("");
     try {
-      await copyToClipboard(url);
+      await copyToClipboard(reviewUrl);
       setCopied(true);
       setTimeout(() => setCopied(false), 2000);
     } catch (err) {
@@ -97,7 +101,12 @@ export function QrCard({ url, businessName }: Props) {
           )}
         </div>
 
-        <p className="mt-4 break-all text-center text-xs text-stone-500">{url}</p>
+        <p className="mt-4 break-all text-center text-xs text-stone-500">{reviewUrl}</p>
+        {hadLocalhost && (
+          <p className="mt-2 rounded-lg bg-emerald-50 px-3 py-2 text-center text-xs text-emerald-900">
+            QR uses your live website link (not localhost) so customers can scan it on their phone.
+          </p>
+        )}
         {error && <p className="mt-2 text-center text-xs text-rose-600">{error}</p>}
 
         <div className="mt-4 flex flex-col gap-2 sm:flex-row">

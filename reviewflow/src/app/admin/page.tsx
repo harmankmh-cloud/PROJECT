@@ -1,10 +1,11 @@
 import { getPlatformAdminData, getPlatformTotals } from "@/lib/admin-data";
+import { getAppUrl } from "@/lib/app-url-server";
 import { PlatformAdminPanel } from "@/components/PlatformAdminPanel";
 
 export default async function AdminOverviewPage() {
   const rows = await getPlatformAdminData();
   const totals = await getPlatformTotals(rows);
-  const appUrl = process.env.NEXT_PUBLIC_APP_URL || "http://localhost:3000";
+  const appUrl = await getAppUrl();
 
   return (
     <main className="flex-1 px-4 py-8 sm:px-8">

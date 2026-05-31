@@ -1,5 +1,6 @@
 import { NextResponse } from "next/server";
 import { createClient } from "@/lib/supabase/server";
+import { getAppUrl } from "@/lib/app-url-server";
 import { getStripe, isStripeConfigured } from "@/lib/stripe";
 
 export async function GET(request: Request) {
@@ -36,7 +37,7 @@ export async function POST() {
       return NextResponse.json({ error: "No billing account yet. Upgrade first." }, { status: 400 });
     }
 
-    const appUrl = process.env.NEXT_PUBLIC_APP_URL || "http://localhost:3000";
+    const appUrl = await getAppUrl();
 
     const session = await stripe.billingPortal.sessions.create({
       customer: business.stripe_customer_id,

@@ -90,10 +90,22 @@ export function BusinessSettingsForm({
             placeholder="https://g.page/r/..."
             className="input-field"
           />
-          <span className="block text-xs text-stone-500">
-            Paste your Google review link so customers can post after copying their draft.
+          <span className="block text-xs leading-relaxed text-stone-500">
+            Paste your Google &quot;Write a review&quot; link — not your ReviewFlow link. Customers
+            scan your QR (ReviewFlow page), then open Google after they copy a draft.
           </span>
         </label>
+
+        <div className="rounded-xl bg-cream px-4 py-3 text-xs leading-relaxed text-stone-600">
+          <p className="font-semibold text-brand-950">Two links — don&apos;t mix them up</p>
+          <p className="mt-1">
+            <strong>QR / review page</strong> (auto):{" "}
+            <span className="font-medium">/r/{business.slug}</span> — put this on posters & texts.
+          </p>
+          <p className="mt-1">
+            <strong>Google link</strong> (above): where happy customers post on Google Maps.
+          </p>
+        </div>
 
         {!simple && (
           <label className="block space-y-2 text-sm">
