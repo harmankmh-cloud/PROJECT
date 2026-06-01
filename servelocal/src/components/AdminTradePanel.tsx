@@ -3,17 +3,19 @@
 import { useRouter } from "next/navigation";
 import { useState } from "react";
 import { cityName, LISTING_PLANS } from "@/lib/constants";
-import type { ProviderReview, ServiceProvider, ServiceRequest } from "@/lib/types";
+import type { ProviderReview, ServiceProvider, ServiceRequest, SiteSuggestion } from "@/lib/types";
 import { StarRating } from "@/components/StarRating";
 
 export function AdminTradePanel({
   providers,
   requests,
   reviews,
+  suggestions,
 }: {
   providers: ServiceProvider[];
   requests: ServiceRequest[];
   reviews: ProviderReview[];
+  suggestions: SiteSuggestion[];
 }) {
   const router = useRouter();
   const [loadingId, setLoadingId] = useState<string | null>(null);
@@ -51,10 +53,66 @@ export function AdminTradePanel({
     }
   }
 
+  async function updateSuggestion(id: string, status: "read" | "done") {
+    setLoadingId(id);
+    try {
+      const response = await fetch(`/api/admin/suggestions/${id}`, {
+        method: "PATCH",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ status }),
+      });
+      if (!response.ok) throw new Error("Suggestion update failed");
+      router.refresh();
+    } finally {
+      setLoadingId(null);
+    }
+  }
+
   const pending = providers.filter((p) => p.status === "pending");
+  const newSuggestions = suggestions.filter((s) => s.status === "new");
 
   return (
     <div className="space-y-8">
+      {newSuggestions.length > 0 && (
+        <div className="surface-card overflow-hidden">
+          <div className="review-header">
+            <h2 className="font-display text-lg font-semibold text-zinc-900">
+              Site suggestions ({newSuggestions.length})
+            </h2>
+          </div>
+          <ul className="divide-y divide-zinc-100">
+            {newSuggestions.map((s) => (
+              <li key={s.id} className="px-6 py-4">
+                <p className="text-sm leading-relaxed text-zinc-700">{s.message}</p>
+                <p className="mt-2 text-xs text-zinc-500">
+                  {s.email && `${s.email} · `}
+                  {s.page_url && `${s.page_url} · `}
+                  {new Date(s.created_at).toLocaleString()}
+                </p>
+                <div className="mt-3 flex gap-2">
+                  <button
+                    type="button"
+                    disabled={loadingId === s.id}
+                    onClick={() => updateSuggestion(s.id, "read")}
+                    className="btn-ghost px-3 py-1.5 text-xs"
+                  >
+                    Mark read
+                  </button>
+                  <button
+                    type="button"
+                    disabled={loadingId === s.id}
+                    onClick={() => updateSuggestion(s.id, "done")}
+                    className="btn-primary px-3 py-1.5 text-xs"
+                  >
+                    Done
+                  </button>
+                </div>
+              </li>
+            ))}
+          </ul>
+        </div>
+      )}
+
       {pending.length > 0 && (
         <div className="surface-card overflow-hidden">
           <div className="review-header">
@@ -70,7 +128,7 @@ export function AdminTradePanel({
                       {p.category_slug} · {cityName(p.city_slug)} · {p.phone}
                     </p>
                     {p.requested_plan && p.requested_plan !== "free" && (
-                      <p className="mt-1 text-xs font-bold uppercase text-gold-600">
+                      <p className="mt-1 text-xs font-bold uppercase text-accent-600">
                         Wants {LISTING_PLANS.find((plan) => plan.id === p.requested_plan)?.name || p.requested_plan}
                       </p>
                     )}
@@ -137,7 +195,7 @@ export function AdminTradePanel({
               <li key={p.id} className="space-y-3 px-6 py-4 text-sm">
                 <div className="flex flex-wrap items-center justify-between gap-3">
                   <div>
-                    <a href={`/pro/${p.slug}`} className="font-semibold text-teal-600 hover:underline" target="_blank" rel="noreferrer">
+                    <a href={`/pro/${p.slug}`} className="font-semibold text-accent-600 hover:underline" target="_blank" rel="noreferrer">
                       {p.display_name}
                     </a>
                     <span className="text-slate-500">

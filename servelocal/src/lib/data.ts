@@ -7,6 +7,7 @@ import type {
   ServiceCategory,
   ServiceProvider,
   ServiceRequest,
+  SiteSuggestion,
 } from "@/lib/types";
 
 const TIER_RANK: Record<string, number> = { premium: 0, featured: 1, free: 2 };
@@ -408,5 +409,54 @@ export async function updateReviewAdmin(id: string, status: "approved" | "reject
     await refreshProviderRating(review.provider_id);
   }
 
+  return { ok: true as const };
+}
+
+export async function createSiteSuggestion(input: {
+  message: string;
+  email?: string;
+  pageUrl?: string;
+}) {
+  const admin = createServiceClient();
+  if (!admin) return { ok: false as const, error: "Server not configured" };
+
+  try {
+    const { error } = await admin.from("site_suggestions").insert({
+      message: input.message.trim(),
+      email: input.email?.trim() || null,
+      page_url: input.pageUrl?.trim() || null,
+    });
+
+    if (error) return { ok: false as const, error: error.message };
+    return { ok: true as const };
+  } catch {
+    return { ok: false as const, error: "Suggestions not available yet" };
+  }
+}
+
+export async function getAdminSuggestions(limit = 50) {
+  const admin = createServiceClient();
+  if (!admin) return [];
+
+  try {
+    const { data } = await admin
+      .from("site_suggestions")
+      .select("*")
+      .order("created_at", { ascending: false })
+      .limit(limit);
+
+    return (data || []) as SiteSuggestion[];
+  } catch {
+    return [];
+  }
+}
+
+export async function updateSuggestionAdmin(id: string, status: "read" | "done") {
+  const admin = createServiceClient();
+  if (!admin) return { ok: false as const, error: "Server not configured" };
+
+  const { error } = await admin.from("site_suggestions").update({ status }).eq("id", id);
+
+  if (error) return { ok: false as const, error: error.message };
   return { ok: true as const };
 }

@@ -14,7 +14,7 @@ export function PricingCards() {
           }
         >
           {plan.highlight && (
-            <span className="absolute right-4 top-4 rounded-full bg-gold-500 px-3 py-1 text-[10px] font-bold uppercase text-brand-950">
+            <span className="absolute right-4 top-4 rounded-full bg-accent-600 px-3 py-1 text-[10px] font-bold uppercase text-white">
               Most popular
             </span>
           )}
@@ -24,7 +24,7 @@ export function PricingCards() {
           <ul className="mt-6 space-y-3 text-sm text-slate-700">
             {plan.features.map((f) => (
               <li key={f} className="flex gap-2">
-                <span className="text-teal-500">✓</span>
+                <span className="text-accent-600">✓</span>
                 <span>{f}</span>
               </li>
             ))}
