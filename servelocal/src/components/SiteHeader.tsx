@@ -1,12 +1,10 @@
 import Link from "next/link";
 import { SERVE_LOCAL } from "@/lib/constants";
-import { NoLoginNotice } from "@/components/NoLoginNotice";
 import { SearchBar } from "@/components/SearchBar";
 
 export function SiteHeader({ compact }: { compact?: boolean }) {
   return (
     <header className="site-header">
-      <NoLoginNotice variant="bar" className={compact ? "py-1.5 text-[11px] sm:text-xs" : ""} />
       <div className="mx-auto flex max-w-6xl flex-col gap-3 px-4 py-3 sm:flex-row sm:items-center sm:justify-between sm:px-8">
         <div className="flex items-center justify-between gap-4">
           <Link href="/" className="group flex items-center gap-2.5">
@@ -18,8 +16,7 @@ export function SiteHeader({ compact }: { compact?: boolean }) {
             </span>
           </Link>
           {!compact && (
-            <nav className="flex items-center gap-2 sm:hidden">
-              <NoLoginNotice variant="pill" className="scale-90" />
+            <nav className="flex gap-2 sm:hidden">
               <Link href="/request" className="btn-gold px-3 py-1.5 text-xs">
                 Get quotes
               </Link>

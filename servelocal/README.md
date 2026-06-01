@@ -21,6 +21,8 @@ Open [http://localhost:3001](http://localhost:3001).
 1. Open your Supabase project SQL Editor
 2. Run `supabase/servelocal.sql`
 3. Run `supabase/premium.sql` for reviews, verified badges, and paid tiers
+4. Run `supabase/suggestions.sql` for the feedback button
+5. Run `supabase/guest-access.sql` so visitors can browse, post jobs, and apply without logging in
 
 ## Premium features
 

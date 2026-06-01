@@ -1,4 +1,4 @@
-import { createServiceClient } from "@/lib/supabase/admin";
+import { createDbClient, createServiceClient } from "@/lib/supabase/admin";
 import { slugify } from "@/lib/slugify";
 import type {
   ProviderFilters,
@@ -47,7 +47,7 @@ function sortProviders(list: ServiceProvider[], sort: ProviderSort = "recommende
 }
 
 export async function getServiceCategories(): Promise<ServiceCategory[]> {
-  const admin = createServiceClient();
+  const admin = createDbClient();
   if (!admin) return [];
 
   const { data } = await admin
@@ -64,7 +64,7 @@ export async function getCategoryBySlug(slug: string) {
 }
 
 export async function getApprovedProviders(filters: ProviderFilters = {}) {
-  const admin = createServiceClient();
+  const admin = createDbClient();
   if (!admin) return [];
 
   let query = admin.from("service_providers").select("*").eq("status", "approved");
@@ -100,7 +100,7 @@ export async function searchProviders(query: string, limit = 24) {
 }
 
 export async function getProviderBySlug(slug: string) {
-  const admin = createServiceClient();
+  const admin = createDbClient();
   if (!admin) return null;
 
   const { data } = await admin
@@ -114,7 +114,7 @@ export async function getProviderBySlug(slug: string) {
 }
 
 export async function getPlatformStats() {
-  const admin = createServiceClient();
+  const admin = createDbClient();
   if (!admin) {
     return { providers: 0, verified: 0, reviews: 0, cities: 8 };
   }
@@ -142,7 +142,7 @@ export async function getPlatformStats() {
 }
 
 export async function getProviderReviews(providerId: string, limit = 20) {
-  const admin = createServiceClient();
+  const admin = createDbClient();
   if (!admin) return [];
 
   try {
@@ -167,7 +167,7 @@ export async function createProviderReview(input: {
   title?: string;
   body: string;
 }) {
-  const admin = createServiceClient();
+  const admin = createDbClient();
   if (!admin) return { ok: false as const, error: "Server not configured" };
 
   const { error } = await admin.from("provider_reviews").insert({
@@ -208,7 +208,7 @@ async function refreshProviderRating(providerId: string) {
 }
 
 export async function incrementContactClicks(providerId: string) {
-  const admin = createServiceClient();
+  const admin = createDbClient();
   if (!admin) return;
 
   const { data } = await admin.from("service_providers").select("contact_clicks").eq("id", providerId).single();
@@ -240,7 +240,7 @@ export async function createProviderApplication(input: {
   minCalloutFee?: string;
   businessHours?: string;
 }) {
-  const admin = createServiceClient();
+  const admin = createDbClient();
   if (!admin) return { ok: false as const, error: "Server not configured" };
 
   const baseSlug = slugify(input.displayName) || "pro";
@@ -290,7 +290,7 @@ export async function createServiceRequest(input: {
   customerEmail?: string;
   description: string;
 }) {
-  const admin = createServiceClient();
+  const admin = createDbClient();
   if (!admin) return { ok: false as const, error: "Server not configured" };
 
   const { data, error } = await admin
@@ -417,7 +417,7 @@ export async function createSiteSuggestion(input: {
   email?: string;
   pageUrl?: string;
 }) {
-  const admin = createServiceClient();
+  const admin = createDbClient();
   if (!admin) return { ok: false as const, error: "Server not configured" };
 
   try {

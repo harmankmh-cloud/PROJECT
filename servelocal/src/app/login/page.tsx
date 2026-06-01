@@ -16,23 +16,20 @@ export default async function LoginPage() {
   }
 
   return (
-    <main className="mesh-bg flex min-h-screen flex-col px-4 py-12">
-      <div className="mx-auto w-full max-w-md flex-1 flex flex-col justify-center">
-        <div className="mb-6 rounded-2xl border border-teal-200/70 bg-white/90 p-4 text-center shadow-sm">
-          <p className="text-sm font-semibold text-brand-950">Looking to hire a tradie or get listed?</p>
-          <p className="mt-1 text-sm text-slate-600">You don&apos;t need an account. Browse and contact pros for free.</p>
-          <Link href="/" className="btn-gold mt-4 inline-flex px-6 py-2.5 text-sm">
-            Continue without login
-          </Link>
-        </div>
-
+    <main className="mesh-bg flex min-h-screen items-center justify-center px-4 py-12">
+      <div className="w-full max-w-md">
         <div className="auth-card">
-          <p className="page-eyebrow">{SERVE_LOCAL.name} admin only</p>
-          <h1 className="font-display mt-2 text-3xl tracking-tight text-brand-950">Admin sign in</h1>
-          <p className="mt-2 text-sm text-slate-500">For approving listings, reviews, and site management.</p>
+          <p className="page-eyebrow">{SERVE_LOCAL.name} admin</p>
+          <h1 className="font-display mt-2 text-3xl tracking-tight text-brand-950">Sign in</h1>
+          <p className="mt-2 text-sm text-slate-500">Approve listings and view customer requests.</p>
           <div className="mt-8">
             <AdminLoginForm />
           </div>
+          <p className="mt-8 text-center text-sm text-slate-500">
+            <Link href="/" className="font-semibold text-teal-600 hover:underline">
+              ← Back to site
+            </Link>
+          </p>
         </div>
       </div>
     </main>
