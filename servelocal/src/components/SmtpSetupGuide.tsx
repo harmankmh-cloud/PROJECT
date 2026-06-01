@@ -27,18 +27,18 @@ export function SmtpSetupGuide() {
       <div className="border-b border-amber-200/80 bg-amber-50 px-6 py-4">
         <h2 className="font-semibold text-amber-950">Auth emails (Resend SMTP)</h2>
         <p className="mt-1 text-sm text-amber-900/80">
-          Same Resend + Supabase SMTP as RateLocal. Customers on ServeLocal never sign up — only admin
-          login uses auth.
+          Same Resend + Supabase SMTP as RateLocal. Used for homeowner/tradie sign-up and password reset.
         </p>
       </div>
       <div className="space-y-4 p-6">
         <div className="rounded-xl border border-teal-200 bg-teal-50 p-4 text-sm text-teal-900">
-          <p className="font-semibold">No login for visitors</p>
+          <p className="font-semibold">Accounts are optional</p>
           <p className="mt-1">
-            Browse, get quotes, apply as a tradie, and leave reviews — all without an account.{" "}
-            <Link href="/" className="font-semibold underline">
-              Back to site
+            Guests can still post jobs. Signed-in homeowners track requests on{" "}
+            <Link href="/dashboard" className="font-semibold underline">
+              My account
             </Link>
+            .
           </p>
         </div>
         <div className="rounded-xl border border-rose-200 bg-rose-50 p-4 text-sm text-rose-900">

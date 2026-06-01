@@ -126,6 +126,14 @@ select {
     background-size: 1rem;
   }
 
+  .service-type-card {
+    @apply flex flex-col items-center justify-center rounded-2xl border border-slate-200/90 bg-white p-3 text-center shadow-sm transition duration-200 hover:border-teal-400/50 hover:bg-teal-50/40;
+  }
+
+  .service-type-card-selected {
+    @apply border-teal-400/70 bg-gradient-to-br from-teal-50 to-amber-50/30 ring-2 ring-teal-400/25;
+  }
+
   .section-eyebrow {
     @apply text-xs font-semibold uppercase tracking-[0.16em] text-teal-600;
   }

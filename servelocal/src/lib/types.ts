@@ -50,6 +50,7 @@ export type ServiceRequest = {
   description: string;
   status: string;
   created_at: string;
+  user_id?: string | null;
 };
 
 export type ProviderReview = {

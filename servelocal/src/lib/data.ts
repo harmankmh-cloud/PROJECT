@@ -56,8 +56,39 @@ export async function getServiceCategories(): Promise<ServiceCategory[]> {
     .select("*")
     .order("sort_order", { ascending: true });
 
-  if (error || !data?.length) return DEFAULT_SERVICE_CATEGORIES;
-  return data as ServiceCategory[];
+  if (error) return DEFAULT_SERVICE_CATEGORIES;
+
+  const dbCats = (data || []) as ServiceCategory[];
+  const bySlug = new Map<string, ServiceCategory>();
+  for (const c of DEFAULT_SERVICE_CATEGORIES) bySlug.set(c.slug, c);
+  for (const c of dbCats) bySlug.set(c.slug, c);
+
+  return [...bySlug.values()].sort((a, b) => a.sort_order - b.sort_order);
+}
+
+export async function getUserServiceRequests(userId: string, email?: string) {
+  const admin = createServiceClient() ?? createDbClient();
+  if (!admin) return [];
+
+  const { data: byUser } = await admin
+    .from("service_requests")
+    .select("*")
+    .eq("user_id", userId)
+    .order("created_at", { ascending: false })
+    .limit(50);
+
+  if (byUser?.length) return byUser as ServiceRequest[];
+
+  if (!email) return [];
+
+  const { data: byEmail } = await admin
+    .from("service_requests")
+    .select("*")
+    .eq("customer_email", email)
+    .order("created_at", { ascending: false })
+    .limit(50);
+
+  return (byEmail || []) as ServiceRequest[];
 }
 
 export async function getCategoryBySlug(slug: string) {
@@ -291,22 +322,31 @@ export async function createServiceRequest(input: {
   customerPhone: string;
   customerEmail?: string;
   description: string;
+  userId?: string;
 }) {
   const admin = createDbClient();
   if (!admin) return { ok: false as const, error: "Server not configured" };
 
-  const { data, error } = await admin
-    .from("service_requests")
-    .insert({
-      category_slug: input.categorySlug,
-      city_slug: input.citySlug,
-      customer_name: input.customerName.trim(),
-      customer_phone: input.customerPhone.trim(),
-      customer_email: input.customerEmail?.trim() || null,
-      description: input.description.trim(),
-    })
-    .select("id")
-    .single();
+  const row: Record<string, unknown> = {
+    category_slug: input.categorySlug,
+    city_slug: input.citySlug,
+    customer_name: input.customerName.trim(),
+    customer_phone: input.customerPhone.trim(),
+    customer_email: input.customerEmail?.trim() || null,
+    description: input.description.trim(),
+  };
+
+  if (input.userId) {
+    row.user_id = input.userId;
+  }
+
+  let { data, error } = await admin.from("service_requests").insert(row).select("id").single();
+
+  if (error?.message?.includes("user_id") && row.user_id) {
+    const withoutUser = { ...row };
+    delete withoutUser.user_id;
+    ({ data, error } = await admin.from("service_requests").insert(withoutUser).select("id").single());
+  }
 
   if (error || !data) return { ok: false as const, error: error?.message || "Could not submit" };
 

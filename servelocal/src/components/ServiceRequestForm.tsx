@@ -10,15 +10,20 @@ import {
 } from "@/lib/form-utils";
 import type { ServiceCategory, ServiceProvider } from "@/lib/types";
 import { MatchProsPanel } from "@/components/MatchProsPanel";
+import { ServiceCategoryPicker } from "@/components/ServiceCategoryPicker";
 
 export function ServiceRequestForm({
   categories,
   defaultCity,
   defaultCategory,
+  defaultName = "",
+  defaultEmail = "",
 }: {
   categories: ServiceCategory[];
   defaultCity?: string;
   defaultCategory?: string;
+  defaultName?: string;
+  defaultEmail?: string;
 }) {
   const safeCategories = useMemo(() => resolveCategories(categories), [categories]);
   const initialCity = isValidCitySlug(defaultCity) ? defaultCity : TRADE_CITIES[0].slug;
@@ -33,9 +38,9 @@ export function ServiceRequestForm({
     return safeCategories[0]?.slug || "";
   }, [categorySlugRaw, safeCategories]);
   const [citySlug, setCitySlug] = useState<string>(initialCity);
-  const [customerName, setCustomerName] = useState("");
+  const [customerName, setCustomerName] = useState(defaultName);
   const [customerPhone, setCustomerPhone] = useState("");
-  const [customerEmail, setCustomerEmail] = useState("");
+  const [customerEmail, setCustomerEmail] = useState(defaultEmail);
   const [description, setDescription] = useState("");
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
@@ -46,7 +51,7 @@ export function ServiceRequestForm({
     setError("");
 
     if (!categorySlug) {
-      setError("Please pick a service from the list.");
+      setError("Please pick a service type above.");
       return;
     }
 
@@ -101,36 +106,27 @@ export function ServiceRequestForm({
   }
 
   return (
-    <form onSubmit={handleSubmit} className="surface-card space-y-4 p-6 sm:p-8">
-      <p className="text-sm text-slate-600">Describe what you need — we&apos;ll show matching local pros you can call right away.</p>
-      <div className="grid gap-4 sm:grid-cols-2">
-        <label className="block space-y-2 text-sm">
-          <span className="font-semibold">Service needed</span>
-          <select
-            value={categorySlug}
-            onChange={(e) => setCategorySlug(e.target.value)}
-            className="input-field select-field"
-            required
-          >
-            {safeCategories.map((c) => (
-              <option key={c.slug} value={c.slug}>{c.icon} {c.name}</option>
-            ))}
-          </select>
-        </label>
-        <label className="block space-y-2 text-sm">
-          <span className="font-semibold">City</span>
-          <select
-            value={citySlug}
-            onChange={(e) => setCitySlug(e.target.value)}
-            className="input-field select-field"
-            required
-          >
-            {TRADE_CITIES.map((c) => (
-              <option key={c.slug} value={c.slug}>{c.name}</option>
-            ))}
-          </select>
-        </label>
-      </div>
+    <form onSubmit={handleSubmit} className="surface-card space-y-5 p-6 sm:p-8">
+      <ServiceCategoryPicker
+        categories={safeCategories}
+        value={categorySlug}
+        onChange={setCategorySlug}
+      />
+
+      <label className="block space-y-2 text-sm">
+        <span className="font-semibold">City</span>
+        <select
+          value={citySlug}
+          onChange={(e) => setCitySlug(e.target.value)}
+          className="input-field select-field"
+          required
+        >
+          {TRADE_CITIES.map((c) => (
+            <option key={c.slug} value={c.slug}>{c.name}</option>
+          ))}
+        </select>
+      </label>
+
       <label className="block space-y-2 text-sm">
         <span className="font-semibold">Your name</span>
         <input value={customerName} onChange={(e) => setCustomerName(e.target.value)} className="input-field" required />
@@ -163,7 +159,7 @@ export function ServiceRequestForm({
         />
       </label>
       {error && (
-        <p className="rounded-xl border border-rose-200 bg-rose-50 px-4 py-3 text-sm text-rose-700" role="alert">
+        <p className="rounded-xl border border-rose-200 bg-rose-50 px-4 py-3 text-sm text-rose-700" role="status">
           {error}
         </p>
       )}

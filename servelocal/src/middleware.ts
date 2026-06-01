@@ -51,18 +51,23 @@ export async function middleware(request: NextRequest) {
   }
 
   if (pathname.startsWith("/admin") && user && !isAdminEmail(user.email)) {
-    return NextResponse.redirect(new URL("/login?error=unauthorized", request.url));
+    return NextResponse.redirect(new URL("/dashboard", request.url));
   }
 
-  if (pathname === "/login" && user && isAdminEmail(user.email)) {
-    return NextResponse.redirect(new URL("/admin", request.url));
+  if (pathname.startsWith("/dashboard") && !user) {
+    return NextResponse.redirect(new URL("/login", request.url));
+  }
+
+  if ((pathname === "/login" || pathname === "/signup") && user) {
+    if (isAdminEmail(user.email)) {
+      return NextResponse.redirect(new URL("/admin", request.url));
+    }
+    return NextResponse.redirect(new URL("/dashboard", request.url));
   }
 
   return response;
 }
 
 export const config = {
-  matcher: [
-    "/((?!_next/static|_next/image|favicon.ico|.*\\.(?:svg|png|jpg|jpeg|gif|webp)$).*)",
-  ],
+  matcher: ["/dashboard/:path*", "/admin/:path*", "/login", "/signup"],
 };

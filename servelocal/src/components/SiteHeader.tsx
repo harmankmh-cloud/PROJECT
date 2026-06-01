@@ -1,6 +1,7 @@
 import Link from "next/link";
 import { SERVE_LOCAL } from "@/lib/constants";
 import { SearchBar } from "@/components/SearchBar";
+import { SiteAuthNav } from "@/components/SiteAuthNav";
 
 export function SiteHeader({ compact }: { compact?: boolean }) {
   return (
@@ -15,15 +16,11 @@ export function SiteHeader({ compact }: { compact?: boolean }) {
               {SERVE_LOCAL.name}
             </span>
           </Link>
-          <nav className="flex gap-2 sm:hidden">
+          <nav className="flex items-center gap-2 sm:hidden">
+            <SiteAuthNav compact />
             <Link href="/request" className="btn-gold px-3 py-1.5 text-xs">
               Get quotes
             </Link>
-            {!compact && (
-              <Link href="/join" className="btn-ghost px-3 py-1.5 text-xs">
-                List business
-              </Link>
-            )}
           </nav>
         </div>
         {!compact && (
@@ -44,6 +41,7 @@ export function SiteHeader({ compact }: { compact?: boolean }) {
           >
             Pricing
           </Link>
+          <SiteAuthNav />
           <Link href="/join" className="btn-ghost ml-1 px-4 py-2 text-sm">
             List business
           </Link>

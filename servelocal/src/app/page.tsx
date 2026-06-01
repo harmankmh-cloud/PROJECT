@@ -40,10 +40,20 @@ export default async function HomePage() {
             <Link href="/request" className="btn-gold px-8 py-3.5 text-base">
               Get free quotes
             </Link>
-            <Link href="/pricing" className="btn-ghost px-8 py-3.5 text-base">
-              Pro plans from $49/mo
+            <Link href="/signup" className="btn-ghost px-8 py-3.5 text-base">
+              Create free account
             </Link>
           </div>
+          <p className="mt-4 text-center text-sm text-slate-500">
+            Tradies:{" "}
+            <Link href="/join" className="font-semibold text-teal-600 hover:underline">
+              Get listed free
+            </Link>
+            {" · "}
+            <Link href="/pricing" className="font-semibold text-teal-600 hover:underline">
+              Pro plans from $49/mo
+            </Link>
+          </p>
           <div className="mx-auto mt-12 grid max-w-2xl grid-cols-3 gap-3 sm:gap-4">
             <div className="stat-hero">
               <p className="font-display text-2xl font-bold text-brand-950">{stats.providers || "50+"}</p>
