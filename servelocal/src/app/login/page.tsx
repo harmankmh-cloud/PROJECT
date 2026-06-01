@@ -26,7 +26,7 @@ export default async function LoginPage() {
             <AdminLoginForm />
           </div>
           <p className="mt-8 text-center text-sm text-slate-500">
-            <Link href="/" className="font-semibold text-accent-600 hover:underline">
+            <Link href="/" className="font-semibold text-teal-600 hover:underline">
               ← Back to site
             </Link>
           </p>

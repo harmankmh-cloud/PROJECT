@@ -102,7 +102,7 @@ export function AdminTradePanel({
                     type="button"
                     disabled={loadingId === s.id}
                     onClick={() => updateSuggestion(s.id, "done")}
-                    className="btn-primary px-3 py-1.5 text-xs"
+                    className="btn-teal px-3 py-1.5 text-xs"
                   >
                     Done
                   </button>
@@ -128,7 +128,7 @@ export function AdminTradePanel({
                       {p.category_slug} · {cityName(p.city_slug)} · {p.phone}
                     </p>
                     {p.requested_plan && p.requested_plan !== "free" && (
-                      <p className="mt-1 text-xs font-bold uppercase text-accent-600">
+                      <p className="mt-1 text-xs font-bold uppercase text-teal-600">
                         Wants {LISTING_PLANS.find((plan) => plan.id === p.requested_plan)?.name || p.requested_plan}
                       </p>
                     )}
@@ -195,7 +195,7 @@ export function AdminTradePanel({
               <li key={p.id} className="space-y-3 px-6 py-4 text-sm">
                 <div className="flex flex-wrap items-center justify-between gap-3">
                   <div>
-                    <a href={`/pro/${p.slug}`} className="font-semibold text-accent-600 hover:underline" target="_blank" rel="noreferrer">
+                    <a href={`/pro/${p.slug}`} className="font-semibold text-teal-600 hover:underline" target="_blank" rel="noreferrer">
                       {p.display_name}
                     </a>
                     <span className="text-slate-500">

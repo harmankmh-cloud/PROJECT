@@ -28,7 +28,7 @@ export default async function ProviderPage({ params }: { params: Promise<{ slug:
       <div className="mx-auto max-w-4xl px-4 py-10 sm:px-8">
         <Link
           href={`/${provider.city_slug}/${provider.category_slug}`}
-          className="text-sm font-semibold text-accent-600 hover:underline"
+          className="text-sm font-semibold text-teal-600 hover:underline"
         >
           ← Back to listings
         </Link>
@@ -100,7 +100,7 @@ export default async function ProviderPage({ params }: { params: Promise<{ slug:
                 <div className="stat-chip">
                   <dt className="text-slate-500">Website</dt>
                   <dd className="mt-1">
-                    <a href={provider.website} target="_blank" rel="noreferrer" className="font-semibold text-accent-600 hover:underline">
+                    <a href={provider.website} target="_blank" rel="noreferrer" className="font-semibold text-teal-600 hover:underline">
                       Visit site ↗
                     </a>
                   </dd>

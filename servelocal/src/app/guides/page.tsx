@@ -24,7 +24,7 @@ export default async function GuidesPage() {
                 <span className="text-3xl">{cat.icon}</span>
                 <h2 className="mt-3 font-semibold text-brand-950">{cat.name}</h2>
                 {guide && guide.low > 0 && (
-                  <p className="mt-1 text-sm text-accent-600">
+                  <p className="mt-1 text-sm text-teal-600">
                     ${guide.low}–${guide.high} {guide.unit}
                   </p>
                 )}

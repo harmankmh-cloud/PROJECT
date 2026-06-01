@@ -24,7 +24,7 @@ export function MatchProsPanel({ providers, city, category }: { providers: Servi
           <ProviderCard key={p.id} provider={p} />
         ))}
       </div>
-      <Link href={`/${city}/${category}`} className="mt-4 inline-block text-sm font-semibold text-accent-600 hover:underline">
+      <Link href={`/${city}/${category}`} className="mt-4 inline-block text-sm font-semibold text-teal-600 hover:underline">
         View all in this category →
       </Link>
     </div>

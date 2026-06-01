@@ -18,7 +18,7 @@ export function ProviderCard({
       <ProviderBadges provider={provider} />
       <div className="mt-3 flex items-start justify-between gap-3">
         <div>
-          <h3 className="font-semibold text-zinc-900 group-hover:text-accent-600">{provider.display_name}</h3>
+          <h3 className="font-semibold text-zinc-900 group-hover:text-teal-600">{provider.display_name}</h3>
           <p className="mt-1 text-sm text-zinc-500">
             {categoryName || provider.category_slug} · {cityName(provider.city_slug)}
           </p>
@@ -37,7 +37,7 @@ export function ProviderCard({
       {provider.bio && (
         <p className="mt-3 line-clamp-2 text-sm leading-relaxed text-zinc-600">{provider.bio}</p>
       )}
-      <p className="mt-4 text-sm font-semibold text-accent-600">View profile →</p>
+      <p className="mt-4 text-sm font-semibold text-teal-600">View profile →</p>
     </Link>
   );
 }

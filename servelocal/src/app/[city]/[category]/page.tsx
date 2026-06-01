@@ -37,7 +37,7 @@ export default async function CategoryPage({
     <main className="mesh-bg min-h-screen">
       <SiteHeader compact />
       <div className="mx-auto max-w-6xl px-4 py-10 sm:px-8">
-        <Link href={`/${city}`} className="text-sm font-semibold text-accent-600 hover:underline">
+        <Link href={`/${city}`} className="text-sm font-semibold text-teal-600 hover:underline">
           ← {cityName(city)}
         </Link>
         <p className="section-eyebrow mt-4">{SERVE_LOCAL.name}</p>

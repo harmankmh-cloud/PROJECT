@@ -53,8 +53,8 @@ export function CategoryFilters({ city, category }: { city: string; category: st
             key={opt.id}
             href={href({ sort: opt.id === "recommended" ? null : opt.id })}
             className={sort === opt.id || (opt.id === "recommended" && sort === "recommended")
-              ? "font-semibold text-accent-600"
-              : "text-slate-600 hover:text-accent-600"}
+              ? "font-semibold text-teal-600"
+              : "text-slate-600 hover:text-teal-600"}
           >
             {opt.label}
           </Link>
