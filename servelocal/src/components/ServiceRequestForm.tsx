@@ -4,6 +4,7 @@ import { useState } from "react";
 import { TRADE_CITIES } from "@/lib/constants";
 import type { ServiceCategory, ServiceProvider } from "@/lib/types";
 import { MatchProsPanel } from "@/components/MatchProsPanel";
+import { NoLoginNotice } from "@/components/NoLoginNotice";
 
 export function ServiceRequestForm({
   categories,
@@ -69,6 +70,7 @@ export function ServiceRequestForm({
 
   return (
     <form onSubmit={handleSubmit} className="surface-card space-y-4 p-6 sm:p-8">
+      <NoLoginNotice variant="inline" />
       <p className="text-sm text-slate-600">Describe what you need — we&apos;ll show matching local pros you can call right away.</p>
       <div className="grid gap-4 sm:grid-cols-2">
         <label className="block space-y-2 text-sm">

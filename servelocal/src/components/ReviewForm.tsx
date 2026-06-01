@@ -1,6 +1,7 @@
 "use client";
 
 import { useState } from "react";
+import { NoLoginNotice } from "@/components/NoLoginNotice";
 
 export function ReviewForm({ providerId, providerName }: { providerId: string; providerName: string }) {
   const [reviewerName, setReviewerName] = useState("");
@@ -44,6 +45,7 @@ export function ReviewForm({ providerId, providerName }: { providerId: string; p
 
   return (
     <form onSubmit={handleSubmit} className="surface-card space-y-4 p-6">
+      <NoLoginNotice variant="inline" />
       <h3 className="font-display text-lg text-brand-950">Leave a review</h3>
       <label className="block space-y-2 text-sm">
         <span className="font-semibold">Your name</span>

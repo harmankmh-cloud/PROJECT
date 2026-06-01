@@ -1,6 +1,7 @@
 import Link from "next/link";
 import { notFound } from "next/navigation";
 import { ProviderBadges } from "@/components/ProviderBadges";
+import { NoLoginNotice } from "@/components/NoLoginNotice";
 import { ProviderContactButtons } from "@/components/ProviderContactButtons";
 import { ReviewForm } from "@/components/ReviewForm";
 import { ReviewList } from "@/components/ReviewList";
@@ -108,7 +109,8 @@ export default async function ProviderPage({ params }: { params: Promise<{ slug:
               )}
             </dl>
 
-            <div className="sticky bottom-4 z-10 rounded-2xl border border-slate-200/80 bg-white/95 p-4 shadow-lg backdrop-blur-xl">
+            <div className="sticky bottom-4 z-10 space-y-3 rounded-2xl border border-slate-200/80 bg-white/95 p-4 shadow-lg backdrop-blur-xl">
+              <NoLoginNotice variant="inline" className="border-0 bg-transparent px-0 py-0 text-xs" />
               <ProviderContactButtons provider={provider} />
             </div>
 

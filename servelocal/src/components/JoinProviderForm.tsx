@@ -4,6 +4,7 @@ import { useSearchParams } from "next/navigation";
 import { useState } from "react";
 import { LISTING_PLANS, TRADE_CITIES } from "@/lib/constants";
 import type { ServiceCategory } from "@/lib/types";
+import { NoLoginNotice } from "@/components/NoLoginNotice";
 
 export function JoinProviderForm({ categories }: { categories: ServiceCategory[] }) {
   const searchParams = useSearchParams();
@@ -83,6 +84,7 @@ export function JoinProviderForm({ categories }: { categories: ServiceCategory[]
 
   return (
     <form onSubmit={handleSubmit} className="space-y-6">
+      <NoLoginNotice variant="inline" />
       <div className="surface-card p-6">
         <h2 className="font-semibold text-brand-950">Choose your plan</h2>
         <div className="mt-4 grid gap-3 sm:grid-cols-3">

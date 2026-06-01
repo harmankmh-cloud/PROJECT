@@ -3,6 +3,7 @@ import { SiteFooter } from "@/components/SiteFooter";
 import { SiteHeader } from "@/components/SiteHeader";
 import { SearchBar } from "@/components/SearchBar";
 import { ProviderCard } from "@/components/ProviderCard";
+import { NoLoginNotice } from "@/components/NoLoginNotice";
 import { HOW_IT_WORKS, TRADE_CITIES, SERVE_LOCAL, TRUST_BADGES } from "@/lib/constants";
 import { getApprovedProviders, getPlatformStats, getServiceCategories } from "@/lib/data";
 
@@ -21,9 +22,12 @@ export default async function HomePage() {
         <div className="hero-glow -left-20 top-0 h-72 w-72 bg-teal-500/20" />
         <div className="hero-glow -right-10 top-20 h-64 w-64 bg-amber-500/15" />
         <div className="relative mx-auto max-w-4xl text-center">
-          <div className="mx-auto inline-flex items-center gap-2 rounded-full border border-teal-200/80 bg-white/90 px-4 py-1.5 text-xs font-medium text-slate-600 shadow-sm">
-            <span className="h-1.5 w-1.5 rounded-full bg-teal-500" />
-            Fraser Valley & Metro Vancouver
+          <div className="mx-auto inline-flex flex-wrap items-center justify-center gap-2">
+            <div className="inline-flex items-center gap-2 rounded-full border border-teal-200/80 bg-white/90 px-4 py-1.5 text-xs font-medium text-slate-600 shadow-sm">
+              <span className="h-1.5 w-1.5 rounded-full bg-teal-500" />
+              Fraser Valley & Metro Vancouver
+            </div>
+            <NoLoginNotice variant="pill" />
           </div>
           <h1 className="font-display mt-6 text-4xl font-extrabold leading-[1.1] tracking-tight text-brand-950 sm:text-5xl lg:text-6xl">
             Find local trades you can{" "}
