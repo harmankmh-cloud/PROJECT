@@ -1,5 +1,12 @@
 .venv/
+.rag/
 .env
 __pycache__/
 *.pyc
 .pytest_cache/
+reviewflow/node_modules/
+reviewflow/.next/
+reviewflow/.env.local
+servelocal/node_modules/
+servelocal/.next/
+servelocal/.env.local
