@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect, useState } from "react";
+import { formatSubmitError } from "@/lib/form-utils";
 
 type FormState = "idle" | "submitting" | "success" | "error";
 
@@ -10,13 +11,6 @@ export function SuggestionButton() {
   const [error, setError] = useState("");
   const [message, setMessage] = useState("");
   const [email, setEmail] = useState("");
-  const [pageUrl, setPageUrl] = useState("");
-
-  useEffect(() => {
-    if (typeof window !== "undefined") {
-      setPageUrl(window.location.pathname);
-    }
-  }, []);
 
   useEffect(() => {
     if (!open) return;
@@ -49,7 +43,7 @@ export function SuggestionButton() {
         body: JSON.stringify({
           message: message.trim(),
           email: email.trim() || undefined,
-          pageUrl: pageUrl || undefined,
+          pageUrl: typeof window !== "undefined" ? window.location.pathname : undefined,
         }),
       });
 
@@ -63,7 +57,7 @@ export function SuggestionButton() {
       setEmail("");
     } catch (err) {
       setFormState("error");
-      setError(err instanceof Error ? err.message : "Something went wrong");
+      setError(formatSubmitError(err instanceof Error ? err.message : "Something went wrong"));
     }
   }
 
@@ -173,7 +167,11 @@ export function SuggestionButton() {
                       className="input-field mt-1.5"
                     />
                   </div>
-                  {error && <p className="text-sm text-red-600">{error}</p>}
+                  {error && (
+                    <p className="rounded-xl border border-rose-200 bg-rose-50 px-4 py-3 text-sm text-rose-700" role="alert">
+                      {error}
+                    </p>
+                  )}
                   <button
                     type="submit"
                     disabled={formState === "submitting"}

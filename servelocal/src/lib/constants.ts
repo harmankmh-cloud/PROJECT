@@ -1,3 +1,5 @@
+import type { ServiceCategory } from "@/lib/types";
+
 export const SERVE_LOCAL = {
   name: "ServeLocal",
   tagline: "Local services, served direct",
@@ -19,6 +21,22 @@ export type CitySlug = (typeof TRADE_CITIES)[number]["slug"];
 
 export function cityName(slug: string) {
   return TRADE_CITIES.find((c) => c.slug === slug)?.name || slug;
+}
+
+/** Built-in categories — used when DB is empty or unavailable so guide/city links never 404. */
+export const DEFAULT_SERVICE_CATEGORIES: ServiceCategory[] = [
+  { id: "default-plumber", slug: "plumber", name: "Plumber", icon: "🔧", sort_order: 1 },
+  { id: "default-electrician", slug: "electrician", name: "Electrician", icon: "⚡", sort_order: 2 },
+  { id: "default-handyman", slug: "handyman", name: "Handyman", icon: "🛠", sort_order: 3 },
+  { id: "default-cleaner", slug: "cleaner", name: "House cleaning", icon: "🧹", sort_order: 4 },
+  { id: "default-hvac", slug: "hvac", name: "HVAC / furnace", icon: "❄", sort_order: 5 },
+  { id: "default-roofer", slug: "roofer", name: "Roofer", icon: "🏠", sort_order: 6 },
+  { id: "default-painter", slug: "painter", name: "Painter", icon: "🎨", sort_order: 7 },
+  { id: "default-landscaper", slug: "landscaper", name: "Landscaping", icon: "🌿", sort_order: 8 },
+];
+
+export function isValidCitySlug(slug: string | undefined): slug is CitySlug {
+  return Boolean(slug && TRADE_CITIES.some((c) => c.slug === slug));
 }
 
 export const HOW_IT_WORKS = [

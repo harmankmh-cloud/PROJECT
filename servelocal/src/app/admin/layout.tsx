@@ -1,11 +1,21 @@
 import Link from "next/link";
 import { redirect } from "next/navigation";
+import { SignOutButton } from "@/components/SignOutButton";
 import { createClient } from "@/lib/supabase/server";
 import { isPlatformAdmin } from "@/lib/admin-auth";
 import { SERVE_LOCAL } from "@/lib/constants";
+import { isSupabaseConfigured } from "@/lib/supabase/config";
 
 export default async function AdminLayout({ children }: { children: React.ReactNode }) {
+  if (!isSupabaseConfigured()) {
+    redirect("/login");
+  }
+
   const supabase = await createClient();
+  if (!supabase) {
+    redirect("/login");
+  }
+
   const {
     data: { user },
   } = await supabase.auth.getUser();
@@ -24,12 +34,26 @@ export default async function AdminLayout({ children }: { children: React.ReactN
           <Link href="/admin" className="nav-item nav-item-active">
             Directory
           </Link>
+          <Link href="/dashboard" className="nav-item">
+            My dashboard
+          </Link>
           <Link href="/" className="nav-item" target="_blank">
             View site ↗
           </Link>
         </nav>
+        <div className="mt-auto pt-6">
+          <SignOutButton className="nav-item w-full text-left" />
+        </div>
       </aside>
-      <div className="flex flex-1 flex-col">{children}</div>
+      <div className="flex flex-1 flex-col">
+        <div className="flex items-center justify-end gap-3 border-b border-slate-200/70 bg-white/80 px-4 py-2 sm:hidden">
+          <Link href="/" className="text-sm text-teal-600">
+            View site
+          </Link>
+          <SignOutButton className="text-sm font-medium text-slate-600" />
+        </div>
+        {children}
+      </div>
     </div>
   );
 }

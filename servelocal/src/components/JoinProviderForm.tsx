@@ -1,17 +1,34 @@
 "use client";
 
 import { useSearchParams } from "next/navigation";
-import { useState } from "react";
-import { LISTING_PLANS, TRADE_CITIES } from "@/lib/constants";
+import { useMemo, useState } from "react";
+import { LISTING_PLANS, TRADE_CITIES, isValidCitySlug } from "@/lib/constants";
+import { formatSubmitError, isValidPhone, normalizePhone, resolveCategories } from "@/lib/form-utils";
 import type { ServiceCategory } from "@/lib/types";
+
+const PLAN_IDS = LISTING_PLANS.map((p) => p.id);
 
 export function JoinProviderForm({ categories }: { categories: ServiceCategory[] }) {
   const searchParams = useSearchParams();
-  const defaultPlan = searchParams.get("plan") || "free";
+  const planParam = searchParams.get("plan");
+  const defaultPlan = PLAN_IDS.includes(planParam as (typeof PLAN_IDS)[number]) ? planParam! : "free";
+
+  const safeCategories = useMemo(() => resolveCategories(categories), [categories]);
+  const cityParam = searchParams.get("city") || undefined;
+  const categoryParam = searchParams.get("category") || undefined;
+  const initialCity = isValidCitySlug(cityParam) ? cityParam : TRADE_CITIES[0].slug;
+  const initialCategory =
+    safeCategories.find((c) => c.slug === categoryParam)?.slug || safeCategories[0]?.slug || "";
 
   const [displayName, setDisplayName] = useState("");
-  const [categorySlug, setCategorySlug] = useState(categories[0]?.slug || "");
-  const [citySlug, setCitySlug] = useState<string>(TRADE_CITIES[0].slug);
+  const [categorySlugRaw, setCategorySlug] = useState(initialCategory);
+  const categorySlug = useMemo(() => {
+    if (categorySlugRaw && safeCategories.some((c) => c.slug === categorySlugRaw)) {
+      return categorySlugRaw;
+    }
+    return safeCategories[0]?.slug || "";
+  }, [categorySlugRaw, safeCategories]);
+  const [citySlug, setCitySlug] = useState<string>(initialCity);
   const [phone, setPhone] = useState("");
   const [email, setEmail] = useState("");
   const [whatsapp, setWhatsapp] = useState("");
@@ -30,18 +47,29 @@ export function JoinProviderForm({ categories }: { categories: ServiceCategory[]
 
   async function handleSubmit(e: React.FormEvent) {
     e.preventDefault();
-    setLoading(true);
     setError("");
+
+    if (!categorySlug) {
+      setError("Please pick a service from the list.");
+      return;
+    }
+
+    if (!isValidPhone(phone)) {
+      setError("Enter a valid 10-digit phone number (e.g. 604-555-1234).");
+      return;
+    }
+
+    setLoading(true);
 
     try {
       const response = await fetch("/api/providers", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
-          displayName,
+          displayName: displayName.trim(),
           categorySlug,
           citySlug,
-          phone,
+          phone: normalizePhone(phone),
           email,
           whatsapp,
           bio,
@@ -59,7 +87,7 @@ export function JoinProviderForm({ categories }: { categories: ServiceCategory[]
       if (!response.ok) throw new Error(data.error || "Submit failed");
       setDone(true);
     } catch (err) {
-      setError(err instanceof Error ? err.message : "Submit failed");
+      setError(formatSubmitError(err instanceof Error ? err.message : "Submit failed"));
     } finally {
       setLoading(false);
     }
@@ -108,15 +136,15 @@ export function JoinProviderForm({ categories }: { categories: ServiceCategory[]
         <div className="grid gap-4 sm:grid-cols-2">
           <label className="block space-y-2 text-sm">
             <span className="font-semibold">Service</span>
-            <select value={categorySlug} onChange={(e) => setCategorySlug(e.target.value)} className="input-field">
-              {categories.map((c) => (
+            <select value={categorySlug} onChange={(e) => setCategorySlug(e.target.value)} className="input-field select-field" required>
+              {safeCategories.map((c) => (
                 <option key={c.slug} value={c.slug}>{c.icon} {c.name}</option>
               ))}
             </select>
           </label>
           <label className="block space-y-2 text-sm">
             <span className="font-semibold">City you serve</span>
-            <select value={citySlug} onChange={(e) => setCitySlug(e.target.value)} className="input-field">
+            <select value={citySlug} onChange={(e) => setCitySlug(e.target.value)} className="input-field select-field" required>
               {TRADE_CITIES.map((c) => (
                 <option key={c.slug} value={c.slug}>{c.name}</option>
               ))}
@@ -125,7 +153,15 @@ export function JoinProviderForm({ categories }: { categories: ServiceCategory[]
         </div>
         <label className="block space-y-2 text-sm">
           <span className="font-semibold">Phone (customers will call this)</span>
-          <input value={phone} onChange={(e) => setPhone(e.target.value)} className="input-field" required placeholder="604-555-1234" />
+          <input
+            value={phone}
+            onChange={(e) => setPhone(e.target.value)}
+            className="input-field"
+            required
+            inputMode="tel"
+            autoComplete="tel"
+            placeholder="604-555-1234"
+          />
         </label>
         <div className="grid gap-4 sm:grid-cols-2">
           <label className="block space-y-2 text-sm">
@@ -173,8 +209,12 @@ export function JoinProviderForm({ categories }: { categories: ServiceCategory[]
           <input type="checkbox" checked={emergencyAvailable} onChange={(e) => setEmergencyAvailable(e.target.checked)} />
           <span>I offer emergency / after-hours service</span>
         </label>
-        {error && <p className="text-sm text-rose-600">{error}</p>}
-        <button type="submit" disabled={loading} className="btn-gold w-full py-3.5 disabled:opacity-60">
+        {error && (
+          <p className="rounded-xl border border-rose-200 bg-rose-50 px-4 py-3 text-sm text-rose-700" role="alert">
+            {error}
+          </p>
+        )}
+        <button type="submit" disabled={loading || !categorySlug} className="btn-gold w-full py-3.5 disabled:opacity-60">
           {loading ? "Submitting…" : "Apply for listing"}
         </button>
       </div>
