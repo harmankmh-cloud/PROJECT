@@ -3,7 +3,7 @@ import { SiteFooter } from "@/components/SiteFooter";
 import { SiteHeader } from "@/components/SiteHeader";
 import { SearchBar } from "@/components/SearchBar";
 import { ProviderCard } from "@/components/ProviderCard";
-import { HOW_IT_WORKS, TRADE_CITIES, SERVE_LOCAL, TRUST_BADGES } from "@/lib/constants";
+import { HOW_IT_WORKS, TRADE_CITIES, TRUST_BADGES } from "@/lib/constants";
 import { getApprovedProviders, getPlatformStats, getServiceCategories } from "@/lib/data";
 
 export default async function HomePage() {

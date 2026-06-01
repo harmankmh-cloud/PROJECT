@@ -1,8 +1,6 @@
-import Link from "next/link";
 import { ServiceRequestForm } from "@/components/ServiceRequestForm";
 import { SiteFooter } from "@/components/SiteFooter";
 import { SiteHeader } from "@/components/SiteHeader";
-import { SERVE_LOCAL } from "@/lib/constants";
 import { getServiceCategories } from "@/lib/data";
 
 export default async function RequestPage({

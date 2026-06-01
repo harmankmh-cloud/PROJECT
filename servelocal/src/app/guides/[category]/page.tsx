@@ -23,7 +23,7 @@ export default async function GuideCategoryPage({ params }: { params: Promise<{ 
           {cat.icon} {cat.name} costs in BC
         </h1>
 
-        {guide && (
+        {guide ? (
           <div className="mt-8 grid gap-6 lg:grid-cols-2">
             <div className="surface-card p-6">
               <h2 className="font-semibold text-brand-950">Typical pricing</h2>
@@ -58,6 +58,13 @@ export default async function GuideCategoryPage({ params }: { params: Promise<{ 
                 Get quotes for {cat.name}
               </Link>
             </div>
+          </div>
+        ) : (
+          <div className="surface-card mt-8 p-8 text-center">
+            <p className="text-slate-600">Pricing guide coming soon for this service.</p>
+            <Link href={`/request?category=${category}`} className="btn-gold mt-6 inline-flex px-6 py-3">
+              Get quotes for {cat.name}
+            </Link>
           </div>
         )}
 

@@ -3,7 +3,6 @@ import { Suspense } from "react";
 import { JoinProviderForm } from "@/components/JoinProviderForm";
 import { SiteFooter } from "@/components/SiteFooter";
 import { SiteHeader } from "@/components/SiteHeader";
-import { SERVE_LOCAL } from "@/lib/constants";
 import { getServiceCategories } from "@/lib/data";
 
 export default async function JoinPage() {

@@ -5,9 +5,12 @@ import { useState } from "react";
 import { LISTING_PLANS, TRADE_CITIES } from "@/lib/constants";
 import type { ServiceCategory } from "@/lib/types";
 
+const PLAN_IDS = LISTING_PLANS.map((p) => p.id);
+
 export function JoinProviderForm({ categories }: { categories: ServiceCategory[] }) {
   const searchParams = useSearchParams();
-  const defaultPlan = searchParams.get("plan") || "free";
+  const planParam = searchParams.get("plan");
+  const defaultPlan = PLAN_IDS.includes(planParam as (typeof PLAN_IDS)[number]) ? planParam! : "free";
 
   const [displayName, setDisplayName] = useState("");
   const [categorySlug, setCategorySlug] = useState(categories[0]?.slug || "");

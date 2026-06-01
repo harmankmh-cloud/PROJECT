@@ -5,15 +5,20 @@ import { SmtpSetupGuide } from "@/components/SmtpSetupGuide";
 import { SERVE_LOCAL } from "@/lib/constants";
 import { createClient } from "@/lib/supabase/server";
 import { isPlatformAdmin } from "@/lib/admin-auth";
+import { isSupabaseConfigured } from "@/lib/supabase/config";
 
 export default async function LoginPage() {
-  const supabase = await createClient();
-  const {
-    data: { user },
-  } = await supabase.auth.getUser();
+  if (isSupabaseConfigured()) {
+    const supabase = await createClient();
+    if (supabase) {
+      const {
+        data: { user },
+      } = await supabase.auth.getUser();
 
-  if (user && isPlatformAdmin(user.email)) {
-    redirect("/admin");
+      if (user && isPlatformAdmin(user.email)) {
+        redirect("/admin");
+      }
+    }
   }
 
   return (
@@ -25,6 +30,12 @@ export default async function LoginPage() {
           <p className="mt-2 text-sm text-slate-500">
             Site owners only. Customers and tradies use the site without logging in.
           </p>
+          {!isSupabaseConfigured() && (
+            <p className="mt-4 rounded-xl border border-amber-200 bg-amber-50 px-4 py-3 text-sm text-amber-900">
+              Add Supabase keys to <code className="text-xs">.env.local</code> (see template) to enable admin
+              login.
+            </p>
+          )}
           <div className="mt-8">
             <AdminLoginForm />
           </div>

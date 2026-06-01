@@ -150,6 +150,18 @@ select {
     @apply aspect-[4/3] w-full rounded-xl object-cover;
   }
 
+  .stat-chip {
+    @apply rounded-xl border border-slate-200/70 bg-slate-50/80 px-4 py-3;
+  }
+
+  .stat-chip dt {
+    @apply text-slate-500;
+  }
+
+  .stat-chip dd {
+    @apply mt-1 font-semibold text-brand-950;
+  }
+
   .option-card {
     @apply w-full rounded-xl border border-slate-200/80 bg-slate-50/60 p-3.5 text-left text-sm transition duration-200 hover:border-teal-400/50 hover:bg-teal-50/40;
   }

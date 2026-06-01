@@ -3,7 +3,7 @@
 import Link from "next/link";
 import { usePathname, useSearchParams } from "next/navigation";
 
-export function CategoryFilters({ city, category }: { city: string; category: string }) {
+export function CategoryFilters() {
   const pathname = usePathname();
   const searchParams = useSearchParams();
 

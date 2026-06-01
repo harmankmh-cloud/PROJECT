@@ -10,13 +10,6 @@ export function SuggestionButton() {
   const [error, setError] = useState("");
   const [message, setMessage] = useState("");
   const [email, setEmail] = useState("");
-  const [pageUrl, setPageUrl] = useState("");
-
-  useEffect(() => {
-    if (typeof window !== "undefined") {
-      setPageUrl(window.location.pathname);
-    }
-  }, []);
 
   useEffect(() => {
     if (!open) return;
@@ -49,7 +42,7 @@ export function SuggestionButton() {
         body: JSON.stringify({
           message: message.trim(),
           email: email.trim() || undefined,
-          pageUrl: pageUrl || undefined,
+          pageUrl: typeof window !== "undefined" ? window.location.pathname : undefined,
         }),
       });
 

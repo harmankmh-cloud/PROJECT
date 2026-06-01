@@ -49,7 +49,7 @@ export default async function CategoryPage({
         </p>
 
         <Suspense fallback={null}>
-          <CategoryFilters city={city} category={category} />
+          <CategoryFilters />
         </Suspense>
 
         {providers.length === 0 ? (

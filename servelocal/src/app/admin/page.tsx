@@ -1,3 +1,4 @@
+import Link from "next/link";
 import { AdminTradePanel } from "@/components/AdminTradePanel";
 import { getAdminProviders, getAdminReviews, getAdminServiceRequests, getAdminSuggestions } from "@/lib/data";
 
@@ -17,9 +18,9 @@ export default async function AdminPage() {
           <h1 className="font-display mt-1 text-3xl font-bold text-zinc-900">Service directory</h1>
           <p className="mt-2 text-sm text-zinc-600">
             Approve listings, verify pros, moderate reviews, set plans ($49/$99). Public site:{" "}
-            <a href="/" className="font-semibold text-teal-600 hover:underline">
+            <Link href="/" className="font-semibold text-teal-600 hover:underline">
               homepage
-            </a>
+            </Link>
           </p>
         </header>
         <AdminTradePanel

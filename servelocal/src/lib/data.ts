@@ -1,4 +1,5 @@
 import { createDbClient, createServiceClient } from "@/lib/supabase/admin";
+import { DEFAULT_SERVICE_CATEGORIES } from "@/lib/constants";
 import { slugify } from "@/lib/slugify";
 import type {
   ProviderFilters,
@@ -48,14 +49,15 @@ function sortProviders(list: ServiceProvider[], sort: ProviderSort = "recommende
 
 export async function getServiceCategories(): Promise<ServiceCategory[]> {
   const admin = createDbClient();
-  if (!admin) return [];
+  if (!admin) return DEFAULT_SERVICE_CATEGORIES;
 
-  const { data } = await admin
+  const { data, error } = await admin
     .from("service_categories")
     .select("*")
     .order("sort_order", { ascending: true });
 
-  return (data || []) as ServiceCategory[];
+  if (error || !data?.length) return DEFAULT_SERVICE_CATEGORIES;
+  return data as ServiceCategory[];
 }
 
 export async function getCategoryBySlug(slug: string) {

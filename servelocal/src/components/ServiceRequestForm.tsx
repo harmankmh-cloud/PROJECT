@@ -1,7 +1,7 @@
 "use client";
 
 import { useState } from "react";
-import { TRADE_CITIES } from "@/lib/constants";
+import { TRADE_CITIES, isValidCitySlug } from "@/lib/constants";
 import type { ServiceCategory, ServiceProvider } from "@/lib/types";
 import { MatchProsPanel } from "@/components/MatchProsPanel";
 
@@ -14,8 +14,12 @@ export function ServiceRequestForm({
   defaultCity?: string;
   defaultCategory?: string;
 }) {
-  const [categorySlug, setCategorySlug] = useState(defaultCategory || categories[0]?.slug || "");
-  const [citySlug, setCitySlug] = useState<string>(defaultCity || TRADE_CITIES[0].slug);
+  const initialCity = isValidCitySlug(defaultCity) ? defaultCity : TRADE_CITIES[0].slug;
+  const initialCategory =
+    categories.find((c) => c.slug === defaultCategory)?.slug || categories[0]?.slug || "";
+
+  const [categorySlug, setCategorySlug] = useState(initialCategory);
+  const [citySlug, setCitySlug] = useState<string>(initialCity);
   const [customerName, setCustomerName] = useState("");
   const [customerPhone, setCustomerPhone] = useState("");
   const [customerEmail, setCustomerEmail] = useState("");
