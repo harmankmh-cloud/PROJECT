@@ -1,10 +1,11 @@
 import { AdminTradePanel } from "@/components/AdminTradePanel";
-import { getAdminProviders, getAdminServiceRequests } from "@/lib/data";
+import { getAdminProviders, getAdminReviews, getAdminServiceRequests } from "@/lib/data";
 
 export default async function AdminPage() {
-  const [providers, requests] = await Promise.all([
+  const [providers, requests, reviews] = await Promise.all([
     getAdminProviders(),
     getAdminServiceRequests(),
+    getAdminReviews(),
   ]);
 
   return (
@@ -14,13 +15,13 @@ export default async function AdminPage() {
           <p className="page-eyebrow">TradeLocal</p>
           <h1 className="font-display mt-1 text-3xl text-brand-950">Service directory</h1>
           <p className="mt-2 text-sm text-slate-600">
-            Approve tradie listings and read customer job requests. Public site:{" "}
+            Approve listings, verify pros, moderate reviews, set plans ($49/$99). Public site:{" "}
             <a href="/" className="font-semibold text-teal-600 hover:underline">
               homepage
             </a>
           </p>
         </header>
-        <AdminTradePanel providers={providers} requests={requests} />
+        <AdminTradePanel providers={providers} requests={requests} reviews={reviews} />
       </div>
     </main>
   );

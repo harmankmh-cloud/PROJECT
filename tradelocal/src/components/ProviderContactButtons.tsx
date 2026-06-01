@@ -6,6 +6,7 @@ export function ProviderContactButtons({ provider }: { provider: ServiceProvider
   const phone = provider.phone.replace(/[^\d+]/g, "");
   const tel = phone.startsWith("+") ? phone : phone.length === 10 ? `+1${phone}` : phone;
   const wa = provider.whatsapp?.replace(/[^\d]/g, "") || phone.replace(/[^\d]/g, "");
+  const waMsg = encodeURIComponent(`Hi ${provider.display_name}, I found you on TradeLocal and need a quote.`);
 
   async function trackContact() {
     fetch(`/api/contact/${provider.slug}`, {
@@ -22,7 +23,7 @@ export function ProviderContactButtons({ provider }: { provider: ServiceProvider
       </a>
       {wa && (
         <a
-          href={`https://wa.me/${wa.startsWith("1") ? wa : `1${wa}`}`}
+          href={`https://wa.me/${wa.startsWith("1") ? wa : `1${wa}`}?text=${waMsg}`}
           target="_blank"
           rel="noreferrer"
           onClick={() => trackContact()}
@@ -33,7 +34,7 @@ export function ProviderContactButtons({ provider }: { provider: ServiceProvider
       )}
       {provider.email && (
         <a
-          href={`mailto:${provider.email}`}
+          href={`mailto:${provider.email}?subject=${encodeURIComponent("Quote request from TradeLocal")}`}
           onClick={() => trackContact()}
           className="btn-ghost flex-1 py-3.5 text-center"
         >

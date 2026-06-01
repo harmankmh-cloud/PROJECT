@@ -15,6 +15,12 @@ const bodySchema = z.object({
   bio: z.string().max(1000).optional(),
   yearsExperience: z.number().int().min(0).max(60).optional(),
   licensed: z.boolean().optional(),
+  licenseNumber: z.string().max(40).optional(),
+  website: z.string().max(200).optional(),
+  minCalloutFee: z.string().max(40).optional(),
+  businessHours: z.string().max(120).optional(),
+  emergencyAvailable: z.boolean().optional(),
+  requestedPlan: z.enum(["free", "featured", "premium"]).optional(),
 });
 
 export async function POST(request: Request) {
@@ -35,6 +41,12 @@ export async function POST(request: Request) {
       bio: body.bio,
       yearsExperience: body.yearsExperience,
       licensed: body.licensed,
+      licenseNumber: body.licenseNumber,
+      website: body.website,
+      minCalloutFee: body.minCalloutFee,
+      businessHours: body.businessHours,
+      emergencyAvailable: body.emergencyAvailable,
+      requestedPlan: body.requestedPlan,
     });
 
     if (!result.ok) {

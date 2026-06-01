@@ -37,7 +37,8 @@ export async function POST(request: Request) {
 
     return NextResponse.json({
       ok: true,
-      message: "Request posted — local pros can contact you directly.",
+      message: "Request posted — call matching pros below.",
+      matches: result.matches,
     });
   } catch (error) {
     if (error instanceof z.ZodError) {

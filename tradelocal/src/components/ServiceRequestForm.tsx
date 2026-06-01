@@ -2,7 +2,8 @@
 
 import { useState } from "react";
 import { TRADE_CITIES } from "@/lib/constants";
-import type { ServiceCategory } from "@/lib/types";
+import type { ServiceCategory, ServiceProvider } from "@/lib/types";
+import { MatchProsPanel } from "@/components/MatchProsPanel";
 
 export function ServiceRequestForm({
   categories,
@@ -21,7 +22,7 @@ export function ServiceRequestForm({
   const [description, setDescription] = useState("");
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
-  const [done, setDone] = useState(false);
+  const [matches, setMatches] = useState<ServiceProvider[] | null>(null);
 
   async function handleSubmit(e: React.FormEvent) {
     e.preventDefault();
@@ -43,7 +44,7 @@ export function ServiceRequestForm({
       });
       const data = await response.json();
       if (!response.ok) throw new Error(data.error || "Submit failed");
-      setDone(true);
+      setMatches(data.matches || []);
     } catch (err) {
       setError(err instanceof Error ? err.message : "Submit failed");
     } finally {
@@ -51,29 +52,30 @@ export function ServiceRequestForm({
     }
   }
 
-  if (done) {
+  if (matches !== null) {
     return (
-      <div className="surface-card p-8 text-center">
-        <p className="text-3xl">✓</p>
-        <h2 className="font-display mt-3 text-xl text-brand-950">Request posted</h2>
-        <p className="mt-2 text-sm text-slate-600">
-          Browse local pros and call them directly — or wait for callbacks if you shared your number.
-        </p>
+      <div>
+        <div className="surface-card p-8 text-center">
+          <p className="text-3xl">✓</p>
+          <h2 className="font-display mt-3 text-xl text-brand-950">Request posted</h2>
+          <p className="mt-2 text-sm text-slate-600">
+            Your job is saved. Call matching pros below — no middleman, no lead fee.
+          </p>
+        </div>
+        <MatchProsPanel providers={matches} city={citySlug} category={categorySlug} />
       </div>
     );
   }
 
   return (
     <form onSubmit={handleSubmit} className="surface-card space-y-4 p-6 sm:p-8">
-      <p className="text-sm text-slate-600">Describe what you need. We don&apos;t do the work — we help you find locals to call.</p>
+      <p className="text-sm text-slate-600">Describe what you need — we&apos;ll show matching local pros you can call right away.</p>
       <div className="grid gap-4 sm:grid-cols-2">
         <label className="block space-y-2 text-sm">
           <span className="font-semibold">Service needed</span>
           <select value={categorySlug} onChange={(e) => setCategorySlug(e.target.value)} className="input-field">
             {categories.map((c) => (
-              <option key={c.slug} value={c.slug}>
-                {c.icon} {c.name}
-              </option>
+              <option key={c.slug} value={c.slug}>{c.icon} {c.name}</option>
             ))}
           </select>
         </label>
@@ -81,9 +83,7 @@ export function ServiceRequestForm({
           <span className="font-semibold">City</span>
           <select value={citySlug} onChange={(e) => setCitySlug(e.target.value)} className="input-field">
             {TRADE_CITIES.map((c) => (
-              <option key={c.slug} value={c.slug}>
-                {c.name}
-              </option>
+              <option key={c.slug} value={c.slug}>{c.name}</option>
             ))}
           </select>
         </label>
@@ -113,7 +113,7 @@ export function ServiceRequestForm({
       </label>
       {error && <p className="text-sm text-rose-600">{error}</p>}
       <button type="submit" disabled={loading} className="btn-dark w-full py-3.5 disabled:opacity-60">
-        {loading ? "Posting…" : "Post request"}
+        {loading ? "Finding pros…" : "Get matching pros"}
       </button>
     </form>
   );

@@ -19,34 +19,33 @@ Open [http://localhost:3001](http://localhost:3001).
 ## Database setup
 
 1. Open your Supabase project SQL Editor
-2. Run the SQL in `supabase/tradelocal.sql`
-3. You can use the **same Supabase project** as RateLocal — the tables are separate
+2. Run `supabase/tradelocal.sql`
+3. Run `supabase/premium.sql` for reviews, verified badges, and paid tiers
 
-## Admin
+## Premium features
 
-1. Set `ADMIN_EMAILS=you@yourbusiness.com` in `.env.local`
-2. Create a Supabase auth user with that email (or use an existing account)
-3. Sign in at `/login` → manage listings at `/admin`
-
-## Deploy on Vercel
-
-1. Add a new Vercel project from this repo
-2. Set **Root Directory** to `tradelocal`
-3. Add environment variables from `.env.local.template`
-4. Point your domain (e.g. `tradelocal.ca`) to this project
+- **Search** — `/search?q=plumber+surrey`
+- **Reviews** — customers leave reviews; you approve in `/admin`
+- **Verified & insured badges** — toggle in admin
+- **Paid tiers** — Free / Featured ($49/mo) / Premium ($99/mo) on `/pricing`
+- **Cost guides** — BC price ranges at `/guides`
+- **Job matching** — after posting a request, customers see matching pros to call
+- **Filters** — licensed, verified, 24/7, sort by rating on category pages
 
 ## Routes
 
 | Path | Purpose |
 |------|---------|
-| `/` | Homepage — browse cities & services |
-| `/join` | Tradie application form |
-| `/request` | Customer job request form |
+| `/` | Premium homepage |
+| `/search` | Search pros |
+| `/pricing` | Pro plans |
+| `/guides` | Cost guides |
+| `/join` | Tradie application with plan picker |
+| `/request` | Get quotes + matching pros |
 | `/{city}` | Listings by city |
-| `/{city}/{category}` | Listings by city + trade |
-| `/pro/{slug}` | Pro profile with call/WhatsApp |
-| `/admin` | Approve listings, view requests |
-| `/login` | Admin sign-in |
+| `/{city}/{category}` | Filtered listings |
+| `/pro/{slug}` | Full profile + reviews |
+| `/admin` | Approve, verify, tiers, reviews |
 
 ## Environment variables
 
