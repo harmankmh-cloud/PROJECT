@@ -1,7 +1,13 @@
 "use client";
 
-import { useState } from "react";
+import { useMemo, useState } from "react";
 import { TRADE_CITIES, isValidCitySlug } from "@/lib/constants";
+import {
+  formatSubmitError,
+  isValidPhone,
+  normalizePhone,
+  resolveCategories,
+} from "@/lib/form-utils";
 import type { ServiceCategory, ServiceProvider } from "@/lib/types";
 import { MatchProsPanel } from "@/components/MatchProsPanel";
 
@@ -14,11 +20,18 @@ export function ServiceRequestForm({
   defaultCity?: string;
   defaultCategory?: string;
 }) {
+  const safeCategories = useMemo(() => resolveCategories(categories), [categories]);
   const initialCity = isValidCitySlug(defaultCity) ? defaultCity : TRADE_CITIES[0].slug;
   const initialCategory =
-    categories.find((c) => c.slug === defaultCategory)?.slug || categories[0]?.slug || "";
+    safeCategories.find((c) => c.slug === defaultCategory)?.slug || safeCategories[0]?.slug || "";
 
-  const [categorySlug, setCategorySlug] = useState(initialCategory);
+  const [categorySlugRaw, setCategorySlug] = useState(initialCategory);
+  const categorySlug = useMemo(() => {
+    if (categorySlugRaw && safeCategories.some((c) => c.slug === categorySlugRaw)) {
+      return categorySlugRaw;
+    }
+    return safeCategories[0]?.slug || "";
+  }, [categorySlugRaw, safeCategories]);
   const [citySlug, setCitySlug] = useState<string>(initialCity);
   const [customerName, setCustomerName] = useState("");
   const [customerPhone, setCustomerPhone] = useState("");
@@ -30,8 +43,24 @@ export function ServiceRequestForm({
 
   async function handleSubmit(e: React.FormEvent) {
     e.preventDefault();
-    setLoading(true);
     setError("");
+
+    if (!categorySlug) {
+      setError("Please pick a service from the list.");
+      return;
+    }
+
+    if (!isValidPhone(customerPhone)) {
+      setError("Enter a valid 10-digit phone number (e.g. 604-555-1234).");
+      return;
+    }
+
+    if (description.trim().length < 10) {
+      setError("Describe your job in at least 10 characters.");
+      return;
+    }
+
+    setLoading(true);
 
     try {
       const response = await fetch("/api/requests", {
@@ -40,17 +69,17 @@ export function ServiceRequestForm({
         body: JSON.stringify({
           categorySlug,
           citySlug,
-          customerName,
-          customerPhone,
-          customerEmail,
-          description,
+          customerName: customerName.trim(),
+          customerPhone: normalizePhone(customerPhone),
+          customerEmail: customerEmail.trim(),
+          description: description.trim(),
         }),
       });
       const data = await response.json();
       if (!response.ok) throw new Error(data.error || "Submit failed");
       setMatches(data.matches || []);
     } catch (err) {
-      setError(err instanceof Error ? err.message : "Submit failed");
+      setError(formatSubmitError(err instanceof Error ? err.message : "Submit failed"));
     } finally {
       setLoading(false);
     }
@@ -77,15 +106,25 @@ export function ServiceRequestForm({
       <div className="grid gap-4 sm:grid-cols-2">
         <label className="block space-y-2 text-sm">
           <span className="font-semibold">Service needed</span>
-          <select value={categorySlug} onChange={(e) => setCategorySlug(e.target.value)} className="input-field">
-            {categories.map((c) => (
+          <select
+            value={categorySlug}
+            onChange={(e) => setCategorySlug(e.target.value)}
+            className="input-field select-field"
+            required
+          >
+            {safeCategories.map((c) => (
               <option key={c.slug} value={c.slug}>{c.icon} {c.name}</option>
             ))}
           </select>
         </label>
         <label className="block space-y-2 text-sm">
           <span className="font-semibold">City</span>
-          <select value={citySlug} onChange={(e) => setCitySlug(e.target.value)} className="input-field">
+          <select
+            value={citySlug}
+            onChange={(e) => setCitySlug(e.target.value)}
+            className="input-field select-field"
+            required
+          >
             {TRADE_CITIES.map((c) => (
               <option key={c.slug} value={c.slug}>{c.name}</option>
             ))}
@@ -98,7 +137,15 @@ export function ServiceRequestForm({
       </label>
       <label className="block space-y-2 text-sm">
         <span className="font-semibold">Your phone</span>
-        <input value={customerPhone} onChange={(e) => setCustomerPhone(e.target.value)} className="input-field" required />
+        <input
+          value={customerPhone}
+          onChange={(e) => setCustomerPhone(e.target.value)}
+          className="input-field"
+          required
+          inputMode="tel"
+          autoComplete="tel"
+          placeholder="604-555-1234"
+        />
       </label>
       <label className="block space-y-2 text-sm">
         <span className="font-semibold">Email (optional)</span>
@@ -115,8 +162,12 @@ export function ServiceRequestForm({
           placeholder="e.g. Leaking kitchen sink, need plumber this week in Surrey…"
         />
       </label>
-      {error && <p className="text-sm text-rose-600">{error}</p>}
-      <button type="submit" disabled={loading} className="btn-dark w-full py-3.5 disabled:opacity-60">
+      {error && (
+        <p className="rounded-xl border border-rose-200 bg-rose-50 px-4 py-3 text-sm text-rose-700" role="alert">
+          {error}
+        </p>
+      )}
+      <button type="submit" disabled={loading || !categorySlug} className="btn-dark w-full py-3.5 disabled:opacity-60">
         {loading ? "Finding pros…" : "Get matching pros"}
       </button>
     </form>

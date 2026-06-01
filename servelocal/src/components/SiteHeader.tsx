@@ -15,13 +15,16 @@ export function SiteHeader({ compact }: { compact?: boolean }) {
               {SERVE_LOCAL.name}
             </span>
           </Link>
-          {!compact && (
-            <nav className="flex gap-2 sm:hidden">
-              <Link href="/request" className="btn-gold px-3 py-1.5 text-xs">
-                Get quotes
+          <nav className="flex gap-2 sm:hidden">
+            <Link href="/request" className="btn-gold px-3 py-1.5 text-xs">
+              Get quotes
+            </Link>
+            {!compact && (
+              <Link href="/join" className="btn-ghost px-3 py-1.5 text-xs">
+                List business
               </Link>
-            </nav>
-          )}
+            )}
+          </nav>
         </div>
         {!compact && (
           <div className="flex flex-1 flex-col gap-3 sm:max-w-md sm:px-4">

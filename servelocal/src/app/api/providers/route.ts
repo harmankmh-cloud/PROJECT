@@ -1,6 +1,7 @@
 import { NextResponse } from "next/server";
 import { z } from "zod";
 import { TRADE_CITIES } from "@/lib/constants";
+import { normalizePhone, zodFieldError } from "@/lib/form-utils";
 import { createProviderApplication, getServiceCategories } from "@/lib/data";
 
 const citySlugs = TRADE_CITIES.map((c) => c.slug);
@@ -9,7 +10,7 @@ const bodySchema = z.object({
   displayName: z.string().min(2).max(80),
   categorySlug: z.string().min(2),
   citySlug: z.enum(citySlugs as [string, ...string[]]),
-  phone: z.string().min(10).max(20),
+  phone: z.string().transform(normalizePhone).pipe(z.string().length(10)),
   email: z.union([z.string().email(), z.literal("")]).optional(),
   whatsapp: z.string().max(20).optional(),
   bio: z.string().max(1000).optional(),
@@ -56,7 +57,7 @@ export async function POST(request: Request) {
     return NextResponse.json({ ok: true, message: "Application received — we review within 1–2 days." });
   } catch (error) {
     if (error instanceof z.ZodError) {
-      return NextResponse.json({ error: "Check your form fields" }, { status: 400 });
+      return NextResponse.json({ error: zodFieldError(error) }, { status: 400 });
     }
     return NextResponse.json({ error: "Could not submit" }, { status: 500 });
   }

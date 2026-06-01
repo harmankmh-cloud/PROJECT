@@ -1,6 +1,7 @@
 "use client";
 
 import { useState } from "react";
+import { formatSubmitError } from "@/lib/form-utils";
 
 export function ReviewForm({ providerId, providerName }: { providerId: string; providerName: string }) {
   const [reviewerName, setReviewerName] = useState("");
@@ -26,7 +27,7 @@ export function ReviewForm({ providerId, providerName }: { providerId: string; p
       if (!response.ok) throw new Error(data.error || "Could not submit");
       setDone(true);
     } catch (err) {
-      setError(err instanceof Error ? err.message : "Could not submit");
+      setError(formatSubmitError(err instanceof Error ? err.message : "Could not submit"));
     } finally {
       setLoading(false);
     }

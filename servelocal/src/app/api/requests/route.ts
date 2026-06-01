@@ -1,6 +1,7 @@
 import { NextResponse } from "next/server";
 import { z } from "zod";
 import { TRADE_CITIES } from "@/lib/constants";
+import { normalizePhone, zodFieldError } from "@/lib/form-utils";
 import { createServiceRequest, getServiceCategories } from "@/lib/data";
 
 const citySlugs = TRADE_CITIES.map((c) => c.slug);
@@ -9,7 +10,7 @@ const bodySchema = z.object({
   categorySlug: z.string().min(2),
   citySlug: z.enum(citySlugs as [string, ...string[]]),
   customerName: z.string().min(2).max(80),
-  customerPhone: z.string().min(10).max(20),
+  customerPhone: z.string().transform(normalizePhone).pipe(z.string().length(10)),
   customerEmail: z.union([z.string().email(), z.literal("")]).optional(),
   description: z.string().min(10).max(2000),
 });
@@ -42,7 +43,7 @@ export async function POST(request: Request) {
     });
   } catch (error) {
     if (error instanceof z.ZodError) {
-      return NextResponse.json({ error: "Check your form fields" }, { status: 400 });
+      return NextResponse.json({ error: zodFieldError(error) }, { status: 400 });
     }
     return NextResponse.json({ error: "Could not submit" }, { status: 500 });
   }
