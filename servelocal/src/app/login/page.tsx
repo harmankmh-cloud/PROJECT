@@ -1,6 +1,7 @@
 import Link from "next/link";
 import { redirect } from "next/navigation";
 import { AdminLoginForm } from "@/components/AdminLoginForm";
+import { SmtpSetupGuide } from "@/components/SmtpSetupGuide";
 import { SERVE_LOCAL } from "@/lib/constants";
 import { createClient } from "@/lib/supabase/server";
 import { isPlatformAdmin } from "@/lib/admin-auth";
@@ -16,21 +17,24 @@ export default async function LoginPage() {
   }
 
   return (
-    <main className="mesh-bg flex min-h-screen items-center justify-center px-4 py-12">
-      <div className="w-full max-w-md">
-        <div className="auth-card">
+    <main className="mesh-bg min-h-screen px-4 py-12">
+      <div className="mx-auto grid max-w-4xl gap-8 lg:grid-cols-2">
+        <div className="auth-card h-fit">
           <p className="page-eyebrow">{SERVE_LOCAL.name} admin</p>
-          <h1 className="font-display mt-2 text-3xl tracking-tight text-brand-950">Sign in</h1>
-          <p className="mt-2 text-sm text-slate-500">Approve listings and view customer requests.</p>
+          <h1 className="font-display mt-2 text-3xl tracking-tight text-brand-950">Admin sign in</h1>
+          <p className="mt-2 text-sm text-slate-500">
+            Site owners only. Customers and tradies use the site without logging in.
+          </p>
           <div className="mt-8">
             <AdminLoginForm />
           </div>
           <p className="mt-8 text-center text-sm text-slate-500">
             <Link href="/" className="font-semibold text-teal-600 hover:underline">
-              ← Back to site
+              ← Back to site (no login needed)
             </Link>
           </p>
         </div>
+        <SmtpSetupGuide />
       </div>
     </main>
   );

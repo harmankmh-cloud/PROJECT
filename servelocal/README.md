@@ -22,7 +22,25 @@ Open [http://localhost:3001](http://localhost:3001).
 2. Run `supabase/servelocal.sql`
 3. Run `supabase/premium.sql` for reviews, verified badges, and paid tiers
 4. Run `supabase/suggestions.sql` for the feedback button
-5. Run `supabase/guest-access.sql` so visitors can browse, post jobs, and apply without logging in
+5. Run `supabase/guest-access.sql` for database permissions (public browse/post without login)
+
+## Email / auth (same as RateLocal — Resend SMTP)
+
+Supabase’s built-in email hits **~2–4 emails/hour**. RateLocal signup was fixed with **Resend SMTP** in Supabase (not in Vercel).
+
+- **Same Supabase project** → if Resend SMTP is already on for RateLocal, ServeLocal uses it too.
+- **ServeLocal visitors never sign up** — no auth emails for customers/tradies.
+- **Admin only** uses `/login` (password).
+
+Full steps: **`SMTP_SETUP.md`** (this folder) and **`reviewflow/SMTP_SETUP.md`** (RateLocal — same Resend setup).
+
+Add redirect URLs in Supabase for ServeLocal:
+
+```
+https://www.servelocal.ca/auth/callback
+https://servelocal.ca/auth/callback
+http://localhost:3001/auth/callback
+```
 
 ## Premium features
 

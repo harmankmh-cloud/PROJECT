@@ -1,5 +1,6 @@
--- ServeLocal: guest access (no login required)
+-- ServeLocal: database permissions for public use (no login)
 -- Run after servelocal.sql, premium.sql, and suggestions.sql
+-- Auth email limits are handled separately via Resend SMTP — see SMTP_SETUP.md
 
 grant usage on schema public to anon, authenticated;
 
