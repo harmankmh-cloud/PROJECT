@@ -18,7 +18,7 @@ export default async function GuideCategoryPage({ params }: { params: Promise<{ 
     <main className="mesh-bg min-h-screen">
       <SiteHeader compact />
       <div className="mx-auto max-w-6xl px-4 py-12 sm:px-8">
-        <Link href="/guides" className="text-sm font-semibold text-teal-600 hover:underline">← All guides</Link>
+        <Link href="/guides" className="text-sm font-semibold text-accent-600 hover:underline">← All guides</Link>
         <h1 className="font-display mt-4 text-4xl text-brand-950">
           {cat.icon} {cat.name} costs in BC
         </h1>
@@ -28,7 +28,7 @@ export default async function GuideCategoryPage({ params }: { params: Promise<{ 
             <div className="surface-card p-6">
               <h2 className="font-semibold text-brand-950">Typical pricing</h2>
               {guide.low > 0 ? (
-                <p className="font-display mt-2 text-3xl text-teal-600">
+                <p className="font-display mt-2 text-3xl text-accent-600">
                   ${guide.low}–${guide.high} <span className="text-base text-slate-500">{guide.unit}</span>
                 </p>
               ) : (
@@ -49,7 +49,7 @@ export default async function GuideCategoryPage({ params }: { params: Promise<{ 
               <ul className="mt-4 space-y-3 text-sm text-slate-700">
                 {guide.tips.map((tip) => (
                   <li key={tip} className="flex gap-2">
-                    <span className="text-teal-500">•</span>
+                    <span className="text-accent-500">•</span>
                     {tip}
                   </li>
                 ))}

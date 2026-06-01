@@ -1,11 +1,12 @@
 import { AdminTradePanel } from "@/components/AdminTradePanel";
-import { getAdminProviders, getAdminReviews, getAdminServiceRequests } from "@/lib/data";
+import { getAdminProviders, getAdminReviews, getAdminServiceRequests, getAdminSuggestions } from "@/lib/data";
 
 export default async function AdminPage() {
-  const [providers, requests, reviews] = await Promise.all([
+  const [providers, requests, reviews, suggestions] = await Promise.all([
     getAdminProviders(),
     getAdminServiceRequests(),
     getAdminReviews(),
+    getAdminSuggestions(),
   ]);
 
   return (
@@ -13,15 +14,20 @@ export default async function AdminPage() {
       <div className="mx-auto max-w-4xl space-y-6">
         <header>
           <p className="page-eyebrow">ServeLocal</p>
-          <h1 className="font-display mt-1 text-3xl text-brand-950">Service directory</h1>
-          <p className="mt-2 text-sm text-slate-600">
+          <h1 className="font-display mt-1 text-3xl font-bold text-zinc-900">Service directory</h1>
+          <p className="mt-2 text-sm text-zinc-600">
             Approve listings, verify pros, moderate reviews, set plans ($49/$99). Public site:{" "}
-            <a href="/" className="font-semibold text-teal-600 hover:underline">
+            <a href="/" className="font-semibold text-accent-600 hover:underline">
               homepage
             </a>
           </p>
         </header>
-        <AdminTradePanel providers={providers} requests={requests} reviews={reviews} />
+        <AdminTradePanel
+          providers={providers}
+          requests={requests}
+          reviews={reviews}
+          suggestions={suggestions}
+        />
       </div>
     </main>
   );

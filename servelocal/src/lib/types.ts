@@ -75,3 +75,12 @@ export type ProviderFilters = {
   sort?: ProviderSort;
   query?: string;
 };
+
+export type SiteSuggestion = {
+  id: string;
+  message: string;
+  email: string | null;
+  page_url: string | null;
+  status: "new" | "read" | "done";
+  created_at: string;
+};

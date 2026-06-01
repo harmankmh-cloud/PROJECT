@@ -94,7 +94,7 @@ export function JoinProviderForm({ categories }: { categories: ServiceCategory[]
               className={requestedPlan === plan.id ? "option-card-selected rounded-xl border p-4 text-left" : "option-card rounded-xl border p-4 text-left"}
             >
               <p className="font-semibold text-brand-950">{plan.name}</p>
-              <p className="text-sm text-teal-600">{plan.priceLabel}</p>
+              <p className="text-sm text-accent-600">{plan.priceLabel}</p>
             </button>
           ))}
         </div>
