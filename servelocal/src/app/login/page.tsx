@@ -31,7 +31,7 @@ export default async function LoginPage({
 
   return (
     <main className="mesh-bg min-h-screen px-4 py-12">
-      <div className="mx-auto grid max-w-4xl gap-8 lg:grid-cols-2">
+      <div className="mx-auto max-w-md">
         <div className="auth-card h-fit">
           <p className="page-eyebrow">{SERVE_LOCAL.name}</p>
           <h1 className="font-display mt-2 text-3xl tracking-tight text-brand-950">Sign in</h1>
@@ -64,7 +64,15 @@ export default async function LoginPage({
             </Link>
           </p>
         </div>
-        <SmtpSetupGuide />
+
+        <details className="mt-8 rounded-2xl border border-slate-200/80 bg-white/80 p-4 text-sm">
+          <summary className="cursor-pointer font-semibold text-slate-600">
+            Site owner? Email setup (Resend / Supabase)
+          </summary>
+          <div className="mt-4">
+            <SmtpSetupGuide />
+          </div>
+        </details>
       </div>
     </main>
   );
