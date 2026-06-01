@@ -13,7 +13,7 @@ export default async function JoinPage() {
     <main className="mesh-bg min-h-screen">
       <SiteHeader compact />
       <div className="mx-auto max-w-2xl px-4 py-10 sm:px-8">
-        <Link href="/pricing" className="text-sm font-semibold text-accent-600 hover:underline">
+        <Link href="/pricing" className="text-sm font-semibold text-teal-600 hover:underline">
           Compare plans →
         </Link>
         <h1 className="font-display mt-2 text-3xl text-brand-950">Get listed on ServeLocal</h1>

@@ -20,7 +20,7 @@ export default async function CityPage({ params }: { params: Promise<{ city: str
     <main className="mesh-bg min-h-screen">
       <SiteHeader compact />
       <div className="mx-auto max-w-6xl px-4 py-10 sm:px-8">
-        <Link href="/" className="text-sm font-semibold text-accent-600 hover:underline">
+        <Link href="/" className="text-sm font-semibold text-teal-600 hover:underline">
           ← {SERVE_LOCAL.name}
         </Link>
         <h1 className="font-display mt-4 text-3xl text-brand-950 sm:text-4xl">{cityMeta.name}</h1>

@@ -110,7 +110,7 @@ export function SuggestionButton() {
           >
             {formState === "success" ? (
               <div className="text-center">
-                <span className="mx-auto flex h-14 w-14 items-center justify-center rounded-full bg-success-500/10 text-2xl">
+                <span className="mx-auto flex h-14 w-14 items-center justify-center rounded-full bg-teal-50 text-2xl text-teal-600">
                   ✓
                 </span>
                 <h2 id="suggestion-title" className="font-display mt-4 text-xl font-bold text-zinc-900">
@@ -119,7 +119,7 @@ export function SuggestionButton() {
                 <p className="mt-2 text-sm text-zinc-600">
                   We read every suggestion. Your input helps shape {SERVE_LOCAL_NAME}.
                 </p>
-                <button type="button" onClick={closeModal} className="btn-primary mt-6 w-full py-3">
+                <button type="button" onClick={closeModal} className="btn-gold mt-6 w-full py-3">
                   Close
                 </button>
               </div>
@@ -177,7 +177,7 @@ export function SuggestionButton() {
                   <button
                     type="submit"
                     disabled={formState === "submitting"}
-                    className="btn-primary w-full py-3 disabled:opacity-60"
+                    className="btn-gold w-full py-3 disabled:opacity-60"
                   >
                     {formState === "submitting" ? "Sending…" : "Send suggestion"}
                   </button>
