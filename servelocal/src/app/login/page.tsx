@@ -1,7 +1,6 @@
 import Link from "next/link";
 import { redirect } from "next/navigation";
 import { AuthForm } from "@/components/AuthForm";
-import { SmtpSetupGuide } from "@/components/SmtpSetupGuide";
 import { SERVE_LOCAL } from "@/lib/constants";
 import { createClient } from "@/lib/supabase/server";
 import { isPlatformAdmin } from "@/lib/admin-auth";
@@ -58,21 +57,17 @@ export default async function LoginPage({
               Create an account
             </Link>
           </p>
-          <p className="mt-4 text-center text-sm text-slate-500">
+          <p className="mt-4 text-center text-xs text-slate-400">
+            <Link href="/help/email" className="hover:text-teal-600 hover:underline">
+              Site owner: email setup (Resend)
+            </Link>
+          </p>
+          <p className="mt-2 text-center text-sm text-slate-500">
             <Link href="/" className="hover:text-teal-600 hover:underline">
               ← Back to {SERVE_LOCAL.name}
             </Link>
           </p>
         </div>
-
-        <details className="mt-8 rounded-2xl border border-slate-200/80 bg-white/80 p-4 text-sm">
-          <summary className="cursor-pointer font-semibold text-slate-600">
-            Site owner? Email setup (Resend / Supabase)
-          </summary>
-          <div className="mt-4">
-            <SmtpSetupGuide />
-          </div>
-        </details>
       </div>
     </main>
   );
