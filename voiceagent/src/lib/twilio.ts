@@ -175,7 +175,7 @@ export function buildConversationRelayTwiml(params: {
     interruptible: relaySettings.interruptible,
     interruptSensitivity: relaySettings.interruptSensitivity,
     hints: relaySettings.hints,
-    partialPrompts: true,
+    partialPrompts: false,
     preemptible: true,
     reportInputDuringAgentSpeech: true,
     ...(relaySettings.elevenlabsTextNormalization

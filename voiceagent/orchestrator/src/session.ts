@@ -43,14 +43,18 @@ export class CallSession {
           this.transcripts.push({ role: "user", content: msg.voicePrompt });
           this.isSpeaking = true;
 
-          this.send({ type: "text", token: "Sure. ", last: false });
-
+          let streamedAny = false;
           const { text, toolResult } = await this.llm.respondStream(
             msg.voicePrompt,
             (token) => {
+              streamedAny = true;
               this.send({ type: "text", token, last: false });
             }
           );
+
+          if (!streamedAny && text) {
+            this.send({ type: "text", token: text, last: false });
+          }
 
           this.send({ type: "text", token: "", last: true });
           this.transcripts.push({ role: "assistant", content: text });
