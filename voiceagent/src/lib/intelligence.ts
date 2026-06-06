@@ -1,76 +1,82 @@
-import "server-only";
+import { chatCompletion, hasOpenRouter } from "./openrouter";
 
-export interface CallAnalysis {
+export interface CallIntelligence {
   summary: string;
   sentiment: "positive" | "neutral" | "negative";
   intent: string;
-  complianceFlags: string[];
+  topics: string[];
+  actionItems: string[];
+  score: number;
+}
+
+function formatTranscript(transcripts: Array<{ role: string; content: string }>) {
+  return transcripts
+    .map((t) => `${t.role}: ${t.content}`)
+    .join("\n")
+    .trim();
 }
 
 export async function analyzeCall(
-  transcripts: Array<{ role: string; content: string }>
-): Promise<CallAnalysis> {
-  const text = transcripts.map((t) => `${t.role}: ${t.content}`).join("\n");
+  transcripts: Array<{ role: string; content: string }>,
+  agentName = "Agent"
+): Promise<CallIntelligence> {
+  const transcript = formatTranscript(transcripts);
 
-  if (!text.trim()) {
+  if (!hasOpenRouter() || !transcript) {
     return {
-      summary: "No conversation recorded",
+      summary: transcript
+        ? "Call completed. Enable OPENROUTER_API_KEY for AI analysis."
+        : "Call completed with no transcript.",
       sentiment: "neutral",
       intent: "unknown",
-      complianceFlags: [],
+      topics: [],
+      actionItems: [],
+      score: 50,
     };
   }
 
-  const apiKey = process.env.OPENAI_API_KEY;
-  if (!apiKey) {
+  const content = await chatCompletion({
+    messages: [
+      {
+        role: "system",
+        content: `Analyze this phone call transcript for agent "${agentName}". Return JSON only with: summary (2 sentences), sentiment (positive/neutral/negative), intent (short phrase describing caller goal), topics (array), actionItems (array), score (0-100 call quality).`,
+      },
+      { role: "user", content: transcript },
+    ],
+    temperature: 0.3,
+    max_tokens: 500,
+    jsonMode: true,
+  });
+
+  if (!content) {
     return {
-      summary: text.slice(0, 200),
+      summary: "Analysis unavailable.",
       sentiment: "neutral",
-      intent: "general_inquiry",
-      complianceFlags: [],
+      intent: "unknown",
+      topics: [],
+      actionItems: [],
+      score: 50,
     };
   }
 
   try {
-    const res = await fetch("https://api.openai.com/v1/chat/completions", {
-      method: "POST",
-      headers: {
-        Authorization: `Bearer ${apiKey}`,
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify({
-        model: "gpt-4o-mini",
-        messages: [
-          {
-            role: "system",
-            content:
-              'Analyze this phone call transcript. Return JSON: {"summary":"...","sentiment":"positive|neutral|negative","intent":"...","complianceFlags":[]}. complianceFlags may include: recording_disclosure_missing, phi_detected, aggressive_language.',
-          },
-          { role: "user", content: text },
-        ],
-        response_format: { type: "json_object" },
-        max_tokens: 300,
-      }),
-    });
-
-    if (res.ok) {
-      const data = await res.json();
-      const parsed = JSON.parse(data.choices[0].message.content);
-      return {
-        summary: parsed.summary || text.slice(0, 200),
-        sentiment: parsed.sentiment || "neutral",
-        intent: parsed.intent || "general_inquiry",
-        complianceFlags: parsed.complianceFlags || [],
-      };
-    }
+    const parsed = JSON.parse(content) as Partial<CallIntelligence>;
+    return {
+      summary: parsed.summary || "Call analyzed.",
+      sentiment: parsed.sentiment || "neutral",
+      intent: parsed.intent || "general inquiry",
+      topics: parsed.topics || [],
+      actionItems: parsed.actionItems || [],
+      score: parsed.score ?? 50,
+    };
   } catch {
-    // fall through
+    return {
+      summary: content.slice(0, 200),
+      sentiment: "neutral",
+      intent: "unknown",
+      topics: [],
+      actionItems: [],
+      score: 50,
+    };
   }
-
-  return {
-    summary: text.slice(0, 200),
-    sentiment: "neutral",
-    intent: "general_inquiry",
-    complianceFlags: [],
-  };
 }

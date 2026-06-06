@@ -43,7 +43,7 @@ Run [`supabase/schema.sql`](supabase/schema.sql) in your Supabase SQL editor.
 ## Architecture
 
 ```
-Caller → Telnyx PSTN → /api/telnyx/webhook → transcription + OpenAI → speak
+Caller → Telnyx PSTN → /api/telnyx/webhook → transcription + OpenRouter → speak
                                               ↓
                                     Next.js API (config, transfer, post-call)
                                               ↓

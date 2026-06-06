@@ -51,6 +51,9 @@ const TOOLS: OpenAI.Chat.Completions.ChatCompletionTool[] = [
   },
 ];
 
+const DEFAULT_MODEL =
+  process.env.OPENROUTER_MODEL || "google/gemini-2.0-flash-001";
+
 export class LlmSession {
   private client: OpenAI;
   private messages: OpenAI.Chat.Completions.ChatCompletionMessageParam[] = [];
@@ -61,9 +64,16 @@ export class LlmSession {
     private knowledgeContext?: string,
     private contactMemory?: string
   ) {
-    const apiKey = process.env.OPENAI_API_KEY;
-    if (!apiKey) throw new Error("OPENAI_API_KEY is required");
-    this.client = new OpenAI({ apiKey });
+    const apiKey = process.env.OPENROUTER_API_KEY;
+    if (!apiKey) throw new Error("OPENROUTER_API_KEY is required");
+    this.client = new OpenAI({
+      apiKey,
+      baseURL: "https://openrouter.ai/api/v1",
+      defaultHeaders: {
+        "HTTP-Referer": process.env.NEXT_PUBLIC_APP_URL || "http://localhost:3002",
+        "X-Title": "VoiceAgent",
+      },
+    });
 
     let fullSystem = systemPrompt;
     if (knowledgeContext) {
@@ -82,7 +92,7 @@ export class LlmSession {
     this.messages.push({ role: "user", content: userText });
 
     const completion = await this.client.chat.completions.create({
-      model: process.env.OPENAI_MODEL || "gpt-4o-mini",
+      model: DEFAULT_MODEL,
       messages: this.messages,
       tools: TOOLS,
       tool_choice: "auto",
