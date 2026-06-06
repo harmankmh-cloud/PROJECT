@@ -31,7 +31,16 @@ export function buildErrorTwiml(message = "Sorry, something went wrong. Please t
 }
 
 function sanitizeSayText(text: string) {
-  return text.replace(/[<>&]/g, " ").replace(/\s+/g, " ").trim().slice(0, 500);
+  const cleaned = text
+    .normalize("NFKD")
+    .replace(/[\u2010-\u2015]/g, "-")
+    .replace(/[<>&]/g, " ")
+    .replace(/[^\x20-\x7E]/g, " ")
+    .replace(/\s+/g, " ")
+    .trim()
+    .slice(0, 500);
+
+  return cleaned || "Please wait a moment.";
 }
 
 export function buildSimpleVoiceTwiml(params: {

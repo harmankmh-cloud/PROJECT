@@ -39,6 +39,7 @@ export async function chatCompletion(params: {
           temperature: params.temperature ?? 0.7,
           ...(params.jsonMode ? { response_format: { type: "json_object" } } : {}),
         }),
+        signal: AbortSignal.timeout(8000),
       });
 
       if (!res.ok) continue;
