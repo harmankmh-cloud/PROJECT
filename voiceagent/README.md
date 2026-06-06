@@ -1,6 +1,6 @@
 # VoiceAgent
 
-Enterprise AI phone agent platform for local businesses. Built on Twilio ConversationRelay with a multi-tenant Next.js control plane.
+Enterprise AI phone agent platform for local businesses. Built on Telnyx Call Control with a multi-tenant Next.js control plane. Twilio ConversationRelay orchestrator path remains optional.
 
 ## Features
 
@@ -27,17 +27,23 @@ npm run orchestrator
 
 Run [`supabase/schema.sql`](supabase/schema.sql) in your Supabase SQL editor.
 
-## Twilio setup
+## Telnyx setup (recommended)
+
+1. Create a **Call Control App** in Telnyx Mission Control
+2. Set webhook URL: `https://your-domain/api/telnyx/webhook`
+3. Buy a phone number and assign it to the Call Control App
+4. Add to `.env.local`: `TELNYX_API_KEY`, `TELNYX_CONNECTION_ID`, `TELNYX_PHONE_NUMBER`
+5. Insert phone number in `va_phone_numbers` linked to your org and agent
+
+## Twilio setup (optional legacy)
 
 1. Create a TwiML App with Voice URL: `https://your-domain/api/twilio/voice`
-2. Buy a phone number and assign the TwiML App
-3. Expose orchestrator via tunnel: `ORCHESTRATOR_WSS_URL=wss://your-tunnel/ws`
-4. Insert phone number in `va_phone_numbers` linked to your org and agent
+2. Expose orchestrator via tunnel: `ORCHESTRATOR_WSS_URL=wss://your-tunnel/ws`
 
 ## Architecture
 
 ```
-Caller → Twilio PSTN → ConversationRelay → orchestrator (wss) → OpenAI
+Caller → Telnyx PSTN → /api/telnyx/webhook → transcription + OpenAI → speak
                                               ↓
                                     Next.js API (config, transfer, post-call)
                                               ↓

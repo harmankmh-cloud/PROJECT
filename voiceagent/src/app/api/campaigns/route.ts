@@ -3,6 +3,7 @@ import { createClient } from "@/lib/supabase/server";
 import { getUserOrg } from "@/lib/auth";
 import { hasValidConsent, isWithinCallingHours } from "@/lib/compliance/tcpa";
 import { getTwilioClient } from "@/lib/twilio";
+import { dialOutbound, encodeClientState, isTelnyxConfigured } from "@/lib/telnyx";
 import { logAudit } from "@/lib/compliance/audit";
 
 export async function GET() {
@@ -98,17 +99,36 @@ export async function PATCH(request: NextRequest) {
       if (hasConsent) eligible.push(contact.phone);
     }
 
-    const client = getTwilioClient();
-    const from = process.env.TWILIO_PHONE_NUMBER;
     const appUrl = process.env.NEXT_PUBLIC_APP_URL || "http://localhost:3002";
+    const provider = process.env.TELEPHONY_PROVIDER || "telnyx";
 
-    if (client && from) {
+    if (provider === "telnyx" && isTelnyxConfigured()) {
+      const from = process.env.TELNYX_PHONE_NUMBER!;
+      const connectionId = process.env.TELNYX_CONNECTION_ID!;
+      const clientState = encodeClientState({
+        orgId: org.id,
+        agentId: campaign.agent_id || "",
+      });
       for (const phone of eligible.slice(0, 10)) {
-        await client.calls.create({
+        await dialOutbound({
           to: phone,
           from,
-          url: `${appUrl}/api/twilio/voice`,
+          connectionId,
+          webhookUrl: `${appUrl}/api/telnyx/webhook`,
+          clientState,
         });
+      }
+    } else {
+      const client = getTwilioClient();
+      const from = process.env.TWILIO_PHONE_NUMBER;
+      if (client && from) {
+        for (const phone of eligible.slice(0, 10)) {
+          await client.calls.create({
+            to: phone,
+            from,
+            url: `${appUrl}/api/twilio/voice`,
+          });
+        }
       }
     }
 

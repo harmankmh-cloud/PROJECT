@@ -4,7 +4,7 @@ Decisions locked per the Enterprise Voice Agent blueprint (June 2026).
 
 ## Build Approach
 
-**Orchestrate on Twilio** — own the SaaS control plane (dashboard, billing, compliance, analytics); rent telephony + managed STT/TTS via Twilio ConversationRelay.
+**Orchestrate on Telnyx** — own the SaaS control plane (dashboard, billing, compliance, analytics); rent telephony via Telnyx Call Control + Deepgram transcription + OpenAI + Telnyx speak. Twilio ConversationRelay orchestrator remains optional legacy path.
 
 - Not building PSTN from scratch
 - Not white-labeling Retell/Vapi
@@ -29,9 +29,10 @@ Decisions locked per the Enterprise Voice Agent blueprint (June 2026).
 
 | Layer | Provider |
 |-------|----------|
-| Telephony + relay | Twilio ConversationRelay |
-| LLM | OpenAI GPT-4o (streaming) |
-| TTS/STT | Twilio-managed via ConversationRelay (Deepgram/ElevenLabs attrs) |
+| Telephony | Telnyx Call Control API |
+| LLM | OpenAI GPT-4o-mini |
+| STT | Telnyx Deepgram transcription |
+| TTS | Telnyx speak |
 | Control plane | Next.js 16 + Supabase |
 | Billing | Stripe metered + subscription tiers |
 | Observability | Structured logs + optional Datadog |

@@ -70,7 +70,7 @@ export default async function DashboardPage() {
           </thead>
           <tbody>
             {recentCalls.length === 0 ? (
-              <tr><td colSpan={4} className="px-5 py-8 text-center text-slate-400">No calls yet. Connect a Twilio number to get started.</td></tr>
+              <tr><td colSpan={4} className="px-5 py-8 text-center text-slate-400">No calls yet. Connect a Telnyx number to get started.</td></tr>
             ) : (
               recentCalls.map((call) => (
                 <tr key={call.id} className="border-t border-slate-100">
