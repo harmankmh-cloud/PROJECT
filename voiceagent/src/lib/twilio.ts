@@ -43,6 +43,9 @@ function sanitizeSayText(text: string) {
   return cleaned || "Please wait a moment.";
 }
 
+const SPEECH_HINTS =
+  "business hours, appointment, booking, help, support, pricing, location, address, phone, email, transfer, human, agent, open, closed, Monday, Tuesday, Wednesday, Thursday, Friday";
+
 export function buildSimpleVoiceTwiml(params: {
   message: string;
   gatherUrl: string;
@@ -53,8 +56,13 @@ export function buildSimpleVoiceTwiml(params: {
     input: ["speech"],
     action: params.gatherUrl,
     method: "POST",
-    speechTimeout: "auto",
     language: "en-US",
+    speechModel: "phone_call",
+    enhanced: true,
+    hints: SPEECH_HINTS,
+    speechTimeout: "auto",
+    profanityFilter: false,
+    timeout: 10,
   });
   gather.say({ voice: "Polly.Joanna" }, sanitizeSayText(params.message));
   response.say({ voice: "Polly.Joanna" }, "I didn't hear anything. Goodbye.");

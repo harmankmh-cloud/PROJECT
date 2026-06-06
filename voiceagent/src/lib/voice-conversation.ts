@@ -19,19 +19,21 @@ export async function generateVoiceReply(params: {
     system += `\n\nKnowledge base:\n${params.knowledgeContext}`;
   }
   system +=
-    "\n\nKeep responses under 2 sentences for phone calls. If the caller wants a human, say you'll transfer them and respond with [TRANSFER].";
+    "\n\nYou are on a live phone call. Reply in ONE short sentence only. Be direct. If the caller wants a human, say you'll transfer them and include [TRANSFER].";
+
+  const recentHistory = params.history.slice(-6);
 
   const content = await chatCompletion({
     messages: [
       { role: "system", content: system },
-      ...params.history.map((h) => ({
+      ...recentHistory.map((h) => ({
         role: h.role === "assistant" ? "assistant" : "user",
         content: h.content,
       })),
       { role: "user", content: params.userMessage },
     ],
-    max_tokens: 200,
-    temperature: 0.7,
+    max_tokens: 80,
+    temperature: 0.4,
   });
 
   if (!content) {

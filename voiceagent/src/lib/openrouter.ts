@@ -4,6 +4,7 @@ import { BRAND } from "./brand";
 const MODEL_CHAIN = [
   process.env.OPENROUTER_MODEL,
   "google/gemini-2.0-flash-001",
+  "meta-llama/llama-3.1-8b-instruct:free",
   "openrouter/free",
 ].filter(Boolean) as string[];
 
@@ -39,7 +40,7 @@ export async function chatCompletion(params: {
           temperature: params.temperature ?? 0.7,
           ...(params.jsonMode ? { response_format: { type: "json_object" } } : {}),
         }),
-        signal: AbortSignal.timeout(8000),
+        signal: AbortSignal.timeout(params.max_tokens && params.max_tokens <= 100 ? 5000 : 8000),
       });
 
       if (!res.ok) continue;
