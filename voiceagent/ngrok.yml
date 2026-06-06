@@ -6,7 +6,4 @@ endpoints:
   - name: web
     url: https://luncheon-laboring-civic.ngrok-free.dev
     upstream:
-      url: http://127.0.0.1:3002
-  - name: orchestrator
-    upstream:
-      url: http://127.0.0.1:8080
+      url: http://127.0.0.1:3099

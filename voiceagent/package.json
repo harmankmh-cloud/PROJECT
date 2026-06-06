@@ -8,7 +8,8 @@
     "start": "next start -p 3002",
     "lint": "eslint",
     "orchestrator": "cd orchestrator && npm run dev",
-    "orchestrator:build": "cd orchestrator && npm run build"
+    "orchestrator:build": "cd orchestrator && npm run build",
+    "dev:proxy": "node scripts/dev-proxy.mjs"
   },
   "dependencies": {
     "@supabase/ssr": "^0.10.3",
@@ -28,6 +29,7 @@
     "@types/react-dom": "^19",
     "eslint": "^9",
     "eslint-config-next": "16.2.6",
+    "http-proxy": "^1.18.1",
     "tailwindcss": "^4",
     "typescript": "^5"
   }
