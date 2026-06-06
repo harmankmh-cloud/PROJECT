@@ -70,17 +70,17 @@ export class CallSession {
   }
 
   private async streamText(text: string) {
-    const words = text.split(/(\s+)/);
+    const chunks = text.match(/\S+\s*/g) || [text];
     let buffer = "";
 
-    for (let i = 0; i < words.length; i++) {
-      buffer += words[i];
-      const isLast = i === words.length - 1;
+    for (let i = 0; i < chunks.length; i++) {
+      buffer += chunks[i];
+      const isLast = i === chunks.length - 1;
 
-      if (buffer.length >= 12 || isLast) {
+      if (buffer.length >= 24 || isLast) {
         this.send({ type: "text", token: buffer, last: false });
         buffer = "";
-        await sleep(30);
+        if (!isLast) await sleep(10);
       }
     }
 

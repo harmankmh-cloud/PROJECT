@@ -24,6 +24,7 @@ export async function resolveVoiceContext(to: string) {
     systemPrompt:
       "You are a friendly phone assistant for a local business. Help callers with questions, book appointments, and transfer to a human when needed. Keep answers brief.",
     escalationPhone: undefined as string | undefined,
+    voice: undefined as string | undefined,
   };
 
   const admin = getAdmin();
@@ -43,6 +44,7 @@ export async function resolveVoiceContext(to: string) {
   let welcomeGreeting = defaults.welcomeGreeting;
   let systemPrompt = defaults.systemPrompt;
   let escalationPhone: string | undefined;
+  let voice: string | undefined;
 
   if (phoneRecord.va_agents) {
     const agent = Array.isArray(phoneRecord.va_agents)
@@ -53,10 +55,11 @@ export async function resolveVoiceContext(to: string) {
       systemPrompt = agent.system_prompt;
       agentId = agent.id;
       escalationPhone = agent.escalation_phone || undefined;
+      voice = agent.voice || undefined;
     }
   }
 
-  return { orgId, agentId, welcomeGreeting, systemPrompt, escalationPhone };
+  return { orgId, agentId, welcomeGreeting, systemPrompt, escalationPhone, voice };
 }
 
 export async function ensureCallRecord(params: {

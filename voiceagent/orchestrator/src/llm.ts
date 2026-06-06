@@ -83,7 +83,7 @@ export class LlmSession {
       fullSystem += `\n\nCaller history:\n${contactMemory}`;
     }
     fullSystem +=
-      "\n\nKeep responses under 2 sentences for phone calls. Be conversational. If the caller wants a human, use transfer_to_human.";
+      "\n\nLive phone call rules: ONE short spoken sentence, under 20 words, natural and direct. No lists or markdown. If the caller wants a human, use transfer_to_human.";
 
     this.messages.push({ role: "system", content: fullSystem });
   }
@@ -96,8 +96,8 @@ export class LlmSession {
       messages: this.messages,
       tools: TOOLS,
       tool_choice: "auto",
-      max_tokens: 200,
-      temperature: 0.7,
+      max_tokens: 80,
+      temperature: 0.4,
     });
 
     const choice = completion.choices[0];

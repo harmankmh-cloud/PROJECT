@@ -1,5 +1,11 @@
-import "dotenv/config";
+import dotenv from "dotenv";
+import path from "path";
+import { fileURLToPath } from "url";
 import http from "http";
+
+const orchestratorDir = path.dirname(fileURLToPath(import.meta.url));
+dotenv.config({ path: path.resolve(orchestratorDir, "../../.env.local") });
+dotenv.config({ path: path.resolve(orchestratorDir, "../../.env") });
 import { WebSocketServer, type WebSocket } from "ws";
 import twilio from "twilio";
 import type { AgentConfig } from "./types.js";

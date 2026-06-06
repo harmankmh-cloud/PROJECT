@@ -103,13 +103,37 @@ export function buildTransferTwiml(params: {
   return response.toString();
 }
 
+export function getRelayVoiceSettings() {
+  const ttsProvider = process.env.TWILIO_RELAY_TTS_PROVIDER || "ElevenLabs";
+  const voice =
+    process.env.TWILIO_RELAY_VOICE ||
+    "ZF6FPAbjXT4488VcRRnw-flash_v2_5-1.15_0.85_0.9";
+
+  return {
+    transcriptionProvider: process.env.TWILIO_RELAY_STT_PROVIDER || "Deepgram",
+    speechModel: process.env.TWILIO_RELAY_SPEECH_MODEL || "nova-3-general",
+    ttsProvider,
+    voice,
+    language: "en-US",
+    interruptible: "speech",
+    interruptSensitivity: "high",
+    hints: SPEECH_HINTS,
+    elevenlabsTextNormalization:
+      ttsProvider === "ElevenLabs"
+        ? process.env.TWILIO_RELAY_ELEVENLABS_NORMALIZE || "on"
+        : undefined,
+  };
+}
+
 export function buildConversationRelayTwiml(params: {
   orgId: string;
   agentId: string;
   welcomeGreeting: string;
   actionUrl: string;
+  voice?: string;
 }) {
   const wssUrl = getOrchestratorWssUrl();
+  const relaySettings = getRelayVoiceSettings();
   const VoiceResponse = twilio.twiml.VoiceResponse;
   const response = new VoiceResponse();
 
@@ -117,7 +141,23 @@ export function buildConversationRelayTwiml(params: {
   const relay = connect.conversationRelay({
     url: wssUrl,
     welcomeGreeting: params.welcomeGreeting,
-    reportInputDuringAgentSpeech: "speech" as unknown as boolean,
+    welcomeGreetingInterruptible: "speech",
+    transcriptionProvider: relaySettings.transcriptionProvider,
+    speechModel: relaySettings.speechModel,
+    ttsProvider: relaySettings.ttsProvider,
+    voice: params.voice || relaySettings.voice,
+    language: relaySettings.language,
+    ttsLanguage: relaySettings.language,
+    transcriptionLanguage: relaySettings.language,
+    interruptible: relaySettings.interruptible,
+    interruptSensitivity: relaySettings.interruptSensitivity,
+    hints: relaySettings.hints,
+    partialPrompts: true,
+    preemptible: true,
+    reportInputDuringAgentSpeech: true,
+    ...(relaySettings.elevenlabsTextNormalization
+      ? { elevenlabsTextNormalization: relaySettings.elevenlabsTextNormalization }
+      : {}),
   });
 
   relay.parameter({ name: "orgId", value: params.orgId });

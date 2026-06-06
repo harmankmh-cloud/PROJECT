@@ -40,6 +40,7 @@ export async function POST(request: NextRequest) {
       agentId: ctx.agentId,
       welcomeGreeting: ctx.welcomeGreeting,
       actionUrl: `${appUrl}/api/twilio/status`,
+      voice: ctx.voice,
     });
 
     return twimlResponse(twiml);
