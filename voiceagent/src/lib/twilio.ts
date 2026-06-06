@@ -16,6 +16,20 @@ export function useSimpleTwilioVoice() {
   return (process.env.TWILIO_VOICE_MODE || "simple") === "simple";
 }
 
+export function twimlResponse(xml: string) {
+  return new Response(xml, {
+    headers: { "Content-Type": "text/xml" },
+  });
+}
+
+export function buildErrorTwiml(message = "Sorry, something went wrong. Please try again later.") {
+  const VoiceResponse = twilio.twiml.VoiceResponse;
+  const response = new VoiceResponse();
+  response.say({ voice: "Polly.Joanna" }, message);
+  response.hangup();
+  return response.toString();
+}
+
 export function buildSimpleVoiceTwiml(params: {
   message: string;
   gatherUrl: string;
