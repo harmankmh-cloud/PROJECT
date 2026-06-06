@@ -1,9 +1,9 @@
-version: "2"
-tunnels:
-  web:
-    addr: 3002
-    proto: http
-    hostname: luncheon-laboring-civic.ngrok-free.dev
-  orchestrator:
-    addr: 8080
-    proto: http
+version: 3
+endpoints:
+  - name: web
+    url: https://luncheon-laboring-civic.ngrok-free.dev
+    upstream:
+      url: http://127.0.0.1:3002
+  - name: orchestrator
+    upstream:
+      url: http://127.0.0.1:8080
