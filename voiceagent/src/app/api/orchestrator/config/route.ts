@@ -38,7 +38,11 @@ export async function GET(request: NextRequest) {
       .limit(10);
 
     if (docs?.length) {
-      knowledgeContext = docs.map((d) => `## ${d.title}\n${d.content}`).join("\n\n");
+      knowledgeContext = docs
+        .slice(0, 3)
+        .map((d) => `## ${d.title}\n${String(d.content).slice(0, 400)}`)
+        .join("\n\n")
+        .slice(0, 1500);
     }
   }
 

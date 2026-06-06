@@ -14,18 +14,27 @@ import { CallSession } from "./session.js";
 const PORT = Number(process.env.ORCHESTRATOR_PORT || 8080);
 const sessions = new Map<WebSocket, CallSession>();
 
+function getAppUrl() {
+  return (
+    process.env.ORCHESTRATOR_APP_URL ||
+    process.env.NEXT_PUBLIC_APP_URL ||
+    "http://127.0.0.1:3002"
+  );
+}
+
 async function fetchAgentConfig(orgId: string, agentId: string): Promise<AgentConfig> {
-  const apiUrl = process.env.NEXT_PUBLIC_APP_URL || "http://localhost:3002";
+  const apiUrl = getAppUrl();
   const apiKey = process.env.ORCHESTRATOR_API_KEY || "";
 
   try {
     const res = await fetch(
       `${apiUrl}/api/orchestrator/config?orgId=${orgId}&agentId=${agentId}`,
-      { headers: { "x-orchestrator-key": apiKey } }
+      { headers: { "x-orchestrator-key": apiKey }, signal: AbortSignal.timeout(3000) }
     );
     if (res.ok) return (await res.json()) as AgentConfig;
-  } catch {
-    // fall through to defaults
+    console.warn("Config fetch failed", { status: res.status, orgId, agentId });
+  } catch (err) {
+    console.warn("Config fetch error:", err);
   }
 
   return {
@@ -76,8 +85,8 @@ wss.on("connection", async (ws, req) => {
   ws.on("message", async (data) => {
     const raw = data.toString();
 
-    if (!session) {
-      try {
+    try {
+      if (!session) {
         const msg = JSON.parse(raw);
         if (msg.type === "setup") {
           const orgId = msg.customParameters?.orgId || process.env.DEFAULT_ORG_ID || "default";
@@ -86,13 +95,13 @@ wss.on("connection", async (ws, req) => {
           session = new CallSession(ws, config);
           sessions.set(ws, session);
         }
-      } catch {
-        return;
       }
-    }
 
-    if (session) {
-      await session.handleMessage(raw);
+      if (session) {
+        await session.handleMessage(raw);
+      }
+    } catch (err) {
+      console.error("WebSocket message error:", err);
     }
   });
 
@@ -108,7 +117,7 @@ async function notifyCallEnd(session: CallSession) {
   const callSid = session.getCallSid();
   if (!callSid) return;
 
-  const apiUrl = process.env.NEXT_PUBLIC_APP_URL || "http://localhost:3002";
+  const apiUrl = getAppUrl();
   const apiKey = process.env.ORCHESTRATOR_API_KEY || "";
 
   try {
