@@ -43,6 +43,13 @@ export async function POST(request: NextRequest) {
       voice: ctx.voice,
     });
 
+    console.info("ConversationRelay call", {
+      callSid,
+      wssUrl: process.env.ORCHESTRATOR_WSS_URL,
+      orgId: ctx.orgId,
+      agentId: ctx.agentId,
+    });
+
     return twimlResponse(twiml);
   } catch (err) {
     console.error("Twilio voice webhook error:", err);

@@ -103,6 +103,29 @@ export function buildTransferTwiml(params: {
   return response.toString();
 }
 
+function isPollyOrAmazonVoice(voice: string) {
+  return /polly\.|neural|en-us-|en-gb-/i.test(voice);
+}
+
+export function resolveRelayVoice(agentVoice?: string) {
+  const ttsProvider = process.env.TWILIO_RELAY_TTS_PROVIDER || "ElevenLabs";
+  const fallback =
+    process.env.TWILIO_RELAY_VOICE ||
+    "ZF6FPAbjXT4488VcRRnw-flash_v2_5-1.15_0.85_0.9";
+
+  if (!agentVoice) return fallback;
+
+  if (ttsProvider === "ElevenLabs" && isPollyOrAmazonVoice(agentVoice)) {
+    return fallback;
+  }
+
+  if (ttsProvider === "Amazon" && !isPollyOrAmazonVoice(agentVoice)) {
+    return "Joanna-Neural";
+  }
+
+  return agentVoice;
+}
+
 export function getRelayVoiceSettings() {
   const ttsProvider = process.env.TWILIO_RELAY_TTS_PROVIDER || "ElevenLabs";
   const voice =
@@ -145,7 +168,7 @@ export function buildConversationRelayTwiml(params: {
     transcriptionProvider: relaySettings.transcriptionProvider,
     speechModel: relaySettings.speechModel,
     ttsProvider: relaySettings.ttsProvider,
-    voice: params.voice || relaySettings.voice,
+    voice: resolveRelayVoice(params.voice) || relaySettings.voice,
     language: relaySettings.language,
     ttsLanguage: relaySettings.language,
     transcriptionLanguage: relaySettings.language,
