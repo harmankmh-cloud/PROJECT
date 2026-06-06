@@ -30,6 +30,10 @@ export function buildErrorTwiml(message = "Sorry, something went wrong. Please t
   return response.toString();
 }
 
+function sanitizeSayText(text: string) {
+  return text.replace(/[<>&]/g, " ").replace(/\s+/g, " ").trim().slice(0, 500);
+}
+
 export function buildSimpleVoiceTwiml(params: {
   message: string;
   gatherUrl: string;
@@ -43,7 +47,7 @@ export function buildSimpleVoiceTwiml(params: {
     speechTimeout: "auto",
     language: "en-US",
   });
-  gather.say({ voice: "Polly.Joanna" }, params.message);
+  gather.say({ voice: "Polly.Joanna" }, sanitizeSayText(params.message));
   response.say({ voice: "Polly.Joanna" }, "I didn't hear anything. Goodbye.");
   return response.toString();
 }
@@ -55,7 +59,7 @@ export function buildTransferTwiml(params: {
 }) {
   const VoiceResponse = twilio.twiml.VoiceResponse;
   const response = new VoiceResponse();
-  response.say({ voice: "Polly.Joanna" }, params.message);
+  response.say({ voice: "Polly.Joanna" }, sanitizeSayText(params.message));
   const dial = response.dial({
     action: params.statusUrl,
     method: "POST",

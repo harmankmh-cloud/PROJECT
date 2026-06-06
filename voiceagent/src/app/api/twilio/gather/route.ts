@@ -1,6 +1,5 @@
 import { NextRequest } from "next/server";
 import {
-  buildErrorTwiml,
   buildSimpleVoiceTwiml,
   buildTransferTwiml,
   twimlResponse,
@@ -11,10 +10,11 @@ import {
   resolveVoiceContext,
 } from "@/lib/twilio-voice-context";
 import { generateVoiceReply } from "@/lib/voice-conversation";
+import { getPublicAppUrl } from "@/lib/public-url";
 import { createAdminClient } from "@/lib/supabase/admin";
 
 export async function POST(request: NextRequest) {
-  const appUrl = process.env.NEXT_PUBLIC_APP_URL || "http://localhost:3002";
+  const appUrl = getPublicAppUrl(request);
   const gatherUrl = `${appUrl}/api/twilio/gather`;
 
   try {
@@ -34,7 +34,6 @@ export async function POST(request: NextRequest) {
       );
     }
 
-    await appendTranscript(callSid, "user", speech);
     const history = await loadCallHistory(callSid);
 
     const reply = await generateVoiceReply({
@@ -43,6 +42,7 @@ export async function POST(request: NextRequest) {
       userMessage: speech,
     });
 
+    await appendTranscript(callSid, "user", speech);
     await appendTranscript(callSid, "assistant", reply.text);
 
     if (reply.shouldTransfer && ctx.escalationPhone) {

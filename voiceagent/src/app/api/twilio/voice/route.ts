@@ -7,6 +7,7 @@ import {
   useSimpleTwilioVoice,
 } from "@/lib/twilio";
 import { ensureCallRecord, resolveVoiceContext } from "@/lib/twilio-voice-context";
+import { getPublicAppUrl } from "@/lib/public-url";
 
 export async function POST(request: NextRequest) {
   try {
@@ -24,7 +25,7 @@ export async function POST(request: NextRequest) {
       to,
     });
 
-    const appUrl = process.env.NEXT_PUBLIC_APP_URL || "http://localhost:3002";
+    const appUrl = getPublicAppUrl(request);
 
     if (useSimpleTwilioVoice()) {
       const twiml = buildSimpleVoiceTwiml({
