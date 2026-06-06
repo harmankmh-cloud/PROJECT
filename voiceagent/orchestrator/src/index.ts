@@ -139,4 +139,8 @@ async function notifyCallEnd(session: CallSession) {
 
 server.listen(PORT, () => {
   console.log(`VoiceAgent orchestrator listening on :${PORT}/ws`);
+  console.log(
+    `OpenRouter: ${process.env.OPENROUTER_API_KEY ? "configured" : "MISSING — add OPENROUTER_API_KEY to .env.local"}`
+  );
+  console.log(`Model: ${process.env.OPENROUTER_MODEL || "google/gemini-2.0-flash-001"} (+ fallbacks)`);
 });
