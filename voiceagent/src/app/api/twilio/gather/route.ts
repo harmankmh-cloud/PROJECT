@@ -1,80 +1,56 @@
 import { NextRequest } from "next/server";
 import {
+  buildProcessingTwiml,
   buildSimpleVoiceTwiml,
-  buildTransferTwiml,
   twimlResponse,
 } from "@/lib/twilio";
-import {
-  appendTranscript,
-  loadCallHistory,
-  resolveVoiceContext,
-} from "@/lib/twilio-voice-context";
-import { generateVoiceReply } from "@/lib/voice-conversation";
 import { getPublicAppUrl } from "@/lib/public-url";
-import { createAdminClient } from "@/lib/supabase/admin";
+import { storePendingSpeech } from "@/lib/pending-speech";
+
+const LOW_CONFIDENCE = 0.45;
 
 export async function POST(request: NextRequest) {
   const appUrl = getPublicAppUrl(request);
   const gatherUrl = `${appUrl}/api/twilio/gather`;
+  const replyUrl = `${appUrl}/api/twilio/reply`;
 
   try {
     const formData = await request.formData();
     const to = String(formData.get("To") || "");
     const callSid = String(formData.get("CallSid") || "");
     const speech = String(formData.get("SpeechResult") || "").trim();
-
-    const ctx = await resolveVoiceContext(to);
+    const confidenceRaw = formData.get("Confidence");
+    const confidence =
+      confidenceRaw != null ? Number(confidenceRaw) : Number.NaN;
 
     if (!speech) {
       return twimlResponse(
         buildSimpleVoiceTwiml({
-          message: "Sorry, I didn't catch that. Could you repeat?",
+          message: "Sorry, I didn't catch that. Please repeat your question.",
           gatherUrl,
         })
       );
     }
 
-    const history = await loadCallHistory(callSid);
-
-    const reply = await generateVoiceReply({
-      systemPrompt: ctx.systemPrompt,
-      history,
-      userMessage: speech,
-    });
-
-    await appendTranscript(callSid, "user", speech);
-    await appendTranscript(callSid, "assistant", reply.text);
-
-    if (reply.shouldTransfer && ctx.escalationPhone) {
-      try {
-        const admin = createAdminClient();
-        await admin
-          .from("va_calls")
-          .update({
-            transferred: true,
-            transfer_reason: reply.transferSummary,
-            contained: false,
-          })
-          .eq("twilio_call_sid", callSid);
-      } catch (err) {
-        console.error("Transfer update failed:", err);
-      }
-
+    if (!Number.isNaN(confidence) && confidence < LOW_CONFIDENCE) {
+      console.info("Low speech confidence", { callSid, speech, confidence });
       return twimlResponse(
-        buildTransferTwiml({
-          message: reply.text || "Connecting you now.",
-          escalationPhone: ctx.escalationPhone,
-          statusUrl: `${appUrl}/api/twilio/status`,
+        buildSimpleVoiceTwiml({
+          message: `I heard "${speech}". Could you say that again a little slower?`,
+          gatherUrl,
         })
       );
     }
 
-    return twimlResponse(
-      buildSimpleVoiceTwiml({
-        message: reply.text,
-        gatherUrl,
-      })
-    );
+    console.info("Speech captured", {
+      callSid,
+      speech,
+      confidence: Number.isNaN(confidence) ? "n/a" : confidence,
+    });
+
+    storePendingSpeech(callSid, speech, to);
+
+    return twimlResponse(buildProcessingTwiml({ replyUrl }));
   } catch (err) {
     console.error("Twilio gather webhook error:", err);
     return twimlResponse(

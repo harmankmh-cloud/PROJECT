@@ -44,28 +44,46 @@ function sanitizeSayText(text: string) {
 }
 
 const SPEECH_HINTS =
-  "business hours, appointment, booking, help, support, pricing, location, address, phone, email, transfer, human, agent, open, closed, Monday, Tuesday, Wednesday, Thursday, Friday";
+  "business hours, appointment, booking, help, support, pricing, location, address, phone, email, transfer, human, agent, open, closed, Monday, Tuesday, Wednesday, Thursday, Friday, Saturday, Sunday, today, tomorrow";
 
-export function buildSimpleVoiceTwiml(params: {
-  message: string;
-  gatherUrl: string;
-}) {
-  const VoiceResponse = twilio.twiml.VoiceResponse;
-  const response = new VoiceResponse();
-  const gather = response.gather({
+function addSpeechGather(
+  response: InstanceType<typeof twilio.twiml.VoiceResponse>,
+  gatherUrl: string,
+  hints?: string
+) {
+  response.gather({
     input: ["speech"],
-    action: params.gatherUrl,
+    action: gatherUrl,
     method: "POST",
     language: "en-US",
     speechModel: "phone_call",
     enhanced: true,
-    hints: SPEECH_HINTS,
-    speechTimeout: "auto",
+    hints: hints || SPEECH_HINTS,
+    speechTimeout: "3",
     profanityFilter: false,
-    timeout: 10,
+    timeout: 8,
+    actionOnEmptyResult: true,
   });
-  gather.say({ voice: "Polly.Joanna" }, sanitizeSayText(params.message));
+}
+
+export function buildSimpleVoiceTwiml(params: {
+  message: string;
+  gatherUrl: string;
+  hints?: string;
+}) {
+  const VoiceResponse = twilio.twiml.VoiceResponse;
+  const response = new VoiceResponse();
+  response.say({ voice: "Polly.Joanna" }, sanitizeSayText(params.message));
+  addSpeechGather(response, params.gatherUrl, params.hints);
   response.say({ voice: "Polly.Joanna" }, "I didn't hear anything. Goodbye.");
+  return response.toString();
+}
+
+export function buildProcessingTwiml(params: { replyUrl: string }) {
+  const VoiceResponse = twilio.twiml.VoiceResponse;
+  const response = new VoiceResponse();
+  response.say({ voice: "Polly.Joanna" }, "Got it.");
+  response.redirect({ method: "POST" }, params.replyUrl);
   return response.toString();
 }
 

@@ -1,5 +1,5 @@
 import "server-only";
-import { chatCompletion, hasOpenRouter } from "./openrouter";
+import { chatCompletionVoice, hasOpenRouter } from "./openrouter";
 
 export async function generateVoiceReply(params: {
   systemPrompt: string;
@@ -19,11 +19,11 @@ export async function generateVoiceReply(params: {
     system += `\n\nKnowledge base:\n${params.knowledgeContext}`;
   }
   system +=
-    "\n\nYou are on a live phone call. Reply in ONE short sentence only. Be direct. If the caller wants a human, say you'll transfer them and include [TRANSFER].";
+    "\n\nLive phone call rules: ONE short sentence, under 15 words, plain spoken English. No lists or markdown. If they want a human, say you'll transfer them and include [TRANSFER].";
 
-  const recentHistory = params.history.slice(-6);
+  const recentHistory = params.history.slice(-4);
 
-  const content = await chatCompletion({
+  const content = await chatCompletionVoice({
     messages: [
       { role: "system", content: system },
       ...recentHistory.map((h) => ({
@@ -32,8 +32,8 @@ export async function generateVoiceReply(params: {
       })),
       { role: "user", content: params.userMessage },
     ],
-    max_tokens: 80,
-    temperature: 0.4,
+    max_tokens: 50,
+    temperature: 0.2,
   });
 
   if (!content) {

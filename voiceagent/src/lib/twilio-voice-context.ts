@@ -20,7 +20,7 @@ export async function resolveVoiceContext(to: string) {
   const defaults = {
     orgId: process.env.DEFAULT_ORG_ID || "default",
     agentId: process.env.DEFAULT_AGENT_ID || "default",
-    welcomeGreeting: "Hello! Thanks for calling. How can I help you today?",
+    welcomeGreeting: "Hi, thanks for calling. How can I help?",
     systemPrompt:
       "You are a friendly phone assistant for a local business. Help callers with questions, book appointments, and transfer to a human when needed. Keep answers brief.",
     escalationPhone: undefined as string | undefined,
@@ -95,19 +95,22 @@ export async function loadCallHistory(callSid: string) {
   try {
     const { data: call } = await admin
       .from("va_calls")
-      .select("id")
+      .select("id, va_call_transcripts(role, content, created_at)")
       .eq("twilio_call_sid", callSid)
       .maybeSingle();
 
-    if (!call) return [];
+    if (!call?.va_call_transcripts) return [];
 
-    const { data: rows } = await admin
-      .from("va_call_transcripts")
-      .select("role, content")
-      .eq("call_id", call.id)
-      .order("created_at", { ascending: true });
+    const rows = Array.isArray(call.va_call_transcripts)
+      ? call.va_call_transcripts
+      : [call.va_call_transcripts];
 
-    return rows || [];
+    return rows
+      .sort(
+        (a, b) =>
+          new Date(a.created_at).getTime() - new Date(b.created_at).getTime()
+      )
+      .map(({ role, content }) => ({ role, content }));
   } catch (err) {
     console.error("loadCallHistory failed:", err);
     return [];
