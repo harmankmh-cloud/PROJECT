@@ -2,8 +2,9 @@ import type { ToolCallResult } from "./types.js";
 
 const MODEL_CHAIN = [
   process.env.OPENROUTER_MODEL,
-  "google/gemini-2.0-flash-001",
-  "meta-llama/llama-3.1-8b-instruct:free",
+  "google/gemini-2.5-flash",
+  "google/gemini-3.5-flash",
+  "meta-llama/llama-3.3-70b-instruct:free",
   "openrouter/free",
 ].filter(Boolean) as string[];
 

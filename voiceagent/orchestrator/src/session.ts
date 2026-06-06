@@ -8,6 +8,8 @@ export class CallSession {
   private from: string | null = null;
   private transcripts: Array<{ role: string; content: string }> = [];
   private isSpeaking = false;
+  private lastPrompt = "";
+  private lastPromptAt = 0;
 
   constructor(
     private ws: WebSocket,
@@ -38,6 +40,19 @@ export class CallSession {
         case "prompt":
           if (!this.llm || !msg.voicePrompt?.trim()) return;
           if (!msg.last) return;
+          if (this.isSpeaking) return;
+
+          const normalizedPrompt = msg.voicePrompt.trim().toLowerCase();
+          const now = Date.now();
+          if (
+            normalizedPrompt === this.lastPrompt &&
+            now - this.lastPromptAt < 8000
+          ) {
+            console.log("Relay prompt skipped (duplicate)", { callSid: this.callSid });
+            return;
+          }
+          this.lastPrompt = normalizedPrompt;
+          this.lastPromptAt = now;
 
           console.log("Relay prompt", { callSid: this.callSid, text: msg.voicePrompt });
           this.transcripts.push({ role: "user", content: msg.voicePrompt });
