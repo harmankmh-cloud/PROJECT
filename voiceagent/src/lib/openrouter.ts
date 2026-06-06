@@ -1,8 +1,13 @@
 import "server-only";
 import { BRAND } from "./brand";
 
+function normalizeModelId(value?: string) {
+  if (!value) return undefined;
+  return value.trim().replace(/^OPENROUTER_MODEL=/i, "");
+}
+
 const MODEL_CHAIN = [
-  process.env.OPENROUTER_MODEL,
+  normalizeModelId(process.env.OPENROUTER_MODEL),
   "google/gemini-2.5-flash",
   "google/gemini-3.5-flash",
   "meta-llama/llama-3.3-70b-instruct:free",
@@ -10,7 +15,7 @@ const MODEL_CHAIN = [
 ].filter(Boolean) as string[];
 
 const VOICE_MODEL_CHAIN = [
-  process.env.OPENROUTER_MODEL,
+  normalizeModelId(process.env.OPENROUTER_MODEL),
   "google/gemini-2.5-flash",
   "google/gemini-3.5-flash",
 ].filter(Boolean) as string[];
