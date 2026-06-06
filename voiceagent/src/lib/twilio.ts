@@ -12,6 +12,44 @@ export function getOrchestratorWssUrl() {
   return process.env.ORCHESTRATOR_WSS_URL || "wss://localhost:8080/ws";
 }
 
+export function useSimpleTwilioVoice() {
+  return (process.env.TWILIO_VOICE_MODE || "simple") === "simple";
+}
+
+export function buildSimpleVoiceTwiml(params: {
+  message: string;
+  gatherUrl: string;
+}) {
+  const VoiceResponse = twilio.twiml.VoiceResponse;
+  const response = new VoiceResponse();
+  const gather = response.gather({
+    input: ["speech"],
+    action: params.gatherUrl,
+    method: "POST",
+    speechTimeout: "auto",
+    language: "en-US",
+  });
+  gather.say({ voice: "Polly.Joanna" }, params.message);
+  response.say({ voice: "Polly.Joanna" }, "I didn't hear anything. Goodbye.");
+  return response.toString();
+}
+
+export function buildTransferTwiml(params: {
+  message: string;
+  escalationPhone: string;
+  statusUrl: string;
+}) {
+  const VoiceResponse = twilio.twiml.VoiceResponse;
+  const response = new VoiceResponse();
+  response.say({ voice: "Polly.Joanna" }, params.message);
+  const dial = response.dial({
+    action: params.statusUrl,
+    method: "POST",
+  });
+  dial.number(params.escalationPhone);
+  return response.toString();
+}
+
 export function buildConversationRelayTwiml(params: {
   orgId: string;
   agentId: string;
@@ -26,8 +64,6 @@ export function buildConversationRelayTwiml(params: {
   const relay = connect.conversationRelay({
     url: wssUrl,
     welcomeGreeting: params.welcomeGreeting,
-    transcriptionProvider: "deepgram",
-    ttsProvider: "elevenlabs",
     reportInputDuringAgentSpeech: "speech" as unknown as boolean,
   });
 
