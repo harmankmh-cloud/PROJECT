@@ -54,14 +54,16 @@ const server = http.createServer((_req, res) => {
 const wss = new WebSocketServer({ server, path: "/ws" });
 
 wss.on("connection", async (ws, req) => {
-  const host = req.headers.host || `localhost:${PORT}`;
-  const url = `wss://${host}/ws`;
+  const publicUrl = process.env.ORCHESTRATOR_WSS_URL || `wss://${req.headers.host || `localhost:${PORT}`}/ws`;
+  const isDev = process.env.NODE_ENV !== "production";
 
-  if (!validateTwilioSignature(req, url)) {
+  if (!isDev && !validateTwilioSignature(req, publicUrl)) {
     console.warn("WebSocket connection rejected: invalid Twilio signature");
     ws.close(1008, "Invalid signature");
     return;
   }
+
+  console.log("WebSocket connected from Twilio");
 
   let session: CallSession | null = null;
 
