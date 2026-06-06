@@ -26,6 +26,12 @@ let { data: org, error: orgLookupError } = await supabase
 
 if (orgLookupError) {
   console.error("Org lookup error:", orgLookupError.message);
+  if (orgLookupError.message.includes("permission denied")) {
+    console.error("\nFix:");
+    console.error("1. In .env.local use SUPABASE_SERVICE_ROLE_KEY (not the anon key)");
+    console.error("   Supabase → Project Settings → API → service_role secret");
+    console.error("2. Run supabase/fix-grants.sql in Supabase SQL Editor");
+  }
   process.exit(1);
 }
 

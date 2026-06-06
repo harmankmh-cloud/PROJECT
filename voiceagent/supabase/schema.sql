@@ -346,6 +346,15 @@ create policy "Org scoped api keys"
   using (org_id in (select va_user_org_ids()))
   with check (org_id in (select va_user_org_ids()));
 
+-- Grants (required for service_role / API access)
+grant usage on schema public to postgres, anon, authenticated, service_role;
+grant all on all tables in schema public to postgres, service_role;
+grant select, insert, update, delete on all tables in schema public to authenticated;
+grant select on all tables in schema public to anon;
+alter default privileges in schema public grant all on tables to postgres, service_role;
+alter default privileges in schema public grant select, insert, update, delete on tables to authenticated;
+alter default privileges in schema public grant select on tables to anon;
+
 -- Indexes
 create index if not exists idx_va_calls_org_created on va_calls(org_id, created_at desc);
 create index if not exists idx_va_calls_twilio_sid on va_calls(twilio_call_sid);
