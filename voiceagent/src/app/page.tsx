@@ -102,8 +102,9 @@ export default function HomePage() {
                 <MaterialIcon name="verified" className="text-[18px]" />
                 <span className="text-xs font-semibold uppercase tracking-wider">Voice AI for local businesses</span>
               </div>
-              <h1 className="font-display mb-6 text-4xl leading-tight text-gradient md:text-5xl lg:text-[48px] lg:leading-[1.1]">
-                AI phone agents that never miss a call
+              <h1 className="font-display mb-6 text-4xl leading-tight text-ghost-white md:text-5xl lg:text-[48px] lg:leading-[1.1]">
+                AI phone agents that{" "}
+                <span className="text-gradient">never miss a call</span>
               </h1>
               <p className="mx-auto mb-10 max-w-xl text-lg text-on-surface-variant md:mx-0">
                 Answer inbound calls, book appointments, update your CRM, and warm-transfer to humans — with audit

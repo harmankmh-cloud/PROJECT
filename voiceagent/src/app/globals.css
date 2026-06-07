@@ -108,9 +108,9 @@ select {
 
   .grid-pattern {
     background-image:
-      linear-gradient(rgba(79, 219, 200, 0.03) 1px, transparent 1px),
-      linear-gradient(90deg, rgba(79, 219, 200, 0.03) 1px, transparent 1px);
-    background-size: 48px 48px;
+      linear-gradient(rgba(79, 219, 200, 0.015) 1px, transparent 1px),
+      linear-gradient(90deg, rgba(79, 219, 200, 0.015) 1px, transparent 1px);
+    background-size: 64px 64px;
   }
 
   .mesh-bg,
@@ -245,17 +245,29 @@ select {
   }
 
   .text-gradient {
+    color: #f8fafc;
     background: linear-gradient(135deg, #f8fafc 0%, #4fdbc8 50%, #a78bfa 100%);
     -webkit-background-clip: text;
     background-clip: text;
-    color: transparent;
+  }
+
+  @supports ((-webkit-background-clip: text) or (background-clip: text)) {
+    .text-gradient {
+      color: transparent;
+    }
   }
 
   .text-gradient-cyan {
+    color: #4fdbc8;
     background: linear-gradient(135deg, #22d3ee 0%, #4fdbc8 100%);
     -webkit-background-clip: text;
     background-clip: text;
-    color: transparent;
+  }
+
+  @supports ((-webkit-background-clip: text) or (background-clip: text)) {
+    .text-gradient-cyan {
+      color: transparent;
+    }
   }
 
   .glow-border {
