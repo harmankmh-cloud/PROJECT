@@ -11,7 +11,7 @@ import twilio from "twilio";
 import type { AgentConfig } from "./types.js";
 import { CallSession } from "./session.js";
 
-const PORT = Number(process.env.ORCHESTRATOR_PORT || 8080);
+const PORT = Number(process.env.PORT || process.env.ORCHESTRATOR_PORT || 8080);
 const sessions = new Map<WebSocket, CallSession>();
 
 function getAppUrl() {
@@ -48,17 +48,47 @@ async function fetchAgentConfig(orgId: string, agentId: string): Promise<AgentCo
   };
 }
 
+function getWssValidationUrls(req: http.IncomingMessage): string[] {
+  const urls = new Set<string>();
+  const configured = process.env.ORCHESTRATOR_WSS_URL?.trim();
+  if (configured) urls.add(configured);
+
+  const host = req.headers.host;
+  if (host) {
+    urls.add(`wss://${host}/ws`);
+    urls.add(`wss://${host}`);
+  }
+
+  return [...urls];
+}
+
 function validateTwilioSignature(
   req: http.IncomingMessage,
-  url: string
+  urls: string[]
 ): boolean {
+  if (process.env.ORCHESTRATOR_SKIP_TWILIO_SIGNATURE === "true") {
+    console.warn("ORCHESTRATOR_SKIP_TWILIO_SIGNATURE=true — skipping Twilio signature check");
+    return true;
+  }
+
   const authToken = process.env.TWILIO_AUTH_TOKEN;
-  if (!authToken) return process.env.NODE_ENV !== "production";
+  if (!authToken) {
+    console.error("TWILIO_AUTH_TOKEN missing — WebSocket rejected in production");
+    return process.env.NODE_ENV !== "production";
+  }
 
   const signature = req.headers["x-twilio-signature"] as string | undefined;
-  if (!signature) return false;
+  if (!signature) {
+    console.warn("WebSocket missing X-Twilio-Signature header");
+    return false;
+  }
 
-  return twilio.validateRequest(authToken, signature, url, {});
+  for (const url of urls) {
+    if (twilio.validateRequest(authToken, signature, url, {})) return true;
+  }
+
+  console.warn("Twilio signature mismatch", { tried: urls });
+  return false;
 }
 
 const server = http.createServer((_req, res) => {
@@ -69,10 +99,10 @@ const server = http.createServer((_req, res) => {
 const wss = new WebSocketServer({ server, path: "/ws" });
 
 wss.on("connection", async (ws, req) => {
-  const publicUrl = process.env.ORCHESTRATOR_WSS_URL || `wss://${req.headers.host || `localhost:${PORT}`}/ws`;
+  const validationUrls = getWssValidationUrls(req);
   const isDev = process.env.NODE_ENV !== "production";
 
-  if (!isDev && !validateTwilioSignature(req, publicUrl)) {
+  if (!isDev && !validateTwilioSignature(req, validationUrls)) {
     console.warn("WebSocket connection rejected: invalid Twilio signature");
     ws.close(1008, "Invalid signature");
     return;
@@ -139,8 +169,13 @@ async function notifyCallEnd(session: CallSession) {
 
 server.listen(PORT, () => {
   console.log(`VoiceAgent orchestrator listening on :${PORT}/ws`);
+  console.log(`WSS URL: ${process.env.ORCHESTRATOR_WSS_URL || "(not set)"}`);
+  console.log(`App URL: ${getAppUrl()}`);
   console.log(
-    `OpenRouter: ${process.env.OPENROUTER_API_KEY ? "configured" : "MISSING — add OPENROUTER_API_KEY to .env.local"}`
+    `Twilio auth: ${process.env.TWILIO_AUTH_TOKEN ? "configured" : "MISSING — WebSocket will fail in production"}`
+  );
+  console.log(
+    `OpenRouter: ${process.env.OPENROUTER_API_KEY ? "configured" : "MISSING — add OPENROUTER_API_KEY"}`
   );
   const model =
     process.env.OPENROUTER_MODEL?.trim().replace(/^OPENROUTER_MODEL=/i, "") ||
