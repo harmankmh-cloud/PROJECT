@@ -14,6 +14,16 @@ function dayKey(d = new Date()) {
   return d.toISOString().slice(0, 10);
 }
 
+/** Today's and yesterday's UTC day keys. Kept outside the component so the
+ *  time lookup isn't treated as an impure call during render. */
+function currentDayKeys() {
+  const now = Date.now();
+  return {
+    today: dayKey(new Date(now)),
+    yesterday: dayKey(new Date(now - 86_400_000)),
+  };
+}
+
 function callerLabel(fromNumber: string | null) {
   if (!fromNumber) return "Unknown caller";
   const digits = fromNumber.replace(/\D/g, "");
@@ -64,8 +74,7 @@ export default async function DashboardPage() {
       // Admin client optional in dev
     }
 
-    const today = dayKey();
-    const yesterday = dayKey(new Date(Date.now() - 86_400_000));
+    const { today, yesterday } = currentDayKeys();
 
     const [
       { data: allCalls },

@@ -13,16 +13,16 @@ export function Toast({
   const [visible, setVisible] = useState(false);
 
   useEffect(() => {
-    if (!message) {
-      setVisible(false);
-      return;
-    }
-    setVisible(true);
+    if (!message) return;
+    const raf = requestAnimationFrame(() => setVisible(true));
     const timer = setTimeout(() => {
       setVisible(false);
       onClear();
     }, 3000);
-    return () => clearTimeout(timer);
+    return () => {
+      cancelAnimationFrame(raf);
+      clearTimeout(timer);
+    };
   }, [message, onClear]);
 
   if (!message) return null;
