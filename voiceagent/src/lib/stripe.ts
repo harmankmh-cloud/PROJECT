@@ -14,17 +14,21 @@ export function isStripeConfigured() {
 export function stripePriceIds() {
   return {
     starter: process.env.STRIPE_PRICE_STARTER_MONTHLY || "",
+    growth: process.env.STRIPE_PRICE_GROWTH_MONTHLY || "",
     pro: process.env.STRIPE_PRICE_PRO_MONTHLY || "",
     enterprise: process.env.STRIPE_PRICE_ENTERPRISE_MONTHLY || "",
     voiceMinutes: process.env.STRIPE_METER_VOICE_MINUTES || "",
   };
 }
 
-export function planFromStripePriceId(priceId: string | undefined | null): "starter" | "pro" | "enterprise" {
+export function planFromStripePriceId(
+  priceId: string | undefined | null
+): "starter" | "growth" | "pro" | "enterprise" {
   const prices = stripePriceIds();
   if (!priceId) return "starter";
   if (priceId === prices.enterprise) return "enterprise";
   if (priceId === prices.pro) return "pro";
+  if (priceId === prices.growth) return "growth";
   if (priceId === prices.starter) return "starter";
   return "starter";
 }

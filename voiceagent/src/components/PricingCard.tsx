@@ -3,7 +3,7 @@ import { estimatedMonthly, PLANS, type PlanKey } from "@/lib/plans";
 
 const EXAMPLE_MINUTES = 500;
 
-export function PricingCard({ planKey }: { planKey: PlanKey }) {
+export function PricingCard({ planKey, highlighted = false }: { planKey: PlanKey; highlighted?: boolean }) {
   const plan = PLANS[planKey];
   const estimate = estimatedMonthly(planKey, EXAMPLE_MINUTES);
 
@@ -19,7 +19,9 @@ export function PricingCard({ planKey }: { planKey: PlanKey }) {
     );
 
   return (
-    <div className="surface-card flex h-full flex-col p-6">
+    <div
+      className={`surface-card flex h-full flex-col p-6 ${highlighted ? "ring-2 ring-teal-500/60" : ""}`}
+    >
       <h3 className="text-lg font-bold text-brand-900">{plan.name}</h3>
       <p className="mt-2 text-3xl font-bold text-brand-900">
         <span>{`$${plan.monthlyPrice}`}</span>

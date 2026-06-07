@@ -10,7 +10,7 @@ export const metadata: Metadata = {
 };
 
 function parsePlan(plan?: string): PlanKey | null {
-  if (plan === "starter" || plan === "pro" || plan === "enterprise") return plan;
+  if (plan === "starter" || plan === "growth" || plan === "pro" || plan === "enterprise") return plan;
   return null;
 }
 

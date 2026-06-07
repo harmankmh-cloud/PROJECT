@@ -51,6 +51,14 @@ export function MarketingFooter() {
             <p className="mt-2 text-xs text-white/35">
               {BRAND.name} · {BRAND.domain}
             </p>
+            <a
+              href="https://www.linkedin.com/company/intellivohealth"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="mt-3 inline-block text-xs text-white/50 hover:text-teal-300"
+            >
+              LinkedIn →
+            </a>
           </div>
           {COLUMNS.map((col) => (
             <div key={col.title}>
@@ -68,10 +76,7 @@ export function MarketingFooter() {
           ))}
         </div>
         <div className="border-t border-white/10 pt-8 text-center text-xs text-white/35">
-          <p>
-            TCPA tools included · HIPAA available on Enterprise with BAA · SOC 2 controls in progress · Audit
-            logs on all plans
-          </p>
+          <p>TCPA tools included · HIPAA available on Enterprise with BAA · Audit logs on all plans</p>
           <p className="mt-2">© {new Date().getFullYear()} {BRAND.name}. All rights reserved.</p>
         </div>
       </div>

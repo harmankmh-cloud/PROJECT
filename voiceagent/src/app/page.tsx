@@ -4,10 +4,12 @@ import { FaqAccordion } from "@/components/FaqAccordion";
 import { MarketingFooter } from "@/components/MarketingFooter";
 import { MarketingHeader } from "@/components/MarketingHeader";
 import { PricingCard } from "@/components/PricingCard";
+import { ProductPreview } from "@/components/ProductPreview";
 import { SkipToContent } from "@/components/SkipToContent";
 import { BRAND } from "@/lib/brand";
 import {
   FAQ_ITEMS,
+  FEATURE_CARDS,
   INTEGRATIONS,
   SETUP_STEPS,
   TESTIMONIALS,
@@ -16,7 +18,7 @@ import {
 } from "@/lib/marketing-content";
 import type { PlanKey } from "@/lib/plans";
 
-const PLAN_KEYS: PlanKey[] = ["starter", "pro", "enterprise"];
+const PLAN_KEYS: PlanKey[] = ["starter", "growth", "pro", "enterprise"];
 
 export const metadata: Metadata = {
   title: "AI phone agents that never miss a call",
@@ -32,6 +34,15 @@ export const metadata: Metadata = {
     "HubSpot voice integration",
   ],
 };
+
+function initials(name: string) {
+  return name
+    .split(" ")
+    .map((p) => p[0])
+    .join("")
+    .slice(0, 2)
+    .toUpperCase();
+}
 
 export default function HomePage() {
   const siteUrl = `https://${BRAND.domain}`;
@@ -97,14 +108,18 @@ export default function HomePage() {
               Security details
             </Link>
           </p>
+          <ProductPreview />
         </section>
 
         <section className="border-y border-slate-200/80 bg-white/60 py-10">
           <div className="mx-auto grid max-w-6xl grid-cols-2 gap-6 px-6 sm:grid-cols-4">
             {TRUST_STATS.map((s) => (
               <div key={s.label} className="text-center">
-                <p className="font-display text-3xl text-brand-900">{s.value}</p>
+                <p className="font-display text-2xl text-brand-900 sm:text-3xl">{s.value}</p>
                 <p className="mt-1 text-xs font-medium uppercase tracking-wide text-slate-500">{s.label}</p>
+                {"note" in s && s.note && (
+                  <p className="mt-1 text-[10px] text-slate-400">{s.note}</p>
+                )}
               </div>
             ))}
           </div>
@@ -120,7 +135,10 @@ export default function HomePage() {
           <div className="mt-12 grid gap-6 sm:grid-cols-2 lg:grid-cols-4">
             {SETUP_STEPS.map((step) => (
               <div key={step.step} className="surface-card p-6">
-                <span className="font-display text-3xl text-teal-600">{step.step}</span>
+                <span className="text-2xl" aria-hidden="true">
+                  {step.icon}
+                </span>
+                <span className="font-display ml-2 text-2xl text-teal-600">{step.step}</span>
                 <h3 className="mt-3 font-semibold text-brand-900">{step.title}</h3>
                 <p className="mt-2 text-sm leading-relaxed text-slate-600">{step.text}</p>
               </div>
@@ -131,24 +149,19 @@ export default function HomePage() {
         <section id="features" className="mx-auto max-w-6xl px-6 py-12">
           <p className="section-eyebrow text-center">Features</p>
           <h2 className="font-display mt-2 text-center text-3xl text-brand-900">Everything you need on day one</h2>
-          <div className="mt-10 grid gap-6 md:grid-cols-3">
-            {[
-              {
-                title: "Inbound AI receptionist",
-                desc: "Natural voice conversations with live transcription, knowledge retrieval, and intent detection.",
-              },
-              {
-                title: "Warm transfer with context",
-                desc: "Escalate to your team with full transcript, caller intent, and summary — no repeat explanations.",
-              },
-              {
-                title: "Compliance & audit trail",
-                desc: "TCPA consent tracking, configurable retention, audit logs, and Enterprise HIPAA mode with BAA.",
-              },
-            ].map((f) => (
+          <div className="mt-10 grid gap-6 md:grid-cols-2 lg:grid-cols-3">
+            {FEATURE_CARDS.map((f) => (
               <div key={f.title} className="surface-card p-6">
                 <h3 className="font-semibold text-brand-900">{f.title}</h3>
                 <p className="mt-2 text-sm leading-relaxed text-slate-600">{f.desc}</p>
+                <ul className="mt-4 space-y-1.5 text-sm text-slate-600">
+                  {f.bullets.map((b) => (
+                    <li key={b} className="flex gap-2">
+                      <span className="text-teal-600">✓</span>
+                      {b}
+                    </li>
+                  ))}
+                </ul>
               </div>
             ))}
           </div>
@@ -170,6 +183,7 @@ export default function HomePage() {
                 >
                   <p className="text-xs font-bold uppercase tracking-wider text-teal-400">{uc.industry}</p>
                   <h3 className="mt-2 text-lg font-semibold">{uc.headline}</h3>
+                  <p className="mt-2 text-xs text-teal-300/80">{uc.outcome}</p>
                   <ul className="mt-4 space-y-2 text-sm text-white/70">
                     {uc.points.map((p) => (
                       <li key={p}>• {p}</li>
@@ -184,11 +198,25 @@ export default function HomePage() {
         <section id="integrations" className="mx-auto max-w-6xl px-6 py-20">
           <p className="section-eyebrow text-center">Integrations</p>
           <h2 className="font-display mt-2 text-center text-3xl text-brand-900">Connects to your stack</h2>
-          <div className="mt-10 grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
+          <div className="mt-10 grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
             {INTEGRATIONS.map((int) => (
               <div key={int.name} className="surface-card p-5">
-                <h3 className="font-semibold text-brand-900">{int.name}</h3>
-                <p className="mt-1 text-sm text-slate-600">{int.desc}</p>
+                <div className="flex items-center gap-3">
+                  <div
+                    className={`flex h-10 w-10 items-center justify-center rounded-xl bg-gradient-to-br ${int.color} text-xs font-bold text-white`}
+                  >
+                    {int.abbr}
+                  </div>
+                  <div>
+                    <h3 className="font-semibold text-brand-900">{int.name}</h3>
+                    {"soon" in int && int.soon && (
+                      <span className="text-[10px] font-semibold uppercase tracking-wide text-amber-600">
+                        Coming soon
+                      </span>
+                    )}
+                  </div>
+                </div>
+                <p className="mt-3 text-sm text-slate-600">{int.desc}</p>
               </div>
             ))}
           </div>
@@ -203,12 +231,27 @@ export default function HomePage() {
         <section className="mx-auto max-w-6xl px-6 py-16">
           <p className="section-eyebrow text-center">Social proof</p>
           <h2 className="font-display mt-2 text-center text-3xl text-brand-900">Teams using voice AI today</h2>
+          <p className="mx-auto mt-2 max-w-lg text-center text-xs text-slate-400">
+            Representative customer stories — names and companies are illustrative.
+          </p>
           <div className="mt-10 grid gap-6 md:grid-cols-2">
             {TESTIMONIALS.map((t) => (
               <blockquote key={t.company} className="surface-card p-6">
                 <p className="text-sm leading-relaxed text-slate-700">&ldquo;{t.quote}&rdquo;</p>
-                <footer className="mt-4 text-xs text-slate-500">
-                  — {t.name}, {t.company}
+                <footer className="mt-4 flex items-center gap-3">
+                  <div
+                    className="flex h-10 w-10 items-center justify-center rounded-full bg-gradient-to-br from-teal-400 to-violet-500 text-xs font-bold text-white"
+                    aria-hidden="true"
+                  >
+                    {initials(t.name)}
+                  </div>
+                  <div>
+                    <p className="text-sm font-semibold text-brand-900">{t.name}</p>
+                    <p className="text-xs text-slate-500">
+                      {t.role}, {t.company}
+                    </p>
+                    <p className="text-[10px] uppercase tracking-wide text-teal-600">{t.industry}</p>
+                  </div>
                 </footer>
               </blockquote>
             ))}
@@ -218,11 +261,12 @@ export default function HomePage() {
         <section id="pricing" className="mx-auto max-w-6xl px-6 py-16">
           <h2 className="text-center text-2xl font-bold text-brand-900">Pricing</h2>
           <p className="mx-auto mt-2 max-w-xl text-center text-sm text-slate-500">
-            Monthly subscription plus metered voice minutes. Transparent estimates at ~500 min/mo.
+            Monthly subscription plus metered voice minutes. Transparent estimates at ~500 min/mo. Sandbox
+            testing is free — no credit card required to explore.
           </p>
-          <div className="mt-8 grid gap-6 md:grid-cols-3">
+          <div className="mt-8 grid gap-6 sm:grid-cols-2 lg:grid-cols-4">
             {PLAN_KEYS.map((key) => (
-              <PricingCard key={key} planKey={key} />
+              <PricingCard key={key} planKey={key} highlighted={key === "growth"} />
             ))}
           </div>
         </section>
