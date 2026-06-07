@@ -9,7 +9,14 @@ export async function POST() {
   } = await supabase.auth.getUser();
   if (!user) return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
 
-  const admin = createAdminClient();
+  let admin;
+  try {
+    admin = createAdminClient();
+  } catch (err) {
+    const message = err instanceof Error ? err.message : "Server configuration error";
+    return NextResponse.json({ error: message }, { status: 500 });
+  }
+
   const { data: existing } = await admin
     .from("va_organizations")
     .select("id")

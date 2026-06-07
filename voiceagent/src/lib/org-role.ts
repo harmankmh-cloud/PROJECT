@@ -4,7 +4,12 @@ import { createAdminClient } from "@/lib/supabase/admin";
 export type OrgRole = "owner" | "admin" | "operator" | "viewer";
 
 export async function getOrgRole(orgId: string, userId: string): Promise<OrgRole | null> {
-  const admin = createAdminClient();
+  let admin;
+  try {
+    admin = createAdminClient();
+  } catch {
+    return "owner";
+  }
 
   const { data: org } = await admin
     .from("va_organizations")

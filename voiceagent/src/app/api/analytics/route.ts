@@ -16,20 +16,37 @@ export async function GET(request: NextRequest) {
   const days = Math.min(90, Math.max(7, Number(request.nextUrl.searchParams.get("days")) || 30));
   const agentId = request.nextUrl.searchParams.get("agent_id");
 
+  const since = new Date(Date.now() - days * 86400000).toISOString();
+  const selectWithScore =
+    "created_at, agent_id, sentiment, score, duration_seconds, transferred, contained, intent, handoff_payload";
+  const selectFallback =
+    "created_at, agent_id, sentiment, duration_seconds, transferred, contained, intent, handoff_payload";
+
   let query = supabase
     .from("va_calls")
-    .select(
-      "created_at, agent_id, sentiment, score, duration_seconds, transferred, contained, intent, handoff_payload"
-    )
+    .select(selectWithScore)
     .eq("org_id", org.id)
-    .gte("created_at", new Date(Date.now() - days * 86400000).toISOString())
+    .gte("created_at", since)
     .order("created_at", { ascending: false })
     .limit(2000);
 
   if (agentId) query = query.eq("agent_id", agentId);
 
-  const { data: calls, error } = await query;
-  if (error) return NextResponse.json({ error: error.message }, { status: 400 });
+  const primary = await query;
+  let calls: Array<Record<string, unknown>> | null = primary.data;
+  if (primary.error) {
+    let fallbackQuery = supabase
+      .from("va_calls")
+      .select(selectFallback)
+      .eq("org_id", org.id)
+      .gte("created_at", since)
+      .order("created_at", { ascending: false })
+      .limit(2000);
+    if (agentId) fallbackQuery = fallbackQuery.eq("agent_id", agentId);
+    const fallback = await fallbackQuery;
+    if (fallback.error) return NextResponse.json({ error: fallback.error.message }, { status: 400 });
+    calls = fallback.data;
+  }
 
   const { data: agents } = await supabase
     .from("va_agents")
@@ -37,7 +54,7 @@ export async function GET(request: NextRequest) {
     .eq("org_id", org.id);
 
   return NextResponse.json({
-    analytics: buildAnalytics(calls || [], days),
+    analytics: buildAnalytics((calls || []) as Parameters<typeof buildAnalytics>[0], days),
     agents: agents || [],
     days,
   });

@@ -2,6 +2,7 @@ import { NextRequest, NextResponse } from "next/server";
 import { createClient } from "@/lib/supabase/server";
 import { getUserOrg } from "@/lib/auth";
 import { logAudit } from "@/lib/compliance/audit";
+import { denyUnlessCanOperate } from "@/lib/require-org-access";
 
 export async function GET() {
   const supabase = await createClient();
@@ -31,6 +32,9 @@ export async function POST(request: NextRequest) {
 
   const org = await getUserOrg(user.id);
   if (!org) return NextResponse.json({ error: "No organization" }, { status: 400 });
+
+  const denied = await denyUnlessCanOperate(org.id, user.id);
+  if (denied) return denied;
 
   const body = await request.json();
   const title = String(body.title || "").trim();
@@ -75,6 +79,9 @@ export async function PATCH(request: NextRequest) {
   const org = await getUserOrg(user.id);
   if (!org) return NextResponse.json({ error: "No organization" }, { status: 400 });
 
+  const denied = await denyUnlessCanOperate(org.id, user.id);
+  if (denied) return denied;
+
   const body = await request.json();
   const { id } = body;
 
@@ -105,6 +112,9 @@ export async function DELETE(request: NextRequest) {
 
   const org = await getUserOrg(user.id);
   if (!org) return NextResponse.json({ error: "No organization" }, { status: 400 });
+
+  const denied = await denyUnlessCanOperate(org.id, user.id);
+  if (denied) return denied;
 
   const id = request.nextUrl.searchParams.get("id");
   if (!id) return NextResponse.json({ error: "Missing id" }, { status: 400 });

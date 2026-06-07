@@ -2,6 +2,7 @@ import { NextRequest, NextResponse } from "next/server";
 import { createClient } from "@/lib/supabase/server";
 import { getUserOrg } from "@/lib/auth";
 import { logAudit } from "@/lib/compliance/audit";
+import { denyUnlessCanManage } from "@/lib/require-org-access";
 
 export async function GET() {
   const supabase = await createClient();
@@ -37,6 +38,9 @@ export async function PATCH(request: NextRequest) {
 
   const org = await getUserOrg(user.id);
   if (!org) return NextResponse.json({ error: "No organization" }, { status: 400 });
+
+  const denied = await denyUnlessCanManage(org.id, user.id);
+  if (denied) return denied;
 
   const body = await request.json();
   const updates: Record<string, unknown> = { updated_at: new Date().toISOString() };

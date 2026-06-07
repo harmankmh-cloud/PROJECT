@@ -1,10 +1,14 @@
 import { NextRequest, NextResponse } from "next/server";
 import { createAdminClient } from "@/lib/supabase/admin";
 import { routeOmnichannelMessage, type ChannelType } from "@/lib/omnichannel";
+import { validateTwilioWebhook } from "@/lib/twilio-webhook";
 import twilio from "twilio";
 
 export async function POST(request: NextRequest) {
   const formData = await request.formData();
+  if (!validateTwilioWebhook(request, formData)) {
+    return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+  }
   const from = String(formData.get("From") || "");
   const body = String(formData.get("Body") || "");
   const to = String(formData.get("To") || "");

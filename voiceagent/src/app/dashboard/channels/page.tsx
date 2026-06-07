@@ -6,7 +6,7 @@ import { apiFetch } from "@/lib/api-client";
 const CHANNEL_META = [
   { id: "sms", name: "SMS", desc: "Text follow-ups and two-way messaging via Twilio." },
   { id: "whatsapp", name: "WhatsApp", desc: "WhatsApp Business messaging." },
-  { id: "web_chat", name: "Web Chat", desc: "Embed a chat widget that shares context with voice agents." },
+  { id: "web_chat", name: "Web Chat", desc: "Coming soon — embeddable chat widget for your site." },
 ] as const;
 
 export default function ChannelsPage() {
@@ -72,10 +72,16 @@ export default function ChannelsPage() {
             <button
               type="button"
               onClick={() => toggleChannel(ch.id)}
-              disabled={saving === ch.id}
-              className={`mt-4 btn-secondary text-xs ${enabled[ch.id] ? "border-teal-500 text-teal-700" : ""}`}
+              disabled={saving === ch.id || ch.id === "web_chat"}
+              className={`mt-4 btn-secondary text-xs ${enabled[ch.id] ? "border-teal-500 text-teal-700" : ""} ${ch.id === "web_chat" ? "opacity-50" : ""}`}
             >
-              {saving === ch.id ? "Saving…" : enabled[ch.id] ? "Enabled" : "Enable channel"}
+              {ch.id === "web_chat"
+                ? "Coming soon"
+                : saving === ch.id
+                  ? "Saving…"
+                  : enabled[ch.id]
+                    ? "Enabled"
+                    : "Enable channel"}
             </button>
           </div>
         ))}

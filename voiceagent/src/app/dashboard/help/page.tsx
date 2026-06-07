@@ -20,7 +20,7 @@ export default async function DashboardHelpPage() {
         <p className="page-eyebrow">Support</p>
         <h1 className="font-display mt-1 text-3xl text-brand-900">Help & suggestions</h1>
         <p className="mt-2 text-sm text-slate-500">
-          Message the {BRAND.name} team — we reply by email.
+          Message the {BRAND.name} team — your request is saved to our support queue.
         </p>
       </header>
 

@@ -5,6 +5,7 @@ import { hasValidConsent, isWithinCallingHours } from "@/lib/compliance/tcpa";
 import { getTwilioClient } from "@/lib/twilio";
 import { dialOutbound, encodeClientState, isTelnyxConfigured } from "@/lib/telnyx";
 import { logAudit } from "@/lib/compliance/audit";
+import { denyUnlessCanOperate } from "@/lib/require-org-access";
 
 export async function GET() {
   const supabase = await createClient();
@@ -34,6 +35,9 @@ export async function POST(request: NextRequest) {
 
   const org = await getUserOrg(user.id);
   if (!org) return NextResponse.json({ error: "No organization" }, { status: 400 });
+
+  const denied = await denyUnlessCanOperate(org.id, user.id);
+  if (denied) return denied;
 
   const body = await request.json();
 
@@ -74,6 +78,9 @@ export async function PATCH(request: NextRequest) {
   const org = await getUserOrg(user.id);
   if (!org) return NextResponse.json({ error: "No organization" }, { status: 400 });
 
+  const denied = await denyUnlessCanOperate(org.id, user.id);
+  if (denied) return denied;
+
   const body = await request.json();
   const { id, action } = body;
 
@@ -92,17 +99,55 @@ export async function PATCH(request: NextRequest) {
     if (!campaign) return NextResponse.json({ error: "Not found" }, { status: 404 });
 
     const contacts = (campaign.contact_list as Array<{ phone: string }>) || [];
-    const eligible: string[] = [];
+    if (!contacts.length) {
+      return NextResponse.json({ error: "Add at least one phone number to the campaign" }, { status: 400 });
+    }
 
+    const eligible: string[] = [];
     for (const contact of contacts) {
       const hasConsent = await hasValidConsent(org.id, contact.phone);
       if (hasConsent) eligible.push(contact.phone);
     }
 
+    if (!eligible.length) {
+      return NextResponse.json(
+        {
+          error:
+            "No contacts have TCPA consent. Record consent on the Compliance page before starting outbound calls.",
+        },
+        { status: 400 }
+      );
+    }
+
     const appUrl = process.env.NEXT_PUBLIC_APP_URL || "http://localhost:3002";
     const provider = process.env.TELEPHONY_PROVIDER || "telnyx";
+    const telnyxReady = provider === "telnyx" && isTelnyxConfigured();
+    const client = getTwilioClient();
+    let twilioFrom = process.env.TWILIO_PHONE_NUMBER;
 
-    if (provider === "telnyx" && isTelnyxConfigured()) {
+    const { data: orgNumbers } = await supabase
+      .from("va_phone_numbers")
+      .select("phone_number")
+      .eq("org_id", org.id)
+      .limit(1);
+
+    if (orgNumbers?.[0]?.phone_number) {
+      twilioFrom = orgNumbers[0].phone_number;
+    }
+
+    const twilioReady = Boolean(client && twilioFrom);
+
+    if (!telnyxReady && !twilioReady) {
+      return NextResponse.json(
+        {
+          error:
+            "Telephony is not configured. Set Telnyx env vars or connect Twilio with a phone number.",
+        },
+        { status: 400 }
+      );
+    }
+
+    if (telnyxReady) {
       const from = process.env.TELNYX_PHONE_NUMBER!;
       const connectionId = process.env.TELNYX_CONNECTION_ID!;
       const clientState = encodeClientState({
@@ -118,28 +163,13 @@ export async function PATCH(request: NextRequest) {
           clientState,
         });
       }
-    } else {
-      const client = getTwilioClient();
-      let from = process.env.TWILIO_PHONE_NUMBER;
-
-      const { data: orgNumbers } = await supabase
-        .from("va_phone_numbers")
-        .select("phone_number")
-        .eq("org_id", org.id)
-        .limit(1);
-
-      if (orgNumbers?.[0]?.phone_number) {
-        from = orgNumbers[0].phone_number;
-      }
-
-      if (client && from) {
-        for (const phone of eligible.slice(0, 10)) {
-          await client.calls.create({
-            to: phone,
-            from,
-            url: `${appUrl}/api/twilio/voice`,
-          });
-        }
+    } else if (twilioReady && client && twilioFrom) {
+      for (const phone of eligible.slice(0, 10)) {
+        await client.calls.create({
+          to: phone,
+          from: twilioFrom,
+          url: `${appUrl}/api/twilio/voice`,
+        });
       }
     }
 

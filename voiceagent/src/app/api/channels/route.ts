@@ -3,6 +3,7 @@ import { createClient } from "@/lib/supabase/server";
 import { getUserOrg } from "@/lib/auth";
 import { enableChannel, type ChannelType } from "@/lib/omnichannel";
 import { createAdminClient } from "@/lib/supabase/admin";
+import { denyUnlessCanOperate } from "@/lib/require-org-access";
 
 const CHANNEL_TYPES: ChannelType[] = ["sms", "whatsapp", "web_chat"];
 
@@ -44,8 +45,18 @@ export async function PATCH(request: NextRequest) {
   const org = await getUserOrg(user.id);
   if (!org) return NextResponse.json({ error: "No organization" }, { status: 400 });
 
+  const denied = await denyUnlessCanOperate(org.id, user.id);
+  if (denied) return denied;
+
   const body = await request.json();
   const channelType = body.channel_type as ChannelType;
+
+  if (channelType === "web_chat") {
+    return NextResponse.json(
+      { error: "Web chat widget is coming soon. SMS and WhatsApp are available now." },
+      { status: 400 }
+    );
+  }
 
   if (!CHANNEL_TYPES.includes(channelType)) {
     return NextResponse.json({ error: "Invalid channel type" }, { status: 400 });

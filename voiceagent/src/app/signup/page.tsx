@@ -24,7 +24,16 @@ export default function SignupPage() {
       setLoading(false);
       return;
     }
-    await fetch("/api/org/setup", { method: "POST" });
+    const setupRes = await fetch("/api/org/setup", { method: "POST" });
+    if (!setupRes.ok) {
+      const data = await setupRes.json().catch(() => ({}));
+      setError(
+        (data as { error?: string }).error ||
+          "Account created but organization setup failed. Try signing in again."
+      );
+      setLoading(false);
+      return;
+    }
     window.location.href = "/dashboard";
   }
 
