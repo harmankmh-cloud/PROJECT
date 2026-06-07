@@ -2,12 +2,22 @@ import { NextResponse } from "next/server";
 import { createClient } from "@/lib/supabase/server";
 import { createAdminClient } from "@/lib/supabase/admin";
 
-export async function POST() {
+export async function POST(request: Request) {
   const supabase = await createClient();
   const {
     data: { user },
   } = await supabase.auth.getUser();
   if (!user) return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+
+  let businessName: string | undefined;
+  if (request.headers.get("content-type")?.includes("application/json")) {
+    try {
+      const body = (await request.json()) as { businessName?: string };
+      businessName = body.businessName?.trim() || undefined;
+    } catch {
+      businessName = undefined;
+    }
+  }
 
   let admin;
   try {
@@ -29,7 +39,7 @@ export async function POST() {
   const { data: org, error } = await admin
     .from("va_organizations")
     .insert({
-      name: user.email?.split("@")[0] || "My Organization",
+      name: businessName || user.email?.split("@")[0] || "My Organization",
       slug,
       owner_id: user.id,
     })

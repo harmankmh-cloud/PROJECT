@@ -110,8 +110,10 @@ export default function HomePage() {
           </div>
         </section>
 
-        <section className="mx-auto max-w-6xl px-6 py-12">
-          <div className="grid gap-6 md:grid-cols-3">
+        <section id="features" className="mx-auto max-w-6xl px-6 py-12">
+          <p className="section-eyebrow text-center">Features</p>
+          <h2 className="font-display mt-2 text-center text-3xl text-brand-900">Everything you need on day one</h2>
+          <div className="mt-10 grid gap-6 md:grid-cols-3">
             {[
               {
                 title: "Inbound AI receptionist",
