@@ -77,7 +77,7 @@ export function MarketingFooter() {
         </div>
         <div className="flex flex-col items-center justify-between gap-4 border-t border-glass-border-subtle pt-8 text-sm text-slate-text md:flex-row">
           <p>
-            © {new Date().getFullYear()} {BRAND.legalName}. All rights reserved.
+            © {new Date().getFullYear()} {BRAND.legalName} All rights reserved.
           </p>
           <div className="flex flex-wrap justify-center gap-6">
             <span className="flex items-center gap-1">

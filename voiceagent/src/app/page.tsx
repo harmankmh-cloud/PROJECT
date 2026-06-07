@@ -15,6 +15,7 @@ import {
   HOME_FEATURES,
   HOME_SERVICES_IMAGE,
   HUBSPOT_LOGO,
+  INTEGRATIONS,
   SALON_IMAGE,
   TESTIMONIALS,
   TRUST_STATS,
@@ -317,7 +318,6 @@ export default function HomePage() {
 
               <div
                 className="col-span-1 flex flex-col gap-8 overflow-hidden rounded-3xl border border-glass-border-subtle bg-surface-container/60 p-10 md:col-span-2 md:flex-row"
-                id="integrations"
               >
                 <div className="flex-1">
                   <span className="mb-2 block text-sm font-semibold text-primary">{pro.industry}</span>
@@ -351,6 +351,47 @@ export default function HomePage() {
                   </div>
                 </div>
               </div>
+            </div>
+          </div>
+        </section>
+
+        {/* Integrations */}
+        <section className="border-t border-glass-border-subtle py-[120px]" id="integrations">
+          <div className="marketing-container">
+            <div className="mb-16 text-center">
+              <p className="section-eyebrow mb-3">Integrations</p>
+              <h2 className="font-display text-3xl font-bold text-ghost-white">Connects to your stack</h2>
+              <p className="mx-auto mt-4 max-w-2xl text-lg text-on-surface-variant">
+                Voice carriers, CRM, calendar, billing, and automation — wired from the {BRAND.name} dashboard.
+              </p>
+            </div>
+            <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
+              {INTEGRATIONS.map((item) => (
+                <div
+                  key={item.name}
+                  className="surface-card-hover flex flex-col gap-3 p-6"
+                >
+                  <div className="flex items-center justify-between gap-2">
+                    <div
+                      className={`flex h-10 w-10 items-center justify-center rounded-lg bg-gradient-to-br ${item.color} text-xs font-bold text-ghost-white`}
+                    >
+                      {item.abbr}
+                    </div>
+                    {"soon" in item && item.soon ? (
+                      <span className="rounded-full bg-surface-container-high px-2 py-0.5 text-[10px] font-semibold uppercase tracking-wide text-on-surface-variant">
+                        Soon
+                      </span>
+                    ) : null}
+                  </div>
+                  <h3 className="font-semibold text-ghost-white">{item.name}</h3>
+                  <p className="text-sm text-on-surface-variant">{item.desc}</p>
+                </div>
+              ))}
+            </div>
+            <div className="mt-10 flex flex-wrap items-center justify-center gap-6 opacity-80">
+              <Image src={HUBSPOT_LOGO} alt="HubSpot" width={100} height={24} className="h-6 w-auto brightness-200" />
+              <div className="hidden h-6 w-px bg-outline-variant sm:block" />
+              <Image src={ZAPIER_LOGO} alt="Zapier" width={80} height={24} className="h-6 w-auto brightness-200" />
             </div>
           </div>
         </section>

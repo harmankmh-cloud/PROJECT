@@ -24,8 +24,11 @@ export const metadata: Metadata = {
   authors: [{ name: BRAND.name, url: siteUrl }],
   metadataBase: new URL(siteUrl),
   alternates: {
-    canonical: "/",
     languages: { "en-CA": siteUrl, "fr-CA": siteUrl },
+  },
+  icons: {
+    icon: "/icon",
+    shortcut: "/icon",
   },
   openGraph: {
     type: "website",
