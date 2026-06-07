@@ -21,11 +21,11 @@ const appUrl =
 export const metadata: Metadata = {
   metadataBase: new URL(appUrl),
   title: {
-    default: `${BRAND.name} — ${BRAND.tagline}`,
+    default: "Get 5-Star Google Reviews with AI + QR Codes | RateLocal BC",
     template: `%s · ${BRAND.name}`,
   },
   description:
-    "QR-powered review collection for local businesses. Route unhappy customers privately, help happy ones post on Google in seconds.",
+    "RateLocal helps BC shops collect Google reviews in under a minute — QR poster, AI-written drafts, and private feedback routing. Built in Fraser Valley.",
   openGraph: {
     title: `${BRAND.name} — ${BRAND.tagline}`,
     description:
