@@ -14,7 +14,10 @@ export default async function BillingPage({
 }) {
   const params = await searchParams;
   const subscribePlan =
-    params.subscribe === "starter" || params.subscribe === "pro" || params.subscribe === "enterprise"
+    params.subscribe === "starter" ||
+    params.subscribe === "growth" ||
+    params.subscribe === "pro" ||
+    params.subscribe === "enterprise"
       ? (params.subscribe as PlanKey)
       : null;
   const supabase = await createClient();
@@ -86,7 +89,7 @@ export default async function BillingPage({
         </div>
       </div>
 
-      <div className="mt-8 grid gap-4 md:grid-cols-3">
+      <div className="mt-8 grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
         {Object.entries(PLANS).map(([key, p]) => (
           <div key={key} className={`surface-card p-5 ${plan === key ? "ring-2 ring-teal-500" : ""}`}>
             <h3 className="font-bold">{p.name}</h3>
@@ -98,7 +101,7 @@ export default async function BillingPage({
               ))}
             </ul>
             <SubscribeButton
-              plan={key as "starter" | "pro" | "enterprise"}
+              plan={key as PlanKey}
               currentPlan={plan}
               stripeReady={stripeReady}
             />

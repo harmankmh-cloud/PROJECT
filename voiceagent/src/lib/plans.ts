@@ -4,7 +4,14 @@ export const PLANS = {
     monthlyPrice: 99,
     perMinute: 0.12,
     concurrentCalls: 5,
-    features: ["1 agent", "Inbound calls", "Call logs", "Basic analytics"],
+    features: ["1 agent", "Inbound calls", "Call logs", "Basic analytics", "Sandbox testing"],
+  },
+  growth: {
+    name: "Growth",
+    monthlyPrice: 249,
+    perMinute: 0.1,
+    concurrentCalls: 10,
+    features: ["2 agents", "Flow builder", "Google Calendar", "Warm transfer", "SMS follow-up"],
   },
   pro: {
     name: "Pro",

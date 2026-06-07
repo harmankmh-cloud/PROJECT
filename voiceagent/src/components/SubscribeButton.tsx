@@ -2,7 +2,7 @@
 
 import { useState } from "react";
 
-type PlanKey = "starter" | "pro" | "enterprise";
+import type { PlanKey } from "@/lib/plans";
 
 export function SubscribeButton({
   plan,

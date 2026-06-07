@@ -2,10 +2,11 @@ import "server-only";
 import type Stripe from "stripe";
 import { getStripe } from "@/lib/stripe";
 
-export type PlanKey = "starter" | "pro" | "enterprise";
+export type PlanKey = "starter" | "growth" | "pro" | "enterprise";
 
 const PLAN_HINTS: Record<PlanKey, { patterns: RegExp[]; amountCents: number }> = {
   starter: { patterns: [/starter/i, /voiceagent starter/i], amountCents: 9900 },
+  growth: { patterns: [/growth/i, /voiceagent growth/i], amountCents: 24900 },
   pro: { patterns: [/pro/i, /voiceagent pro/i], amountCents: 49900 },
   enterprise: {
     patterns: [/enterprise/i, /voiceagent enterprise/i],
@@ -15,6 +16,7 @@ const PLAN_HINTS: Record<PlanKey, { patterns: RegExp[]; amountCents: number }> =
 
 const LOOKUP_KEYS: Record<PlanKey, string> = {
   starter: "voiceagent_starter_monthly",
+  growth: "voiceagent_growth_monthly",
   pro: "voiceagent_pro_monthly",
   enterprise: "voiceagent_enterprise_monthly",
 };
@@ -24,6 +26,7 @@ export type ResolvedStripePrices = Record<PlanKey, string>;
 function fromEnv(): Partial<ResolvedStripePrices> {
   return {
     starter: process.env.STRIPE_PRICE_STARTER_MONTHLY || undefined,
+    growth: process.env.STRIPE_PRICE_GROWTH_MONTHLY || undefined,
     pro: process.env.STRIPE_PRICE_PRO_MONTHLY || undefined,
     enterprise: process.env.STRIPE_PRICE_ENTERPRISE_MONTHLY || undefined,
   };
@@ -47,7 +50,7 @@ export async function resolveStripePriceIds(): Promise<ResolvedStripePrices> {
   const env = fromEnv();
   const resolved: Partial<ResolvedStripePrices> = { ...env };
 
-  const missing = (["starter", "pro", "enterprise"] as PlanKey[]).filter(
+  const missing = (["starter", "growth", "pro", "enterprise"] as PlanKey[]).filter(
     (p) => !resolved[p]?.startsWith("price_")
   );
 
@@ -59,6 +62,7 @@ export async function resolveStripePriceIds(): Promise<ResolvedStripePrices> {
   if (!stripe) {
     return {
       starter: env.starter || "",
+      growth: env.growth || "",
       pro: env.pro || "",
       enterprise: env.enterprise || "",
     };
@@ -109,6 +113,7 @@ export async function resolveStripePriceIds(): Promise<ResolvedStripePrices> {
 
   return {
     starter: resolved.starter || "",
+    growth: resolved.growth || "",
     pro: resolved.pro || "",
     enterprise: resolved.enterprise || "",
   };
@@ -121,6 +126,7 @@ export function planFromResolvedPrices(
   if (!priceId) return "starter";
   if (priceId === prices.enterprise) return "enterprise";
   if (priceId === prices.pro) return "pro";
+  if (priceId === prices.growth) return "growth";
   if (priceId === prices.starter) return "starter";
   return "starter";
 }

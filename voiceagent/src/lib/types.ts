@@ -1,4 +1,4 @@
-export type Plan = "starter" | "pro" | "enterprise";
+export type Plan = "starter" | "growth" | "pro" | "enterprise";
 
 export interface Organization {
   id: string;
