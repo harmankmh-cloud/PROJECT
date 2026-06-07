@@ -34,7 +34,7 @@ const COLUMNS = [
 
 export function MarketingFooter() {
   return (
-    <footer className="w-full border-t border-glass-border-subtle bg-surface-container/40 py-20 backdrop-blur-xl">
+    <footer id="footer" className="w-full border-t border-glass-border-subtle bg-surface-container/40 py-20 backdrop-blur-xl">
       <div className="marketing-container">
         <div className="mb-16 grid grid-cols-2 gap-8 md:grid-cols-4">
           <div className="col-span-2 md:col-span-1">
@@ -85,11 +85,11 @@ export function MarketingFooter() {
           <div className="flex flex-wrap justify-center gap-6">
             <span className="flex items-center gap-1">
               <MaterialIcon name="lock" className="text-[16px] text-primary" />
-              HIPAA on Enterprise
+              PIPEDA-aligned
             </span>
             <span className="flex items-center gap-1">
               <MaterialIcon name="verified_user" className="text-[16px] text-primary" />
-              TCPA tooling
+              CASL tooling
             </span>
             <span className="flex items-center gap-1">
               <MaterialIcon name="location_on" className="text-[16px] text-primary" />
