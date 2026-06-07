@@ -1,6 +1,7 @@
 import Link from "next/link";
 import { SupportForm } from "@/components/SupportForm";
 import { BrandLogo } from "@/components/BrandLogo";
+import { SiteFooter } from "@/components/SiteFooter";
 import { BRAND } from "@/lib/brand";
 
 export const metadata = {
@@ -58,6 +59,7 @@ export default function HelpPage() {
           </Link>
         </p>
       </div>
+      <SiteFooter />
     </main>
   );
 }

@@ -18,3 +18,15 @@ See [voiceagent/README.md](voiceagent/README.md).
 ## Start ServeLocal
 
 See [servelocal/README.md](servelocal/README.md).
+
+## Project RAG (agent knowledge base)
+
+Search all projects from one index — for Cursor agents and CLI:
+
+```bash
+pip install -r requirements-rag.txt
+python -m project_rag index
+python -m project_rag search "ServeLocal login"
+```
+
+See [docs/PROJECT_RAG.md](docs/PROJECT_RAG.md). MCP server: `project-rag` in `.cursor/mcp.json`.

@@ -11,7 +11,7 @@ const jakarta = Plus_Jakarta_Sans({
 });
 
 const appUrl =
-  process.env.NEXT_PUBLIC_APP_URL?.replace(/\/$/, "") || "http://localhost:3001";
+  process.env.NEXT_PUBLIC_APP_URL?.replace(/\/$/, "") || "https://www.servelocal.ca";
 
 export const metadata: Metadata = {
   metadataBase: new URL(appUrl),
@@ -27,7 +27,17 @@ export const metadata: Metadata = {
       "Find trusted local trades in BC. Browse plumbers, electricians, and more — call direct, no middleman.",
     url: appUrl,
     siteName: SERVE_LOCAL.name,
+    locale: "en_CA",
     type: "website",
+  },
+  twitter: {
+    card: "summary_large_image",
+    title: `${SERVE_LOCAL.name} — ${SERVE_LOCAL.tagline}`,
+    description:
+      "Find trusted local trades in BC. Browse plumbers, electricians, and more — call direct, no middleman.",
+  },
+  alternates: {
+    canonical: appUrl,
   },
 };
 
@@ -44,7 +54,7 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="en" className={`${jakarta.variable} h-full`}>
+    <html lang="en-CA" className={`${jakarta.variable} h-full`}>
       <body className="min-h-full font-sans antialiased">
         {children}
         <SuggestionButton />

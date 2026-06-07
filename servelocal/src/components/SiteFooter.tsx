@@ -52,6 +52,26 @@ export function SiteFooter() {
           </ul>
         </div>
         <div>
+          <p className="text-xs font-semibold uppercase tracking-wider text-zinc-400">Legal</p>
+          <ul className="mt-4 space-y-2.5 text-sm">
+            <li>
+              <Link href="/privacy" className="text-zinc-600 transition hover:text-teal-600">
+                Privacy Policy
+              </Link>
+            </li>
+            <li>
+              <Link href="/terms" className="text-zinc-600 transition hover:text-teal-600">
+                Terms of Service
+              </Link>
+            </li>
+            <li>
+              <a href="mailto:hello@servelocal.ca" className="text-zinc-600 transition hover:text-teal-600">
+                Help & contact
+              </a>
+            </li>
+          </ul>
+        </div>
+        <div>
           <p className="text-xs font-semibold uppercase tracking-wider text-zinc-400">Cities</p>
           <ul className="mt-4 flex flex-wrap gap-x-3 gap-y-2 text-sm">
             {TRADE_CITIES.slice(0, 6).map((c) => (

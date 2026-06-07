@@ -37,7 +37,22 @@ export default async function CityPage({ params }: { params: Promise<{ city: str
           </div>
         </div>
 
-        {providers.length > 0 && (
+        {providers.length === 0 ? (
+          <div className="surface-card mt-12 p-8 text-center">
+            <p className="font-medium text-brand-950">No pros listed in {cityMeta.name} yet.</p>
+            <p className="mt-2 text-sm text-slate-600">
+              Be the first tradie in this city, or post a job and we&apos;ll help you find someone.
+            </p>
+            <div className="mt-6 flex flex-wrap justify-center gap-3">
+              <Link href="/join" className="btn-gold px-6 py-3">
+                List my business
+              </Link>
+              <Link href={`/request?city=${city}`} className="btn-ghost px-6 py-3">
+                Post a job
+              </Link>
+            </div>
+          </div>
+        ) : (
           <div className="mt-12">
             <h2 className="font-semibold text-brand-950">Top pros in {cityMeta.name}</h2>
             <div className="mt-4 grid gap-4 sm:grid-cols-2 lg:grid-cols-3">

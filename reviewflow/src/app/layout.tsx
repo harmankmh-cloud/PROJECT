@@ -32,7 +32,17 @@ export const metadata: Metadata = {
       "QR-powered review collection for local businesses. Route unhappy customers privately, help happy ones post on Google in seconds.",
     url: appUrl,
     siteName: BRAND.name,
+    locale: "en_CA",
     type: "website",
+  },
+  twitter: {
+    card: "summary_large_image",
+    title: `${BRAND.name} — ${BRAND.tagline}`,
+    description:
+      "QR-powered review collection for local businesses. Route unhappy customers privately, help happy ones post on Google in seconds.",
+  },
+  alternates: {
+    canonical: appUrl,
   },
   ...(process.env.GOOGLE_SITE_VERIFICATION
     ? { verification: { google: process.env.GOOGLE_SITE_VERIFICATION } }
@@ -52,7 +62,7 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="en" className={`${jakarta.variable} ${instrument.variable} h-full`}>
+    <html lang="en-CA" className={`${jakarta.variable} ${instrument.variable} h-full`}>
       <body className="min-h-full font-sans antialiased">
         <DatadogInit />
         {children}
