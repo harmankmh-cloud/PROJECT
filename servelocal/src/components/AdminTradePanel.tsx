@@ -114,7 +114,7 @@ export function AdminTradePanel({
       )}
 
       {pending.length > 0 && (
-        <div className="surface-card overflow-hidden">
+        <div id="pending-listings" className="surface-card overflow-hidden scroll-mt-24">
           <div className="review-header">
             <h2 className="font-display text-lg">Pending listings ({pending.length})</h2>
           </div>
@@ -184,7 +184,7 @@ export function AdminTradePanel({
         </div>
       )}
 
-      <div className="surface-card overflow-hidden">
+      <div id="listings" className="surface-card overflow-hidden scroll-mt-24">
         <div className="border-b border-slate-200/80 px-6 py-4">
           <h2 className="font-display text-lg">Approved pros</h2>
         </div>
@@ -238,7 +238,7 @@ export function AdminTradePanel({
         </ul>
       </div>
 
-      <div className="surface-card overflow-hidden">
+      <div id="requests" className="surface-card overflow-hidden scroll-mt-24">
         <div className="border-b border-slate-200/80 px-6 py-4">
           <h2 className="font-display text-lg">Customer requests</h2>
         </div>

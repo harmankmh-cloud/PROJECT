@@ -74,7 +74,7 @@ export function SiteFooter() {
         <div>
           <p className="text-xs font-semibold uppercase tracking-wider text-zinc-400">Cities</p>
           <ul className="mt-4 flex flex-wrap gap-x-3 gap-y-2 text-sm">
-            {TRADE_CITIES.slice(0, 6).map((c) => (
+            {TRADE_CITIES.map((c) => (
               <li key={c.slug}>
                 <Link href={`/${c.slug}`} className="text-zinc-600 transition hover:text-teal-600">
                   {c.name}

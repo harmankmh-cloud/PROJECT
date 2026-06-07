@@ -5,6 +5,7 @@ import { ProviderCard } from "@/components/ProviderCard";
 import { SiteFooter } from "@/components/SiteFooter";
 import { SiteHeader } from "@/components/SiteHeader";
 import { TRADE_CITIES, SERVE_LOCAL } from "@/lib/constants";
+import { pageMetadata } from "@/lib/seo";
 import { getApprovedProviders, getServiceCategories } from "@/lib/data";
 
 export async function generateMetadata({
@@ -16,11 +17,11 @@ export async function generateMetadata({
   const cityMeta = TRADE_CITIES.find((c) => c.slug === city);
   if (!cityMeta) return { title: "City not found" };
 
-  return {
-    title: `Find Local Trades in ${cityMeta.name} | ${SERVE_LOCAL.name} BC`,
+  return pageMetadata({
+    title: `Local Trades in ${cityMeta.name} BC`,
     description: `Browse plumbers, electricians, and handymen in ${cityMeta.name}, ${cityMeta.region}. Post a job or compare verified local pros on ${SERVE_LOCAL.name}.`,
-    alternates: { canonical: `/${city}` },
-  };
+    path: `/${city}`,
+  });
 }
 
 export default async function CityPage({ params }: { params: Promise<{ city: string }> }) {

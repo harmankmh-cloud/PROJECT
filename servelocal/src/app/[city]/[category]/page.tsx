@@ -1,3 +1,4 @@
+import type { Metadata } from "next";
 import Link from "next/link";
 import { notFound } from "next/navigation";
 import { Suspense } from "react";
@@ -6,8 +7,26 @@ import { ProviderCard } from "@/components/ProviderCard";
 import { SiteFooter } from "@/components/SiteFooter";
 import { SiteHeader } from "@/components/SiteHeader";
 import { TRADE_CITIES, SERVE_LOCAL, cityName } from "@/lib/constants";
+import { pageMetadata } from "@/lib/seo";
 import { getApprovedProviders, getCategoryBySlug } from "@/lib/data";
 import type { ProviderSort } from "@/lib/types";
+
+export async function generateMetadata({
+  params,
+}: {
+  params: Promise<{ city: string; category: string }>;
+}): Promise<Metadata> {
+  const { city, category } = await params;
+  const cityMeta = TRADE_CITIES.find((c) => c.slug === city);
+  const cat = await getCategoryBySlug(category);
+  if (!cityMeta || !cat) return { title: "Not found" };
+
+  return pageMetadata({
+    title: `${cat.name} in ${cityMeta.name} BC`,
+    description: `Find ${cat.name.toLowerCase()} pros in ${cityMeta.name}, ${cityMeta.region}. Compare verified listings, reviews, and contact trades direct on ${SERVE_LOCAL.name}.`,
+    path: `/${city}/${category}`,
+  });
+}
 
 export default async function CategoryPage({
   params,

@@ -1,11 +1,20 @@
+import type { Metadata } from "next";
 import Link from "next/link";
 import { SiteFooter } from "@/components/SiteFooter";
 import { SiteHeader } from "@/components/SiteHeader";
 import { SearchBar } from "@/components/SearchBar";
 import { ProviderCard } from "@/components/ProviderCard";
 import { HOW_IT_WORKS, TRADE_CITIES, TRUST_BADGES, SERVE_LOCAL } from "@/lib/constants";
-import { HOMEOWNER_TESTIMONIALS } from "@/lib/marketing-content";
+import { WHY_SERVELOCAL } from "@/lib/marketing-content";
+import { pageMetadata } from "@/lib/seo";
 import { getApprovedProviders, getPlatformStats, getServiceCategories } from "@/lib/data";
+
+export const metadata: Metadata = pageMetadata({
+  title: "ServeLocal BC — Find Local Trades, Zero Middleman Fees",
+  description:
+    "Find trusted plumbers, electricians, and handymen in British Columbia. Compare verified pros, read BC cost guides, and call direct — no lead fees.",
+  path: "/",
+});
 
 export default async function HomePage() {
   const [categories, featured, stats] = await Promise.all([
@@ -201,25 +210,19 @@ export default async function HomePage() {
 
       <section className="border-t border-slate-200/70 bg-white py-16">
         <div className="mx-auto max-w-6xl px-4 sm:px-8">
-          <p className="section-eyebrow text-center">Social proof</p>
+          <p className="section-eyebrow text-center">Why ServeLocal</p>
           <h2 className="font-display mt-2 text-center text-3xl font-bold tracking-tight text-brand-950">
-            Homeowners & tradies in BC
+            Built for BC homeowners & tradies
           </h2>
-          <p className="mx-auto mt-2 max-w-lg text-center text-xs text-slate-400">
-            Representative stories — replace with your real customers as you grow.
+          <p className="mx-auto mt-2 max-w-lg text-center text-sm text-slate-500">
+            A local directory with transparent pricing — not a pay-per-lead marketplace.
           </p>
           <div className="mt-10 grid gap-6 md:grid-cols-3">
-            {HOMEOWNER_TESTIMONIALS.map((t) => (
-              <blockquote key={t.name + t.city} className="surface-card p-6">
-                <p className="text-sm leading-relaxed text-slate-700">&ldquo;{t.quote}&rdquo;</p>
-                <footer className="mt-4">
-                  <p className="text-sm font-semibold text-brand-950">{t.name}</p>
-                  <p className="text-xs text-slate-500">
-                    {t.role}
-                    {"business" in t && t.business ? `, ${t.business}` : ""} · {t.city}
-                  </p>
-                </footer>
-              </blockquote>
+            {WHY_SERVELOCAL.map((item) => (
+              <div key={item.title} className="surface-card p-6">
+                <h3 className="font-semibold text-brand-950">{item.title}</h3>
+                <p className="mt-2 text-sm leading-relaxed text-slate-600">{item.body}</p>
+              </div>
             ))}
           </div>
         </div>

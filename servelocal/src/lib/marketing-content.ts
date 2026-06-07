@@ -12,25 +12,18 @@ export const POPULAR_SEARCHES = [
   { label: "Roofer Chilliwack", href: "/search?q=roofer+chilliwack" },
 ] as const;
 
-export const HOMEOWNER_TESTIMONIALS = [
+export const WHY_SERVELOCAL = [
   {
-    quote: "Posted our kitchen reno on ServeLocal and had two electricians call the same day. No middleman fees.",
-    name: "Sarah M.",
-    role: "Homeowner",
-    city: "Surrey",
+    title: "No per-lead fees",
+    body: "Homeowners post jobs free. Pros pay one flat monthly rate — not $25–75 every time someone clicks call.",
   },
   {
-    quote: "The cost guides helped us know what a fair price looks like before we hired our plumber.",
-    name: "David K.",
-    role: "Homeowner",
-    city: "Langley",
+    title: "BC-focused directory",
+    body: "Fraser Valley and Metro Vancouver cities only — local pros, local pricing guides, local reviews.",
   },
   {
-    quote: "As a tradie, the free listing got us our first three leads in Abbotsford within two weeks.",
-    name: "Mike R.",
-    role: "Owner",
-    city: "Abbotsford",
-    business: "MR Electrical",
+    title: "Call direct",
+    body: "Tap phone or WhatsApp on a pro profile. Agree scope and price with the tradie you choose — no middleman.",
   },
 ] as const;
 

@@ -36,9 +36,6 @@ export const metadata: Metadata = {
     description:
       "Find trusted local trades in BC. Browse plumbers, electricians, and more — call direct, no middleman.",
   },
-  alternates: {
-    canonical: appUrl,
-  },
 };
 
 export const viewport = {

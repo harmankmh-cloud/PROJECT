@@ -1,10 +1,19 @@
+import type { Metadata } from "next";
 import Link from "next/link";
 import { ServiceRequestForm } from "@/components/ServiceRequestForm";
 import { SiteFooter } from "@/components/SiteFooter";
 import { SiteHeader } from "@/components/SiteHeader";
 import { getServiceCategories } from "@/lib/data";
+import { pageMetadata } from "@/lib/seo";
 import { createClient } from "@/lib/supabase/server";
 import { isSupabaseConfigured } from "@/lib/supabase/config";
+
+export const metadata: Metadata = pageMetadata({
+  title: "Get Free Quotes from Local Pros",
+  description:
+    "Post your job in under 2 minutes. Describe what you need, pick your city and service, and connect with BC trades direct — no lead fees.",
+  path: "/request",
+});
 
 export default async function RequestPage({
   searchParams,

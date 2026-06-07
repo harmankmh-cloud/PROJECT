@@ -1,7 +1,16 @@
+import type { Metadata } from "next";
 import { SiteFooter } from "@/components/SiteFooter";
 import { SiteHeader } from "@/components/SiteHeader";
 import { PricingCards } from "@/components/PricingCards";
 import { SERVE_LOCAL } from "@/lib/constants";
+import { pageMetadata } from "@/lib/seo";
+
+export const metadata: Metadata = pageMetadata({
+  title: "Pro Plans & Pricing — From $49/mo",
+  description:
+    "ServeLocal listing plans for BC trades. No per-lead fees — one flat monthly rate. Compare Starter (free), Featured ($49/mo), and Premium ($99/mo).",
+  path: "/pricing",
+});
 
 export default function PricingPage() {
   return (

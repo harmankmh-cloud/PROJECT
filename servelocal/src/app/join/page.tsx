@@ -1,9 +1,18 @@
+import type { Metadata } from "next";
 import Link from "next/link";
 import { Suspense } from "react";
 import { JoinProviderForm } from "@/components/JoinProviderForm";
 import { SiteFooter } from "@/components/SiteFooter";
 import { SiteHeader } from "@/components/SiteHeader";
 import { getServiceCategories } from "@/lib/data";
+import { pageMetadata } from "@/lib/seo";
+
+export const metadata: Metadata = pageMetadata({
+  title: "Get Listed — Free BC Trades Directory",
+  description:
+    "List your plumbing, electrical, HVAC, or other trade business on ServeLocal. Free starter listing or upgrade to Featured and Premium plans.",
+  path: "/join",
+});
 
 export default async function JoinPage() {
   const categories = await getServiceCategories();

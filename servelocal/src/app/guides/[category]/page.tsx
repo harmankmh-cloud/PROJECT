@@ -6,6 +6,7 @@ import { SiteHeader } from "@/components/SiteHeader";
 import { ProviderCard } from "@/components/ProviderCard";
 import { COST_GUIDES, SERVE_LOCAL } from "@/lib/constants";
 import { GUIDE_EXTENDED } from "@/lib/marketing-content";
+import { pageMetadata } from "@/lib/seo";
 import { getApprovedProviders, getCategoryBySlug } from "@/lib/data";
 
 export async function generateMetadata({
@@ -17,11 +18,11 @@ export async function generateMetadata({
   const cat = await getCategoryBySlug(category);
   if (!cat) return { title: "Guide not found" };
 
-  return {
-    title: `${cat.name} Cost Guide BC | ${SERVE_LOCAL.name}`,
+  return pageMetadata({
+    title: `${cat.name} Cost Guide BC 2026`,
     description: `Typical ${cat.name.toLowerCase()} prices in British Columbia — Fraser Valley & Metro Vancouver ranges, hiring tips, and FAQs.`,
-    alternates: { canonical: `/guides/${category}` },
-  };
+    path: `/guides/${category}`,
+  });
 }
 
 export default async function GuideCategoryPage({ params }: { params: Promise<{ category: string }> }) {
@@ -47,6 +48,22 @@ export default async function GuideCategoryPage({ params }: { params: Promise<{ 
       },
     ],
   };
+
+  const faqJsonLd =
+    extended && extended.faqs.length > 0
+      ? {
+          "@context": "https://schema.org",
+          "@type": "FAQPage",
+          mainEntity: extended.faqs.map((faq) => ({
+            "@type": "Question",
+            name: faq.q,
+            acceptedAnswer: {
+              "@type": "Answer",
+              text: faq.a,
+            },
+          })),
+        }
+      : null;
 
   return (
     <main className="mesh-bg min-h-screen">
@@ -159,6 +176,9 @@ export default async function GuideCategoryPage({ params }: { params: Promise<{ 
       </div>
 
       <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(breadcrumbJsonLd) }} />
+      {faqJsonLd && (
+        <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(faqJsonLd) }} />
+      )}
 
       <SiteFooter />
     </main>

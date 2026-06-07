@@ -1,9 +1,18 @@
+import type { Metadata } from "next";
 import Link from "next/link";
 import { SiteFooter } from "@/components/SiteFooter";
 import { SiteHeader } from "@/components/SiteHeader";
 import { COST_GUIDES } from "@/lib/constants";
 import { guidePricePreview } from "@/lib/marketing-content";
 import { getServiceCategories } from "@/lib/data";
+import { pageMetadata } from "@/lib/seo";
+
+export const metadata: Metadata = pageMetadata({
+  title: "BC Trades Cost Guides",
+  description:
+    "Typical plumber, electrician, roofer, and handyman prices in Fraser Valley and Metro Vancouver. BC-focused hiring tips before you get quotes.",
+  path: "/guides",
+});
 
 export default async function GuidesPage() {
   const categories = await getServiceCategories();

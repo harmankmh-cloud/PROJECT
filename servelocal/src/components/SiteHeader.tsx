@@ -1,8 +1,32 @@
 import Link from "next/link";
 import { SERVE_LOCAL } from "@/lib/constants";
 import { SiteAuthNav } from "@/components/SiteAuthNav";
+import { createClient } from "@/lib/supabase/server";
+import { isPlatformAdmin } from "@/lib/admin-auth";
+import { isSupabaseConfigured } from "@/lib/supabase/config";
 
-export function SiteHeader({ compact }: { compact?: boolean }) {
+export async function SiteHeader({ compact }: { compact?: boolean }) {
+  let accountHref: string | null = null;
+  let accountLabel: string | null = null;
+
+  if (isSupabaseConfigured()) {
+    const supabase = await createClient();
+    if (supabase) {
+      const {
+        data: { user },
+      } = await supabase.auth.getUser();
+      if (user) {
+        if (isPlatformAdmin(user.email)) {
+          accountHref = "/admin";
+          accountLabel = "Admin";
+        } else {
+          accountHref = "/dashboard";
+          accountLabel = "My account";
+        }
+      }
+    }
+  }
+
   return (
     <header className="site-header">
       <div className="mx-auto flex max-w-6xl items-center justify-between gap-4 px-4 py-3 sm:px-8">
@@ -15,7 +39,7 @@ export function SiteHeader({ compact }: { compact?: boolean }) {
           </span>
         </Link>
         <nav className="flex items-center gap-1">
-          <SiteAuthNav compact={compact} />
+          <SiteAuthNav compact={compact} accountHref={accountHref} accountLabel={accountLabel} />
           <Link href="/join" className="btn-ghost hidden px-4 py-2 text-sm sm:inline-flex">
             List business
           </Link>
