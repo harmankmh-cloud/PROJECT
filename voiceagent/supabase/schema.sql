@@ -15,6 +15,8 @@ create table if not exists va_organizations (
   stripe_subscription_id text,
   transfer_phone text,
   business_hours jsonb default '{"mon":{"open":"09:00","close":"17:00"},"tue":{"open":"09:00","close":"17:00"},"wed":{"open":"09:00","close":"17:00"},"thu":{"open":"09:00","close":"17:00"},"fri":{"open":"09:00","close":"17:00"}}'::jsonb,
+  webhook_url text,
+  webhook_secret text,
   data_region text not null default 'us' check (data_region in ('us', 'eu')),
   white_label jsonb default '{}'::jsonb,
   sso_config jsonb,
@@ -93,6 +95,9 @@ create table if not exists va_calls (
   sentiment text,
   intent text,
   summary text,
+  score integer,
+  topics jsonb default '[]'::jsonb,
+  action_items jsonb default '[]'::jsonb,
   started_at timestamptz,
   ended_at timestamptz,
   created_at timestamptz not null default now()

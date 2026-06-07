@@ -93,9 +93,14 @@ export default async function DashboardPage() {
       <div className="surface-card overflow-hidden">
         <div className="flex items-center justify-between border-b border-slate-100 px-5 py-4">
           <h2 className="font-semibold">Recent calls</h2>
-          <Link href="/dashboard/calls" className="text-sm text-teal-600 hover:underline">
-            View all →
-          </Link>
+          <div className="flex gap-4">
+            <Link href="/dashboard/analytics" className="text-sm text-teal-600 hover:underline">
+              Analytics →
+            </Link>
+            <Link href="/dashboard/calls" className="text-sm text-teal-600 hover:underline">
+              View all →
+            </Link>
+          </div>
         </div>
         <table className="w-full text-left text-sm">
           <thead className="bg-slate-50 text-slate-500">

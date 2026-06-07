@@ -13,6 +13,9 @@ import { loadKnowledgeContext } from "@/lib/knowledge-context";
 import { processVoiceTurn } from "@/lib/voice-flow-runtime";
 import { logHubSpotCall } from "@/lib/integrations/hubspot";
 import { analyzeCall } from "@/lib/intelligence";
+import { intelligenceToCallUpdate } from "@/lib/call-intelligence-persist";
+import { dispatchCallWebhook } from "@/lib/outbound-webhook";
+import { isWithinBusinessHours, type BusinessHours } from "@/lib/business-hours";
 
 export async function POST(request: NextRequest) {
   const rawBody = await request.text();
@@ -55,6 +58,26 @@ export async function POST(request: NextRequest) {
     }
 
     if (orgId && orgId !== "default") {
+      const { data: orgRow } = await admin
+        .from("va_organizations")
+        .select("business_hours, transfer_phone")
+        .eq("id", orgId)
+        .maybeSingle();
+
+      const withinHours = isWithinBusinessHours(
+        (orgRow?.business_hours as BusinessHours) || undefined
+      );
+
+      if (!withinHours) {
+        const afterHoursMsg =
+          "Thanks for calling. We're currently closed. Please call back during business hours or leave a message after the tone.";
+        await answerCall(callControlId, {
+          clientState: encodeClientState({ orgId, agentId: agentId || "default" }),
+        });
+        await speakOnCall(callControlId, afterHoursMsg);
+        return NextResponse.json({ ok: true, afterHours: true });
+      }
+
       await admin.from("va_calls").upsert(
         {
           org_id: orgId,
@@ -174,7 +197,7 @@ export async function POST(request: NextRequest) {
   if (eventType === "call.hangup" || eventType === "call.ended") {
     const { data: call } = await admin
       .from("va_calls")
-      .select("id, org_id, agent_id, from_number, transferred, duration_seconds")
+      .select("id, org_id, agent_id, from_number, transferred, duration_seconds, handoff_payload")
       .eq("twilio_call_sid", callControlId)
       .maybeSingle();
 
@@ -197,11 +220,18 @@ export async function POST(request: NextRequest) {
           cost_cents: minutes * 8,
           contained: !call.transferred,
           ended_at: new Date().toISOString(),
-          summary: analysis.summary,
-          sentiment: analysis.sentiment,
-          intent: analysis.intent,
+          ...intelligenceToCallUpdate(
+            analysis,
+            call.handoff_payload as Record<string, unknown> | null
+          ),
         })
         .eq("id", call.id);
+
+      await dispatchCallWebhook(call.org_id, {
+        event: "call.completed",
+        call: { id: call.id, from_number: call.from_number, transferred: call.transferred, duration },
+        analysis,
+      });
 
       await admin.from("va_usage_events").insert({
         org_id: call.org_id,

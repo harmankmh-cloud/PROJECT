@@ -6,7 +6,14 @@ import { apiFetch } from "@/lib/api-client";
 
 export default function AgentsPage() {
   const [agents, setAgents] = useState<Agent[]>([]);
-  const [form, setForm] = useState({ name: "", system_prompt: "", welcome_greeting: "", escalation_phone: "" });
+  const [form, setForm] = useState({
+    name: "",
+    system_prompt: "",
+    welcome_greeting: "",
+    escalation_phone: "",
+    voice: "Polly.Joanna",
+    language: "en-US",
+  });
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState("");
   const [editingId, setEditingId] = useState<string | null>(null);
@@ -34,7 +41,14 @@ export default function AgentsPage() {
     });
     if (res.ok) {
       setAgents((prev) => [res.data.agent, ...prev]);
-      setForm({ name: "", system_prompt: "", welcome_greeting: "", escalation_phone: "" });
+      setForm({
+        name: "",
+        system_prompt: "",
+        welcome_greeting: "",
+        escalation_phone: "",
+        voice: "Polly.Joanna",
+        language: "en-US",
+      });
     } else {
       setError(res.error);
     }
@@ -71,6 +85,10 @@ export default function AgentsPage() {
         <textarea className="input-field min-h-24" placeholder="System prompt" value={form.system_prompt} onChange={(e) => setForm({ ...form, system_prompt: e.target.value })} />
         <input className="input-field" placeholder="Welcome greeting" value={form.welcome_greeting} onChange={(e) => setForm({ ...form, welcome_greeting: e.target.value })} />
         <input className="input-field" placeholder="Escalation phone (+1...)" value={form.escalation_phone} onChange={(e) => setForm({ ...form, escalation_phone: e.target.value })} />
+        <div className="grid gap-4 sm:grid-cols-2">
+          <input className="input-field" placeholder="Voice (e.g. Polly.Joanna)" value={form.voice} onChange={(e) => setForm({ ...form, voice: e.target.value })} />
+          <input className="input-field" placeholder="Language (e.g. en-US)" value={form.language} onChange={(e) => setForm({ ...form, language: e.target.value })} />
+        </div>
         <button type="submit" className="btn-primary">Create agent</button>
       </form>
 
@@ -106,6 +124,9 @@ export default function AgentsPage() {
                   </div>
                   <p className="mt-2 text-sm text-slate-600 line-clamp-2">{agent.system_prompt}</p>
                   <p className="mt-2 text-xs text-slate-400">Greeting: {agent.welcome_greeting}</p>
+                  <p className="mt-1 text-xs text-slate-400">
+                    Voice: {agent.voice} · {agent.language}
+                  </p>
                   {agent.escalation_phone && (
                     <p className="mt-1 text-xs text-slate-400">Transfer: {agent.escalation_phone}</p>
                   )}
@@ -136,6 +157,10 @@ function AgentEditForm({
       <textarea className="input-field min-h-24" value={draft.system_prompt} onChange={(e) => setDraft({ ...draft, system_prompt: e.target.value })} />
       <input className="input-field" value={draft.welcome_greeting} onChange={(e) => setDraft({ ...draft, welcome_greeting: e.target.value })} />
       <input className="input-field" placeholder="Escalation phone" value={draft.escalation_phone || ""} onChange={(e) => setDraft({ ...draft, escalation_phone: e.target.value })} />
+      <div className="grid gap-3 sm:grid-cols-2">
+        <input className="input-field" placeholder="Voice" value={draft.voice} onChange={(e) => setDraft({ ...draft, voice: e.target.value })} />
+        <input className="input-field" placeholder="Language" value={draft.language} onChange={(e) => setDraft({ ...draft, language: e.target.value })} />
+      </div>
       <label className="flex items-center gap-2 text-sm">
         <input type="checkbox" checked={draft.knowledge_base_enabled} onChange={(e) => setDraft({ ...draft, knowledge_base_enabled: e.target.checked })} />
         Knowledge base enabled
