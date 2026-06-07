@@ -1,24 +1,31 @@
 #!/usr/bin/env node
 /**
- * Audit Vercel domain DNS for RateLocal, ServeLocal, and GreetQ.
+ * Audit (and optionally fix) Vercel domain DNS for RateLocal, ServeLocal, and GreetQ.
  *
  * Usage:
  *   VERCEL_TOKEN=... node scripts/dns-audit.mjs
  *   VERCEL_TOKEN=... node scripts/dns-audit.mjs --json
+ *   VERCEL_TOKEN=... node scripts/dns-audit.mjs --fix
  *
- * Requires VERCEL_TOKEN with access to the team. Does not mutate DNS or Vercel.
+ * --fix: attach GreetQ domains on Vercel and set NEXT_PUBLIC_APP_URL / NEXT_PUBLIC_APP_NAME.
+ * Does not change Cloudflare — public DNS must still be set there.
  */
 
 const TEAM_ID = process.env.VERCEL_TEAM_ID ?? "team_oKVA7rxDj8Zu4wfRgJQNBlkK";
 const TOKEN = process.env.VERCEL_TOKEN;
+const FIX = process.argv.includes("--fix");
+
+const GREETQ = {
+  product: "GreetQ",
+  project: "voiceagent",
+  projectId: "prj_SYy3FDPrl0ERVs5mwVcGc1vNanpC",
+  domains: ["greetq.com", "www.greetq.com", "intellivo.ca", "www.intellivo.ca"],
+  appUrl: "https://greetq.com",
+  appName: "GreetQ",
+};
 
 const PRODUCTS = [
-  {
-    product: "GreetQ",
-    project: "voiceagent",
-    projectId: "prj_SYy3FDPrl0ERVs5mwVcGc1vNanpC",
-    domains: ["greetq.com", "www.greetq.com", "intellivo.ca", "www.intellivo.ca"],
-  },
+  GREETQ,
   {
     product: "RateLocal",
     project: "project",
@@ -33,16 +40,86 @@ const PRODUCTS = [
   },
 ];
 
-async function vercel(path) {
+async function vercel(path, { method = "GET", body } = {}) {
   const res = await fetch(`https://api.vercel.com${path}`, {
-    headers: { Authorization: `Bearer ${TOKEN}` },
+    method,
+    headers: {
+      Authorization: `Bearer ${TOKEN}`,
+      ...(body ? { "Content-Type": "application/json" } : {}),
+    },
+    body: body ? JSON.stringify(body) : undefined,
   });
-  const body = await res.json().catch(() => ({}));
+  const data = await res.json().catch(() => ({}));
   if (!res.ok) {
-    const msg = body?.error?.message ?? res.statusText;
+    const msg = data?.error?.message ?? res.statusText;
     throw new Error(`${path}: ${msg}`);
   }
-  return body;
+  return data;
+}
+
+async function ensureTeamDomain(name) {
+  try {
+    return await vercel(`/v4/domains/${name}?teamId=${TEAM_ID}`);
+  } catch {
+    return vercel(`/v5/domains?teamId=${TEAM_ID}`, { method: "POST", body: { name } });
+  }
+}
+
+async function ensureProjectDomain(projectId, name, { redirect, redirectStatusCode = 308 } = {}) {
+  const existing = await projectDomains(projectId);
+  const found = existing.find((d) => d.name === name);
+  if (found) {
+    if (redirect && found.redirect !== redirect) {
+      return vercel(`/v9/projects/${projectId}/domains/${name}?teamId=${TEAM_ID}`, {
+        method: "PATCH",
+        body: { redirect, redirectStatusCode },
+      });
+    }
+    return found;
+  }
+  const body = { name };
+  if (redirect) {
+    body.redirect = redirect;
+    body.redirectStatusCode = redirectStatusCode;
+  }
+  return vercel(`/v10/projects/${projectId}/domains?teamId=${TEAM_ID}`, { method: "POST", body });
+}
+
+async function ensureEnvVar(projectId, key, value, targets = ["production", "preview"]) {
+  const { envs = [] } = await vercel(`/v9/projects/${projectId}/env?teamId=${TEAM_ID}`);
+  const existing = envs.find((e) => e.key === key);
+  if (existing) {
+    return vercel(`/v9/projects/${projectId}/env/${existing.id}?teamId=${TEAM_ID}`, {
+      method: "PATCH",
+      body: { value, target: targets, type: existing.type ?? "plain" },
+    });
+  }
+  return vercel(`/v10/projects/${projectId}/env?teamId=${TEAM_ID}`, {
+    method: "POST",
+    body: { key, value, type: "plain", target: targets },
+  });
+}
+
+async function fixGreetQ() {
+  console.log("Applying Vercel fixes for GreetQ...\n");
+  const { projectId, appUrl, appName } = GREETQ;
+
+  for (const name of ["greetq.com", "intellivo.ca"]) {
+    await ensureTeamDomain(name);
+  }
+
+  await ensureProjectDomain(projectId, "greetq.com");
+  await ensureProjectDomain(projectId, "www.greetq.com", { redirect: "greetq.com" });
+  await ensureProjectDomain(projectId, "intellivo.ca", { redirect: "greetq.com" });
+  await ensureProjectDomain(projectId, "www.intellivo.ca", { redirect: "greetq.com" });
+
+  await ensureEnvVar(projectId, "NEXT_PUBLIC_APP_URL", appUrl);
+  await ensureEnvVar(projectId, "NEXT_PUBLIC_APP_NAME", appName);
+
+  console.log("  greetq.com + www.greetq.com attached to voiceagent");
+  console.log("  intellivo.ca + www.intellivo.ca redirect to greetq.com");
+  console.log(`  NEXT_PUBLIC_APP_URL=${appUrl}`);
+  console.log(`  NEXT_PUBLIC_APP_NAME=${appName}\n`);
 }
 
 function cloudflareRecords(domain, config) {
@@ -101,8 +178,13 @@ async function projectDomains(projectId) {
 
 async function main() {
   if (!TOKEN) {
-    console.error("Set VERCEL_TOKEN (Vercel → Account → Tokens).");
+    console.error("VERCEL_TOKEN is not set in this VM.");
+    console.error("Add VERCEL_TOKEN under Cursor → Cloud Agents → Secrets, then start a new agent run.");
     process.exit(1);
+  }
+
+  if (FIX) {
+    await fixGreetQ();
   }
 
   const jsonMode = process.argv.includes("--json");

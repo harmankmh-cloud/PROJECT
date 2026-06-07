@@ -5,8 +5,14 @@ All three products use **Cloudflare** nameservers (`ace.ns.cloudflare.com`, `hol
 Run an audit anytime:
 
 ```bash
+test -n "$VERCEL_TOKEN" && echo set || echo not-set
 VERCEL_TOKEN=... node scripts/dns-audit.mjs
+VERCEL_TOKEN=... node scripts/dns-audit.mjs --fix   # attach GreetQ domains + env on Vercel
 ```
+
+From `voiceagent/`: `node scripts/dns-audit.mjs --fix`
+
+**Cloud Agent note:** `VERCEL_TOKEN` must be named exactly that under **Cursor → Cloud Agents → Secrets**. It is injected only when a **new** agent run starts — an older session without it cannot pick it up mid-flight.
 
 ## Vercel projects
 
