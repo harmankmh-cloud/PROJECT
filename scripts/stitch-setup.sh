@@ -43,7 +43,7 @@ save_key() {
     echo ""
     echo "Option B — save directly:"
     echo "  stitch auth set --api-key YOUR_KEY"
-    echo "  stitch doctor --json"
+    echo "  npm run stitch:doctor"
     exit 1
   fi
   printf '%s' "${key}" | stitch_cmd auth set --stdin
@@ -61,7 +61,7 @@ main() {
   fi
 
   stitch_cmd auth status --json
-  stitch_cmd doctor --json
+  node "${ROOT}/scripts/stitch-doctor.mjs"
 }
 
 main "$@"
