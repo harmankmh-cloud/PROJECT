@@ -7,6 +7,8 @@ import { BRAND } from "@/lib/brand";
 const NAV = [
   { href: "/dashboard", label: "Overview" },
   { href: "/dashboard/agents", label: "Agents" },
+  { href: "/dashboard/phone-numbers", label: "Phone Numbers" },
+  { href: "/dashboard/knowledge", label: "Knowledge" },
   { href: "/dashboard/calls", label: "Calls" },
   { href: "/dashboard/flows", label: "Flows" },
   { href: "/dashboard/campaigns", label: "Campaigns" },

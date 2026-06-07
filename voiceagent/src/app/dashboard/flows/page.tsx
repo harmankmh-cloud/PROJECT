@@ -3,11 +3,13 @@
 import { useEffect, useState } from "react";
 import { FlowBuilder } from "@/components/FlowBuilder";
 import { DEFAULT_FLOW_EDGES, DEFAULT_FLOW_NODES } from "@/lib/flow-engine";
+import type { Agent } from "@/lib/types";
 import { apiFetch } from "@/lib/api-client";
 
 type Flow = {
   id: string;
   name: string;
+  agent_id: string | null;
   is_published: boolean;
   nodes?: typeof DEFAULT_FLOW_NODES;
   edges?: typeof DEFAULT_FLOW_EDGES;
@@ -15,24 +17,41 @@ type Flow = {
 
 export default function FlowsPage() {
   const [flows, setFlows] = useState<Flow[]>([]);
+  const [agents, setAgents] = useState<Agent[]>([]);
   const [flowName, setFlowName] = useState("Main Flow");
+  const [agentId, setAgentId] = useState("");
   const [error, setError] = useState("");
   const [saving, setSaving] = useState(false);
 
   useEffect(() => {
-    apiFetch<{ flows: Flow[] }>("/api/flows").then((res) => {
-      if (res.ok) setFlows(res.data.flows || []);
-      else setError(res.error);
+    Promise.all([
+      apiFetch<{ flows: Flow[] }>("/api/flows"),
+      apiFetch<{ agents: Agent[] }>("/api/agents"),
+    ]).then(([flowsRes, agentsRes]) => {
+      if (flowsRes.ok) setFlows(flowsRes.data.flows || []);
+      else setError(flowsRes.error);
+      if (agentsRes.ok) setAgents(agentsRes.data.agents || []);
     });
   }, []);
 
   async function saveFlow(nodes: typeof DEFAULT_FLOW_NODES, edges: typeof DEFAULT_FLOW_EDGES) {
+    if (!agentId) {
+      setError("Select an agent — flows run on live calls for that agent.");
+      return;
+    }
+
     setSaving(true);
     setError("");
     const res = await apiFetch<{ flow: Flow }>("/api/flows", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ name: flowName, nodes, edges, is_published: true }),
+      body: JSON.stringify({
+        name: flowName,
+        agent_id: agentId,
+        nodes,
+        edges,
+        is_published: true,
+      }),
     });
     setSaving(false);
     if (res.ok) {
@@ -42,19 +61,38 @@ export default function FlowsPage() {
     }
   }
 
+  function agentLabel(id: string | null) {
+    if (!id) return "No agent";
+    return agents.find((a) => a.id === id)?.name || "Unknown agent";
+  }
+
   return (
     <div>
       <h1 className="text-2xl font-bold text-brand-900">Flow Builder</h1>
-      <p className="mt-1 text-slate-500">Design conversation flows with greet, ask, branch, tool, transfer, and end nodes.</p>
+      <p className="mt-1 text-slate-500">
+        Published flows drive live call logic for the selected agent. Tool nodes use AI + knowledge base.
+      </p>
       {error && <p className="mt-4 text-sm text-red-600">{error}</p>}
 
-      <div className="mt-6 flex items-center gap-3">
+      <div className="mt-6 flex flex-wrap items-center gap-3">
         <input
           className="input-field max-w-xs"
           placeholder="Flow name"
           value={flowName}
           onChange={(e) => setFlowName(e.target.value)}
         />
+        <select
+          className="input-field max-w-xs"
+          value={agentId}
+          onChange={(e) => setAgentId(e.target.value)}
+        >
+          <option value="">Select agent</option>
+          {agents.map((a) => (
+            <option key={a.id} value={a.id}>
+              {a.name}
+            </option>
+          ))}
+        </select>
         {saving && <span className="text-sm text-slate-400">Saving…</span>}
       </div>
 
@@ -68,7 +106,10 @@ export default function FlowsPage() {
           <ul className="mt-3 space-y-2">
             {flows.map((f) => (
               <li key={f.id} className="surface-card flex items-center justify-between px-4 py-3 text-sm">
-                <span>{f.name}</span>
+                <div>
+                  <span className="font-medium">{f.name}</span>
+                  <span className="ml-2 text-slate-400">→ {agentLabel(f.agent_id)}</span>
+                </div>
                 <span className={f.is_published ? "text-teal-600" : "text-slate-400"}>
                   {f.is_published ? "Published" : "Draft"}
                 </span>
