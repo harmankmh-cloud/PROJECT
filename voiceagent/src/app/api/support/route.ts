@@ -23,8 +23,21 @@ export async function POST(request: Request) {
     const org = user ? await getUserOrg(user.id) : null;
     const orgName = body.orgName?.trim() || org?.name || null;
 
-    const admin = createAdminClient();
-    if (admin && org) {
+    try {
+      const admin = createAdminClient();
+      await admin.from("va_support_tickets").insert({
+        org_id: org?.id || null,
+        user_id: user?.id || null,
+        email: body.email.trim(),
+        org_name: orgName,
+        category: body.category,
+        message: body.message.trim(),
+      });
+    } catch {
+      // Table may not exist yet; fall through to audit when possible.
+    }
+
+    if (org) {
       await logAudit({
         orgId: org.id,
         userId: user?.id,

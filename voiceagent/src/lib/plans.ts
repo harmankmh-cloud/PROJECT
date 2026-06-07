@@ -21,3 +21,11 @@ export const PLANS = {
     features: ["Unlimited agents", "SSO", "HIPAA", "White-label", "EU residency", "SLA"],
   },
 } as const;
+
+export type PlanKey = keyof typeof PLANS;
+
+/** Estimated all-in monthly cost at a given minute volume. */
+export function estimatedMonthly(planKey: PlanKey, minutes = 500): number {
+  const plan = PLANS[planKey];
+  return Math.round((plan.monthlyPrice + minutes * plan.perMinute) * 100) / 100;
+}

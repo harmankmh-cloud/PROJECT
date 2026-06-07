@@ -1,6 +1,9 @@
 import { NextRequest, NextResponse } from "next/server";
 import { createAdminClient } from "@/lib/supabase/admin";
 import { validateTwilioWebhook } from "@/lib/twilio-webhook";
+import { analyzeCall } from "@/lib/intelligence";
+import { intelligenceToCallUpdate } from "@/lib/call-intelligence-persist";
+import { dispatchCallWebhook } from "@/lib/outbound-webhook";
 
 export async function POST(request: NextRequest) {
   const formData = await request.formData();
@@ -23,13 +26,20 @@ export async function POST(request: NextRequest) {
   }
   const { data: call } = await admin
     .from("va_calls")
-    .select("id, org_id, transferred, ended_at")
+    .select("id, org_id, agent_id, from_number, transferred, ended_at, handoff_payload")
     .eq("twilio_call_sid", callSid)
     .maybeSingle();
 
   if (call && !call.ended_at) {
     const minutes = Math.max(1, Math.ceil(duration / 60));
     const costCents = minutes * 10;
+
+    const { data: transcripts } = await admin
+      .from("va_call_transcripts")
+      .select("role, content")
+      .eq("call_id", call.id);
+
+    const analysis = await analyzeCall(transcripts || []);
 
     await admin
       .from("va_calls")
@@ -39,6 +49,10 @@ export async function POST(request: NextRequest) {
         cost_cents: costCents,
         contained: !call.transferred,
         ended_at: new Date().toISOString(),
+        ...intelligenceToCallUpdate(
+          analysis,
+          call.handoff_payload as Record<string, unknown> | null
+        ),
       })
       .eq("id", call.id);
 
@@ -47,6 +61,17 @@ export async function POST(request: NextRequest) {
       call_id: call.id,
       event_type: "voice_minute",
       quantity: minutes,
+    });
+
+    await dispatchCallWebhook(call.org_id, {
+      event: "call.completed",
+      call: {
+        id: call.id,
+        from_number: call.from_number,
+        transferred: call.transferred,
+        duration,
+      },
+      analysis,
     });
   }
 

@@ -4,15 +4,14 @@ import { createAdminClient } from "@/lib/supabase/admin";
 export async function loadKnowledgeContext(orgId: string, agentId?: string, query?: string) {
   const admin = createAdminClient();
 
-  const q = admin
+  const { data: docs, error } = await admin
     .from("va_knowledge_docs")
     .select("title, content, agent_id")
     .eq("org_id", orgId)
-    .order("updated_at", { ascending: false })
+    .order("created_at", { ascending: false })
     .limit(20);
 
-  const { data: docs } = await q;
-  if (!docs?.length) return "";
+  if (error || !docs?.length) return "";
 
   const scoped = docs.filter((d) => !d.agent_id || !agentId || d.agent_id === agentId);
 

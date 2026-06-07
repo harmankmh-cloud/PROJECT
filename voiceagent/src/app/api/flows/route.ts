@@ -3,6 +3,7 @@ import { createClient } from "@/lib/supabase/server";
 import { getUserOrg } from "@/lib/auth";
 import { FlowEngine, DEFAULT_FLOW_EDGES, DEFAULT_FLOW_NODES } from "@/lib/flow-engine";
 import { logAudit } from "@/lib/compliance/audit";
+import { denyUnlessCanOperate } from "@/lib/require-org-access";
 
 export async function GET() {
   const supabase = await createClient();
@@ -32,6 +33,9 @@ export async function POST(request: NextRequest) {
 
   const org = await getUserOrg(user.id);
   if (!org) return NextResponse.json({ error: "No organization" }, { status: 400 });
+
+  const denied = await denyUnlessCanOperate(org.id, user.id);
+  if (denied) return denied;
 
   const body = await request.json();
   const nodes = body.nodes || DEFAULT_FLOW_NODES;
@@ -79,6 +83,9 @@ export async function PATCH(request: NextRequest) {
   const org = await getUserOrg(user.id);
   if (!org) return NextResponse.json({ error: "No organization" }, { status: 400 });
 
+  const denied = await denyUnlessCanOperate(org.id, user.id);
+  if (denied) return denied;
+
   const body = await request.json();
   const { id, nodes, edges, ...rest } = body;
 
@@ -111,6 +118,9 @@ export async function DELETE(request: NextRequest) {
 
   const org = await getUserOrg(user.id);
   if (!org) return NextResponse.json({ error: "No organization" }, { status: 400 });
+
+  const denied = await denyUnlessCanOperate(org.id, user.id);
+  if (denied) return denied;
 
   const body = await request.json().catch(() => ({}));
   const id = body.id as string | undefined;

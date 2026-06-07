@@ -3,12 +3,6 @@
 import { useState } from "react";
 import { BRAND } from "@/lib/brand";
 
-type Props = {
-  defaultEmail?: string;
-  defaultOrgName?: string;
-  compact?: boolean;
-};
-
 const categories = [
   { value: "help", label: "I need help" },
   { value: "suggestion", label: "Suggestion" },
@@ -17,11 +11,27 @@ const categories = [
   { value: "other", label: "Other" },
 ] as const;
 
-export function SupportForm({ defaultEmail = "", defaultOrgName = "", compact }: Props) {
+type Category = (typeof categories)[number]["value"];
+
+type Props = {
+  defaultEmail?: string;
+  defaultOrgName?: string;
+  defaultCategory?: Category;
+  defaultMessage?: string;
+  compact?: boolean;
+};
+
+export function SupportForm({
+  defaultEmail = "",
+  defaultOrgName = "",
+  defaultCategory = "help",
+  defaultMessage = "",
+  compact,
+}: Props) {
   const [email, setEmail] = useState(defaultEmail);
   const [orgName, setOrgName] = useState(defaultOrgName);
-  const [category, setCategory] = useState<(typeof categories)[number]["value"]>("help");
-  const [message, setMessage] = useState("");
+  const [category, setCategory] = useState<Category>(defaultCategory);
+  const [message, setMessage] = useState(defaultMessage);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
   const [sent, setSent] = useState(false);

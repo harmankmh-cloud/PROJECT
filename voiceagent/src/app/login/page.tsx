@@ -6,6 +6,7 @@ import { Suspense, useState } from "react";
 import { createClient } from "@/lib/supabase/client";
 import { AuthMarketingPanel } from "@/components/AuthMarketingPanel";
 import { BrandLogo } from "@/components/BrandLogo";
+import { MarketingFooter } from "@/components/MarketingFooter";
 
 function LoginForm() {
   const searchParams = useSearchParams();
@@ -27,12 +28,22 @@ function LoginForm() {
       setLoading(false);
       return;
     }
-    await fetch("/api/org/setup", { method: "POST" });
+    const setupRes = await fetch("/api/org/setup", { method: "POST" });
+    if (!setupRes.ok) {
+      const data = await setupRes.json().catch(() => ({}));
+      setError(
+        (data as { error?: string }).error ||
+          "Account signed in but organization setup failed. Contact support."
+      );
+      setLoading(false);
+      return;
+    }
     window.location.href = "/dashboard";
   }
 
   return (
-    <main className="mesh-bg flex min-h-screen">
+    <main className="mesh-bg flex min-h-screen flex-col">
+      <div className="flex flex-1">
       <AuthMarketingPanel footer="Sign in to your command center" />
 
       <div className="flex flex-1 items-center justify-center px-4 py-12">
@@ -79,14 +90,11 @@ function LoginForm() {
                 Start free trial
               </Link>
             </p>
-            <p className="mt-3 text-center text-xs text-slate-400">
-              <a href="/api/auth/sso" className="hover:text-violet-600 hover:underline">
-                Enterprise SSO
-              </a>
-            </p>
           </div>
         </div>
       </div>
+      </div>
+      <MarketingFooter />
     </main>
   );
 }

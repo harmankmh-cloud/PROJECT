@@ -2,6 +2,7 @@ import { NextRequest, NextResponse } from "next/server";
 import { createClient } from "@/lib/supabase/server";
 import { getUserOrg } from "@/lib/auth";
 import { logAudit } from "@/lib/compliance/audit";
+import { denyUnlessCanOperate } from "@/lib/require-org-access";
 
 export async function GET() {
   const supabase = await createClient();
@@ -32,6 +33,9 @@ export async function POST(request: NextRequest) {
   const org = await getUserOrg(user.id);
   if (!org) return NextResponse.json({ error: "No organization" }, { status: 400 });
 
+  const denied = await denyUnlessCanOperate(org.id, user.id);
+  if (denied) return denied;
+
   const body = await request.json();
   const { data, error } = await supabase
     .from("va_agents")
@@ -41,6 +45,7 @@ export async function POST(request: NextRequest) {
       system_prompt: body.system_prompt,
       welcome_greeting: body.welcome_greeting,
       voice: body.voice || "Polly.Joanna",
+      language: body.language || "en-US",
       escalation_phone: body.escalation_phone,
       is_active: body.is_active ?? true,
     })
@@ -70,6 +75,9 @@ export async function PATCH(request: NextRequest) {
   const org = await getUserOrg(user.id);
   if (!org) return NextResponse.json({ error: "No organization" }, { status: 400 });
 
+  const denied = await denyUnlessCanOperate(org.id, user.id);
+  if (denied) return denied;
+
   const body = await request.json();
   const { id } = body;
 
@@ -78,6 +86,7 @@ export async function PATCH(request: NextRequest) {
   if (body.system_prompt !== undefined) allowed.system_prompt = body.system_prompt;
   if (body.welcome_greeting !== undefined) allowed.welcome_greeting = body.welcome_greeting;
   if (body.voice !== undefined) allowed.voice = body.voice;
+  if (body.language !== undefined) allowed.language = body.language;
   if (body.escalation_phone !== undefined) allowed.escalation_phone = body.escalation_phone;
   if (body.is_active !== undefined) allowed.is_active = body.is_active;
   if (body.knowledge_base_enabled !== undefined) {

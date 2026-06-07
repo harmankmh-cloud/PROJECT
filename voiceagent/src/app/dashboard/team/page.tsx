@@ -83,7 +83,9 @@ export default function TeamPage() {
     <div className="mx-auto max-w-3xl space-y-8">
       <header>
         <h1 className="font-display text-2xl text-brand-900">Team</h1>
-        <p className="mt-1 text-slate-500">Invite teammates with role-based access.</p>
+        <p className="mt-1 text-slate-500">
+          Add teammates who already have an account. Viewers can read; operators can edit agents and calls.
+        </p>
       </header>
 
       {message && <p className="text-sm text-teal-700">{message}</p>}
@@ -92,7 +94,9 @@ export default function TeamPage() {
       {canManage && (
         <form onSubmit={addMember} className="surface-card space-y-4 p-6">
           <h2 className="font-semibold">Add member</h2>
-          <p className="text-sm text-slate-500">User must already have an Intellivo account.</p>
+          <p className="text-sm text-slate-500">
+            The person must sign up at Intellivo first, then you add them here by email.
+          </p>
           <input
             className="input-field"
             type="email"
