@@ -1,5 +1,6 @@
 import "server-only";
 import twilio from "twilio";
+import { agentVoiceFields } from "./voice-catalog";
 
 export function getTwilioClient() {
   const sid = process.env.TWILIO_ACCOUNT_SID;
@@ -107,11 +108,21 @@ function isPollyOrAmazonVoice(voice: string) {
   return /polly\.|neural|en-us-|en-gb-/i.test(voice);
 }
 
-export function resolveRelayVoice(agentVoice?: string) {
+export function resolveRelayVoice(agentVoice?: string, voiceId?: string) {
   const ttsProvider = process.env.TWILIO_RELAY_TTS_PROVIDER || "ElevenLabs";
   const fallback =
     process.env.TWILIO_RELAY_VOICE ||
     "ZF6FPAbjXT4488VcRRnw-flash_v2_5-1.15_0.85_0.9";
+
+  if (voiceId) {
+    const fields = agentVoiceFields({ voice_id: voiceId, voice: agentVoice });
+    if (fields.relay_voice) {
+      const relay = fields.relay_voice;
+      if (ttsProvider === "ElevenLabs" && isPollyOrAmazonVoice(relay)) return fallback;
+      if (ttsProvider === "Amazon" && !isPollyOrAmazonVoice(relay)) return "Joanna-Neural";
+      return relay;
+    }
+  }
 
   if (!agentVoice) return fallback;
 
@@ -154,6 +165,7 @@ export function buildConversationRelayTwiml(params: {
   welcomeGreeting: string;
   actionUrl: string;
   voice?: string;
+  voiceId?: string;
 }) {
   const wssUrl = getOrchestratorWssUrl();
   const relaySettings = getRelayVoiceSettings();
@@ -168,7 +180,7 @@ export function buildConversationRelayTwiml(params: {
     transcriptionProvider: relaySettings.transcriptionProvider,
     speechModel: relaySettings.speechModel,
     ttsProvider: relaySettings.ttsProvider,
-    voice: resolveRelayVoice(params.voice) || relaySettings.voice,
+    voice: resolveRelayVoice(params.voice, params.voiceId) || relaySettings.voice,
     language: relaySettings.language,
     ttsLanguage: relaySettings.language,
     transcriptionLanguage: relaySettings.language,

@@ -10,10 +10,12 @@ import { BRAND } from "@/lib/brand";
 
 const NAV = [
   { href: "/dashboard", label: "Overview", icon: "home" },
+  { href: "/dashboard/setup", label: "Go Live", icon: "rocket_launch" },
   { href: "/dashboard/agents", label: "Agents", icon: "smart_toy" },
   { href: "/dashboard/phone-numbers", label: "Phone Numbers", icon: "call" },
   { href: "/dashboard/knowledge", label: "Knowledge", icon: "menu_book" },
   { href: "/dashboard/calls", label: "Calls", icon: "call_log" },
+  { href: "/dashboard/contacts", label: "Contacts", icon: "contacts" },
   { href: "/dashboard/analytics", label: "Analytics", icon: "bar_chart" },
   { href: "/dashboard/sandbox", label: "Sandbox", icon: "science" },
   { href: "/dashboard/flows", label: "Flows", icon: "account_tree" },

@@ -45,7 +45,13 @@ export async function POST(request: NextRequest) {
       system_prompt: body.system_prompt,
       welcome_greeting: body.welcome_greeting,
       voice: body.voice || "Polly.Joanna",
+      voice_provider: body.voice_provider || "telnyx",
+      voice_id: body.voice_id || "telnyx-female",
       language: body.language || "en-US",
+      llm_model: body.llm_model || null,
+      temperature: body.temperature ?? 0.2,
+      max_tokens: body.max_tokens ?? 50,
+      persona_template: body.persona_template || "receptionist",
       escalation_phone: body.escalation_phone,
       is_active: body.is_active ?? true,
       knowledge_base_enabled: body.knowledge_base_enabled ?? true,
@@ -87,7 +93,13 @@ export async function PATCH(request: NextRequest) {
   if (body.system_prompt !== undefined) allowed.system_prompt = body.system_prompt;
   if (body.welcome_greeting !== undefined) allowed.welcome_greeting = body.welcome_greeting;
   if (body.voice !== undefined) allowed.voice = body.voice;
+  if (body.voice_provider !== undefined) allowed.voice_provider = body.voice_provider;
+  if (body.voice_id !== undefined) allowed.voice_id = body.voice_id;
   if (body.language !== undefined) allowed.language = body.language;
+  if (body.llm_model !== undefined) allowed.llm_model = body.llm_model;
+  if (body.temperature !== undefined) allowed.temperature = body.temperature;
+  if (body.max_tokens !== undefined) allowed.max_tokens = body.max_tokens;
+  if (body.persona_template !== undefined) allowed.persona_template = body.persona_template;
   if (body.escalation_phone !== undefined) allowed.escalation_phone = body.escalation_phone;
   if (body.is_active !== undefined) allowed.is_active = body.is_active;
   if (body.knowledge_base_enabled !== undefined) {

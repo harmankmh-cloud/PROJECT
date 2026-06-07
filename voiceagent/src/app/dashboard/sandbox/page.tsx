@@ -16,6 +16,9 @@ function SandboxContent() {
   const [input, setInput] = useState("");
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
+  const [testPhone, setTestPhone] = useState("");
+  const [callMessage, setCallMessage] = useState("");
+  const [calling, setCalling] = useState(false);
 
   useEffect(() => {
     apiFetch<{ agents: Agent[] }>("/api/agents").then((res) => {
@@ -55,12 +58,52 @@ function SandboxContent() {
     }
   }
 
+  async function testCall(e: React.FormEvent) {
+    e.preventDefault();
+    if (!agentId || !testPhone.trim()) return;
+    setCalling(true);
+    setCallMessage("");
+    setError("");
+    const res = await apiFetch<{ message?: string }>("/api/sandbox/test-call", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ agent_id: agentId, phone: testPhone }),
+    });
+    setCalling(false);
+    if (res.ok) setCallMessage(res.data.message || "Test call started.");
+    else setError(res.error);
+  }
+
   return (
     <div className="dashboard-container mx-auto max-w-3xl space-y-6 pb-8">
       <header>
         <h1 className="font-display text-2xl font-bold text-on-surface">Agent sandbox</h1>
-        <p className="mt-1 text-on-primary-container">Test your agent in text before going live on the phone.</p>
+        <p className="mt-1 text-on-primary-container">
+          Test in text or call your phone to hear the agent voice (1 min max).
+        </p>
       </header>
+
+      <form onSubmit={testCall} className="surface-card flex flex-col gap-3 p-5 sm:flex-row sm:items-end">
+        <div className="flex-1">
+          <label className="mb-2 block text-xs font-semibold uppercase tracking-wider text-slate-text">
+            Call my phone
+          </label>
+          <input
+            className="input-field"
+            placeholder="+1 604 555 0100"
+            value={testPhone}
+            onChange={(e) => setTestPhone(e.target.value)}
+          />
+        </div>
+        <button
+          type="submit"
+          disabled={calling || !agentId}
+          className="btn-primary rounded-xl px-5 py-3 text-sm disabled:opacity-50"
+        >
+          {calling ? "Calling…" : "Start test call"}
+        </button>
+      </form>
+      {callMessage && <p className="text-sm text-primary">{callMessage}</p>}
 
       <div className="flex flex-wrap gap-3">
         <select

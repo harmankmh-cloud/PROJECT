@@ -14,6 +14,16 @@ export interface Organization {
   recording_retention_days: number;
 }
 
+export type VoiceProvider = "telnyx" | "elevenlabs" | "polly";
+export type PersonaTemplate =
+  | "receptionist"
+  | "scheduler"
+  | "sales"
+  | "salon"
+  | "clinic"
+  | "home_services"
+  | "custom";
+
 export interface Agent {
   id: string;
   org_id: string;
@@ -21,10 +31,27 @@ export interface Agent {
   system_prompt: string;
   welcome_greeting: string;
   voice: string;
+  voice_provider?: VoiceProvider;
+  voice_id?: string;
   language: string;
+  llm_model?: string | null;
+  temperature?: number;
+  max_tokens?: number;
+  persona_template?: PersonaTemplate;
   is_active: boolean;
   escalation_phone: string | null;
   knowledge_base_enabled: boolean;
+}
+
+export interface Contact {
+  id: string;
+  org_id: string;
+  phone_number: string;
+  name: string | null;
+  email: string | null;
+  memory: Record<string, unknown>;
+  last_call_at: string | null;
+  created_at: string;
 }
 
 export interface Call {

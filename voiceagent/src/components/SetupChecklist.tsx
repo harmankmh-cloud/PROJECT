@@ -19,9 +19,9 @@ export function SetupChecklist({
     {
       done: hasAgent,
       title: "AI agent configured",
-      detail: hasAgent ? "Your agent has a system prompt and greeting" : "Customize your default agent",
-      href: "/dashboard/agents",
-      action: "Open agents →",
+      detail: hasAgent ? "Your agent has a system prompt and greeting" : "Run the guided setup wizard",
+      href: "/dashboard/setup",
+      action: "Start wizard →",
     },
     {
       done: hasPhoneNumber,

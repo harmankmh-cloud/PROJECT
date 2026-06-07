@@ -6,9 +6,11 @@ import {
   decodeClientState,
   encodeClientState,
   speakOnCall,
+  startCallRecording,
   startTranscription,
   transferCall,
 } from "@/lib/telnyx";
+import { agentVoiceFields } from "@/lib/voice-catalog";
 import { loadKnowledgeContext } from "@/lib/knowledge-context";
 import { processVoiceTurn } from "@/lib/voice-flow-runtime";
 import { logHubSpotCall } from "@/lib/integrations/hubspot";
@@ -36,26 +38,52 @@ export async function POST(request: NextRequest) {
   const from = payload.from as string | undefined;
   const to = payload.to as string | undefined;
 
-  if (eventType === "call.initiated" && payload.direction === "incoming") {
+  const isInbound = eventType === "call.initiated" && payload.direction === "incoming";
+  const isOutbound = eventType === "call.initiated" && payload.direction === "outgoing";
+
+  if (isInbound || isOutbound) {
     const { data: phoneRecord } = await admin
       .from("va_phone_numbers")
       .select("org_id, agent_id, va_agents(*)")
       .eq("phone_number", to || "")
       .maybeSingle();
 
-    const orgId = phoneRecord?.org_id || process.env.DEFAULT_ORG_ID;
-    let agentId = phoneRecord?.agent_id || process.env.DEFAULT_AGENT_ID;
+    const clientStateEarly = decodeClientState(payload.client_state);
+    const orgId = clientStateEarly.orgId || phoneRecord?.org_id || process.env.DEFAULT_ORG_ID;
+    let agentId = clientStateEarly.agentId || phoneRecord?.agent_id || process.env.DEFAULT_AGENT_ID;
     let welcome = "Hello! How can I help you today?";
+    let agentRow: Record<string, unknown> | null = null;
+    const isSandbox = clientStateEarly.sandbox === "true";
 
     if (phoneRecord?.va_agents) {
       const agent = Array.isArray(phoneRecord.va_agents)
         ? phoneRecord.va_agents[0]
         : phoneRecord.va_agents;
       if (agent) {
-        welcome = agent.welcome_greeting;
-        agentId = agent.id;
+        agentRow = agent as Record<string, unknown>;
+        welcome = String(agent.welcome_greeting);
+        agentId = String(agent.id);
       }
     }
+
+    if (!agentRow && agentId && agentId !== "default" && orgId && orgId !== "default") {
+      const { data: loaded } = await admin
+        .from("va_agents")
+        .select("*")
+        .eq("id", agentId)
+        .maybeSingle();
+      if (loaded) {
+        agentRow = loaded;
+        welcome = String(loaded.welcome_greeting || welcome);
+      }
+    }
+
+    const speakOpts = agentVoiceFields({
+      voice_id: agentRow?.voice_id as string | undefined,
+      voice: agentRow?.voice as string | undefined,
+      voice_provider: agentRow?.voice_provider as string | undefined,
+      language: agentRow?.language as string | undefined,
+    });
 
     if (orgId && orgId !== "default") {
       const { data: orgRow } = await admin
@@ -68,13 +96,16 @@ export async function POST(request: NextRequest) {
         (orgRow?.business_hours as BusinessHours) || undefined
       );
 
-      if (!withinHours) {
+      if (isInbound && !withinHours && !isSandbox) {
         const afterHoursMsg =
           "Thanks for calling. We're currently closed. Please call back during business hours or leave a message after the tone.";
         await answerCall(callControlId, {
           clientState: encodeClientState({ orgId, agentId: agentId || "default" }),
         });
-        await speakOnCall(callControlId, afterHoursMsg);
+        await speakOnCall(callControlId, afterHoursMsg, {
+          voice: speakOpts.telnyx_voice,
+          language: speakOpts.language,
+        });
         return NextResponse.json({ ok: true, afterHours: true });
       }
 
@@ -83,10 +114,11 @@ export async function POST(request: NextRequest) {
           org_id: orgId,
           agent_id: agentId !== "default" ? agentId : null,
           twilio_call_sid: callControlId,
-          direction: "inbound",
+          direction: isOutbound ? "outbound" : "inbound",
           from_number: from,
           to_number: to,
           status: "initiated",
+          is_sandbox: isSandbox,
           started_at: new Date().toISOString(),
         },
         { onConflict: "twilio_call_sid" }
@@ -96,11 +128,20 @@ export async function POST(request: NextRequest) {
     const clientState = encodeClientState({
       orgId: orgId || "default",
       agentId: agentId || "default",
+      sandbox: isSandbox ? "true" : "false",
     });
 
-    await answerCall(callControlId, { clientState });
+    if (isInbound) {
+      await answerCall(callControlId, { clientState });
+    }
     await startTranscription(callControlId);
-    await speakOnCall(callControlId, welcome);
+    if (!isSandbox) {
+      await startCallRecording(callControlId).catch(() => {});
+    }
+    await speakOnCall(callControlId, welcome, {
+      voice: speakOpts.telnyx_voice,
+      language: speakOpts.language,
+    });
   }
 
   if (eventType === "call.transcription") {
@@ -161,6 +202,20 @@ export async function POST(request: NextRequest) {
       knowledgeContext: knowledgeContext || undefined,
       callerPhone: call.from_number || from || undefined,
       history: (prior || []).slice(0, -1),
+      agentConfig: agent
+        ? {
+            llm_model: agent.llm_model,
+            temperature: agent.temperature,
+            max_tokens: agent.max_tokens,
+          }
+        : undefined,
+    });
+
+    const speakOpts = agentVoiceFields({
+      voice_id: agent?.voice_id,
+      voice: agent?.voice,
+      voice_provider: agent?.voice_provider,
+      language: agent?.language,
     });
 
     await admin.from("va_call_transcripts").insert({
@@ -179,7 +234,11 @@ export async function POST(request: NextRequest) {
         .then((r) => r.data?.transfer_phone));
 
     if (reply.shouldTransfer && escalationPhone) {
-      await speakOnCall(callControlId, "Connecting you with a team member now. Please hold.");
+      await speakOnCall(
+        callControlId,
+        "Connecting you with a team member now. Please hold.",
+        { voice: speakOpts.telnyx_voice, language: speakOpts.language }
+      );
       await transferCall(callControlId, escalationPhone, from);
       await admin
         .from("va_calls")
@@ -190,20 +249,44 @@ export async function POST(request: NextRequest) {
         })
         .eq("id", call.id);
     } else {
-      await speakOnCall(callControlId, reply.text);
+      await speakOnCall(callControlId, reply.text, {
+        voice: speakOpts.telnyx_voice,
+        language: speakOpts.language,
+      });
+    }
+  }
+
+  if (eventType === "call.recording.saved") {
+    const recordingUrl = payload.recording_urls?.mp3 || payload.public_recording_urls?.mp3;
+    if (recordingUrl) {
+      const { data: call } = await admin
+        .from("va_calls")
+        .select("id")
+        .eq("twilio_call_sid", callControlId)
+        .maybeSingle();
+      if (call) {
+        await admin.from("va_call_recordings").insert({
+          call_id: call.id,
+          storage_url: recordingUrl,
+        });
+      }
     }
   }
 
   if (eventType === "call.hangup" || eventType === "call.ended") {
     const { data: call } = await admin
       .from("va_calls")
-      .select("id, org_id, agent_id, from_number, transferred, duration_seconds, handoff_payload, ended_at")
+      .select("id, org_id, agent_id, from_number, transferred, duration_seconds, handoff_payload, ended_at, is_sandbox")
       .eq("twilio_call_sid", callControlId)
       .maybeSingle();
 
     if (call && !call.ended_at) {
       const duration = Number(payload.duration_secs || payload.call_duration || 0);
-      const minutes = Math.max(1, Math.ceil(duration / 60));
+      const handoff = call.handoff_payload as { sandboxMaxSeconds?: number } | null;
+      const maxSandbox = handoff?.sandboxMaxSeconds || 60;
+      const cappedDuration =
+        call.is_sandbox && duration > maxSandbox ? maxSandbox : duration;
+      const minutes = Math.max(1, Math.ceil(cappedDuration / 60));
 
       const { data: transcripts } = await admin
         .from("va_call_transcripts")
@@ -216,7 +299,7 @@ export async function POST(request: NextRequest) {
         .from("va_calls")
         .update({
           status: "completed",
-          duration_seconds: duration,
+          duration_seconds: cappedDuration,
           cost_cents: minutes * 8,
           contained: !call.transferred,
           ended_at: new Date().toISOString(),

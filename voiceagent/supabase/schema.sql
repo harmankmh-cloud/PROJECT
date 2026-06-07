@@ -43,7 +43,14 @@ create table if not exists va_agents (
   system_prompt text not null default 'You are a helpful phone assistant for a local business. Be concise and friendly.',
   welcome_greeting text not null default 'Hello! How can I help you today?',
   voice text not null default 'Polly.Joanna',
+  voice_provider text not null default 'telnyx' check (voice_provider in ('telnyx', 'elevenlabs', 'polly')),
+  voice_id text not null default 'female',
   language text not null default 'en-US',
+  llm_model text,
+  temperature numeric not null default 0.2,
+  max_tokens integer not null default 50,
+  persona_template text not null default 'receptionist'
+    check (persona_template in ('receptionist', 'scheduler', 'sales', 'salon', 'clinic', 'home_services', 'custom')),
   is_active boolean not null default true,
   escalation_phone text,
   knowledge_base_enabled boolean not null default true,
@@ -63,6 +70,19 @@ create table if not exists va_flows (
   version integer not null default 1,
   created_at timestamptz not null default now(),
   updated_at timestamptz not null default now()
+);
+
+-- Telnyx provisioned numbers (self-serve)
+create table if not exists va_telnyx_numbers (
+  id uuid primary key default gen_random_uuid(),
+  org_id uuid not null references va_organizations(id) on delete cascade,
+  phone_number text not null,
+  telnyx_number_id text,
+  telnyx_order_id text,
+  status text not null default 'active' check (status in ('pending', 'active', 'released')),
+  monthly_cost_cents integer default 0,
+  created_at timestamptz not null default now(),
+  unique (org_id, phone_number)
 );
 
 -- Phone numbers
@@ -98,6 +118,7 @@ create table if not exists va_calls (
   score integer,
   topics jsonb default '[]'::jsonb,
   action_items jsonb default '[]'::jsonb,
+  is_sandbox boolean not null default false,
   started_at timestamptz,
   ended_at timestamptz,
   created_at timestamptz not null default now()
@@ -236,6 +257,7 @@ alter table va_organizations enable row level security;
 alter table va_org_members enable row level security;
 alter table va_agents enable row level security;
 alter table va_flows enable row level security;
+alter table va_telnyx_numbers enable row level security;
 alter table va_phone_numbers enable row level security;
 alter table va_calls enable row level security;
 alter table va_call_transcripts enable row level security;
@@ -287,6 +309,11 @@ create policy "Org scoped flows"
 
 create policy "Org scoped phone numbers"
   on va_phone_numbers for all
+  using (org_id in (select va_user_org_ids()))
+  with check (org_id in (select va_user_org_ids()));
+
+create policy "Org members manage telnyx numbers"
+  on va_telnyx_numbers for all
   using (org_id in (select va_user_org_ids()))
   with check (org_id in (select va_user_org_ids()));
 

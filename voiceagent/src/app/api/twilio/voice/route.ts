@@ -54,6 +54,7 @@ export async function POST(request: NextRequest) {
       welcomeGreeting,
       actionUrl: `${appUrl}/api/twilio/status`,
       voice: ctx.voice,
+      voiceId: ctx.voiceId,
     });
 
     console.info("ConversationRelay call", {

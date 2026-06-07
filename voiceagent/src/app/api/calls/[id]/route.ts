@@ -27,11 +27,22 @@ export async function GET(
     return NextResponse.json({ error: "Call not found" }, { status: 404 });
   }
 
-  const { data: transcripts } = await supabase
-    .from("va_call_transcripts")
-    .select("id, role, content, created_at")
-    .eq("call_id", id)
-    .order("created_at", { ascending: true });
+  const [{ data: transcripts }, { data: recordings }] = await Promise.all([
+    supabase
+      .from("va_call_transcripts")
+      .select("id, role, content, created_at")
+      .eq("call_id", id)
+      .order("created_at", { ascending: true }),
+    supabase
+      .from("va_call_recordings")
+      .select("id, storage_url, created_at")
+      .eq("call_id", id)
+      .order("created_at", { ascending: false }),
+  ]);
 
-  return NextResponse.json({ call, transcripts: transcripts || [] });
+  return NextResponse.json({
+    call,
+    transcripts: transcripts || [],
+    recordings: recordings || [],
+  });
 }

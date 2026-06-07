@@ -34,6 +34,13 @@ export default async function DashboardPage() {
   let volumeDelta: number | null = null;
   let sparklineValues = [0, 0, 0, 0, 0, 0, 0];
   let unclassifiedToday = 0;
+  let liveCalls: Array<{
+    id: string;
+    from_number: string | null;
+    to_number: string | null;
+    status: string;
+    is_sandbox: boolean;
+  }> = [];
   let recentCalls: Array<{
     id: string;
     from_number: string | null;
@@ -71,6 +78,7 @@ export default async function DashboardPage() {
       { data: channels },
       { data: todayRows },
       { data: yesterdayRows },
+      { data: liveRows },
     ] = await Promise.all([
       supabase
         .from("va_calls")
@@ -107,9 +115,17 @@ export default async function DashboardPage() {
         .eq("org_id", org.id)
         .gte("created_at", `${yesterday}T00:00:00`)
         .lt("created_at", `${today}T00:00:00`),
+      supabase
+        .from("va_calls")
+        .select("id, from_number, to_number, status, is_sandbox")
+        .eq("org_id", org.id)
+        .is("ended_at", null)
+        .order("started_at", { ascending: false })
+        .limit(5),
     ]);
 
     recentCalls = recent || [];
+    liveCalls = liveRows || [];
     activeAgents = activeAgentCount || 0;
     const activeChannels = (channels || []).filter((c) => c.is_active).length;
     channelCount = (phoneCount || 0) + activeChannels;
@@ -164,6 +180,34 @@ export default async function DashboardPage() {
             hasPublishedFlow={setup.hasPublishedFlow}
           />
         </div>
+      )}
+
+      {liveCalls.length > 0 && (
+        <section className="mb-10">
+          <h2 className="mb-4 text-lg font-bold text-ghost-white">Live calls</h2>
+          <div className="space-y-2">
+            {liveCalls.map((c) => (
+              <Link
+                key={c.id}
+                href={`/dashboard/calls/${c.id}`}
+                className="surface-card flex items-center justify-between gap-4 p-4 transition hover:border-primary/30"
+              >
+                <div className="flex items-center gap-3">
+                  <span className="pulse-dot" />
+                  <span className="text-sm font-semibold text-ghost-white">
+                    {c.from_number || c.to_number || "Active call"}
+                  </span>
+                  {c.is_sandbox && (
+                    <span className="rounded-full bg-primary/10 px-2 py-0.5 text-[10px] font-bold text-primary">
+                      SANDBOX
+                    </span>
+                  )}
+                </div>
+                <span className="text-xs text-slate-text">{c.status}</span>
+              </Link>
+            ))}
+          </div>
+        </section>
       )}
 
       <div className="mb-10 grid grid-cols-1 gap-4 md:grid-cols-2">
