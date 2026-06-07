@@ -1,0 +1,9 @@
+version: 3
+# Paste your authtoken from https://dashboard.ngrok.com/get-started/your-authtoken
+agent:
+  authtoken: REPLACE_WITH_YOUR_NGROK_AUTHTOKEN
+endpoints:
+  - name: web
+    url: https://luncheon-laboring-civic.ngrok-free.dev
+    upstream:
+      url: http://127.0.0.1:3099

@@ -1,6 +1,7 @@
 import Link from "next/link";
 import { BrandLogo } from "@/components/BrandLogo";
 import { PhonePreview } from "@/components/PhonePreview";
+import { SiteFooter } from "@/components/SiteFooter";
 import { BRAND } from "@/lib/brand";
 
 export default function HomePage() {
@@ -188,23 +189,7 @@ export default function HomePage() {
         </div>
       </section>
 
-      <footer className="bg-brand-950 py-14 text-white">
-        <div className="mx-auto flex max-w-6xl flex-col items-center justify-between gap-8 px-4 sm:flex-row sm:px-8">
-          <BrandLogo light size="sm" />
-          <p className="text-center text-sm text-white/40 sm:text-left">{BRAND.footer}</p>
-          <div className="flex flex-wrap justify-center gap-6 text-sm font-medium">
-            <Link href="/help" className="text-teal-400 hover:underline">
-              Help & contact
-            </Link>
-            <Link href="/login" className="text-white/50 hover:text-white">
-              Sign in
-            </Link>
-            <Link href="/signup" className="text-gold-400 hover:underline">
-              Sign up free
-            </Link>
-          </div>
-        </div>
-      </footer>
+      <SiteFooter dark />
     </main>
   );
 }
