@@ -15,6 +15,7 @@ import {
   HOME_FEATURES,
   HOME_SERVICES_IMAGE,
   HUBSPOT_LOGO,
+  INTEGRATIONS,
   SALON_IMAGE,
   TESTIMONIALS,
   TRUST_STATS,
@@ -120,6 +121,17 @@ export default function HomePage() {
 
         {/* Hero */}
         <section className="hero-mesh relative overflow-hidden pb-[120px] pt-12">
+          <div aria-hidden className="pointer-events-none absolute inset-0 overflow-hidden">
+            <div className="hero-glow animate-aurora -left-32 -top-10 h-96 w-96 bg-violet-500/20" />
+            <div
+              className="hero-glow animate-aurora -right-24 top-8 h-80 w-80 bg-electric-cyan/15"
+              style={{ animationDelay: "-7s" }}
+            />
+            <div
+              className="hero-glow animate-aurora bottom-0 left-1/3 h-72 w-72 bg-primary/10"
+              style={{ animationDelay: "-3s" }}
+            />
+          </div>
           <div className="marketing-container grid items-center gap-6 md:grid-cols-2">
             <div className="z-10 text-center md:text-left">
               <div className="mb-6 inline-flex items-center gap-2 rounded-full border border-primary/30 bg-primary/10 px-3 py-1 text-primary">
@@ -169,6 +181,37 @@ export default function HomePage() {
                 </p>
               </div>
             ))}
+          </div>
+        </section>
+
+        {/* Integrations marquee */}
+        <section aria-label="Integrations" className="border-b border-glass-border-subtle bg-obsidian/40 py-12">
+          <div className="marketing-container">
+            <p className="mb-7 text-center text-xs font-semibold uppercase tracking-[0.22em] text-slate-text">
+              Plugs into the tools you already run
+            </p>
+            <div className="group edge-fade-x relative overflow-hidden">
+              <div className="flex w-max animate-marquee items-center gap-4 group-hover:[animation-play-state:paused]">
+                {[...INTEGRATIONS, ...INTEGRATIONS].map((it, i) => (
+                  <span
+                    key={`${it.name}-${i}`}
+                    className="flex shrink-0 items-center gap-2.5 rounded-full border border-glass-border-subtle bg-surface-container/60 px-5 py-2.5 text-sm font-semibold text-on-surface-variant backdrop-blur-sm"
+                  >
+                    <span
+                      className={`flex h-6 w-6 items-center justify-center rounded-md bg-gradient-to-br ${it.color} text-[10px] font-bold text-ghost-white`}
+                    >
+                      {it.abbr}
+                    </span>
+                    {it.name}
+                    {"soon" in it && it.soon ? (
+                      <span className="rounded-full bg-primary/10 px-2 py-0.5 text-[10px] font-bold uppercase tracking-wide text-primary">
+                        Soon
+                      </span>
+                    ) : null}
+                  </span>
+                ))}
+              </div>
+            </div>
           </div>
         </section>
 
