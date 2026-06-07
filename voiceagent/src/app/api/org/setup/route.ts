@@ -1,4 +1,5 @@
 import { NextResponse } from "next/server";
+import { DEFAULT_AGENT_SYSTEM_PROMPT } from "@/lib/agent-guardrails";
 import { createClient } from "@/lib/supabase/server";
 import { createAdminClient } from "@/lib/supabase/admin";
 
@@ -51,8 +52,7 @@ export async function POST(request: Request) {
   await admin.from("va_agents").insert({
     org_id: org.id,
     name: "Default Agent",
-    system_prompt:
-      "You are a friendly phone assistant for a local business. Help callers with questions, book appointments, and transfer to a human when needed. Keep answers brief.",
+    system_prompt: DEFAULT_AGENT_SYSTEM_PROMPT,
     welcome_greeting: "Hello! Thanks for calling. How can I help you today?",
   });
 

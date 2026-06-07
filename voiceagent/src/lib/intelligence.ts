@@ -22,13 +22,24 @@ export async function analyzeCall(
 ): Promise<CallIntelligence> {
   const transcript = formatTranscript(transcripts);
 
-  if (!hasOpenRouter() || !transcript) {
+  if (!transcript) {
     return {
-      summary: transcript
-        ? "Call completed. Enable OPENROUTER_API_KEY for AI analysis."
-        : "Call completed with no transcript.",
+      summary: "Call completed with no transcript.",
       sentiment: "neutral",
       intent: "unknown",
+      topics: [],
+      actionItems: [],
+      score: 50,
+    };
+  }
+
+  if (!hasOpenRouter()) {
+    const lines = transcripts.filter((t) => t.content?.trim()).slice(0, 4);
+    const preview = lines.map((t) => `${t.role}: ${t.content}`).join(" ");
+    return {
+      summary: preview.length > 200 ? `${preview.slice(0, 197)}…` : preview || "Call completed.",
+      sentiment: "neutral",
+      intent: "general inquiry",
       topics: [],
       actionItems: [],
       score: 50,
@@ -49,10 +60,14 @@ export async function analyzeCall(
   });
 
   if (!content) {
+    const lastUser = [...transcripts].reverse().find((t) => t.role === "user" || t.role === "caller");
+    const fallback = lastUser?.content
+      ? `Caller discussed: ${lastUser.content.slice(0, 120)}`
+      : "Call completed — AI summary temporarily unavailable.";
     return {
-      summary: "Analysis unavailable.",
+      summary: fallback,
       sentiment: "neutral",
-      intent: "unknown",
+      intent: "general inquiry",
       topics: [],
       actionItems: [],
       score: 50,

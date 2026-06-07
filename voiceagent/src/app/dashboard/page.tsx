@@ -5,6 +5,8 @@ import { SetupChecklist } from "@/components/SetupChecklist";
 import { createClient } from "@/lib/supabase/server";
 import { getUserOrg } from "@/lib/auth";
 import { computeCallStats } from "@/lib/call-stats";
+import { reconcileStaleCalls } from "@/lib/call-reconciliation";
+import { createAdminClient } from "@/lib/supabase/admin";
 
 export default async function DashboardPage() {
   const supabase = await createClient();
@@ -29,6 +31,13 @@ export default async function DashboardPage() {
   };
 
   if (org) {
+    try {
+      const admin = createAdminClient();
+      await reconcileStaleCalls(admin, org.id);
+    } catch {
+      // Admin client optional in dev — skip reconciliation
+    }
+
     const [
       { data: allCalls },
       { data: recent },
@@ -36,6 +45,7 @@ export default async function DashboardPage() {
       { count: phoneCount },
       { count: knowledgeCount },
       { count: flowCount },
+      { data: usageEvents },
     ] = await Promise.all([
       supabase.from("va_calls").select("transferred, contained, duration_seconds").eq("org_id", org.id),
       supabase
@@ -52,10 +62,21 @@ export default async function DashboardPage() {
         .select("id", { count: "exact", head: true })
         .eq("org_id", org.id)
         .eq("is_published", true),
+      supabase
+        .from("va_usage_events")
+        .select("quantity")
+        .eq("org_id", org.id)
+        .eq("event_type", "voice_minute"),
     ]);
 
     recentCalls = recent || [];
     stats = computeCallStats(allCalls || []);
+    const usageMinutes = Math.round(
+      (usageEvents || []).reduce((sum, e) => sum + Number(e.quantity), 0)
+    );
+    if (usageMinutes > stats.totalMinutes) {
+      stats = { ...stats, totalMinutes: usageMinutes };
+    }
     setup = {
       hasAgent: (agentCount || 0) > 0,
       hasPhoneNumber: (phoneCount || 0) > 0,

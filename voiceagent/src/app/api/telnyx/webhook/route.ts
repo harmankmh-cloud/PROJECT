@@ -197,11 +197,11 @@ export async function POST(request: NextRequest) {
   if (eventType === "call.hangup" || eventType === "call.ended") {
     const { data: call } = await admin
       .from("va_calls")
-      .select("id, org_id, agent_id, from_number, transferred, duration_seconds, handoff_payload")
+      .select("id, org_id, agent_id, from_number, transferred, duration_seconds, handoff_payload, ended_at")
       .eq("twilio_call_sid", callControlId)
       .maybeSingle();
 
-    if (call) {
+    if (call && !call.ended_at) {
       const duration = Number(payload.duration_secs || payload.call_duration || 0);
       const minutes = Math.max(1, Math.ceil(duration / 60));
 

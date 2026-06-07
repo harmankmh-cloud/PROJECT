@@ -4,6 +4,8 @@ import { getUserOrg } from "@/lib/auth";
 import { isPlatformAdmin } from "@/lib/admin-auth";
 import { DashboardShell } from "@/components/DashboardShell";
 
+export const dynamic = "force-dynamic";
+
 export default async function DashboardLayout({ children }: { children: React.ReactNode }) {
   const supabase = await createClient();
   const {

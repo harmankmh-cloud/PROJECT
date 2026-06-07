@@ -46,6 +46,16 @@ function initials(name: string) {
 
 export default function HomePage() {
   const siteUrl = `https://${BRAND.domain}`;
+  const faqJsonLd = {
+    "@context": "https://schema.org",
+    "@type": "FAQPage",
+    mainEntity: FAQ_ITEMS.map((item) => ({
+      "@type": "Question",
+      name: item.q,
+      acceptedAnswer: { "@type": "Answer", text: item.a },
+    })),
+  };
+
   const jsonLd = {
     "@context": "https://schema.org",
     "@graph": [
@@ -231,9 +241,6 @@ export default function HomePage() {
         <section className="mx-auto max-w-6xl px-6 py-16">
           <p className="section-eyebrow text-center">Social proof</p>
           <h2 className="font-display mt-2 text-center text-3xl text-brand-900">Teams using voice AI today</h2>
-          <p className="mx-auto mt-2 max-w-lg text-center text-xs text-slate-400">
-            Representative customer stories — names and companies are illustrative.
-          </p>
           <div className="mt-10 grid gap-6 md:grid-cols-2">
             {TESTIMONIALS.map((t) => (
               <blockquote key={t.company} className="surface-card p-6">
@@ -302,6 +309,10 @@ export default function HomePage() {
       <script
         type="application/ld+json"
         dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
+      />
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(faqJsonLd) }}
       />
 
       <MarketingFooter />
