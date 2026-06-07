@@ -19,7 +19,7 @@ export function AuthMarketingPanel({ footer }: { footer: string }) {
         <h2 className="font-display mt-10 text-4xl leading-tight text-white">
           Never miss
           <br />
-          <span className="bg-gradient-to-r from-teal-200 to-violet-300 bg-clip-text text-transparent">
+          <span className="bg-gradient-to-r from-teal-200 to-violet-300 bg-clip-text text-teal-200">
             another call
           </span>
         </h2>
