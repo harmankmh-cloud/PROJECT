@@ -9,3 +9,8 @@ reviewflow/.env.local
 servelocal/node_modules/
 servelocal/.next/
 servelocal/.env.local
+voiceagent/node_modules/
+voiceagent/orchestrator/node_modules/
+voiceagent/.next/
+voiceagent/orchestrator/dist/
+voiceagent/.env.local
