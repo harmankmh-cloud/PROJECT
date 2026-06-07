@@ -49,9 +49,9 @@ export default function TermsPage() {
           <section>
             <h2 className="text-lg font-semibold text-ghost-white">Billing</h2>
             <p>
-              Paid plans include a monthly subscription plus metered per-minute voice usage as described on
-              our pricing page. Fees are processed through Stripe. Failed payments may result in service
-              suspension after notice.
+              Paid plans are a flat monthly subscription that includes a block of voice minutes, plus
+              per-minute overage above that block, as described on our pricing page. Fees are processed
+              through Stripe. Failed payments may result in service suspension after notice.
             </p>
           </section>
 

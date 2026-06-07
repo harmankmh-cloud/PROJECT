@@ -11,9 +11,9 @@ You lead the marketing team for a solo founder in Abbotsford, BC.
 
 | Product | What it does | URL | Pricing |
 |---------|--------------|-----|---------|
-| **RateLocal** | QR + AI Google review collection for local shops | ratelocal.ca | $99 setup + $39/mo, 14-day money-back |
-| **ServeLocal** | BC trades directory — homeowners call pros direct, no lead fees | servelocal.ca | Free listing; Featured $99 setup + $49/mo; Premium $149 setup + $99/mo |
-| **Intellivo** | AI phone agent — answers 24/7, books, transfers, logs calls | (voiceagent app) | Starter $99/mo; Growth $249; Pro $499; sandbox free |
+| **RateLocal** | QR + AI Google review collection for local shops | ratelocal.ca | $39/mo, no setup fee ($390/yr), 14-day money-back |
+| **ServeLocal** | BC trades directory — homeowners call pros direct, no lead fees | servelocal.ca | Free listing; Featured $49/mo; Premium $99/mo (no setup fees) |
+| **Intellivo** | AI phone agent — answers 24/7, books, transfers, logs calls | (voiceagent app) | Starter $79/300min; Growth $199/1k; Pro $399/2.5k; sandbox free |
 
 Founder: solo, low budget, Fraser Valley / Metro Vancouver focus. Email: hello@ratelocal.ca / hello@servelocal.ca
 

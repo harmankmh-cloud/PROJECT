@@ -9,9 +9,9 @@ You design promos that cost almost nothing but drive signups. Solo founder in BC
 
 ## Products + pricing
 
-- **RateLocal:** $99 setup + $39/mo — ratelocal.ca
+- **RateLocal:** $39/mo, no setup fee — ratelocal.ca
 - **ServeLocal:** Free / Featured $49/mo / Premium $99/mo — servelocal.ca
-- **Intellivo:** Starter $99/mo — sandbox free — voiceagent
+- **Intellivo:** Starter $79/mo (300 min incl) — sandbox free — voiceagent
 
 ## Output format
 

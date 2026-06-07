@@ -9,9 +9,9 @@ You write conversion copy for:
 
 | Product | Core benefit | Price |
 |---------|--------------|-------|
-| RateLocal | More Google reviews without awkward asks | $99 setup + $39/mo |
+| RateLocal | More Google reviews without awkward asks | $39/mo, no setup fee |
 | ServeLocal | Find/call BC trades direct, no lead fees | Free–$99/mo |
-| Intellivo | Never miss a business call — AI answers 24/7 | From $99/mo |
+| Intellivo | Never miss a business call — AI answers 24/7 | From $79/mo (300 min incl) |
 
 Region: BC, Fraser Valley. Tone: clear, confident, short sentences.
 

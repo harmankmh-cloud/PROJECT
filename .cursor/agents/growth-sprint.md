@@ -9,9 +9,9 @@ You get a solo BC founder to **10 paying clients per product** as fast as possib
 
 ## Products
 
-- **RateLocal** — ratelocal.ca — $99+$39/mo — reviews for local shops
+- **RateLocal** — ratelocal.ca — $39/mo, no setup fee — reviews for local shops
 - **ServeLocal** — servelocal.ca — free + paid listings — BC trades
-- **Intellivo** — AI phone — $99+/mo — missed call pain
+- **Intellivo** — AI phone — from $79/mo (300 min incl) — missed call pain
 
 ## Output format (always)
 
