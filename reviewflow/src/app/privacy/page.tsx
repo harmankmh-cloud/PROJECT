@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import Link from "next/link";
 import { LegalLayout } from "@/components/LegalLayout";
 import { BRAND } from "@/lib/brand";
+import { COMPANY } from "@/lib/marketing-content";
 
 export const metadata: Metadata = {
   title: "Privacy Policy",
@@ -17,11 +18,15 @@ export default function PrivacyPage() {
         <h2 className="text-lg font-semibold text-brand-950">Who we are</h2>
         <p className="text-sm leading-relaxed text-slate-600">
           {BRAND.name} ({BRAND.tagline}) operates at ratelocal.ca. We provide review-collection tools for local
-          businesses in British Columbia. Contact:{" "}
-          <a href="mailto:hello@ratelocal.ca" className="font-semibold text-gold-600 hover:underline">
-            hello@ratelocal.ca
+          businesses in British Columbia.
+        </p>
+        <p className="text-sm leading-relaxed text-slate-600">
+          <strong>Mailing address:</strong> {COMPANY.address}
+          <br />
+          <strong>Email:</strong>{" "}
+          <a href={`mailto:${COMPANY.email}`} className="font-semibold text-gold-600 hover:underline">
+            {COMPANY.email}
           </a>
-          .
         </p>
       </section>
 

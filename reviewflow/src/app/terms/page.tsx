@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import Link from "next/link";
 import { LegalLayout } from "@/components/LegalLayout";
 import { BRAND } from "@/lib/brand";
+import { COMPANY } from "@/lib/marketing-content";
 
 export const metadata: Metadata = {
   title: "Terms of Service",
@@ -16,11 +17,15 @@ export default function TermsPage() {
       <section className="space-y-3">
         <h2 className="text-lg font-semibold text-brand-950">Agreement</h2>
         <p className="text-sm leading-relaxed text-slate-600">
-          By using {BRAND.name} at ratelocal.ca, you agree to these Terms. Questions:{" "}
-          <a href="mailto:hello@ratelocal.ca" className="font-semibold text-gold-600 hover:underline">
-            hello@ratelocal.ca
+          By using {BRAND.name} at ratelocal.ca, you agree to these Terms.
+        </p>
+        <p className="text-sm leading-relaxed text-slate-600">
+          <strong>Operator:</strong> {COMPANY.name} · {COMPANY.address}
+          <br />
+          <strong>Contact:</strong>{" "}
+          <a href={`mailto:${COMPANY.email}`} className="font-semibold text-gold-600 hover:underline">
+            {COMPANY.email}
           </a>
-          .
         </p>
       </section>
 

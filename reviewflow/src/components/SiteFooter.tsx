@@ -13,6 +13,9 @@ export function SiteFooter({ dark = false }: { dark?: boolean }) {
             <Link href="/help" className="text-teal-400 hover:underline">
               Help & contact
             </Link>
+            <Link href="/pricing" className="text-white/50 hover:text-white">
+              Pricing
+            </Link>
             <Link href="/privacy" className="text-white/50 hover:text-white">
               Privacy
             </Link>
@@ -39,6 +42,9 @@ export function SiteFooter({ dark = false }: { dark?: boolean }) {
         <div className="flex flex-wrap justify-center gap-4 text-sm">
           <Link href="/help" className="text-slate-600 hover:text-gold-600">
             Help
+          </Link>
+          <Link href="/pricing" className="text-slate-600 hover:text-gold-600">
+            Pricing
           </Link>
           <Link href="/privacy" className="text-slate-600 hover:text-gold-600">
             Privacy

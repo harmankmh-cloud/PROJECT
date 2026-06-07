@@ -236,3 +236,21 @@ select {
     transform: scale(1.05);
   }
 }
+
+@keyframes flow-step-pulse {
+  0%,
+  100% {
+    border-color: rgba(255, 255, 255, 0.1);
+    background: rgba(5, 8, 16, 0.4);
+  }
+  15%,
+  35% {
+    border-color: rgba(45, 212, 191, 0.5);
+    background: rgba(20, 184, 166, 0.15);
+    transform: scale(1.03);
+  }
+}
+
+.flow-demo-step {
+  animation: flow-step-pulse 2.4s ease-in-out infinite;
+}
