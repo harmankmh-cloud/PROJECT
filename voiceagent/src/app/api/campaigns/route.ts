@@ -140,9 +140,17 @@ export async function PATCH(request: NextRequest) {
     return NextResponse.json({ ok: true, dialed: eligible.length });
   }
 
+  const allowed: Record<string, unknown> = {};
+  if (body.name !== undefined) allowed.name = body.name;
+  if (body.status !== undefined) allowed.status = body.status;
+  if (body.contact_list !== undefined) allowed.contact_list = body.contact_list;
+  if (body.schedule_at !== undefined) allowed.schedule_at = body.schedule_at;
+  if (body.calling_hours !== undefined) allowed.calling_hours = body.calling_hours;
+  if (body.agent_id !== undefined) allowed.agent_id = body.agent_id;
+
   const { data, error } = await supabase
     .from("va_campaigns")
-    .update({ ...body, updated_at: new Date().toISOString() })
+    .update({ ...allowed, updated_at: new Date().toISOString() })
     .eq("id", id)
     .eq("org_id", org.id)
     .select()

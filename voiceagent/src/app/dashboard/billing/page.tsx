@@ -2,8 +2,14 @@ import { PLANS } from "@/lib/plans";
 import { createClient } from "@/lib/supabase/server";
 import { getUserOrg } from "@/lib/auth";
 import { isStripeConfigured } from "@/lib/stripe";
+import { SubscribeButton } from "@/components/SubscribeButton";
 
-export default async function BillingPage() {
+export default async function BillingPage({
+  searchParams,
+}: {
+  searchParams: Promise<{ success?: string; canceled?: string }>;
+}) {
+  const params = await searchParams;
   const supabase = await createClient();
   const { data: { user } } = await supabase.auth.getUser();
   const org = user ? await getUserOrg(user.id) : null;
@@ -26,6 +32,17 @@ export default async function BillingPage() {
       <h1 className="text-2xl font-bold text-brand-900">Billing</h1>
       <p className="mt-1 text-slate-500">Usage-based voice minutes + subscription.</p>
 
+      {params.success && (
+        <p className="mt-4 rounded-lg bg-teal-50 px-4 py-3 text-sm text-teal-800">
+          Subscription updated. It may take a moment to reflect here.
+        </p>
+      )}
+      {params.canceled && (
+        <p className="mt-4 rounded-lg bg-amber-50 px-4 py-3 text-sm text-amber-800">
+          Checkout canceled — no changes were made.
+        </p>
+      )}
+
       <div className="mt-8 grid gap-4 sm:grid-cols-3">
         <div className="surface-card p-5">
           <p className="text-sm text-slate-500">Current plan</p>
@@ -46,7 +63,7 @@ export default async function BillingPage() {
         <p className="mt-2 text-sm text-slate-600">
           {stripeReady
             ? "Stripe is configured. Voice minutes are reported via meter events on invoice creation."
-            : "Add STRIPE_SECRET_KEY and STRIPE_METER_VOICE_MINUTES to enable billing."}
+            : "Add STRIPE_SECRET_KEY and price IDs to enable billing."}
         </p>
         <p className="mt-4 text-xs text-slate-400">
           Webhook endpoint: /api/webhooks/stripe
@@ -59,6 +76,16 @@ export default async function BillingPage() {
             <h3 className="font-bold">{p.name}</h3>
             <p className="mt-1 text-2xl font-bold">${p.monthlyPrice}/mo</p>
             <p className="text-sm text-slate-500">+ ${p.perMinute}/min</p>
+            <ul className="mt-3 space-y-1 text-xs text-slate-500">
+              {p.features.map((f) => (
+                <li key={f}>• {f}</li>
+              ))}
+            </ul>
+            <SubscribeButton
+              plan={key as "starter" | "pro" | "enterprise"}
+              currentPlan={plan}
+              stripeReady={stripeReady}
+            />
           </div>
         ))}
       </div>

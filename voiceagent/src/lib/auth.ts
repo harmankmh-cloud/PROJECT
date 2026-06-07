@@ -44,6 +44,9 @@ export async function requireOrg() {
 
 export function verifyOrchestratorKey(request: Request): boolean {
   const key = process.env.ORCHESTRATOR_API_KEY;
-  if (!key) return process.env.NODE_ENV !== "production";
+  if (!key) {
+    // In production, internal orchestrator routes must be keyed.
+    return process.env.NODE_ENV !== "production";
+  }
   return request.headers.get("x-orchestrator-key") === key;
 }

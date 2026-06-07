@@ -1,6 +1,7 @@
 import { StatCard } from "@/components/StatCard";
 import { createClient } from "@/lib/supabase/server";
 import { getUserOrg } from "@/lib/auth";
+import { computeCallStats } from "@/lib/call-stats";
 
 export default async function DashboardPage() {
   const supabase = await createClient();
@@ -20,27 +21,21 @@ export default async function DashboardPage() {
   }> = [];
 
   if (org) {
-    const res = await fetch(`${process.env.NEXT_PUBLIC_APP_URL || "http://localhost:3002"}/api/calls`, {
-      headers: { cookie: "" },
-    }).catch(() => null);
-
-    if (!res?.ok) {
-      const { data: calls } = await supabase
+    const [{ data: allCalls }, { data: recent }] = await Promise.all([
+      supabase
+        .from("va_calls")
+        .select("transferred, contained, duration_seconds")
+        .eq("org_id", org.id),
+      supabase
         .from("va_calls")
         .select("id, from_number, status, created_at, summary, transferred, contained, duration_seconds")
         .eq("org_id", org.id)
         .order("created_at", { ascending: false })
-        .limit(10);
+        .limit(10),
+    ]);
 
-      recentCalls = calls || [];
-      const total = recentCalls.length;
-      stats = {
-        total,
-        containmentRate: total ? Math.round((recentCalls.filter((c) => c.contained).length / total) * 100) : 0,
-        transferRate: total ? Math.round((recentCalls.filter((c) => c.transferred).length / total) * 100) : 0,
-        totalMinutes: recentCalls.reduce((s, c) => s + Math.ceil(((c as { duration_seconds?: number }).duration_seconds || 0) / 60), 0),
-      };
-    }
+    recentCalls = recent || [];
+    stats = computeCallStats(allCalls || []);
   }
 
   return (
@@ -70,7 +65,7 @@ export default async function DashboardPage() {
           </thead>
           <tbody>
             {recentCalls.length === 0 ? (
-              <tr><td colSpan={4} className="px-5 py-8 text-center text-slate-400">No calls yet. Connect a Telnyx number to get started.</td></tr>
+              <tr><td colSpan={4} className="px-5 py-8 text-center text-slate-400">No calls yet. Connect a Twilio number to get started.</td></tr>
             ) : (
               recentCalls.map((call) => (
                 <tr key={call.id} className="border-t border-slate-100">

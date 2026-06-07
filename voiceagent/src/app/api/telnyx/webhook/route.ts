@@ -1,5 +1,6 @@
 import { NextRequest, NextResponse } from "next/server";
 import { createAdminClient } from "@/lib/supabase/admin";
+import { validateTelnyxWebhook } from "@/lib/telnyx-webhook";
 import {
   answerCall,
   decodeClientState,
@@ -13,7 +14,12 @@ import { logHubSpotCall } from "@/lib/integrations/hubspot";
 import { analyzeCall } from "@/lib/intelligence";
 
 export async function POST(request: NextRequest) {
-  const body = await request.json();
+  const rawBody = await request.text();
+  if (!validateTelnyxWebhook(request, rawBody)) {
+    return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+  }
+
+  const body = JSON.parse(rawBody);
   const eventType = body?.data?.event_type as string | undefined;
   const payload = body?.data?.payload;
 
@@ -33,7 +39,7 @@ export async function POST(request: NextRequest) {
       .eq("phone_number", to || "")
       .maybeSingle();
 
-    let orgId = phoneRecord?.org_id || process.env.DEFAULT_ORG_ID;
+    const orgId = phoneRecord?.org_id || process.env.DEFAULT_ORG_ID;
     let agentId = phoneRecord?.agent_id || process.env.DEFAULT_AGENT_ID;
     let welcome = "Hello! How can I help you today?";
 
@@ -88,7 +94,6 @@ export async function POST(request: NextRequest) {
     }
 
     const state = decodeClientState(payload.client_state);
-    const orgId = state.orgId;
     const agentId = state.agentId;
 
     const { data: call } = await admin

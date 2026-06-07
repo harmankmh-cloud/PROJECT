@@ -3,6 +3,8 @@ import { createAdminClient } from "@/lib/supabase/admin";
 import { getTwilioClient } from "@/lib/twilio";
 import { verifyOrchestratorKey } from "@/lib/auth";
 import { logHubSpotCall } from "@/lib/integrations/hubspot";
+import { getPublicAppUrl } from "@/lib/public-url";
+import { escapeXml } from "@/lib/twilio-webhook";
 
 export async function POST(request: NextRequest) {
   if (!verifyOrchestratorKey(request)) {
@@ -51,12 +53,15 @@ export async function POST(request: NextRequest) {
 
   const client = getTwilioClient();
   if (client && transferPhone && callSid) {
-    const appUrl = process.env.NEXT_PUBLIC_APP_URL || "http://localhost:3002";
+    const appUrl = getPublicAppUrl(request);
+    const safeFrom = escapeXml(String(from || ""));
+    const safePhone = escapeXml(String(transferPhone));
+    const statusUrl = escapeXml(`${appUrl}/api/twilio/status`);
     const twiml = `<?xml version="1.0" encoding="UTF-8"?>
 <Response>
   <Say voice="Polly.Joanna">Please hold while I connect you.</Say>
-  <Dial callerId="${from || ""}" action="${appUrl}/api/twilio/status">
-    <Number>${transferPhone}</Number>
+  <Dial callerId="${safeFrom}" action="${statusUrl}">
+    <Number>${safePhone}</Number>
   </Dial>
 </Response>`;
 

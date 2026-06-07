@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from "next/server";
 import { google } from "googleapis";
 import { createAdminClient } from "@/lib/supabase/admin";
+import { verifyIntegrationOrgAccess } from "@/lib/integration-auth";
 
 export async function GET(request: NextRequest) {
   const code = request.nextUrl.searchParams.get("code");
@@ -8,6 +9,13 @@ export async function GET(request: NextRequest) {
 
   if (!code || !orgId) {
     return NextResponse.redirect(new URL("/dashboard/integrations?error=missing_params", request.url));
+  }
+
+  const access = await verifyIntegrationOrgAccess(orgId);
+  if (!access.ok) {
+    return NextResponse.redirect(
+      new URL(`/dashboard/integrations?error=${access.reason}`, request.url)
+    );
   }
 
   const oauth2 = new google.auth.OAuth2(

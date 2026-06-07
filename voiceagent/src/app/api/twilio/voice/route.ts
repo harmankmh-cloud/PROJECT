@@ -4,19 +4,26 @@ import {
   buildErrorTwiml,
   buildSimpleVoiceTwiml,
   twimlResponse,
-  useSimpleTwilioVoice,
+  isSimpleTwilioVoiceMode,
 } from "@/lib/twilio";
 import { ensureCallRecord, resolveVoiceContext } from "@/lib/twilio-voice-context";
 import { getPublicAppUrl } from "@/lib/public-url";
+import { validateTwilioWebhook } from "@/lib/twilio-webhook";
 
 export async function POST(request: NextRequest) {
   try {
     const formData = await request.formData();
+    if (!validateTwilioWebhook(request, formData)) {
+      return twimlResponse(buildErrorTwiml("Unauthorized request."));
+    }
+
     const to = String(formData.get("To") || "");
     const callSid = String(formData.get("CallSid") || "");
     const from = String(formData.get("From") || "");
+    const direction = String(formData.get("Direction") || "inbound");
+    const lookupNumber = direction.toLowerCase().startsWith("outbound") ? from : to;
 
-    const ctx = await resolveVoiceContext(to);
+    const ctx = await resolveVoiceContext(lookupNumber);
     await ensureCallRecord({
       callSid,
       orgId: ctx.orgId,
@@ -27,7 +34,7 @@ export async function POST(request: NextRequest) {
 
     const appUrl = getPublicAppUrl(request);
 
-    if (useSimpleTwilioVoice()) {
+    if (isSimpleTwilioVoiceMode()) {
       const twiml = buildSimpleVoiceTwiml({
         message: ctx.welcomeGreeting,
         gatherUrl: `${appUrl}/api/twilio/gather`,
