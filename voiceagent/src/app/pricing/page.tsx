@@ -42,8 +42,8 @@ export default function PricingPage() {
                 <a href="https://ratelocal.ca" className="font-semibold text-electric-blue hover:underline">
                   RateLocal
                 </a>{" "}
-                (Google reviews) for <strong className="text-on-surface">$119/mo</strong> — never miss a call and
-                win more 5-star reviews. Ask sales to apply the bundle.
+                (Google reviews) for <strong className="text-on-surface">$99/mo</strong> — save $19 vs buying
+                separately. Never miss a call and win more 5-star reviews. Ask sales to apply the bundle.
               </p>
             </div>
             <p className="mt-10 text-center text-sm text-slate-text">

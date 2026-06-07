@@ -40,7 +40,7 @@ You set prices that are low vs competitors but never below cost. Solo founder, B
 
 ## Bundles
 
-- **Reputation + Reception** = RateLocal $39 + Intellivo Starter $79 → **$119/mo**
+- **Reputation + Reception** = RateLocal $39 + Intellivo Starter $79 ($118) → **$99/mo** (save $19)
 - **Trades Power Pack** = ServeLocal Featured + RateLocal + Intellivo Starter → **$149/mo**
 
 ## Output format

@@ -88,7 +88,8 @@ export default function PricingPage() {
           <p className="text-sm font-semibold text-brand-950">Bundle &amp; save: Reputation + Reception</p>
           <p className="mt-2 text-sm text-slate-600">
             Add Intellivo (an AI phone agent that answers every call 24/7) and get both for{" "}
-            <strong className="text-brand-950">$119/mo</strong>. More reviews and never a missed call.
+            <strong className="text-brand-950">$99/mo</strong> — save $19 vs buying separately. More reviews and
+            never a missed call.
           </p>
         </div>
 
