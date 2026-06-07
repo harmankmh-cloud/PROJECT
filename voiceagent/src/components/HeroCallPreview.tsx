@@ -1,24 +1,31 @@
+import Link from "next/link";
 import { MaterialIcon } from "@/components/MaterialIcon";
 
 export function HeroCallPreview() {
   return (
     <div className="relative mt-12 md:mt-0">
       <div className="glass-card glow-border relative z-10 rounded-2xl p-6 shadow-2xl">
-        <div className="mb-6 flex items-center justify-between border-b border-glass-border-subtle pb-4">
+        <div className="mb-4 flex items-center justify-between gap-3 border-b border-glass-border-subtle pb-4">
           <div className="flex items-center gap-3">
             <div className="flex h-10 w-10 items-center justify-center rounded-full bg-gradient-to-br from-violet-500 to-electric-cyan text-ghost-white">
               <MaterialIcon name="person" />
             </div>
             <div>
-              <p className="text-xs font-semibold text-on-surface-variant">Caller</p>
+              <p className="text-xs font-semibold text-on-surface-variant">Sample caller</p>
               <p className="font-bold text-ghost-white">+1 (604) 555-0142</p>
             </div>
           </div>
-          <span className="flex items-center gap-2 rounded-full border border-primary/30 bg-primary/10 px-3 py-1 text-xs font-semibold text-primary">
-            <span className="pulse-dot" />
-            Live Session
+          <span className="rounded-full border border-glass-border-subtle bg-surface-container-high px-3 py-1 text-[10px] font-bold uppercase tracking-wide text-slate-text">
+            Example transcript
           </span>
         </div>
+        <p className="mb-5 text-xs text-slate-text">
+          Illustrative booking flow — not a live recording.{" "}
+          <Link href="/signup" className="text-primary hover:underline">
+            Try the sandbox
+          </Link>{" "}
+          with your own agent.
+        </p>
         <div className="space-y-5">
           <div className="flex max-w-[80%] flex-col gap-2">
             <p className="px-1 text-[10px] font-bold uppercase text-on-surface-variant">Caller · 0:04</p>

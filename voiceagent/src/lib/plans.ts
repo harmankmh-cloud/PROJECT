@@ -25,7 +25,14 @@ export const PLANS = {
     monthlyPrice: 2000,
     perMinute: 0.06,
     concurrentCalls: 1000,
-    features: ["Unlimited agents", "SSO", "HIPAA", "White-label", "EU residency", "SLA"],
+    features: [
+      "Unlimited agents",
+      "SSO (SAML 2.0 & OIDC)",
+      "Google Workspace & Microsoft Entra",
+      "PIPEDA + provincial privacy controls",
+      "US HIPAA & BAA (optional)",
+      "Dedicated SLA & security review",
+    ],
   },
 } as const;
 

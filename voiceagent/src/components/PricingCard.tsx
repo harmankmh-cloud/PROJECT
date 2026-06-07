@@ -38,9 +38,9 @@ export function PricingCard({ planKey, highlighted = false }: { planKey: PlanKey
           <p className="mt-2 text-xs text-on-surface-variant">{`+ $${plan.perMinute}/min voice usage`}</p>
         </div>
         <ul className="mb-10 flex-grow space-y-4 text-sm">
-          {plan.features.slice(0, 3).map((f) => (
+          {plan.features.map((f) => (
             <li key={f} className="flex gap-2 text-on-surface-variant">
-              <MaterialIcon name="verified" className="text-primary text-[20px]" />
+              <MaterialIcon name="verified" className="shrink-0 text-primary text-[20px]" />
               {f}
             </li>
           ))}

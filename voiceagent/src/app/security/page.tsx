@@ -7,26 +7,34 @@ import { BRAND } from "@/lib/brand";
 
 export const metadata: Metadata = {
   title: "Security & Compliance",
-  description: `How ${BRAND.name} handles security, TCPA, HIPAA, audit logging, and data protection for AI phone agents.`,
+  description: `How ${BRAND.name} handles security, PIPEDA, CASL, audit logging, and optional US HIPAA for AI phone agents.`,
   alternates: { canonical: "/security" },
 };
 
 const SECTIONS = [
   {
+    title: "Canadian privacy (PIPEDA)",
+    body: `${BRAND.legalName} is based in ${BRAND.location.label}. We handle personal information under Canada's Personal Information Protection and Electronic Documents Act (PIPEDA), with org-scoped data isolation, access controls, export, and deletion on request. You are responsible for telling callers when calls are recorded and obtaining consent where required.`,
+  },
+  {
+    title: "CASL & outbound communications",
+    body: "Outbound voice and SMS campaigns require documented consent before contact, quiet-hours enforcement, and do-not-call list support. These controls align with Canada's Anti-Spam Legislation (CASL). US customers with US lists may additionally configure TCPA-oriented consent fields.",
+  },
+  {
+    title: "BC health-sector clients",
+    body: "Clinics and dental practices in British Columbia can use Enterprise plans for controls aligned with provincial health privacy expectations, including configurable retention and audit logging. Review your own professional obligations before routing patient information through any third-party system.",
+  },
+  {
+    title: "US HIPAA (Enterprise, optional)",
+    body: "For US healthcare customers, HIPAA mode is available on Enterprise with a signed Business Associate Agreement (BAA). Not all integrations are HIPAA-eligible — review your stack before enabling PHI workflows.",
+  },
+  {
     title: "Infrastructure",
     body: "Hosted on Vercel with HTTPS everywhere. Database and auth via Supabase with row-level security per organization. Service-role operations are limited to server-side API routes.",
   },
   {
-    title: "TCPA & outbound calling",
-    body: "Campaigns require recorded consent before dialing. Calling hours enforcement blocks starts outside permitted windows. You are responsible for maintaining accurate consent records for your contact lists.",
-  },
-  {
-    title: "HIPAA (Enterprise)",
-    body: "HIPAA mode is available on Enterprise plans with a signed Business Associate Agreement (BAA). Includes configurable recording retention and audit logging. Not all integrations are HIPAA-eligible — review your stack before enabling PHI workflows.",
-  },
-  {
-    title: "SOC 2",
-    body: "We follow SOC 2-aligned controls across access management, logging, and change management. Formal SOC 2 Type II certification is in progress — contact sales for current status and security questionnaire responses.",
+    title: "SSO (Enterprise)",
+    body: "Enterprise SSO supports SAML 2.0 and OpenID Connect, including common identity providers such as Google Workspace and Microsoft Entra ID. Contact sales for setup guides and metadata exchange.",
   },
   {
     title: "Audit logs",
@@ -46,8 +54,8 @@ export default function SecurityPage() {
       <main id="main-content" className="mx-auto max-w-3xl flex-1 px-6 py-16">
         <h1 className="font-display text-3xl text-ghost-white">Security & compliance</h1>
         <p className="mt-3 text-sm text-on-surface-variant">
-          How {BRAND.name} supports regulated and high-trust buyers. This page explains our controls — it is
-          not legal advice.
+          How {BRAND.name} supports regulated and high-trust buyers in Canada and the United States. This page
+          explains our controls — it is not legal advice.
         </p>
         <div className="mt-10 space-y-8">
           {SECTIONS.map((s) => (
@@ -59,15 +67,15 @@ export default function SecurityPage() {
         </div>
         <p className="mt-10 text-sm text-on-surface-variant">
           See also{" "}
-          <Link href="/privacy" className="text-teal-600 hover:underline">
+          <Link href="/privacy" className="text-primary hover:underline">
             Privacy Policy
           </Link>{" "}
           and{" "}
-          <Link href="/terms" className="text-teal-600 hover:underline">
+          <Link href="/terms" className="text-primary hover:underline">
             Terms of Service
           </Link>
           . Enterprise security reviews:{" "}
-          <Link href="/help?intent=enterprise" className="text-teal-600 hover:underline">
+          <Link href="/help?intent=enterprise" className="text-primary hover:underline">
             contact sales
           </Link>
           .
