@@ -2,8 +2,9 @@ import "server-only";
 
 import Stripe from "stripe";
 import { getStripeConfigStatus, isStripeConfigured } from "./stripe-config";
+import { DEFAULT_LIVE_STRIPE_PRICE_MONTHLY } from "./stripe-defaults";
 
-export { getStripeConfigStatus, isStripeConfigured };
+export { getStripeConfigStatus, isStripeConfigured, DEFAULT_LIVE_STRIPE_PRICE_MONTHLY };
 
 export function getStripe(): Stripe | null {
   const key = process.env.STRIPE_SECRET_KEY;
@@ -14,6 +15,6 @@ export function getStripe(): Stripe | null {
 export function stripePriceIds() {
   return {
     setup: process.env.STRIPE_PRICE_SETUP || "",
-    monthly: process.env.STRIPE_PRICE_MONTHLY || "",
+    monthly: process.env.STRIPE_PRICE_MONTHLY || DEFAULT_LIVE_STRIPE_PRICE_MONTHLY,
   };
 }
