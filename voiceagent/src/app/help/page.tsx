@@ -28,6 +28,17 @@ export default async function HelpPage({
                 ? `Book a product walkthrough — we'll reply with next steps and scheduling options.`
                 : `Questions about ${BRAND.name}? Send us a message.`}
           </p>
+          <p className="mt-4 text-sm text-on-surface-variant">
+            {BRAND.legalName} · {BRAND.location.label}
+            <br />
+            <a href={`mailto:${BRAND.contact.email}`} className="text-primary hover:underline">
+              {BRAND.contact.email}
+            </a>
+            {" · "}
+            <a href={`tel:${BRAND.contact.phone.replace(/\D/g, "")}`} className="text-primary hover:underline">
+              {BRAND.contact.phone}
+            </a>
+          </p>
         </header>
         <SupportForm
           defaultCategory={isEnterprise || isDemo ? "billing" : "help"}

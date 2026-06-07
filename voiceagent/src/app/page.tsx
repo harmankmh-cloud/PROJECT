@@ -15,6 +15,7 @@ import {
   HOME_SERVICES_IMAGE,
   HUBSPOT_LOGO,
   SALON_IMAGE,
+  TESTIMONIALS,
   TRUST_STATS,
   USE_CASES,
   ZAPIER_LOGO,
@@ -60,10 +61,19 @@ export default function HomePage() {
     "@graph": [
       {
         "@type": "Organization",
-        name: BRAND.name,
+        name: BRAND.legalName,
+        alternateName: BRAND.name,
         url: siteUrl,
         logo: `${siteUrl}/icon`,
-        sameAs: ["https://www.linkedin.com/company/intellivohealth"],
+        description: BRAND.productCategory,
+        email: BRAND.contact.email,
+        telephone: BRAND.contact.phone,
+        address: {
+          "@type": "PostalAddress",
+          addressLocality: BRAND.location.city,
+          addressRegion: BRAND.location.region,
+          addressCountry: BRAND.location.country,
+        },
       },
       {
         "@type": "WebSite",
@@ -94,6 +104,19 @@ export default function HomePage() {
       <MarketingHeader />
 
       <main id="main-content" className="pt-20">
+        {/* Company identity — disambiguate from other "Intellivo" brands */}
+        <section className="border-b border-glass-border-subtle bg-surface-container/50 py-3" aria-label="Company notice">
+          <div className="marketing-container flex flex-col gap-2 text-center text-xs text-on-surface-variant sm:flex-row sm:items-center sm:justify-between sm:text-left">
+            <p>
+              <span className="font-semibold text-ghost-white">{BRAND.legalName}</span> — voice AI for salons,
+              clinics, and local service businesses. Based in {BRAND.location.label}.
+            </p>
+            <p className="text-slate-text">
+              Independent product · Not affiliated with intellivo.com or intellivo.ai
+            </p>
+          </div>
+        </section>
+
         {/* Hero */}
         <section className="hero-mesh relative overflow-hidden pb-[120px] pt-12">
           <div className="marketing-container grid items-center gap-6 md:grid-cols-2">
@@ -104,7 +127,7 @@ export default function HomePage() {
               </div>
               <h1 className="font-display mb-6 text-4xl leading-tight text-ghost-white md:text-5xl lg:text-[48px] lg:leading-[1.1]">
                 AI phone agents that{" "}
-                <span className="text-gradient">never miss a call</span>
+                <span className="text-accent">never miss a call</span>
               </h1>
               <p className="mx-auto mb-10 max-w-xl text-lg text-on-surface-variant md:mx-0">
                 Answer inbound calls, book appointments, update your CRM, and warm-transfer to humans — with audit
@@ -120,7 +143,11 @@ export default function HomePage() {
                 </Link>
               </div>
               <p className="mt-6 text-xs text-slate-text">
-                No credit card to explore · Sandbox testing included ·{" "}
+                No credit card to explore ·{" "}
+                <Link href="/signup" className="text-primary hover:underline">
+                  Sandbox testing included
+                </Link>{" "}
+                ·{" "}
                 <Link href="/security" className="text-primary hover:underline">
                   Security details
                 </Link>
@@ -308,6 +335,37 @@ export default function HomePage() {
                   </div>
                 </div>
               </div>
+            </div>
+          </div>
+        </section>
+
+        {/* Social proof */}
+        <section className="border-t border-glass-border-subtle bg-surface-container/30 py-[120px]" id="testimonials">
+          <div className="marketing-container">
+            <div className="mb-16 text-center">
+              <p className="section-eyebrow mb-3">Trusted by operators</p>
+              <h2 className="font-display text-3xl font-bold text-ghost-white">What teams say after going live</h2>
+              <p className="mx-auto mt-4 max-w-2xl text-lg text-on-surface-variant">
+                Local businesses use {BRAND.name} to cover evenings, weekends, and peak hours without adding headcount.
+              </p>
+            </div>
+            <div className="grid gap-6 md:grid-cols-2">
+              {TESTIMONIALS.map((t) => (
+                <figure
+                  key={t.name}
+                  className="surface-card-hover flex flex-col justify-between p-8"
+                >
+                  <blockquote className="text-sm leading-relaxed text-on-surface-variant">
+                    &ldquo;{t.quote}&rdquo;
+                  </blockquote>
+                  <figcaption className="mt-6 border-t border-glass-border-subtle pt-6">
+                    <p className="font-semibold text-ghost-white">{t.name}</p>
+                    <p className="text-xs text-slate-text">
+                      {t.role}, {t.company} · {t.industry}
+                    </p>
+                  </figcaption>
+                </figure>
+              ))}
             </div>
           </div>
         </section>

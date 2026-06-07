@@ -10,6 +10,7 @@ const COLUMNS = [
       { href: "/#solutions", label: "Use cases" },
       { href: "/#integrations", label: "Integrations" },
       { href: "/pricing", label: "Pricing" },
+      { href: "/signup", label: "Start free trial" },
     ],
   },
   {
@@ -18,6 +19,7 @@ const COLUMNS = [
       { href: "/about", label: "About" },
       { href: "/help", label: "Contact" },
       { href: "/help?intent=demo", label: "Book a demo" },
+      { href: "/security", label: "Security" },
     ],
   },
   {
@@ -38,17 +40,25 @@ export function MarketingFooter() {
           <div className="col-span-2 md:col-span-1">
             <h4 className="font-display text-xl font-bold text-ghost-white">{BRAND.name}</h4>
             <p className="mt-4 text-sm text-on-surface-variant">
-              AI phone agents for local businesses. Built for excellence.
+              {BRAND.productCategory}. Based in {BRAND.location.label}.
             </p>
-            <a
-              href="https://www.linkedin.com/company/intellivohealth"
-              target="_blank"
-              rel="noopener noreferrer"
-              className="mt-6 flex h-10 w-10 items-center justify-center rounded-full border border-glass-border-subtle bg-surface-container text-on-surface-variant transition-colors hover:border-primary/40 hover:text-primary"
-              aria-label="LinkedIn"
-            >
-              <MaterialIcon name="share" />
-            </a>
+            <p className="mt-3 text-xs text-slate-text">
+              Not affiliated with intellivo.com (healthcare claims) or intellivo.ai.
+            </p>
+            <ul className="mt-6 space-y-2 text-sm text-on-surface-variant">
+              <li>
+                <a href={`mailto:${BRAND.contact.email}`} className="hover:text-primary">
+                  {BRAND.contact.email}
+                </a>
+              </li>
+              <li>
+                <a href={`tel:${BRAND.contact.phone.replace(/\D/g, "")}`} className="hover:text-primary">
+                  {BRAND.contact.phone}
+                </a>
+                <span className="block text-xs text-slate-text">{BRAND.contact.phoneNote}</span>
+              </li>
+              <li>{BRAND.location.label}</li>
+            </ul>
           </div>
           {COLUMNS.map((col) => (
             <div key={col.title}>
@@ -69,15 +79,21 @@ export function MarketingFooter() {
           ))}
         </div>
         <div className="flex flex-col items-center justify-between gap-4 border-t border-glass-border-subtle pt-8 text-sm text-slate-text md:flex-row">
-          <p>© {new Date().getFullYear()} {BRAND.name}. All rights reserved.</p>
-          <div className="flex gap-6">
+          <p>
+            © {new Date().getFullYear()} {BRAND.legalName}. All rights reserved.
+          </p>
+          <div className="flex flex-wrap justify-center gap-6">
             <span className="flex items-center gap-1">
               <MaterialIcon name="lock" className="text-[16px] text-primary" />
-              HIPAA Ready
+              HIPAA on Enterprise
             </span>
             <span className="flex items-center gap-1">
               <MaterialIcon name="verified_user" className="text-[16px] text-primary" />
-              TCPA Compliant
+              TCPA tooling
+            </span>
+            <span className="flex items-center gap-1">
+              <MaterialIcon name="location_on" className="text-[16px] text-primary" />
+              {BRAND.location.city}, {BRAND.location.region}
             </span>
           </div>
         </div>
