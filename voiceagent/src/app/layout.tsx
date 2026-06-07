@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import { Inter, Plus_Jakarta_Sans } from "next/font/google";
+import { CookieNotice } from "@/components/CookieNotice";
 import { BRAND } from "@/lib/brand";
 import "./globals.css";
 
@@ -15,7 +16,7 @@ const inter = Inter({
 
 const siteUrl = `https://${BRAND.domain}`;
 const description =
-  "AI phone agents for salons, clinics, and local service businesses. Answer calls 24/7, book appointments, sync CRM, and warm-transfer with compliance built in.";
+  "Canadian voice AI for salons, clinics, and local service businesses. Answer calls 24/7, book appointments, sync CRM, and warm-transfer with PIPEDA-aligned controls.";
 
 export const metadata: Metadata = {
   title: { default: `${BRAND.name} — ${BRAND.tagline}`, template: `%s · ${BRAND.name}` },
@@ -66,7 +67,10 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
           }}
         />
       </head>
-      <body className="min-h-full bg-obsidian font-sans text-on-surface antialiased">{children}</body>
+      <body className="min-h-full bg-obsidian font-sans text-on-surface antialiased">
+        {children}
+        <CookieNotice />
+      </body>
     </html>
   );
 }

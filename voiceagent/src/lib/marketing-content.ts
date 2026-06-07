@@ -1,7 +1,7 @@
 export const TRUST_STATS = [
   { value: "24/7", label: "AI coverage" },
   { value: "<2s", label: "Avg. answer time", note: "Median on Telnyx inbound" },
-  { value: "100%", label: "Call logs retained" },
+  { value: "100%", label: "Complete call records" },
   { value: "99.9%", label: "Uptime SLA" },
 ] as const;
 
@@ -21,14 +21,14 @@ export const HOME_FEATURES = [
   {
     icon: "campaign",
     title: "Outbound Campaigns",
-    desc: "TCPA-aware dialing with consent tracking and hours enforcement.",
+    desc: "CASL-compliant outreach with recorded consent, quiet hours, and do-not-call lists.",
     bullets: ["Consent records", "Calling-hours windows"],
   },
   {
     icon: "security",
     title: "Audit & Compliance",
-    desc: "Enterprise HIPAA mode with BAA and full audit logging.",
-    bullets: ["Full audit log", "HIPAA on Enterprise"],
+    desc: "PIPEDA-aligned controls, audit logging, and optional US HIPAA mode on Enterprise.",
+    bullets: ["Full audit log", "PIPEDA & CASL tooling"],
   },
 ] as const;
 
@@ -108,22 +108,27 @@ export const USE_CASES = [
   {
     industry: "Salons & spas",
     headline: "Book appointments while stylists stay with clients",
-    outcome: "Teams report fewer missed evening bookings",
+    outcome: "Fewer missed evening bookings — our salon customers report smoother after-hours scheduling.",
+    outcomeAttribution: "Elena R., Salon Manager, Glow Studio Collective",
     points: ["Answer after-hours booking requests", "Capture caller intent and preferred times"],
     image: SALON_IMAGE,
     variant: "salon" as const,
   },
   {
     industry: "Clinics & dental",
-    headline: "HIPAA-aware intake without hold music",
-    outcome: "Reduce front-desk hold time on routine calls",
-    points: ["Route urgent vs routine calls", "Sync with Google Calendar", "Enterprise HIPAA mode with BAA"],
+    headline: "Privacy-aware intake without hold music",
+    outcome: "Reduce front-desk hold time on routine scheduling and FAQ calls.",
+    points: [
+      "Route urgent vs routine calls",
+      "Sync with Google Calendar",
+      "PIPEDA-aligned handling; BC health-sector controls on Enterprise",
+    ],
     variant: "clinic" as const,
   },
   {
     industry: "Home services",
     headline: "Qualify leads before dispatch",
-    outcome: "Capture address and urgency before dispatch",
+    outcome: "Capture address, issue, and urgency before your team rolls a truck.",
     points: ["Capture address, issue, and urgency", "Quote FAQs from your knowledge base"],
     image: HOME_SERVICES_IMAGE,
     variant: "home" as const,
@@ -131,7 +136,7 @@ export const USE_CASES = [
   {
     industry: "Professional services",
     headline: "Screen calls and log every conversation",
-    outcome: "Every call logged with intent for follow-up",
+    outcome: "Every call logged with intent for follow-up and compliance review.",
     points: ["HubSpot call logging", "Audit trail for compliance"],
     variant: "pro" as const,
   },
@@ -189,8 +194,12 @@ export const FAQ_ITEMS = [
     a: "Most teams launch in one day: create an agent, add knowledge, connect a phone number, and test in the sandbox. Complex flows or Enterprise compliance may take longer.",
   },
   {
+    q: "How do you handle Canadian privacy law?",
+    a: "We are built for Canadian operators. Personal information is handled under PIPEDA with org-scoped data isolation, export, and deletion options. For BC health-sector clients, Enterprise plans add controls aligned with provincial health privacy requirements. See our Security page and Privacy Policy.",
+  },
+  {
     q: "What does HIPAA-ready mean?",
-    a: "Enterprise plans support HIPAA mode with a signed Business Associate Agreement (BAA), configurable retention, and audit logging. You remain responsible for lawful call recording consent in your jurisdiction. See our Security page for details.",
+    a: "For US healthcare customers, Enterprise plans can enable HIPAA mode with a signed Business Associate Agreement (BAA), configurable retention, and audit logging. Canadian clinics typically use our PIPEDA and provincial privacy controls instead. You remain responsible for lawful call recording consent in your jurisdiction.",
   },
   {
     q: "Which phone providers work?",
@@ -202,7 +211,7 @@ export const FAQ_ITEMS = [
   },
   {
     q: "Can we try before buying a number?",
-    a: "Yes. Use the Agent Sandbox in your dashboard to simulate conversations in text before routing production traffic. No credit card required to explore.",
+    a: "Yes. Use the Agent Sandbox in your dashboard to simulate conversations in text, or place a short test call to your mobile before routing production traffic. No credit card required to explore.",
   },
   {
     q: "What is your cancellation policy?",

@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import Image from "next/image";
 import Link from "next/link";
 import { FaqAccordion } from "@/components/FaqAccordion";
+import { LegalStrip } from "@/components/LegalStrip";
 import { HeroCallPreview } from "@/components/HeroCallPreview";
 import { MarketingFooter } from "@/components/MarketingFooter";
 import { MarketingHeader } from "@/components/MarketingHeader";
@@ -250,15 +251,20 @@ export default function HomePage() {
                 <div className="order-2 flex-1 md:order-1">
                   <span className="mb-2 block text-sm font-semibold text-primary">{salon.industry}</span>
                   <h3 className="mb-4 text-2xl font-bold text-ghost-white">{salon.headline}</h3>
-                  <ul className="mb-8 space-y-4">
+                  <ul className="mb-8 space-y-3">
                     {salon.points.map((p) => (
-                      <li key={p} className="flex gap-3 text-on-surface-variant">
-                        <span className="text-xl text-primary">•</span>
+                      <li key={p} className="flex items-start gap-2 text-sm text-on-surface-variant">
+                        <MaterialIcon name="check_circle" className="mt-0.5 shrink-0 text-[18px] text-primary" />
                         <span>{p}</span>
                       </li>
                     ))}
                   </ul>
-                  <p className="text-xs font-semibold italic text-primary">&ldquo;{salon.outcome}&rdquo;</p>
+                  <blockquote className="border-l-2 border-primary/40 pl-4 text-sm italic text-on-surface-variant">
+                    &ldquo;{salon.outcome}&rdquo;
+                  </blockquote>
+                  {"outcomeAttribution" in salon && salon.outcomeAttribution ? (
+                    <p className="mt-2 text-xs text-slate-text">— {salon.outcomeAttribution}</p>
+                  ) : null}
                 </div>
                 <div className="order-1 flex-1 md:order-2">
                   <Image
@@ -274,18 +280,16 @@ export default function HomePage() {
               <div className="glow-border flex flex-col justify-between rounded-3xl bg-gradient-to-br from-surface-container to-brand-900 p-10">
                 <div>
                   <span className="mb-2 block text-sm font-semibold text-primary">{clinic.industry}</span>
-                  <h3 className="mb-6 text-2xl font-bold text-ghost-white">{clinic.headline}</h3>
-                  <p className="mb-8 text-on-surface-variant">{clinic.outcome}</p>
-                </div>
-                <div className="space-y-4">
-                  <div className="flex items-center gap-4 rounded-xl border border-primary/20 bg-primary/5 p-4">
-                    <MaterialIcon name="health_and_safety" className="text-primary" />
-                    <span className="text-xs font-semibold text-ghost-white">Enterprise HIPAA Mode</span>
-                  </div>
-                  <div className="flex items-center gap-4 rounded-xl border border-primary/20 bg-primary/5 p-4">
-                    <MaterialIcon name="calendar_month" className="text-primary" />
-                    <span className="text-xs font-semibold text-ghost-white">Google Calendar Sync</span>
-                  </div>
+                  <h3 className="mb-4 text-2xl font-bold text-ghost-white">{clinic.headline}</h3>
+                  <p className="mb-6 text-sm text-on-surface-variant">{clinic.outcome}</p>
+                  <ul className="space-y-3">
+                    {clinic.points.map((p) => (
+                      <li key={p} className="flex items-start gap-2 text-sm text-on-surface-variant">
+                        <MaterialIcon name="check_circle" className="mt-0.5 shrink-0 text-[18px] text-primary" />
+                        <span>{p}</span>
+                      </li>
+                    ))}
+                  </ul>
                 </div>
               </div>
 
@@ -293,7 +297,15 @@ export default function HomePage() {
                 <div>
                   <span className="mb-2 block text-sm font-semibold text-primary">{home.industry}</span>
                   <h3 className="mb-4 text-2xl font-bold text-ghost-white">{home.headline}</h3>
-                  <p className="mb-6 text-on-surface-variant">{home.points[0]}</p>
+                  <p className="mb-6 text-sm text-on-surface-variant">{home.outcome}</p>
+                  <ul className="mb-6 space-y-3">
+                    {home.points.map((p) => (
+                      <li key={p} className="flex items-start gap-2 text-sm text-on-surface-variant">
+                        <MaterialIcon name="check_circle" className="mt-0.5 shrink-0 text-[18px] text-primary" />
+                        <span>{p}</span>
+                      </li>
+                    ))}
+                  </ul>
                 </div>
                 <Image
                   src={HOME_SERVICES_IMAGE}
@@ -303,7 +315,7 @@ export default function HomePage() {
                   className="mb-6 rounded-2xl opacity-80 transition-all duration-500 hover:opacity-100"
                 />
                 <div className="border-t border-glass-border-subtle pt-6">
-                  <p className="text-xs font-semibold text-primary">SMS follow-up on Growth+ plans</p>
+                  <p className="text-xs font-semibold text-primary">SMS follow-up on Growth and Pro plans</p>
                 </div>
               </div>
 
@@ -314,7 +326,15 @@ export default function HomePage() {
                 <div className="flex-1">
                   <span className="mb-2 block text-sm font-semibold text-primary">{pro.industry}</span>
                   <h3 className="mb-4 text-2xl font-bold text-ghost-white">{pro.headline}</h3>
-                  <p className="mb-6 text-on-surface-variant">{pro.points[1]}</p>
+                  <p className="mb-6 text-sm text-on-surface-variant">{pro.outcome}</p>
+                  <ul className="mb-6 space-y-3">
+                    {pro.points.map((p) => (
+                      <li key={p} className="flex items-start gap-2 text-sm text-on-surface-variant">
+                        <MaterialIcon name="check_circle" className="mt-0.5 shrink-0 text-[18px] text-primary" />
+                        <span>{p}</span>
+                      </li>
+                    ))}
+                  </ul>
                   <div className="flex items-center gap-4 opacity-70 transition-all hover:opacity-100">
                     <Image src={HUBSPOT_LOGO} alt="HubSpot" width={100} height={24} className="h-6 w-auto brightness-200" />
                     <div className="h-6 w-px bg-outline-variant" />
@@ -397,6 +417,8 @@ export default function HomePage() {
             <FaqAccordion items={FAQ_ITEMS} />
           </div>
         </section>
+
+        <LegalStrip />
 
         {/* CTA */}
         <section className="py-[120px]">
