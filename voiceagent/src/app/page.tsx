@@ -34,20 +34,38 @@ export const metadata: Metadata = {
 };
 
 export default function HomePage() {
+  const siteUrl = `https://${BRAND.domain}`;
   const jsonLd = {
     "@context": "https://schema.org",
-    "@type": "SoftwareApplication",
-    name: BRAND.name,
-    applicationCategory: "BusinessApplication",
-    operatingSystem: "Web",
-    url: `https://${BRAND.domain}`,
-    description:
-      "AI phone agents for local businesses with inbound answering, booking, CRM sync, and compliance tooling.",
-    offers: {
-      "@type": "Offer",
-      price: "99",
-      priceCurrency: "USD",
-    },
+    "@graph": [
+      {
+        "@type": "Organization",
+        name: BRAND.name,
+        url: siteUrl,
+        logo: `${siteUrl}/icon`,
+        sameAs: ["https://www.linkedin.com/company/intellivohealth"],
+      },
+      {
+        "@type": "WebSite",
+        name: BRAND.name,
+        url: siteUrl,
+        description: BRAND.tagline,
+      },
+      {
+        "@type": "SoftwareApplication",
+        name: BRAND.name,
+        applicationCategory: "BusinessApplication",
+        operatingSystem: "Web",
+        url: siteUrl,
+        description:
+          "AI phone agents for local businesses with inbound answering, booking, CRM sync, and compliance tooling.",
+        offers: {
+          "@type": "Offer",
+          price: "99",
+          priceCurrency: "USD",
+        },
+      },
+    ],
   };
 
   return (

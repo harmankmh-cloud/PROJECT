@@ -18,11 +18,16 @@ export function SignupForm({
   const [businessName, setBusinessName] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+  const [acceptedTerms, setAcceptedTerms] = useState(false);
   const [error, setError] = useState("");
   const [loading, setLoading] = useState(false);
 
   async function handleSubmit(e: React.FormEvent<HTMLFormElement>) {
     e.preventDefault();
+    if (!acceptedTerms) {
+      setError("Please accept the Terms of Service and Privacy Policy to continue.");
+      return;
+    }
     setLoading(true);
     setError("");
     const supabase = createClient();
@@ -129,6 +134,27 @@ export function SignupForm({
                     required
                   />
                 </div>
+                <label className="flex items-start gap-3 text-sm text-slate-600">
+                  <input
+                    type="checkbox"
+                    name="acceptTerms"
+                    checked={acceptedTerms}
+                    onChange={(e) => setAcceptedTerms(e.target.checked)}
+                    className="mt-1 h-4 w-4 rounded border-slate-300 text-teal-600 focus:ring-teal-500"
+                    required
+                  />
+                  <span>
+                    I agree to the{" "}
+                    <Link href="/terms" className="link-accent">
+                      Terms of Service
+                    </Link>{" "}
+                    and{" "}
+                    <Link href="/privacy" className="link-accent">
+                      Privacy Policy
+                    </Link>
+                    .
+                  </span>
+                </label>
                 {error && (
                   <p className="text-sm text-red-600" role="alert">
                     {error}
@@ -144,17 +170,6 @@ export function SignupForm({
                 <Link href="/login" className="link-accent">
                   Sign in
                 </Link>
-              </p>
-              <p className="mt-3 text-center text-xs text-slate-400">
-                By signing up you agree to our{" "}
-                <Link href="/terms" className="link-accent">
-                  Terms
-                </Link>{" "}
-                and{" "}
-                <Link href="/privacy" className="link-accent">
-                  Privacy Policy
-                </Link>
-                .
               </p>
             </div>
           </div>
