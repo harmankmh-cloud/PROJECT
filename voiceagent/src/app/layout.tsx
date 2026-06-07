@@ -40,8 +40,14 @@ export const metadata: Metadata = {
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (
-    <html lang="en" className={`${jakarta.variable} h-full`}>
-      <body className="min-h-full font-sans antialiased">{children}</body>
+    <html lang="en" className={`${jakarta.variable} scroll-smooth`}>
+      <head>
+        <link
+          href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@24,400,0..1,0&display=swap"
+          rel="stylesheet"
+        />
+      </head>
+      <body className="min-h-full bg-surface font-sans text-on-surface antialiased">{children}</body>
     </html>
   );
 }
