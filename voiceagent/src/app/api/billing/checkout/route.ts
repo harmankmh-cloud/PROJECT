@@ -37,7 +37,7 @@ export async function POST(request: NextRequest) {
   if (!priceId || !priceId.startsWith("price_")) {
     return NextResponse.json(
       {
-        error: `No Stripe price found for ${plan}. Create "Intellivo ${plan}" ($${plan === "starter" ? 79 : plan === "growth" ? 199 : plan === "pro" ? 399 : 1500}/mo) in Stripe, or set STRIPE_PRICE_${plan.toUpperCase()}_MONTHLY.`,
+        error: `No Stripe price found for ${plan}. Create "GreetQ ${plan}" ($${plan === "starter" ? 79 : plan === "growth" ? 199 : plan === "pro" ? 399 : 1500}/mo) in Stripe, or set STRIPE_PRICE_${plan.toUpperCase()}_MONTHLY.`,
       },
       { status: 400 }
     );

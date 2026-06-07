@@ -95,7 +95,7 @@ export default function TeamPage() {
         <form onSubmit={addMember} className="surface-card space-y-4 p-6">
           <h2 className="font-semibold">Add member</h2>
           <p className="text-sm text-on-surface-variant">
-            The person must sign up at Intellivo first, then you add them here by email.
+            The person must sign up at GreetQ first, then you add them here by email.
           </p>
           <input
             className="input-field"

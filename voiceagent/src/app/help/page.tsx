@@ -46,7 +46,7 @@ export default async function HelpPage({
             isEnterprise
               ? "I'm interested in the Enterprise plan. Please contact me about pricing, HIPAA, and SLA options."
               : isDemo
-                ? "I'd like to book a demo of Intellivo. Please share availability for a 30-minute walkthrough."
+                ? "I'd like to book a demo of GreetQ. Please share availability for a 30-minute walkthrough."
                 : ""
           }
         />
