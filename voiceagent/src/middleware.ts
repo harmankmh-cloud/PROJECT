@@ -41,7 +41,14 @@ export async function middleware(request: NextRequest) {
   }
 
   if (PUBLIC_PATHS.includes(pathname) && user && pathname !== "/reset-password") {
-    return NextResponse.redirect(new URL("/dashboard", request.url));
+    const redirect = NextResponse.redirect(new URL("/dashboard", request.url));
+    redirect.headers.set("Cache-Control", "no-store, no-cache, must-revalidate");
+    return redirect;
+  }
+
+  if (pathname.startsWith("/dashboard") || pathname.startsWith("/admin")) {
+    response.headers.set("Cache-Control", "no-store, no-cache, must-revalidate, private");
+    response.headers.set("Pragma", "no-cache");
   }
 
   return response;

@@ -2,7 +2,34 @@ export const TRUST_STATS = [
   { value: "24/7", label: "AI coverage" },
   { value: "<2s", label: "Avg. answer time", note: "Median on Telnyx inbound" },
   { value: "100%", label: "Call logs retained" },
-  { value: "Voice · SMS · WA", label: "Channels supported" },
+  { value: "99.9%", label: "Uptime SLA" },
+] as const;
+
+export const HOME_FEATURES = [
+  {
+    icon: "headset_mic",
+    title: "Inbound AI Receptionist",
+    desc: "Natural voice conversations with live transcription and intent detection.",
+    bullets: ["24/7 call answering", "Knowledge-base answers"],
+  },
+  {
+    icon: "call_merge",
+    title: "Warm Transfer",
+    desc: "Escalate to your team with full transcript and context handoff.",
+    bullets: ["Intent + summary handoff", "Human takeover mid-call"],
+  },
+  {
+    icon: "campaign",
+    title: "Outbound Campaigns",
+    desc: "TCPA-aware dialing with consent tracking and hours enforcement.",
+    bullets: ["Consent records", "Calling-hours windows"],
+  },
+  {
+    icon: "security",
+    title: "Audit & Compliance",
+    desc: "Enterprise HIPAA mode with BAA and full audit logging.",
+    bullets: ["Full audit log", "HIPAA on Enterprise"],
+  },
 ] as const;
 
 export const SETUP_STEPS = [
@@ -65,30 +92,48 @@ export const FEATURE_CARDS = [
   },
 ] as const;
 
+export const SALON_IMAGE =
+  "https://lh3.googleusercontent.com/aida-public/AB6AXuACO7gwLxUNCE7e9a7e-n2xqRuIpXUhJWJ6k0wpdpBiLfTvrQP1sWAUj3tvE2zYK1luVJhEKQ7m5tacd-V0Kla1Q7UPnhfH_A4R6ROtoySzJaShwco39_HnNB-ER_anpB1gF8fMYDa6dhZHy7q1eEeIrgg5vMdtJrqgpf3OozGTmcGhDWnGHqnwic5prGYM21adTEtlbcODANQ5ixfDoiDf66eQCwNlxe5QteezSX4cA1rnEWi1D2VzJcHh6o1uxF7qKS4_R9aPgw";
+
+export const HOME_SERVICES_IMAGE =
+  "https://lh3.googleusercontent.com/aida-public/AB6AXuB53bz9SIJ4F280FP10Oydc39b69f2KDx7xUgjmqIZaT8PYltkNj9S4que7bqJeMPgpNVvhb7tZPuuzCuceq5kzvGZDw2LMPxeTzEGZPIr_qcE1YTI1RdIXRzWVpfT6QArsJHEkAYbXrQlWOeyr3I0Oc1r2vjWZl7ki_dg4PgseNwZHrtgNBKQEnBXMGkE5TTlyuypOreLdwFd0xlmqTMf_GqckzfPqQd1SuFYxO8HR4gMvFPzGYD_tNsnpc5cKzE5Mft-G_4QNHQ";
+
+export const HUBSPOT_LOGO =
+  "https://lh3.googleusercontent.com/aida-public/AB6AXuAQWxkSZ5wNm5MuG7lPHg03Hf9XuWsETyG_JYwQ0YqJZZnqtFNj1xT3d2ZIYhBEIIXI26TNonGlNit8FA5KbjgHwdBvXpZ54QqWnTJ6t5__6GEseCbs2R7851riq1htmKYuxdi8GSv35EpZ_QxcU3ujaw68aAWLlezKSB47jPlstjKlzYZFhD74RfMCkks5iaM1KAZ5U4yRH0xA2CCKtdJBRdTXNJxPybZVGJRW6e88UxflpPf0LXvMlz3q18uck7pa6Btx7KKa8g";
+
+export const ZAPIER_LOGO =
+  "https://lh3.googleusercontent.com/aida-public/AB6AXuB0z2laAo9LS4fJwtitJvcSXg8u79FTVm_SotFFgBUoNurzDFWInjqROMmdUvPTJ3CPFeka0m2Oi_SCQ4punu1T2-ue-RzHEF5lPVt60QPfgFFuZ5i7DYqptdxKyVgNm_a9VA-QH_WVs57qJ8mQIIZQ2oYbCpaXYdGdlXmjxDJ8JCn63pn8w4WdXmut52d-TlldfiD7h6Vx18cuMx4G7vSv3XvkefP8c08T7-NmtbRXMTZcGKklcWbEOhqFazxDPd9IeqwSCeSWvg";
+
 export const USE_CASES = [
   {
     industry: "Salons & spas",
     headline: "Book appointments while stylists stay with clients",
     outcome: "Teams report fewer missed evening bookings",
-    points: ["Answer after-hours booking requests", "Capture caller intent and preferred times", "Warm transfer for complex color consults"],
+    points: ["Answer after-hours booking requests", "Capture caller intent and preferred times"],
+    image: SALON_IMAGE,
+    variant: "salon" as const,
   },
   {
     industry: "Clinics & dental",
     headline: "HIPAA-aware intake without hold music",
     outcome: "Reduce front-desk hold time on routine calls",
     points: ["Route urgent vs routine calls", "Sync with Google Calendar", "Enterprise HIPAA mode with BAA"],
+    variant: "clinic" as const,
   },
   {
     industry: "Home services",
     headline: "Qualify leads before dispatch",
     outcome: "Capture address and urgency before dispatch",
-    points: ["Capture address, issue, and urgency", "Quote FAQs from your knowledge base", "SMS follow-up on Growth+ plans"],
+    points: ["Capture address, issue, and urgency", "Quote FAQs from your knowledge base"],
+    image: HOME_SERVICES_IMAGE,
+    variant: "home" as const,
   },
   {
     industry: "Professional services",
     headline: "Screen calls and log every conversation",
     outcome: "Every call logged with intent for follow-up",
-    points: ["HubSpot call logging", "Audit trail for compliance", "API access for custom CRM workflows"],
+    points: ["HubSpot call logging", "Audit trail for compliance"],
+    variant: "pro" as const,
   },
 ] as const;
 

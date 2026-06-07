@@ -1,5 +1,5 @@
 import Link from "next/link";
-import { BrandLogo } from "@/components/BrandLogo";
+import { MaterialIcon } from "@/components/MaterialIcon";
 import { BRAND } from "@/lib/brand";
 
 const COLUMNS = [
@@ -7,10 +7,9 @@ const COLUMNS = [
     title: "Product",
     links: [
       { href: "/#product", label: "How it works" },
-      { href: "/#use-cases", label: "Use cases" },
+      { href: "/#solutions", label: "Use cases" },
       { href: "/#integrations", label: "Integrations" },
-      { href: "/#pricing", label: "Pricing" },
-      { href: "/#faq", label: "FAQ" },
+      { href: "/pricing", label: "Pricing" },
     ],
   },
   {
@@ -19,54 +18,48 @@ const COLUMNS = [
       { href: "/about", label: "About" },
       { href: "/help", label: "Contact" },
       { href: "/help?intent=demo", label: "Book a demo" },
-      { href: "/help?intent=enterprise", label: "Enterprise sales" },
     ],
   },
   {
-    title: "Legal & security",
+    title: "Legal",
     links: [
-      { href: "/security", label: "Security & compliance" },
-      { href: "/privacy", label: "Privacy policy" },
-      { href: "/terms", label: "Terms of service" },
-    ],
-  },
-  {
-    title: "Account",
-    links: [
-      { href: "/signup", label: "Start free trial" },
-      { href: "/login", label: "Sign in" },
-      { href: "/help", label: "Support" },
+      { href: "/privacy", label: "Privacy Policy" },
+      { href: "/terms", label: "Terms of Service" },
+      { href: "/security", label: "Compliance" },
     ],
   },
 ] as const;
 
 export function MarketingFooter() {
   return (
-    <footer className="bg-brand-950 py-14 text-white">
-      <div className="mx-auto max-w-6xl space-y-10 px-4 sm:px-8">
-        <div className="grid gap-10 sm:grid-cols-2 lg:grid-cols-5">
-          <div className="lg:col-span-1">
-            <BrandLogo href="/" light size="sm" />
-            <p className="mt-4 text-sm text-white/50">{BRAND.tagline}</p>
-            <p className="mt-2 text-xs text-white/35">
-              {BRAND.name} · {BRAND.domain}
+    <footer className="w-full border-t border-outline-variant/20 bg-primary-container py-[120px]">
+      <div className="marketing-container">
+        <div className="mb-16 grid grid-cols-2 gap-8 md:grid-cols-4">
+          <div className="col-span-2 md:col-span-1">
+            <h4 className="font-display text-xl font-bold text-on-primary">{BRAND.name}</h4>
+            <p className="mt-4 text-sm text-on-primary-container/80">
+              AI phone agents for local businesses. Built for excellence.
             </p>
             <a
               href="https://www.linkedin.com/company/intellivohealth"
               target="_blank"
               rel="noopener noreferrer"
-              className="mt-3 inline-block text-xs text-white/50 hover:text-teal-300"
+              className="mt-6 flex h-10 w-10 items-center justify-center rounded-full bg-white/5 text-white transition-colors hover:bg-electric-blue"
+              aria-label="LinkedIn"
             >
-              LinkedIn →
+              <MaterialIcon name="share" />
             </a>
           </div>
           {COLUMNS.map((col) => (
             <div key={col.title}>
-              <h3 className="text-xs font-bold uppercase tracking-wider text-white/60">{col.title}</h3>
-              <ul className="mt-4 space-y-2">
+              <h5 className="mb-6 font-bold text-white">{col.title}</h5>
+              <ul className="space-y-4 text-sm">
                 {col.links.map((link) => (
                   <li key={link.href}>
-                    <Link href={link.href} className="text-sm text-white/70 hover:text-teal-300 hover:underline">
+                    <Link
+                      href={link.href}
+                      className="text-on-primary-container/80 transition-colors hover:text-on-primary"
+                    >
                       {link.label}
                     </Link>
                   </li>
@@ -75,9 +68,18 @@ export function MarketingFooter() {
             </div>
           ))}
         </div>
-        <div className="border-t border-white/10 pt-8 text-center text-xs text-white/35">
-          <p>TCPA tools included · HIPAA available on Enterprise with BAA · Audit logs on all plans</p>
-          <p className="mt-2">© {new Date().getFullYear()} {BRAND.name}. All rights reserved.</p>
+        <div className="flex flex-col items-center justify-between gap-4 border-t border-white/10 pt-8 text-sm text-on-primary-container/60 md:flex-row">
+          <p>© {new Date().getFullYear()} {BRAND.name}. All rights reserved.</p>
+          <div className="flex gap-6">
+            <span className="flex items-center gap-1">
+              <MaterialIcon name="lock" className="text-[16px] text-green-500" />
+              HIPAA Ready
+            </span>
+            <span className="flex items-center gap-1">
+              <MaterialIcon name="verified_user" className="text-[16px] text-green-500" />
+              TCPA Compliant
+            </span>
+          </div>
         </div>
       </div>
     </footer>

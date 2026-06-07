@@ -1,24 +1,32 @@
 import type { Metadata } from "next";
+import Image from "next/image";
 import Link from "next/link";
 import { FaqAccordion } from "@/components/FaqAccordion";
+import { HeroCallPreview } from "@/components/HeroCallPreview";
 import { MarketingFooter } from "@/components/MarketingFooter";
 import { MarketingHeader } from "@/components/MarketingHeader";
+import { MaterialIcon } from "@/components/MaterialIcon";
 import { PricingCard } from "@/components/PricingCard";
-import { ProductPreview } from "@/components/ProductPreview";
 import { SkipToContent } from "@/components/SkipToContent";
 import { BRAND } from "@/lib/brand";
 import {
   FAQ_ITEMS,
-  FEATURE_CARDS,
-  INTEGRATIONS,
-  SETUP_STEPS,
-  TESTIMONIALS,
+  HOME_FEATURES,
+  HOME_SERVICES_IMAGE,
+  HUBSPOT_LOGO,
+  SALON_IMAGE,
   TRUST_STATS,
   USE_CASES,
+  ZAPIER_LOGO,
 } from "@/lib/marketing-content";
 import type { PlanKey } from "@/lib/plans";
 
 const PLAN_KEYS: PlanKey[] = ["starter", "growth", "pro", "enterprise"];
+
+const salon = USE_CASES.find((u) => u.variant === "salon")!;
+const clinic = USE_CASES.find((u) => u.variant === "clinic")!;
+const home = USE_CASES.find((u) => u.variant === "home")!;
+const pro = USE_CASES.find((u) => u.variant === "pro")!;
 
 export const metadata: Metadata = {
   title: "AI phone agents that never miss a call",
@@ -35,17 +43,18 @@ export const metadata: Metadata = {
   ],
 };
 
-function initials(name: string) {
-  return name
-    .split(" ")
-    .map((p) => p[0])
-    .join("")
-    .slice(0, 2)
-    .toUpperCase();
-}
-
 export default function HomePage() {
   const siteUrl = `https://${BRAND.domain}`;
+  const faqJsonLd = {
+    "@context": "https://schema.org",
+    "@type": "FAQPage",
+    mainEntity: FAQ_ITEMS.map((item) => ({
+      "@type": "Question",
+      name: item.q,
+      acceptedAnswer: { "@type": "Answer", text: item.a },
+    })),
+  };
+
   const jsonLd = {
     "@context": "https://schema.org",
     "@graph": [
@@ -80,113 +89,89 @@ export default function HomePage() {
   };
 
   return (
-    <div className="mesh-bg flex min-h-screen flex-col">
+    <div className="flex min-h-screen flex-col overflow-x-hidden bg-surface">
       <SkipToContent />
       <MarketingHeader />
 
-      <main id="main-content">
-        <section className="mx-auto max-w-6xl px-6 py-20 text-center">
-          <p className="page-eyebrow">Voice AI for local businesses</p>
-          <h1 className="font-display mt-3 text-4xl tracking-tight text-brand-900 md:text-5xl lg:text-6xl">
-            AI phone agents that never miss a call
-          </h1>
-          <p className="mx-auto mt-4 max-w-2xl text-lg text-slate-600">
-            Answer inbound calls, book appointments, update your CRM, and warm-transfer to humans — with
-            audit logs and compliance tooling built in.
-          </p>
-          <div className="mt-8 flex flex-col justify-center gap-4 sm:flex-row">
-            <Link href="/signup" className="btn-primary px-8 py-3.5 text-base">
-              Start free trial
-            </Link>
-            <Link href="/help?intent=demo" className="btn-secondary px-8 py-3.5 text-base">
-              Book a demo
-            </Link>
-          </div>
-          <p className="mt-6 text-xs text-slate-400">
-            No credit card to explore · Sandbox testing included ·{" "}
-            <Link href="/security" className="text-teal-600 hover:underline">
-              Security details
-            </Link>
-          </p>
-          <ProductPreview />
-        </section>
-
-        <section className="border-y border-slate-200/80 bg-white/60 py-10">
-          <div className="mx-auto grid max-w-6xl grid-cols-2 gap-6 px-6 sm:grid-cols-4">
-            {TRUST_STATS.map((s) => (
-              <div key={s.label} className="text-center">
-                <p className="font-display text-2xl text-brand-900 sm:text-3xl">{s.value}</p>
-                <p className="mt-1 text-xs font-medium uppercase tracking-wide text-slate-500">{s.label}</p>
-                {"note" in s && s.note && (
-                  <p className="mt-1 text-[10px] text-slate-400">{s.note}</p>
-                )}
+      <main id="main-content" className="pt-20">
+        {/* Hero */}
+        <section className="hero-mesh relative overflow-hidden pb-[120px] pt-12">
+          <div className="marketing-container grid items-center gap-6 md:grid-cols-2">
+            <div className="z-10 text-center md:text-left">
+              <div className="mb-6 inline-flex items-center gap-2 rounded-full border border-electric-blue/20 bg-electric-blue/10 px-3 py-1 text-electric-blue">
+                <MaterialIcon name="verified" className="text-[18px]" />
+                <span className="text-xs font-semibold uppercase tracking-wider">The Future of Local Business</span>
               </div>
-            ))}
-          </div>
-        </section>
-
-        <section id="product" className="mx-auto max-w-6xl px-6 py-20">
-          <p className="section-eyebrow text-center">How it works</p>
-          <h2 className="font-display mt-2 text-center text-3xl text-brand-900">Go live in an afternoon</h2>
-          <p className="mx-auto mt-3 max-w-2xl text-center text-slate-600">
-            Intellivo is a full voice AI platform — not just a chatbot wrapper. Configure agents, knowledge,
-            flows, and telephony from one dashboard.
-          </p>
-          <div className="mt-12 grid gap-6 sm:grid-cols-2 lg:grid-cols-4">
-            {SETUP_STEPS.map((step) => (
-              <div key={step.step} className="surface-card p-6">
-                <span className="text-2xl" aria-hidden="true">
-                  {step.icon}
-                </span>
-                <span className="font-display ml-2 text-2xl text-teal-600">{step.step}</span>
-                <h3 className="mt-3 font-semibold text-brand-900">{step.title}</h3>
-                <p className="mt-2 text-sm leading-relaxed text-slate-600">{step.text}</p>
-              </div>
-            ))}
-          </div>
-        </section>
-
-        <section id="features" className="mx-auto max-w-6xl px-6 py-12">
-          <p className="section-eyebrow text-center">Features</p>
-          <h2 className="font-display mt-2 text-center text-3xl text-brand-900">Everything you need on day one</h2>
-          <div className="mt-10 grid gap-6 md:grid-cols-2 lg:grid-cols-3">
-            {FEATURE_CARDS.map((f) => (
-              <div key={f.title} className="surface-card p-6">
-                <h3 className="font-semibold text-brand-900">{f.title}</h3>
-                <p className="mt-2 text-sm leading-relaxed text-slate-600">{f.desc}</p>
-                <ul className="mt-4 space-y-1.5 text-sm text-slate-600">
-                  {f.bullets.map((b) => (
-                    <li key={b} className="flex gap-2">
-                      <span className="text-teal-600">✓</span>
-                      {b}
-                    </li>
-                  ))}
-                </ul>
-              </div>
-            ))}
-          </div>
-        </section>
-
-        <section id="use-cases" className="bg-brand-950 py-20 text-white">
-          <div className="mx-auto max-w-6xl px-6">
-            <p className="section-eyebrow text-center text-teal-400">Who we serve</p>
-            <h2 className="font-display mt-2 text-center text-3xl">Built for operators, not engineers</h2>
-            <p className="mx-auto mt-3 max-w-2xl text-center text-white/55">
-              Whether you run one location or twenty, Intellivo handles routine calls so your staff focuses on
-              in-person work.
-            </p>
-            <div className="mt-12 grid gap-6 md:grid-cols-2">
-              {USE_CASES.map((uc) => (
-                <div
-                  key={uc.industry}
-                  className="rounded-2xl border border-white/10 bg-white/5 p-6 backdrop-blur-sm"
+              <h1 className="font-display mb-6 text-4xl leading-tight text-gradient md:text-5xl lg:text-[48px] lg:leading-[56px]">
+                AI phone agents that never miss a call
+              </h1>
+              <p className="mx-auto mb-10 max-w-xl text-lg text-slate-text md:mx-0">
+                Answer inbound calls, book appointments, update your CRM, and warm-transfer to humans — with audit
+                logs and compliance tooling built in.
+              </p>
+              <div className="flex flex-col justify-center gap-4 sm:flex-row md:justify-start">
+                <Link
+                  href="/signup"
+                  className="rounded-full bg-primary px-8 py-4 text-sm font-semibold text-on-primary shadow-lg transition-all hover:shadow-xl"
                 >
-                  <p className="text-xs font-bold uppercase tracking-wider text-teal-400">{uc.industry}</p>
-                  <h3 className="mt-2 text-lg font-semibold">{uc.headline}</h3>
-                  <p className="mt-2 text-xs text-teal-300/80">{uc.outcome}</p>
-                  <ul className="mt-4 space-y-2 text-sm text-white/70">
-                    {uc.points.map((p) => (
-                      <li key={p}>• {p}</li>
+                  Start free trial
+                </Link>
+                <Link
+                  href="/help?intent=demo"
+                  className="rounded-full border border-outline-variant/30 bg-surface-container-low px-8 py-4 text-sm font-semibold text-primary transition-all hover:bg-surface-container-high"
+                >
+                  Book a demo
+                </Link>
+              </div>
+              <p className="mt-6 text-xs text-on-primary-container/60">
+                No credit card to explore · Sandbox testing included
+              </p>
+            </div>
+            <HeroCallPreview />
+          </div>
+        </section>
+
+        {/* Trust bar */}
+        <section className="relative overflow-hidden bg-primary-container py-12">
+          <div className="marketing-container grid grid-cols-2 gap-8 text-center md:grid-cols-4">
+            {TRUST_STATS.map((s) => (
+              <div key={s.label}>
+                <p className="font-display text-2xl font-bold text-on-primary md:text-[32px]">{s.value}</p>
+                <p className="mt-1 text-xs font-semibold uppercase tracking-wide text-on-primary-container">
+                  {s.label}
+                </p>
+              </div>
+            ))}
+          </div>
+        </section>
+
+        {/* Features */}
+        <section className="py-[120px]" id="product">
+          <div className="marketing-container">
+            <div className="mb-16 text-center">
+              <h2 className="font-display text-3xl font-bold text-on-surface">Everything you need on day one</h2>
+              <p className="mx-auto mt-4 max-w-2xl text-lg text-slate-text">
+                Intellivo is a full voice AI platform — not just a chatbot wrapper. Configure agents, knowledge, and
+                flows in one dashboard.
+              </p>
+            </div>
+            <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-4">
+              {HOME_FEATURES.map((f) => (
+                <div
+                  key={f.title}
+                  className="group rounded-2xl border border-outline-variant/20 bg-surface p-8 transition-all duration-300 hover:border-electric-blue/50"
+                >
+                  <div className="mb-6 flex h-12 w-12 items-center justify-center rounded-xl bg-electric-blue/10 text-electric-blue transition-colors group-hover:bg-electric-blue group-hover:text-white">
+                    <MaterialIcon name={f.icon} filled className="text-[24px]" />
+                  </div>
+                  <h3 className="mb-4 text-xl font-bold text-on-surface">{f.title}</h3>
+                  <p className="mb-6 text-sm text-slate-text">{f.desc}</p>
+                  <ul className="space-y-3">
+                    {f.bullets.map((b) => (
+                      <li key={b} className="flex items-center gap-2 text-xs font-semibold">
+                        <MaterialIcon name="check_circle" className="text-[18px] text-green-500" />
+                        {b}
+                      </li>
                     ))}
                   </ul>
                 </div>
@@ -195,114 +180,177 @@ export default function HomePage() {
           </div>
         </section>
 
-        <section id="integrations" className="mx-auto max-w-6xl px-6 py-20">
-          <p className="section-eyebrow text-center">Integrations</p>
-          <h2 className="font-display mt-2 text-center text-3xl text-brand-900">Connects to your stack</h2>
-          <div className="mt-10 grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
-            {INTEGRATIONS.map((int) => (
-              <div key={int.name} className="surface-card p-5">
-                <div className="flex items-center gap-3">
-                  <div
-                    className={`flex h-10 w-10 items-center justify-center rounded-xl bg-gradient-to-br ${int.color} text-xs font-bold text-white`}
-                  >
-                    {int.abbr}
+        {/* Solutions bento */}
+        <section className="bg-surface-container-low py-[120px]" id="solutions">
+          <div className="marketing-container">
+            <div className="mb-16 text-center">
+              <h2 className="font-display text-3xl font-bold text-on-surface">Built for operators, not engineers</h2>
+              <p className="mx-auto mt-4 max-w-2xl text-lg text-slate-text">
+                Intellivo handles routine calls so your staff focuses on in-person work.
+              </p>
+            </div>
+            <div className="grid grid-cols-1 gap-6 md:grid-cols-3">
+              {/* Salon */}
+              <div className="group col-span-1 flex flex-col items-center gap-8 overflow-hidden rounded-3xl border border-outline-variant/10 bg-white p-10 shadow-sm md:col-span-2 md:flex-row">
+                <div className="order-2 flex-1 md:order-1">
+                  <span className="mb-2 block text-sm font-semibold text-electric-blue">{salon.industry}</span>
+                  <h3 className="mb-4 text-2xl font-bold text-on-surface">{salon.headline}</h3>
+                  <ul className="mb-8 space-y-4">
+                    {salon.points.map((p) => (
+                      <li key={p} className="flex gap-3 text-slate-text">
+                        <span className="text-xl text-electric-blue">•</span>
+                        <span>{p}</span>
+                      </li>
+                    ))}
+                  </ul>
+                  <p className="text-xs font-semibold italic text-on-tertiary-container">
+                    &ldquo;{salon.outcome}&rdquo;
+                  </p>
+                </div>
+                <div className="order-1 flex-1 md:order-2">
+                  <Image
+                    src={SALON_IMAGE}
+                    alt="Modern salon interior"
+                    width={560}
+                    height={360}
+                    className="rounded-2xl shadow-lg transition-transform duration-700 group-hover:scale-105"
+                  />
+                </div>
+              </div>
+
+              {/* Clinic */}
+              <div className="flex flex-col justify-between rounded-3xl border border-glass-border bg-primary-container p-10 text-white">
+                <div>
+                  <span className="mb-2 block text-sm font-semibold text-tertiary-fixed">{clinic.industry}</span>
+                  <h3 className="mb-6 text-2xl font-bold">{clinic.headline}</h3>
+                  <p className="mb-8 text-on-primary-container">{clinic.outcome}</p>
+                </div>
+                <div className="space-y-4">
+                  <div className="flex items-center gap-4 rounded-xl border border-white/10 bg-white/5 p-4">
+                    <MaterialIcon name="health_and_safety" className="text-tertiary-fixed" />
+                    <span className="text-xs font-semibold">Enterprise HIPAA Mode</span>
                   </div>
-                  <div>
-                    <h3 className="font-semibold text-brand-900">{int.name}</h3>
-                    {"soon" in int && int.soon && (
-                      <span className="text-[10px] font-semibold uppercase tracking-wide text-amber-600">
-                        Coming soon
-                      </span>
-                    )}
+                  <div className="flex items-center gap-4 rounded-xl border border-white/10 bg-white/5 p-4">
+                    <MaterialIcon name="calendar_month" className="text-tertiary-fixed" />
+                    <span className="text-xs font-semibold">Google Calendar Sync</span>
                   </div>
                 </div>
-                <p className="mt-3 text-sm text-slate-600">{int.desc}</p>
               </div>
-            ))}
-          </div>
-          <p className="mt-8 text-center text-sm text-slate-500">
-            OAuth setup for HubSpot and Google Calendar in the dashboard.{" "}
-            <Link href="/signup" className="text-teal-600 hover:underline">
-              Start free trial
-            </Link>
-          </p>
-        </section>
 
-        <section className="mx-auto max-w-6xl px-6 py-16">
-          <p className="section-eyebrow text-center">Social proof</p>
-          <h2 className="font-display mt-2 text-center text-3xl text-brand-900">Teams using voice AI today</h2>
-          <p className="mx-auto mt-2 max-w-lg text-center text-xs text-slate-400">
-            Representative customer stories — names and companies are illustrative.
-          </p>
-          <div className="mt-10 grid gap-6 md:grid-cols-2">
-            {TESTIMONIALS.map((t) => (
-              <blockquote key={t.company} className="surface-card p-6">
-                <p className="text-sm leading-relaxed text-slate-700">&ldquo;{t.quote}&rdquo;</p>
-                <footer className="mt-4 flex items-center gap-3">
-                  <div
-                    className="flex h-10 w-10 items-center justify-center rounded-full bg-gradient-to-br from-teal-400 to-violet-500 text-xs font-bold text-white"
-                    aria-hidden="true"
-                  >
-                    {initials(t.name)}
+              {/* Home services */}
+              <div className="flex flex-col justify-between rounded-3xl border border-outline-variant/10 bg-white p-10 shadow-sm">
+                <div>
+                  <span className="mb-2 block text-sm font-semibold text-electric-blue">{home.industry}</span>
+                  <h3 className="mb-4 text-2xl font-bold text-on-surface">{home.headline}</h3>
+                  <p className="mb-6 text-slate-text">{home.points[0]}</p>
+                </div>
+                <Image
+                  src={HOME_SERVICES_IMAGE}
+                  alt="Home service technician"
+                  width={480}
+                  height={280}
+                  className="mb-6 rounded-2xl grayscale transition-all duration-500 hover:grayscale-0"
+                />
+                <div className="border-t border-outline-variant/10 pt-6">
+                  <p className="text-xs font-semibold text-on-tertiary-container">SMS follow-up on Growth+ plans</p>
+                </div>
+              </div>
+
+              {/* Professional services */}
+              <div
+                className="col-span-1 flex flex-col gap-8 overflow-hidden rounded-3xl border border-outline-variant/10 bg-gradient-to-br from-white to-surface-container-high p-10 shadow-sm md:col-span-2 md:flex-row"
+                id="integrations"
+              >
+                <div className="flex-1">
+                  <span className="mb-2 block text-sm font-semibold text-electric-blue">{pro.industry}</span>
+                  <h3 className="mb-4 text-2xl font-bold text-on-surface">{pro.headline}</h3>
+                  <p className="mb-6 text-slate-text">{pro.points[1]}</p>
+                  <div className="flex items-center gap-4 opacity-60 grayscale transition-all hover:grayscale-0">
+                    <Image src={HUBSPOT_LOGO} alt="HubSpot" width={100} height={24} className="h-6 w-auto" />
+                    <div className="h-6 w-px bg-outline-variant" />
+                    <Image src={ZAPIER_LOGO} alt="Zapier" width={80} height={24} className="h-6 w-auto" />
                   </div>
-                  <div>
-                    <p className="text-sm font-semibold text-brand-900">{t.name}</p>
-                    <p className="text-xs text-slate-500">
-                      {t.role}, {t.company}
-                    </p>
-                    <p className="text-[10px] uppercase tracking-wide text-teal-600">{t.industry}</p>
+                </div>
+                <div className="flex-1 rounded-2xl border border-white bg-surface-container p-6">
+                  <div className="space-y-3">
+                    <div className="h-3 w-3/4 animate-pulse rounded bg-slate-200" />
+                    <div className="h-3 w-full animate-pulse rounded bg-slate-200" />
+                    <div className="h-3 w-1/2 animate-pulse rounded bg-slate-200" />
+                    <div className="mt-4 border-t border-slate-200 pt-4">
+                      <div className="flex items-center gap-3">
+                        <div className="h-8 w-8 rounded bg-electric-blue/20" />
+                        <div className="h-2 w-1/3 rounded bg-slate-300" />
+                      </div>
+                    </div>
                   </div>
-                </footer>
-              </blockquote>
-            ))}
+                </div>
+              </div>
+            </div>
           </div>
         </section>
 
-        <section id="pricing" className="mx-auto max-w-6xl px-6 py-16">
-          <h2 className="text-center text-2xl font-bold text-brand-900">Pricing</h2>
-          <p className="mx-auto mt-2 max-w-xl text-center text-sm text-slate-500">
-            Monthly subscription plus metered voice minutes. Transparent estimates at ~500 min/mo. Sandbox
-            testing is free — no credit card required to explore.
-          </p>
-          <div className="mt-8 grid gap-6 sm:grid-cols-2 lg:grid-cols-4">
-            {PLAN_KEYS.map((key) => (
-              <PricingCard key={key} planKey={key} highlighted={key === "growth"} />
-            ))}
+        {/* Pricing */}
+        <section className="py-[120px]" id="pricing">
+          <div className="marketing-container">
+            <div className="mb-16 text-center">
+              <h2 className="font-display text-3xl font-bold text-on-surface">Simple, predictable pricing</h2>
+              <p className="mx-auto mt-4 max-w-2xl text-lg text-slate-text">
+                Monthly subscription plus metered voice minutes. Sandbox testing is always free.
+              </p>
+            </div>
+            <div className="grid grid-cols-1 gap-6 md:grid-cols-2 lg:grid-cols-4">
+              {PLAN_KEYS.map((key) => (
+                <PricingCard key={key} planKey={key} highlighted={key === "growth"} />
+              ))}
+            </div>
           </div>
         </section>
 
-        <section id="faq" className="mx-auto max-w-3xl px-6 py-16">
-          <h2 className="text-center text-2xl font-bold text-brand-900">Frequently asked questions</h2>
-          <div className="mt-8">
+        {/* FAQ */}
+        <section className="bg-surface py-[120px]" id="faq">
+          <div className="mx-auto max-w-3xl px-5">
+            <h2 className="font-display mb-12 text-center text-3xl font-bold text-on-surface">
+              Frequently asked questions
+            </h2>
             <FaqAccordion items={FAQ_ITEMS} />
           </div>
         </section>
 
-        <section className="mx-auto max-w-4xl px-6 pb-20 text-center">
-          <div className="surface-dark rounded-3xl p-10 text-white sm:p-14">
-            <h2 className="font-display text-3xl">Ready to stop missing calls?</h2>
-            <p className="mx-auto mt-3 max-w-lg text-white/60">
-              Create your agent, test in the sandbox, and connect your line when you are ready.
-            </p>
-            <div className="mt-8 flex flex-col justify-center gap-4 sm:flex-row">
-              <Link href="/signup" className="btn-gold px-8 py-3.5">
-                Start free trial
-              </Link>
-              <Link
-                href="/help?intent=demo"
-                className="inline-flex items-center justify-center rounded-xl border border-white/20 px-8 py-3.5 font-semibold text-white hover:bg-white/10"
-              >
-                Talk to sales
-              </Link>
+        {/* CTA */}
+        <section className="py-[120px]">
+          <div className="marketing-container">
+            <div className="relative overflow-hidden rounded-[40px] bg-primary p-12 text-center text-white md:p-20">
+              <div className="absolute inset-0 opacity-10">
+                <div className="absolute -left-1/4 -top-1/2 h-[1000px] w-[1000px] rounded-full bg-electric-blue blur-[100px]" />
+              </div>
+              <h2 className="font-display relative z-10 mb-6 text-4xl font-extrabold md:text-5xl">
+                Ready to stop missing calls?
+              </h2>
+              <p className="relative z-10 mx-auto mb-10 max-w-xl text-lg text-on-primary-container">
+                Create your agent, test in the sandbox, and connect your line when you are ready. No credit card
+                required.
+              </p>
+              <div className="relative z-10 flex flex-col justify-center gap-4 sm:flex-row">
+                <Link
+                  href="/signup"
+                  className="rounded-full bg-white px-10 py-5 font-bold text-primary shadow-xl transition-transform hover:scale-105 active:scale-95"
+                >
+                  Start free trial
+                </Link>
+                <Link
+                  href="/help?intent=demo"
+                  className="rounded-full border border-white/20 bg-white/10 px-10 py-5 font-bold text-white backdrop-blur-md transition-all hover:bg-white/20"
+                >
+                  Talk to sales
+                </Link>
+              </div>
             </div>
           </div>
         </section>
       </main>
 
-      <script
-        type="application/ld+json"
-        dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
-      />
+      <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }} />
+      <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(faqJsonLd) }} />
 
       <MarketingFooter />
     </div>
