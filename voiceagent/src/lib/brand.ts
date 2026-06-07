@@ -1,5 +1,5 @@
 export const BRAND = {
-  name: "VoiceAgent",
+  name: "Intellivo",
   tagline: "AI phone agents for local businesses",
-  domain: "voiceagent.app",
+  domain: "intellivo.ca",
 } as const;

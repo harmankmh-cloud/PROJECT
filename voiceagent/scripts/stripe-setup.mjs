@@ -5,13 +5,16 @@
  */
 import Stripe from "stripe";
 
-const APP_URL = process.env.NEXT_PUBLIC_APP_URL || "https://voiceagent-indol.vercel.app";
+const APP_URL = process.env.NEXT_PUBLIC_APP_URL || "https://intellivo.ca";
 const WEBHOOK_URL = `${APP_URL.replace(/\/$/, "")}/api/webhooks/stripe`;
+const LEGACY_WEBHOOK_URLS = [
+  "https://voiceagent-indol.vercel.app/api/webhooks/stripe",
+];
 
 const PLANS = [
-  { key: "starter", name: "VoiceAgent Starter", amount: 9900, lookup: "voiceagent_starter_monthly" },
-  { key: "pro", name: "VoiceAgent Pro", amount: 49900, lookup: "voiceagent_pro_monthly" },
-  { key: "enterprise", name: "VoiceAgent Enterprise", amount: 200000, lookup: "voiceagent_enterprise_monthly" },
+  { key: "starter", name: "Intellivo Starter", amount: 9900, lookup: "voiceagent_starter_monthly" },
+  { key: "pro", name: "Intellivo Pro", amount: 49900, lookup: "voiceagent_pro_monthly" },
+  { key: "enterprise", name: "Intellivo Enterprise", amount: 200000, lookup: "voiceagent_enterprise_monthly" },
 ];
 
 const EVENTS = [
@@ -58,15 +61,27 @@ async function main() {
   const existing = await stripe.webhookEndpoints.list({ limit: 20 });
   let endpoint = existing.data.find((e) => e.url === WEBHOOK_URL);
 
+  for (const legacyUrl of LEGACY_WEBHOOK_URLS) {
+    const legacy = existing.data.find((e) => e.url === legacyUrl && e.status !== "disabled");
+    if (legacy) {
+      await stripe.webhookEndpoints.update(legacy.id, { disabled: true });
+      console.log(`\n✓ Disabled legacy webhook: ${legacyUrl}`);
+    }
+  }
+
   if (!endpoint) {
     endpoint = await stripe.webhookEndpoints.create({
       url: WEBHOOK_URL,
       enabled_events: EVENTS,
-      description: "VoiceAgent billing",
+      description: "Intellivo billing",
     });
     console.log(`\n✓ Created webhook: ${WEBHOOK_URL}`);
   } else {
-    await stripe.webhookEndpoints.update(endpoint.id, { enabled_events: EVENTS });
+    await stripe.webhookEndpoints.update(endpoint.id, {
+      enabled_events: EVENTS,
+      disabled: false,
+      description: "Intellivo billing",
+    });
     console.log(`\n✓ Webhook already exists: ${WEBHOOK_URL}`);
   }
 
