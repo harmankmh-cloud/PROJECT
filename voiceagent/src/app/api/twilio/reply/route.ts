@@ -14,6 +14,7 @@ import { generateVoiceReply } from "@/lib/voice-conversation";
 import { getPublicAppUrl } from "@/lib/public-url";
 import { takePendingSpeech } from "@/lib/pending-speech";
 import { createAdminClient } from "@/lib/supabase/admin";
+import { validateTwilioWebhook } from "@/lib/twilio-webhook";
 
 export async function POST(request: NextRequest) {
   const appUrl = getPublicAppUrl(request);
@@ -21,6 +22,9 @@ export async function POST(request: NextRequest) {
 
   try {
     const formData = await request.formData();
+    if (!validateTwilioWebhook(request, formData)) {
+      return twimlResponse(buildSimpleVoiceTwiml({ message: "Unauthorized.", gatherUrl }));
+    }
     const callSid = String(formData.get("CallSid") || "");
     const to = String(formData.get("To") || "");
 

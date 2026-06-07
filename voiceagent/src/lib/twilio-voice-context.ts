@@ -39,7 +39,7 @@ export async function resolveVoiceContext(to: string) {
 
   if (!phoneRecord) return defaults;
 
-  let orgId = phoneRecord.org_id || defaults.orgId;
+  const orgId = phoneRecord.org_id || defaults.orgId;
   let agentId = phoneRecord.agent_id || defaults.agentId;
   let welcomeGreeting = defaults.welcomeGreeting;
   let systemPrompt = defaults.systemPrompt;

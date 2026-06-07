@@ -6,6 +6,7 @@ import {
 } from "@/lib/twilio";
 import { getPublicAppUrl } from "@/lib/public-url";
 import { storePendingSpeech } from "@/lib/pending-speech";
+import { validateTwilioWebhook } from "@/lib/twilio-webhook";
 
 const LOW_CONFIDENCE = 0.45;
 
@@ -16,6 +17,9 @@ export async function POST(request: NextRequest) {
 
   try {
     const formData = await request.formData();
+    if (!validateTwilioWebhook(request, formData)) {
+      return twimlResponse(buildSimpleVoiceTwiml({ message: "Unauthorized.", gatherUrl }));
+    }
     const to = String(formData.get("To") || "");
     const callSid = String(formData.get("CallSid") || "");
     const speech = String(formData.get("SpeechResult") || "").trim();

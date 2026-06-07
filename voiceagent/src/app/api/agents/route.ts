@@ -71,11 +71,22 @@ export async function PATCH(request: NextRequest) {
   if (!org) return NextResponse.json({ error: "No organization" }, { status: 400 });
 
   const body = await request.json();
-  const { id, ...updates } = body;
+  const { id } = body;
+
+  const allowed: Record<string, unknown> = {};
+  if (body.name !== undefined) allowed.name = body.name;
+  if (body.system_prompt !== undefined) allowed.system_prompt = body.system_prompt;
+  if (body.welcome_greeting !== undefined) allowed.welcome_greeting = body.welcome_greeting;
+  if (body.voice !== undefined) allowed.voice = body.voice;
+  if (body.escalation_phone !== undefined) allowed.escalation_phone = body.escalation_phone;
+  if (body.is_active !== undefined) allowed.is_active = body.is_active;
+  if (body.knowledge_base_enabled !== undefined) {
+    allowed.knowledge_base_enabled = body.knowledge_base_enabled;
+  }
 
   const { data, error } = await supabase
     .from("va_agents")
-    .update({ ...updates, updated_at: new Date().toISOString() })
+    .update({ ...allowed, updated_at: new Date().toISOString() })
     .eq("id", id)
     .eq("org_id", org.id)
     .select()

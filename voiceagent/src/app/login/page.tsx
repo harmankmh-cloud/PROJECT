@@ -22,6 +22,7 @@ export default function LoginPage() {
       setLoading(false);
       return;
     }
+    await fetch("/api/org/setup", { method: "POST" });
     window.location.href = "/dashboard";
   }
 

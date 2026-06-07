@@ -20,7 +20,7 @@ export function FlowBuilder({
   const [saving, setSaving] = useState(false);
 
   function addNode(type: (typeof NODE_TYPES)[number]) {
-    const id = `${type}_${Date.now()}`;
+    const id = `${type}_${crypto.randomUUID()}`;
     setNodes((prev) => [
       ...prev,
       { id, type, label: type.charAt(0).toUpperCase() + type.slice(1), config: {} },

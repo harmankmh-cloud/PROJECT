@@ -1,16 +1,14 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useState } from "react";
 
 export default function SettingsPage() {
-  const [dataRegion, setDataRegion] = useState("us");
+  const [dataRegion, setDataRegion] = useState(
+    process.env.NEXT_PUBLIC_DEFAULT_DATA_REGION || "us"
+  );
   const [whiteLabel, setWhiteLabel] = useState({ brandName: "", domain: "" });
   const [transferPhone, setTransferPhone] = useState("");
   const [hipaa, setHipaa] = useState(false);
-
-  useEffect(() => {
-    setDataRegion(process.env.NEXT_PUBLIC_DEFAULT_DATA_REGION || "us");
-  }, []);
 
   return (
     <div>

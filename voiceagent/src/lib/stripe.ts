@@ -20,12 +20,29 @@ export function stripePriceIds() {
   };
 }
 
+export function planFromStripePriceId(priceId: string | undefined | null): "starter" | "pro" | "enterprise" {
+  const prices = stripePriceIds();
+  if (!priceId) return "starter";
+  if (priceId === prices.enterprise) return "enterprise";
+  if (priceId === prices.pro) return "pro";
+  if (priceId === prices.starter) return "starter";
+  return "starter";
+}
+
+export function stripeMeterEventName() {
+  return (
+    process.env.STRIPE_METER_EVENT_NAME ||
+    process.env.STRIPE_METER_VOICE_MINUTES ||
+    "voice_minutes"
+  );
+}
+
 export async function reportVoiceMinutes(
   stripeCustomerId: string,
   minutes: number
 ) {
   const stripe = getStripe();
-  const meterEventName = process.env.STRIPE_METER_EVENT_NAME || "voice_minutes";
+  const meterEventName = stripeMeterEventName();
 
   if (!stripe) return { ok: false };
 

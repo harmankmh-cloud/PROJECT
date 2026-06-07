@@ -12,8 +12,8 @@ export function getOrchestratorWssUrl() {
   return process.env.ORCHESTRATOR_WSS_URL || "wss://localhost:8080/ws";
 }
 
-export function useSimpleTwilioVoice() {
-  return (process.env.TWILIO_VOICE_MODE || "simple") === "simple";
+export function isSimpleTwilioVoiceMode() {
+  return (process.env.TWILIO_VOICE_MODE || "relay") === "simple";
 }
 
 export function twimlResponse(xml: string) {
