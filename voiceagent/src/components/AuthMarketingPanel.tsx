@@ -19,9 +19,7 @@ export function AuthMarketingPanel({ footer }: { footer: string }) {
         <h2 className="font-display mt-10 text-4xl leading-tight text-white">
           Never miss
           <br />
-          <span className="bg-gradient-to-r from-teal-200 to-violet-300 bg-clip-text text-teal-200">
-            another call
-          </span>
+          <span className="text-teal-300">another call</span>
         </h2>
         <p className="mt-4 max-w-sm text-sm leading-relaxed text-white/50">
           {BRAND.name} gives local businesses enterprise-grade phone agents — not a voicemail black hole.
