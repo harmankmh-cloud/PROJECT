@@ -89,6 +89,24 @@ select {
     @apply text-xs font-semibold uppercase tracking-[0.2em] text-gold-600;
   }
 
+  .section-eyebrow {
+    @apply text-xs font-bold uppercase tracking-[0.22em] text-teal-600;
+  }
+
+  .surface-dark {
+    @apply rounded-[1.35rem] border border-white/[0.08] bg-gradient-to-br from-[#0a1020] via-brand-950 to-[#030508] text-white shadow-[0_32px_80px_-20px_rgba(5,8,16,0.7)];
+  }
+
+  .sr-only {
+    @apply absolute -m-px h-px w-px overflow-hidden whitespace-nowrap border-0 p-0;
+    clip: rect(0, 0, 0, 0);
+  }
+
+  .focus\:not-sr-only:focus {
+    @apply static m-0 h-auto w-auto overflow-visible whitespace-normal p-4;
+    clip: auto;
+  }
+
   .link-accent {
     @apply font-semibold text-teal-600 transition hover:text-teal-500;
   }

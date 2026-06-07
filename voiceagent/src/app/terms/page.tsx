@@ -1,17 +1,21 @@
+import type { Metadata } from "next";
 import Link from "next/link";
 import { MarketingFooter } from "@/components/MarketingFooter";
 import { MarketingHeader } from "@/components/MarketingHeader";
+import { SkipToContent } from "@/components/SkipToContent";
 import { BRAND } from "@/lib/brand";
 
-export const metadata = {
+export const metadata: Metadata = {
   title: "Terms of Service",
+  alternates: { canonical: "/terms" },
 };
 
 export default function TermsPage() {
   return (
     <div className="mesh-bg flex min-h-screen flex-col">
+      <SkipToContent />
       <MarketingHeader />
-      <main className="mx-auto max-w-3xl flex-1 px-6 py-16">
+      <main id="main-content" className="mx-auto max-w-3xl flex-1 px-6 py-16">
         <h1 className="font-display text-3xl text-brand-900">Terms of Service</h1>
         <p className="mt-2 text-sm text-slate-500">Last updated: June 2026</p>
 
