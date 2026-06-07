@@ -52,13 +52,19 @@ if (!authPresent) {
 } else {
   const projects = runStitch(["project", "list", "--json"]);
   const projectsOk = projects.json?.ok === true;
+  const projectData = projects.json?.data ?? {};
   const projectList =
-    projects.json?.data?.projects ?? projects.json?.projects ?? [];
+    projectData.items ??
+    projectData.projects ??
+    projects.json?.projects ??
+    [];
+  const projectCount =
+    typeof projectData.count === "number" ? projectData.count : projectList.length;
   checks.push({
     name: "api.projects.list",
     ok: projectsOk,
     detail: projectsOk
-      ? `${projectList.length} projects`
+      ? `${projectCount} projects`
       : projects.json?.error?.message ||
         projects.stderr ||
         projects.stdout ||
