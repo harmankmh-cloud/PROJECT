@@ -16,7 +16,7 @@ export const BRAND = {
     email: "hello@intellivo.ca",
     salesEmail: "sales@intellivo.ca",
     supportEmail: "support@intellivo.ca",
-    phone: "+1 (604) 555-0199",
+    phone: "+1 (604) 791-6991",
     phoneNote: "Sales & support — Mon–Fri 9am–5pm PT",
   },
 } as const;
