@@ -4,15 +4,22 @@ set -euo pipefail
 ROOT="$(cd "$(dirname "$0")/.." && pwd)"
 export PATH="${HOME}/.local/bin:${PATH}"
 
+# Use global `stitch` when available; otherwise npx (no global install required).
+stitch_cmd() {
+  if command -v stitch >/dev/null 2>&1; then
+    stitch "$@"
+  else
+    npx -y stitch-design-cli "$@"
+  fi
+}
+
 install_cli() {
   if command -v stitch >/dev/null 2>&1; then
     echo "stitch CLI already installed: $(stitch --version)"
     return
   fi
-  echo "Installing stitch-design-cli to ~/.local ..."
-  npm install -g stitch-design-cli --prefix "${HOME}/.local"
-  export PATH="${HOME}/.local/bin:${PATH}"
-  stitch --version
+  echo "stitch not on PATH — using npx stitch-design-cli (no global install needed)."
+  stitch_cmd --version
 }
 
 load_env_key() {
@@ -39,7 +46,7 @@ save_key() {
     echo "  stitch doctor --json"
     exit 1
   fi
-  printf '%s' "${key}" | stitch auth set --stdin
+  printf '%s' "${key}" | stitch_cmd auth set --stdin
   echo "Stitch API key saved to ~/.config/stitch/config.json"
 }
 
@@ -53,8 +60,8 @@ main() {
     save_key ""
   fi
 
-  stitch auth status --json
-  stitch doctor --json
+  stitch_cmd auth status --json
+  stitch_cmd doctor --json
 }
 
 main "$@"

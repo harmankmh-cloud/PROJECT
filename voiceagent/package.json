@@ -11,7 +11,9 @@
     "orchestrator:build": "cd orchestrator && npm run build",
     "dev:proxy": "node scripts/dev-proxy.mjs",
     "dev:relay": "node scripts/start-relay-dev.mjs",
-    "stripe:setup": "node scripts/stripe-setup.mjs"
+    "stripe:setup": "node scripts/stripe-setup.mjs",
+    "stitch": "npx -y stitch-design-cli",
+    "stitch:doctor": "npx -y stitch-design-cli doctor --json"
   },
   "dependencies": {
     "@supabase/ssr": "^0.10.3",

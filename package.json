@@ -2,7 +2,9 @@
   "name": "project-workspace",
   "private": true,
   "scripts": {
+    "stitch": "npx -y stitch-design-cli",
     "stitch:setup": "bash scripts/stitch-setup.sh",
+    "stitch:auth": "npx -y stitch-design-cli auth set",
     "stitch:doctor": "npx -y stitch-design-cli doctor --json",
     "stitch:projects": "npx -y stitch-design-cli project list --json"
   },
