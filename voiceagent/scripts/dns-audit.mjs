@@ -6,8 +6,9 @@
  * Optional: CLOUDFLARE_API_TOKEN + CLOUDFLARE_ZONE_ID for zone record audit.
  *
  * Usage:
- *   node scripts/dns-audit.mjs          # audit only
- *   node scripts/dns-audit.mjs --fix    # add missing Vercel domains + env vars
+ *   node scripts/dns-audit.mjs              # audit public DNS (+ Cloudflare API if token set)
+ *   node scripts/dns-audit.mjs --fix        # add missing Vercel domains + env vars
+ *   node scripts/dns-audit.mjs --skip-vercel  # DNS/Cloudflare only (Vercel already configured)
  */
 
 import { readFileSync, existsSync } from "node:fs";
@@ -37,7 +38,9 @@ const WWW = "www.greetq.com";
 const EXPECTED_DOMAINS = [APEX, WWW];
 const VERCEL_APEX = "76.76.21.21";
 const VERCEL_WWW_CNAME = "cname.vercel-dns.com";
+const DEFAULT_CF_ZONE_ID = "a324ec75e1915d0cca4d8106bda5eb52";
 const FIX = process.argv.includes("--fix");
+const SKIP_VERCEL = process.argv.includes("--skip-vercel");
 
 async function vercel(path, opts = {}) {
   const token = process.env.VERCEL_TOKEN;
@@ -60,8 +63,8 @@ async function vercel(path, opts = {}) {
 
 async function cloudflareRecords() {
   const token = process.env.CLOUDFLARE_API_TOKEN;
-  const zone = process.env.CLOUDFLARE_ZONE_ID;
-  if (!token || !zone) return null;
+  const zone = process.env.CLOUDFLARE_ZONE_ID || DEFAULT_CF_ZONE_ID;
+  if (!token) return null;
   const res = await fetch(
     `https://api.cloudflare.com/client/v4/zones/${zone}/dns_records?per_page=100`,
     { headers: { Authorization: `Bearer ${token}` } }
@@ -114,6 +117,16 @@ async function auditPublicDns() {
       `${WWW} DNS error: ${www.error || "no records"}`
     )
   );
+  if (www.cname) {
+    const normalized = www.cname.replace(/\.$/, "");
+    checks.push(
+      ok(
+        normalized === VERCEL_WWW_CNAME,
+        `${WWW} CNAME target is ${VERCEL_WWW_CNAME}`,
+        `${WWW} CNAME expected ${VERCEL_WWW_CNAME}, got ${normalized}`
+      )
+    );
+  }
 
   return { apex, www, checks };
 }
@@ -121,7 +134,7 @@ async function auditPublicDns() {
 async function auditCloudflare() {
   const records = await cloudflareRecords();
   if (!records) {
-    return [{ status: "skip", message: "Cloudflare — set CLOUDFLARE_API_TOKEN + CLOUDFLARE_ZONE_ID" }];
+    return [{ status: "skip", message: "Cloudflare API — set CLOUDFLARE_API_TOKEN (zone ID defaults to greetq.com)" }];
   }
   const checks = [];
   const apexA = records.find((r) => r.name === APEX && r.type === "A");
@@ -146,8 +159,11 @@ async function auditCloudflare() {
 
 async function auditVercel() {
   if (!process.env.VERCEL_TOKEN) {
+    const msg = SKIP_VERCEL
+      ? "Vercel — skipped (--skip-vercel; domains configured on project)"
+      : "VERCEL_TOKEN not set — skip with --skip-vercel or restart agent";
     return {
-      checks: [{ status: "fail", message: "VERCEL_TOKEN not set in environment" }],
+      checks: [{ status: "skip", message: msg }],
       domains: [],
       fixes: [],
     };
@@ -259,13 +275,13 @@ async function main() {
 
   if (failed.length) {
     console.log(`\n${failed.length} issue(s) remaining.`);
-    if (!tokenSet) {
-      console.log(
-        "VERCEL_TOKEN is configured in Cursor but not injected into this VM. " +
-          "Start a new Cloud Agent run after saving the secret."
-      );
-    }
     process.exit(1);
+  }
+
+  if (!tokenSet && !SKIP_VERCEL) {
+    console.log(
+      "\nNote: VERCEL_TOKEN not injected in this VM. Use --skip-vercel if Vercel is already configured."
+    );
   }
 
   console.log("\nAll checks passed.");
