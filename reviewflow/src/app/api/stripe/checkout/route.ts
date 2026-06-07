@@ -3,6 +3,7 @@ import { createClient } from "@/lib/supabase/server";
 import { getAppUrl } from "@/lib/app-url-server";
 import { validateCheckoutPrices } from "@/lib/stripe-prices";
 import { getStripe, isStripeConfigured, stripePriceIds } from "@/lib/stripe";
+import { SETUP_FEE_ENABLED } from "@/lib/plans";
 
 export async function GET(request: Request) {
   return NextResponse.redirect(new URL("/dashboard/billing", request.url));
@@ -44,14 +45,19 @@ export async function POST() {
     const appUrl = await getAppUrl();
     const prices = stripePriceIds();
 
-    if (!prices.monthly || !prices.setup) {
-      return NextResponse.json({ error: "Stripe price IDs missing in server env" }, { status: 503 });
+    if (!prices.monthly) {
+      return NextResponse.json({ error: "Stripe monthly price ID missing in server env" }, { status: 503 });
+    }
+    if (SETUP_FEE_ENABLED && !prices.setup) {
+      return NextResponse.json({ error: "Stripe setup price ID missing in server env" }, { status: 503 });
     }
 
-    for (const [label, priceId] of [
-      ["STRIPE_PRICE_MONTHLY", prices.monthly],
-      ["STRIPE_PRICE_SETUP", prices.setup],
-    ] as const) {
+    const priceChecks = [["STRIPE_PRICE_MONTHLY", prices.monthly]] as const;
+    const allChecks = SETUP_FEE_ENABLED
+      ? [...priceChecks, ["STRIPE_PRICE_SETUP", prices.setup] as const]
+      : priceChecks;
+
+    for (const [label, priceId] of allChecks) {
       if (!priceId.startsWith("price_")) {
         return NextResponse.json(
           {
@@ -62,9 +68,16 @@ export async function POST() {
       }
     }
 
-    const priceCheck = await validateCheckoutPrices(stripe, prices.setup, prices.monthly);
-    if (!priceCheck.ok) {
-      return NextResponse.json({ error: priceCheck.errors.join(" ") }, { status: 400 });
+    if (SETUP_FEE_ENABLED) {
+      const priceCheck = await validateCheckoutPrices(stripe, prices.setup, prices.monthly);
+      if (!priceCheck.ok) {
+        return NextResponse.json({ error: priceCheck.errors.join(" ") }, { status: 400 });
+      }
+    }
+
+    const lineItems = [{ price: prices.monthly, quantity: 1 }];
+    if (SETUP_FEE_ENABLED) {
+      lineItems.push({ price: prices.setup, quantity: 1 });
     }
 
     const session = await stripe.checkout.sessions.create({
@@ -72,10 +85,7 @@ export async function POST() {
       customer_email: user.email || undefined,
       client_reference_id: business.id,
       payment_method_types: ["card"],
-      line_items: [
-        { price: prices.monthly, quantity: 1 },
-        { price: prices.setup, quantity: 1 },
-      ],
+      line_items: lineItems,
       success_url: `${appUrl}/dashboard/billing?success=1&session_id={CHECKOUT_SESSION_ID}`,
       cancel_url: `${appUrl}/dashboard/billing?canceled=1`,
       metadata: {

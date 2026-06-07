@@ -6,9 +6,9 @@ import { BRAND } from "@/lib/brand";
 import { PRICING } from "@/lib/marketing-content";
 
 export const metadata: Metadata = {
-  title: "Pricing — $99 setup + $39/mo",
+  title: "Pricing — $39/mo, no setup fee",
   description:
-    "Simple pricing for RateLocal — one-time setup, monthly subscription, 14-day money-back guarantee. QR review collection for BC local businesses.",
+    "Simple pricing for RateLocal — $39/mo, no setup fee, 14-day money-back guarantee. Cheaper than NiceJob and Podium. QR review collection for BC local businesses.",
   alternates: { canonical: "/pricing" },
 };
 
@@ -43,20 +43,27 @@ export default function PricingPage() {
           <div className="hero-glow -right-10 top-0 h-48 w-48 bg-amber-500/20" />
           <div className="relative flex flex-col items-center justify-center gap-8 sm:flex-row sm:gap-14">
             <div>
-              <p className="font-display text-5xl text-white sm:text-6xl">${PRICING.setup}</p>
-              <p className="mt-1 text-sm text-white/45">One-time setup</p>
-            </div>
-            <div className="hidden h-16 w-px bg-white/10 sm:block" />
-            <div>
               <p className="font-display text-5xl text-white sm:text-6xl">
                 ${PRICING.monthly}
                 <span className="text-2xl text-white/40">/mo</span>
               </p>
               <p className="mt-1 text-sm text-white/45">Everything included</p>
             </div>
+            <div className="hidden h-16 w-px bg-white/10 sm:block" />
+            <div>
+              <p className="font-display text-5xl text-white sm:text-6xl">$0</p>
+              <p className="mt-1 text-sm text-white/45">Setup fee — waived</p>
+            </div>
           </div>
-          <p className="relative mt-6 inline-flex rounded-full border border-teal-400/30 bg-teal-500/10 px-4 py-1.5 text-sm font-medium text-teal-200">
+          <p className="relative mt-6 inline-flex flex-wrap items-center justify-center gap-2 rounded-full border border-teal-400/30 bg-teal-500/10 px-4 py-1.5 text-sm font-medium text-teal-200">
             {PRICING.guarantee}
+          </p>
+          <p className="relative mt-3 text-sm text-white/55">
+            Pay yearly: <strong className="text-white">${PRICING.annual}/yr</strong> — 2 months free.
+          </p>
+          <p className="relative mx-auto mt-4 max-w-md text-xs text-white/45">
+            NiceJob starts at $75/mo. Podium runs $399+/mo. {BRAND.name} does the core job — more Google
+            reviews — for less, with no contract.
           </p>
           <ul className="relative mx-auto mt-8 max-w-md space-y-2 text-left text-sm text-white/70">
             {[
@@ -75,6 +82,14 @@ export default function PricingPage() {
           <Link href="/signup" className="btn-gold relative mt-10 inline-flex px-10 py-4 text-base">
             Get started today
           </Link>
+        </div>
+
+        <div className="mx-auto mt-10 max-w-xl rounded-2xl border border-gold-500/30 bg-gold-50/60 p-6 text-center">
+          <p className="text-sm font-semibold text-brand-950">Bundle &amp; save: Reputation + Reception</p>
+          <p className="mt-2 text-sm text-slate-600">
+            Add Intellivo (an AI phone agent that answers every call 24/7) and get both for{" "}
+            <strong className="text-brand-950">$119/mo</strong>. More reviews and never a missed call.
+          </p>
         </div>
 
         <p className="mt-8 text-center text-sm text-slate-500">

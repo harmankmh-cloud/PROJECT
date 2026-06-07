@@ -56,7 +56,7 @@ export default function HomePage() {
           "@type": "Offer",
           price: String(PRICING.monthly),
           priceCurrency: "CAD",
-          description: `$${PRICING.setup} setup + $${PRICING.monthly}/month`,
+          description: `$${PRICING.monthly}/month, no setup fee`,
         },
       },
       {
@@ -179,7 +179,7 @@ export default function HomePage() {
             ["30s", "Average review time"],
             ["3", "AI options per visit"],
             ["1–2★", "Routed privately"],
-            [`$${PRICING.setup}`, "One-time setup"],
+            ["$0", "Setup fee"],
           ].map(([val, label]) => (
             <div key={label} className="text-center sm:text-left">
               <p className="font-display text-3xl text-brand-950 sm:text-4xl">{val}</p>
@@ -299,16 +299,16 @@ export default function HomePage() {
           <div className="hero-glow -right-10 top-0 h-48 w-48 bg-amber-500/20" />
           <div className="relative flex flex-col items-center justify-center gap-8 sm:flex-row sm:gap-14">
             <div>
-              <p className="font-display text-5xl text-white sm:text-6xl">${PRICING.setup}</p>
-              <p className="mt-1 text-sm text-white/45">One-time setup</p>
-            </div>
-            <div className="hidden h-16 w-px bg-white/10 sm:block" />
-            <div>
               <p className="font-display text-5xl text-white sm:text-6xl">
                 ${PRICING.monthly}
                 <span className="text-2xl text-white/40">/mo</span>
               </p>
               <p className="mt-1 text-sm text-white/45">Everything included</p>
+            </div>
+            <div className="hidden h-16 w-px bg-white/10 sm:block" />
+            <div>
+              <p className="font-display text-5xl text-white sm:text-6xl">$0</p>
+              <p className="mt-1 text-sm text-white/45">Setup fee — waived</p>
             </div>
           </div>
           <p className="relative mt-6 inline-flex rounded-full border border-teal-400/30 bg-teal-500/10 px-4 py-1.5 text-sm font-medium text-teal-200">

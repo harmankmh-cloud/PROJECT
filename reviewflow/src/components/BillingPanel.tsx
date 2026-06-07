@@ -111,7 +111,7 @@ export function BillingPanel({
         <div className="border-b border-[#e8e2d9] bg-brand-950 px-6 py-5 text-white">
           <p className="text-xs font-semibold uppercase tracking-widest text-gold-400">{BRAND.proPlan}</p>
           <h2 className="font-display mt-1 text-2xl">{pricingLabel()}</h2>
-          <p className="mt-2 text-sm text-white/60">One-time setup + monthly subscription</p>
+          <p className="mt-2 text-sm text-white/60">Monthly subscription · no setup fee · cancel anytime</p>
         </div>
         <div className="space-y-4 p-6">
           <ul className="space-y-2 text-sm text-stone-600">
