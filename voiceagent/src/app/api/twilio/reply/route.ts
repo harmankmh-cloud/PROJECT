@@ -10,6 +10,7 @@ import {
   loadCallHistory,
   resolveVoiceContext,
 } from "@/lib/twilio-voice-context";
+import { loadKnowledgeContext } from "@/lib/knowledge-context";
 import { processVoiceTurn } from "@/lib/voice-flow-runtime";
 import { createAdminClient } from "@/lib/supabase/admin";
 import { getPublicAppUrl } from "@/lib/public-url";
@@ -27,6 +28,7 @@ export async function POST(request: NextRequest) {
     }
     const callSid = String(formData.get("CallSid") || "");
     const to = String(formData.get("To") || "");
+    const from = String(formData.get("From") || "");
 
     const pending = takePendingSpeech(callSid);
     if (!pending) {
@@ -53,18 +55,8 @@ export async function POST(request: NextRequest) {
           .eq("id", ctx.agentId)
           .maybeSingle();
         if (agent?.knowledge_base_enabled) {
-          const { data: docs } = await admin
-            .from("va_knowledge_docs")
-            .select("title, content")
-            .eq("org_id", ctx.orgId)
-            .limit(10);
-          if (docs?.length) {
-            knowledgeContext = docs
-              .slice(0, 3)
-              .map((d) => `## ${d.title}\n${String(d.content).slice(0, 400)}`)
-              .join("\n\n")
-              .slice(0, 1500);
-          }
+          knowledgeContext =
+            (await loadKnowledgeContext(ctx.orgId, ctx.agentId, pending.speech)) || undefined;
         }
       } catch {
         /* knowledge optional */
@@ -79,6 +71,7 @@ export async function POST(request: NextRequest) {
       systemPrompt: ctx.systemPrompt,
       knowledgeContext,
       escalationPhone: ctx.escalationPhone,
+      callerPhone: from || undefined,
       history,
     });
 

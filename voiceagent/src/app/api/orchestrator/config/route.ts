@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from "next/server";
 import { createAdminClient } from "@/lib/supabase/admin";
 import { verifyOrchestratorKey } from "@/lib/auth";
+import { loadKnowledgeContext } from "@/lib/knowledge-context";
 
 export async function GET(request: NextRequest) {
   if (!verifyOrchestratorKey(request)) {
@@ -29,22 +30,9 @@ export async function GET(request: NextRequest) {
     .eq("id", orgId)
     .maybeSingle();
 
-  let knowledgeContext = "";
-  if (agent?.knowledge_base_enabled) {
-    const { data: docs } = await admin
-      .from("va_knowledge_docs")
-      .select("title, content")
-      .eq("org_id", orgId)
-      .limit(10);
-
-    if (docs?.length) {
-      knowledgeContext = docs
-        .slice(0, 3)
-        .map((d) => `## ${d.title}\n${String(d.content).slice(0, 400)}`)
-        .join("\n\n")
-        .slice(0, 1500);
-    }
-  }
+  const knowledgeContext = agent?.knowledge_base_enabled
+    ? await loadKnowledgeContext(orgId, agentId)
+    : "";
 
   return NextResponse.json({
     orgId,

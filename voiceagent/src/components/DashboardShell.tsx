@@ -25,10 +25,12 @@ const NAV = [
 export function DashboardShell({
   orgName,
   userEmail,
+  isPlatformAdmin,
   children,
 }: {
   orgName?: string;
   userEmail?: string;
+  isPlatformAdmin?: boolean;
   children: React.ReactNode;
 }) {
   const pathname = usePathname();
@@ -91,6 +93,17 @@ export function DashboardShell({
           View site
         </Link>
       </nav>
+
+      {isPlatformAdmin && (
+        <div className="border-t border-white/10 px-3 py-3">
+          <Link
+            href="/admin"
+            className="flex items-center gap-2 rounded-2xl bg-gradient-to-r from-teal-500/20 to-violet-500/15 px-3.5 py-2.5 text-sm font-semibold text-teal-300 transition hover:from-teal-500/30"
+          >
+            🛡 Platform panel →
+          </Link>
+        </div>
+      )}
 
       <div className="border-t border-white/10 p-3">
         <button

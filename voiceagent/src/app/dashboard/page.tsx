@@ -1,4 +1,5 @@
 import Link from "next/link";
+import { RateLocalUpsell } from "@/components/RateLocalUpsell";
 import { StatCard } from "@/components/StatCard";
 import { SetupChecklist } from "@/components/SetupChecklist";
 import { createClient } from "@/lib/supabase/server";
@@ -69,6 +70,8 @@ export default async function DashboardPage() {
         <h1 className="font-display text-2xl text-brand-900">Overview</h1>
         <p className="mt-1 text-slate-500">{org ? org.name : "Set up your organization"}</p>
       </header>
+
+      <RateLocalUpsell />
 
       {org && (
         <SetupChecklist

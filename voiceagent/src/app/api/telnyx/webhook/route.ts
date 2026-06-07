@@ -9,7 +9,8 @@ import {
   startTranscription,
   transferCall,
 } from "@/lib/telnyx";
-import { generateVoiceReply } from "@/lib/voice-conversation";
+import { loadKnowledgeContext } from "@/lib/knowledge-context";
+import { processVoiceTurn } from "@/lib/voice-flow-runtime";
 import { logHubSpotCall } from "@/lib/integrations/hubspot";
 import { analyzeCall } from "@/lib/intelligence";
 
@@ -124,23 +125,19 @@ export async function POST(request: NextRequest) {
       .eq("call_id", call.id)
       .order("created_at", { ascending: true });
 
-    let knowledgeContext = "";
-    if (agent?.knowledge_base_enabled) {
-      const { data: docs } = await admin
-        .from("va_knowledge_docs")
-        .select("title, content")
-        .eq("org_id", call.org_id)
-        .limit(5);
-      if (docs?.length) {
-        knowledgeContext = docs.map((d) => `${d.title}: ${d.content}`).join("\n");
-      }
-    }
+    const knowledgeContext = agent?.knowledge_base_enabled
+      ? await loadKnowledgeContext(call.org_id, call.agent_id || agentId, text.trim())
+      : "";
 
-    const reply = await generateVoiceReply({
-      systemPrompt: agent?.system_prompt || "You are a helpful phone assistant.",
-      knowledgeContext,
-      history: (prior || []).slice(0, -1),
+    const reply = await processVoiceTurn({
+      callSid: callControlId,
+      orgId: call.org_id,
+      agentId: call.agent_id || agentId || "default",
       userMessage: text.trim(),
+      systemPrompt: agent?.system_prompt || "You are a helpful phone assistant.",
+      knowledgeContext: knowledgeContext || undefined,
+      callerPhone: call.from_number || from || undefined,
+      history: (prior || []).slice(0, -1),
     });
 
     await admin.from("va_call_transcripts").insert({

@@ -1,6 +1,7 @@
 import { redirect } from "next/navigation";
 import { createClient } from "@/lib/supabase/server";
 import { getUserOrg } from "@/lib/auth";
+import { isPlatformAdmin } from "@/lib/admin-auth";
 import { DashboardShell } from "@/components/DashboardShell";
 
 export default async function DashboardLayout({ children }: { children: React.ReactNode }) {
@@ -14,7 +15,11 @@ export default async function DashboardLayout({ children }: { children: React.Re
   const org = await getUserOrg(user.id);
 
   return (
-    <DashboardShell orgName={org?.name} userEmail={user.email}>
+    <DashboardShell
+      orgName={org?.name}
+      userEmail={user.email}
+      isPlatformAdmin={isPlatformAdmin(user.email)}
+    >
       {children}
     </DashboardShell>
   );
