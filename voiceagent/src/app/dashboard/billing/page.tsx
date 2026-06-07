@@ -66,11 +66,18 @@ export default async function BillingPage({
         </div>
         <div className="surface-card p-5">
           <p className="text-sm text-on-surface-variant">Minutes this period</p>
-          <p className="text-2xl font-bold">{totalMinutes}</p>
+          <p className="text-2xl font-bold">
+            {totalMinutes}
+            <span className="ml-1 text-sm font-normal text-on-surface-variant">
+              / {planInfo.includedMinutes.toLocaleString()} incl.
+            </span>
+          </p>
         </div>
         <div className="surface-card p-5">
           <p className="text-sm text-on-surface-variant">Est. overage</p>
-          <p className="text-2xl font-bold">${(totalMinutes * planInfo.perMinute).toFixed(2)}</p>
+          <p className="text-2xl font-bold">
+            ${(Math.max(0, totalMinutes - planInfo.includedMinutes) * planInfo.perMinute).toFixed(2)}
+          </p>
         </div>
       </div>
 
@@ -94,7 +101,9 @@ export default async function BillingPage({
           <div key={key} className={`surface-card p-5 ${plan === key ? "ring-2 ring-teal-500" : ""}`}>
             <h3 className="font-bold">{p.name}</h3>
             <p className="mt-1 text-2xl font-bold">${p.monthlyPrice}/mo</p>
-            <p className="text-sm text-on-surface-variant">+ ${p.perMinute}/min</p>
+            <p className="text-sm text-on-surface-variant">
+              {p.includedMinutes.toLocaleString()} min incl · then ${p.perMinute}/min
+            </p>
             <ul className="mt-3 space-y-1 text-xs text-on-surface-variant">
               {p.features.map((f) => (
                 <li key={f}>• {f}</li>

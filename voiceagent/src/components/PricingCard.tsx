@@ -35,7 +35,7 @@ export function PricingCard({ planKey, highlighted = false }: { planKey: PlanKey
             <span className="text-3xl font-bold text-ghost-white">{`$${plan.monthlyPrice}`}</span>
             <span className="text-on-surface-variant">/mo</span>
           </div>
-          <p className="mt-2 text-xs text-on-surface-variant">{`+ $${plan.perMinute}/min voice usage`}</p>
+          <p className="mt-2 text-xs text-on-surface-variant">{`${plan.includedMinutes.toLocaleString()} min included, then $${plan.perMinute}/min`}</p>
         </div>
         <ul className="mb-10 flex-grow space-y-4 text-sm">
           {plan.features.map((f) => (
@@ -69,7 +69,7 @@ export function PricingCard({ planKey, highlighted = false }: { planKey: PlanKey
           <span className="text-3xl font-bold text-ghost-white">{`$${plan.monthlyPrice}`}</span>
           <span className="text-on-surface-variant">/mo</span>
         </div>
-        <p className="mt-2 text-xs text-on-surface-variant">{`+ $${plan.perMinute}/min voice usage`}</p>
+        <p className="mt-2 text-xs text-on-surface-variant">{`${plan.includedMinutes.toLocaleString()} min included, then $${plan.perMinute}/min`}</p>
         <p className="mt-2 text-xs text-slate-text">
           ~{EXAMPLE_MINUTES} min/mo ≈ <strong className="text-on-surface">${estimate}/mo</strong> all-in
         </p>

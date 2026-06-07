@@ -12,9 +12,10 @@ const LEGACY_WEBHOOK_URLS = [
 ];
 
 const PLANS = [
-  { key: "starter", name: "Intellivo Starter", amount: 9900, lookup: "voiceagent_starter_monthly" },
-  { key: "pro", name: "Intellivo Pro", amount: 49900, lookup: "voiceagent_pro_monthly" },
-  { key: "enterprise", name: "Intellivo Enterprise", amount: 200000, lookup: "voiceagent_enterprise_monthly" },
+  { key: "starter", name: "Intellivo Starter", amount: 7900, lookup: "voiceagent_starter_monthly" },
+  { key: "growth", name: "Intellivo Growth", amount: 19900, lookup: "voiceagent_growth_monthly" },
+  { key: "pro", name: "Intellivo Pro", amount: 39900, lookup: "voiceagent_pro_monthly" },
+  { key: "enterprise", name: "Intellivo Enterprise", amount: 150000, lookup: "voiceagent_enterprise_monthly" },
 ];
 
 const EVENTS = [

@@ -5,12 +5,12 @@ import { getStripe } from "@/lib/stripe";
 export type PlanKey = "starter" | "growth" | "pro" | "enterprise";
 
 const PLAN_HINTS: Record<PlanKey, { patterns: RegExp[]; amountCents: number }> = {
-  starter: { patterns: [/starter/i, /voiceagent starter/i], amountCents: 9900 },
-  growth: { patterns: [/growth/i, /voiceagent growth/i], amountCents: 24900 },
-  pro: { patterns: [/pro/i, /voiceagent pro/i], amountCents: 49900 },
+  starter: { patterns: [/starter/i, /voiceagent starter/i], amountCents: 7900 },
+  growth: { patterns: [/growth/i, /voiceagent growth/i], amountCents: 19900 },
+  pro: { patterns: [/pro/i, /voiceagent pro/i], amountCents: 39900 },
   enterprise: {
     patterns: [/enterprise/i, /voiceagent enterprise/i],
-    amountCents: 200000,
+    amountCents: 150000,
   },
 };
 

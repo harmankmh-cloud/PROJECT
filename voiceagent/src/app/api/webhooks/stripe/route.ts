@@ -13,7 +13,10 @@ async function updateOrgPlan(
   const metadataPlan = subscription.metadata?.plan;
   const prices = await resolveStripePriceIds();
   const plan =
-    metadataPlan === "enterprise" || metadataPlan === "pro" || metadataPlan === "starter"
+    metadataPlan === "enterprise" ||
+    metadataPlan === "pro" ||
+    metadataPlan === "growth" ||
+    metadataPlan === "starter"
       ? metadataPlan
       : planFromResolvedPrices(priceId, prices);
 
@@ -65,6 +68,7 @@ export async function POST(request: NextRequest) {
           plan:
             session.metadata?.plan === "enterprise" ||
             session.metadata?.plan === "pro" ||
+            session.metadata?.plan === "growth" ||
             session.metadata?.plan === "starter"
               ? session.metadata.plan
               : "starter",
