@@ -244,30 +244,13 @@ select {
     }
   }
 
-  .text-gradient {
-    color: #f8fafc;
-    background: linear-gradient(135deg, #f8fafc 0%, #4fdbc8 50%, #a78bfa 100%);
-    -webkit-background-clip: text;
-    background-clip: text;
-  }
-
-  @supports ((-webkit-background-clip: text) or (background-clip: text)) {
-    .text-gradient {
-      color: transparent;
-    }
-  }
-
-  .text-gradient-cyan {
+  /* Solid accent text — avoids invisible text when background-clip is unsupported */
+  .text-accent {
     color: #4fdbc8;
-    background: linear-gradient(135deg, #22d3ee 0%, #4fdbc8 100%);
-    -webkit-background-clip: text;
-    background-clip: text;
   }
 
-  @supports ((-webkit-background-clip: text) or (background-clip: text)) {
-    .text-gradient-cyan {
-      color: transparent;
-    }
+  .text-accent-cyan {
+    color: #22d3ee;
   }
 
   .glow-border {

@@ -9,6 +9,8 @@ const NAV = [
   { href: "/#product", label: "Product" },
   { href: "/#solutions", label: "Solutions" },
   { href: "/pricing", label: "Pricing" },
+  { href: "/about", label: "About" },
+  { href: "/help", label: "Contact" },
 ] as const;
 
 export function MarketingHeader() {
@@ -28,7 +30,7 @@ export function MarketingHeader() {
             </div>
             {BRAND.name}
           </Link>
-          <nav className="hidden items-center gap-8 md:flex" aria-label="Main navigation">
+          <nav className="hidden items-center gap-8 lg:flex" aria-label="Main navigation">
             {NAV.map((item) => (
               <Link
                 key={item.href}
@@ -52,13 +54,13 @@ export function MarketingHeader() {
           </Link>
           <Link
             href="/help?intent=demo"
-            className="btn-secondary hidden rounded-full px-6 py-3 lg:inline-flex"
+            className="btn-secondary hidden rounded-full px-6 py-3 md:inline-flex"
           >
             Book a demo
           </Link>
           <button
             type="button"
-            className="rounded-lg border border-glass-border-subtle bg-surface-container px-3 py-2 text-sm md:hidden"
+            className="rounded-lg border border-glass-border-subtle bg-surface-container px-3 py-2 text-sm lg:hidden"
             aria-label="Open menu"
             aria-expanded={mobileOpen}
             onClick={() => setMobileOpen((v) => !v)}
@@ -69,7 +71,7 @@ export function MarketingHeader() {
       </div>
       {mobileOpen && (
         <nav
-          className="border-t border-glass-border-subtle bg-surface-container px-5 py-4 md:hidden"
+          className="border-t border-glass-border-subtle bg-surface-container px-5 py-4 lg:hidden"
           aria-label="Mobile navigation"
         >
           <div className="flex flex-col gap-3">

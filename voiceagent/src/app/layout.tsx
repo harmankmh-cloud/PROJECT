@@ -53,6 +53,18 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
           href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@24,400,0..1,0&display=swap"
           rel="stylesheet"
         />
+        <style
+          dangerouslySetInnerHTML={{
+            __html: `
+              html, body { background:#020617 !important; color:#e2e8f0 !important; }
+              h1, h2, h3, h4, p, a, button, li, span, label { color: inherit; }
+              .text-ghost-white, h1, h2 { color: #f8fafc !important; }
+              .text-on-surface { color: #dae2fd !important; }
+              .text-on-surface-variant, .text-slate-text { color: #94a3b8 !important; }
+              .text-primary, .text-accent { color: #4fdbc8 !important; }
+            `,
+          }}
+        />
       </head>
       <body className="min-h-full bg-obsidian font-sans text-on-surface antialiased">{children}</body>
     </html>
