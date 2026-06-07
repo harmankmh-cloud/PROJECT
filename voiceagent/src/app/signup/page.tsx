@@ -3,6 +3,8 @@
 import Link from "next/link";
 import { useState } from "react";
 import { createClient } from "@/lib/supabase/client";
+import { AuthMarketingPanel } from "@/components/AuthMarketingPanel";
+import { BrandLogo } from "@/components/BrandLogo";
 import { BRAND } from "@/lib/brand";
 
 export default function SignupPage() {
@@ -16,9 +18,9 @@ export default function SignupPage() {
     setLoading(true);
     setError("");
     const supabase = createClient();
-    const { error } = await supabase.auth.signUp({ email, password });
-    if (error) {
-      setError(error.message);
+    const { error: signUpError } = await supabase.auth.signUp({ email, password });
+    if (signUpError) {
+      setError(signUpError.message);
       setLoading(false);
       return;
     }
@@ -27,19 +29,52 @@ export default function SignupPage() {
   }
 
   return (
-    <div className="flex min-h-screen items-center justify-center px-4">
-      <div className="surface-card w-full max-w-md p-8">
-        <h1 className="text-2xl font-bold text-brand-900">Start with {BRAND.name}</h1>
-        <form onSubmit={handleSubmit} className="mt-6 space-y-4">
-          <input type="email" placeholder="Work email" value={email} onChange={(e) => setEmail(e.target.value)} className="input-field" required />
-          <input type="password" placeholder="Password (min 8 chars)" value={password} onChange={(e) => setPassword(e.target.value)} className="input-field" minLength={8} required />
-          {error && <p className="text-sm text-red-600">{error}</p>}
-          <button type="submit" disabled={loading} className="btn-primary w-full">{loading ? "Creating…" : "Create account"}</button>
-        </form>
-        <p className="mt-4 text-center text-sm text-slate-500">
-          Already have an account? <Link href="/login" className="text-teal-600 hover:underline">Log in</Link>
-        </p>
+    <main className="mesh-bg flex min-h-screen">
+      <AuthMarketingPanel footer={`Start with ${BRAND.name}`} />
+
+      <div className="flex flex-1 items-center justify-center px-4 py-12">
+        <div className="w-full max-w-md">
+          <div className="mb-8 lg:hidden">
+            <BrandLogo href="/" />
+          </div>
+          <div className="auth-card">
+            <p className="page-eyebrow">Get started</p>
+            <h1 className="font-display mt-2 text-3xl tracking-tight text-brand-900">Create account</h1>
+            <p className="mt-2 text-sm text-slate-500">We&apos;ll set up your org and default agent.</p>
+
+            <form onSubmit={handleSubmit} className="mt-8 space-y-4">
+              <input
+                type="email"
+                placeholder="Work email"
+                value={email}
+                onChange={(e) => setEmail(e.target.value)}
+                className="input-field"
+                required
+              />
+              <input
+                type="password"
+                placeholder="Password (min 8 chars)"
+                value={password}
+                onChange={(e) => setPassword(e.target.value)}
+                className="input-field"
+                minLength={8}
+                required
+              />
+              {error && <p className="text-sm text-red-600">{error}</p>}
+              <button type="submit" disabled={loading} className="btn-gold w-full py-3">
+                {loading ? "Creating…" : "Start free trial"}
+              </button>
+            </form>
+
+            <p className="mt-6 text-center text-sm text-slate-500">
+              Already have an account?{" "}
+              <Link href="/login" className="link-accent">
+                Sign in
+              </Link>
+            </p>
+          </div>
+        </div>
       </div>
-    </div>
+    </main>
   );
 }

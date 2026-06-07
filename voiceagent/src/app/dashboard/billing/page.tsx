@@ -3,6 +3,7 @@ import { createClient } from "@/lib/supabase/server";
 import { getUserOrg } from "@/lib/auth";
 import { isStripeConfigured } from "@/lib/stripe";
 import { SubscribeButton } from "@/components/SubscribeButton";
+import { ManageSubscriptionButton } from "@/components/ManageSubscriptionButton";
 
 export default async function BillingPage({
   searchParams,
@@ -59,15 +60,18 @@ export default async function BillingPage({
       </div>
 
       <div className="mt-8 surface-card p-6">
-        <h2 className="font-semibold">Stripe metered billing</h2>
-        <p className="mt-2 text-sm text-slate-600">
-          {stripeReady
-            ? "Stripe is configured. Voice minutes are reported via meter events on invoice creation."
-            : "Add STRIPE_SECRET_KEY and price IDs to enable billing."}
-        </p>
-        <p className="mt-4 text-xs text-slate-400">
-          Webhook endpoint: /api/webhooks/stripe
-        </p>
+        <div className="flex flex-wrap items-start justify-between gap-4">
+          <div>
+            <h2 className="font-semibold">Stripe metered billing</h2>
+            <p className="mt-2 text-sm text-slate-600">
+              {stripeReady
+                ? "Stripe is configured. Voice minutes are reported via meter events on invoice creation."
+                : "Add STRIPE_SECRET_KEY and price IDs to enable billing."}
+            </p>
+            <p className="mt-4 text-xs text-slate-400">Webhook endpoint: /api/webhooks/stripe</p>
+          </div>
+          <ManageSubscriptionButton hasCustomer={Boolean(org?.stripe_customer_id)} />
+        </div>
       </div>
 
       <div className="mt-8 grid gap-4 md:grid-cols-3">

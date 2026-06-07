@@ -101,3 +101,31 @@ export async function PATCH(request: NextRequest) {
   if (error) return NextResponse.json({ error: error.message }, { status: 400 });
   return NextResponse.json({ flow: data });
 }
+
+export async function DELETE(request: NextRequest) {
+  const supabase = await createClient();
+  const {
+    data: { user },
+  } = await supabase.auth.getUser();
+  if (!user) return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+
+  const org = await getUserOrg(user.id);
+  if (!org) return NextResponse.json({ error: "No organization" }, { status: 400 });
+
+  const body = await request.json().catch(() => ({}));
+  const id = body.id as string | undefined;
+  if (!id) return NextResponse.json({ error: "Flow id required" }, { status: 400 });
+
+  const { error } = await supabase.from("va_flows").delete().eq("id", id).eq("org_id", org.id);
+  if (error) return NextResponse.json({ error: error.message }, { status: 400 });
+
+  await logAudit({
+    orgId: org.id,
+    userId: user.id,
+    action: "flow.deleted",
+    resourceType: "flow",
+    resourceId: id,
+  });
+
+  return NextResponse.json({ ok: true });
+}

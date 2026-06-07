@@ -1,13 +1,13 @@
 import Link from "next/link";
-import { BRAND } from "@/lib/brand";
+import { BrandLogo } from "@/components/BrandLogo";
 import { PLANS } from "@/lib/plans";
 
 export default function HomePage() {
   return (
-    <div className="min-h-screen">
-      <header className="border-b border-slate-200 bg-white">
+    <div className="mesh-bg min-h-screen">
+      <header className="site-header">
         <div className="mx-auto flex max-w-6xl items-center justify-between px-6 py-4">
-          <p className="text-xl font-bold text-brand-900">{BRAND.name}</p>
+          <BrandLogo href="/" />
           <div className="flex gap-3">
             <Link href="/login" className="btn-secondary">Log in</Link>
             <Link href="/signup" className="btn-primary">Start free trial</Link>
@@ -16,7 +16,7 @@ export default function HomePage() {
       </header>
 
       <section className="mx-auto max-w-6xl px-6 py-20 text-center">
-        <h1 className="text-4xl font-bold tracking-tight text-brand-900 md:text-5xl">
+        <h1 className="font-display text-4xl tracking-tight text-brand-900 md:text-5xl">
           AI phone agents that never miss a call
         </h1>
         <p className="mx-auto mt-4 max-w-2xl text-lg text-slate-600">

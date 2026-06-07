@@ -1,5 +1,6 @@
 "use client";
 
+import Link from "next/link";
 import { useEffect, useState } from "react";
 import type { Call } from "@/lib/types";
 import { apiFetch } from "@/lib/api-client";
@@ -39,7 +40,7 @@ export default function CallsPage() {
           <thead className="bg-slate-50 text-slate-500">
             <tr>
               <th className="px-5 py-3">Direction</th>
-              <th className="px-5 py-3">From</th>
+              <th className="px-5 py-3">From / Detail</th>
               <th className="px-5 py-3">Duration</th>
               <th className="px-5 py-3">Intent</th>
               <th className="px-5 py-3">Sentiment</th>
@@ -54,7 +55,11 @@ export default function CallsPage() {
               calls.map((call) => (
                 <tr key={call.id} className="border-t border-slate-100">
                   <td className="px-5 py-3 capitalize">{call.direction}</td>
-                  <td className="px-5 py-3">{call.from_number || "—"}</td>
+                  <td className="px-5 py-3">
+                    <Link href={`/dashboard/calls/${call.id}`} className="text-teal-700 hover:underline">
+                      {call.from_number || "View call"}
+                    </Link>
+                  </td>
                   <td className="px-5 py-3">{call.duration_seconds}s</td>
                   <td className="px-5 py-3">{call.intent || "—"}</td>
                   <td className="px-5 py-3">{call.sentiment || "—"}</td>
