@@ -207,7 +207,7 @@ export const FAQ_ITEMS = [
   },
   {
     q: "How is usage billed?",
-    a: "Each plan is a flat monthly fee that includes a block of voice minutes (300 on Starter, 1,000 on Growth, 2,500 on Pro). If you go over, extra minutes are billed at your plan's per-minute rate. Cancel anytime from the billing portal.",
+    a: "Each plan is a flat monthly fee that includes a block of voice minutes (300 on Starter, 900 on Growth, 2,000 on Pro). If you go over, extra minutes are billed at your plan's per-minute rate. Cancel anytime from the billing portal.",
   },
   {
     q: "Can we try before buying a number?",

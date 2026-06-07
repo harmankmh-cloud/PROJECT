@@ -18,9 +18,11 @@ You set prices that are low vs competitors but never below cost. Solo founder, B
 - COGS ≈ near zero → high margin
 
 **Intellivo** — `voiceagent/src/lib/plans.ts` (PLANS)
-- Starter $79 (300 min) / Growth $199 (1,000 min) / Pro $399 (2,500 min) / Enterprise $1,500 (10,000 min)
-- Overage: $0.25 / $0.20 / $0.15 / $0.12 per min
-- **COGS ≈ $0.05–0.16/min (telephony + STT + TTS + LLM). THIS is where losses hide.**
+- Starter $79 (300 min) / Growth $199 (900 min) / Pro $399 (2,000 min) / Enterprise $1,500 (8,000 min)
+- Overage: $0.25 / $0.22 / $0.18 / $0.15 per min
+- **Planned COGS $0.08/min** (default Telnyx + Deepgram + Gemini stack ≈ $0.04–0.06; $0.08 adds cushion).
+- All tiers hold ≥ 60% gross margin at full included-minute use; overage ≥ ~2.25× cost.
+- **ElevenLabs voices cost ~$0.15–0.20/min — keep as a premium add-on, not bundled.**
 
 ## Competitor benchmarks (2026)
 
