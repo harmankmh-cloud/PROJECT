@@ -2,6 +2,7 @@ import Link from "next/link";
 import { SiteFooter } from "@/components/SiteFooter";
 import { SiteHeader } from "@/components/SiteHeader";
 import { COST_GUIDES } from "@/lib/constants";
+import { guidePricePreview } from "@/lib/marketing-content";
 import { getServiceCategories } from "@/lib/data";
 
 export default async function GuidesPage() {
@@ -23,10 +24,8 @@ export default async function GuidesPage() {
               <Link key={cat.slug} href={`/guides/${cat.slug}`} className="surface-card-hover p-6">
                 <span className="text-3xl">{cat.icon}</span>
                 <h2 className="mt-3 font-semibold text-brand-950">{cat.name}</h2>
-                {guide && guide.low > 0 && (
-                  <p className="mt-1 text-sm text-teal-600">
-                    ${guide.low}–${guide.high} {guide.unit}
-                  </p>
+                {guide && (
+                  <p className="mt-1 text-sm text-teal-600">{guidePricePreview(cat.slug, guide)}</p>
                 )}
                 <p className="mt-3 text-sm text-slate-500">View guide →</p>
               </Link>

@@ -28,7 +28,7 @@ export default function PrivacyPage() {
       <section className="space-y-3">
         <h2 className="text-lg font-semibold text-brand-950">Information we collect</h2>
         <ul className="list-disc space-y-2 pl-5 text-sm leading-relaxed text-slate-600">
-          <li>Account details: email address and password (stored securely via Supabase Auth).</li>
+          <li>Account details: email address and password (stored using industry-standard encryption).</li>
           <li>Job requests: name, phone, email, city, service type, and job description you submit.</li>
           <li>Business listings: business name, contact info, licence claims, and profile content for pros.</li>
           <li>Usage data: pages visited, device/browser type, and IP address (standard web logs).</li>
@@ -58,8 +58,8 @@ export default function PrivacyPage() {
       <section className="space-y-3">
         <h2 className="text-lg font-semibold text-brand-950">Where data is stored</h2>
         <p className="text-sm leading-relaxed text-slate-600">
-          Data is hosted by Supabase (PostgreSQL and authentication). Email is sent through Resend. These
-          providers may process data in Canada or the United States under contractual safeguards.
+          Data is hosted by secure cloud providers in Canada or the United States under contractual safeguards.
+          Email is sent through our transactional email provider.
         </p>
       </section>
 

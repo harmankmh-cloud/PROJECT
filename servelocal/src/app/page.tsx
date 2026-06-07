@@ -3,7 +3,8 @@ import { SiteFooter } from "@/components/SiteFooter";
 import { SiteHeader } from "@/components/SiteHeader";
 import { SearchBar } from "@/components/SearchBar";
 import { ProviderCard } from "@/components/ProviderCard";
-import { HOW_IT_WORKS, TRADE_CITIES, TRUST_BADGES } from "@/lib/constants";
+import { HOW_IT_WORKS, TRADE_CITIES, TRUST_BADGES, SERVE_LOCAL } from "@/lib/constants";
+import { HOMEOWNER_TESTIMONIALS } from "@/lib/marketing-content";
 import { getApprovedProviders, getPlatformStats, getServiceCategories } from "@/lib/data";
 
 export default async function HomePage() {
@@ -12,6 +13,31 @@ export default async function HomePage() {
     getApprovedProviders({ featuredOnly: true, sort: "recommended" }),
     getPlatformStats(),
   ]);
+
+  const siteUrl = process.env.NEXT_PUBLIC_APP_URL?.replace(/\/$/, "") || "https://www.servelocal.ca";
+  const jsonLd = {
+    "@context": "https://schema.org",
+    "@graph": [
+      {
+        "@type": "Organization",
+        name: SERVE_LOCAL.name,
+        url: siteUrl,
+        logo: `${siteUrl}/icon`,
+        areaServed: "British Columbia, Canada",
+        description: SERVE_LOCAL.tagline,
+      },
+      {
+        "@type": "WebSite",
+        name: SERVE_LOCAL.name,
+        url: siteUrl,
+        potentialAction: {
+          "@type": "SearchAction",
+          target: `${siteUrl}/search?q={search_term_string}`,
+          "query-input": "required name=search_term_string",
+        },
+      },
+    ],
+  };
 
   return (
     <main className="mesh-bg min-h-screen">
@@ -56,20 +82,24 @@ export default async function HomePage() {
           </p>
           <div className="mx-auto mt-12 grid max-w-2xl grid-cols-3 gap-3 sm:gap-4">
             <div className="stat-hero">
+              <p className="font-display text-2xl font-bold text-brand-950">{TRADE_CITIES.length}</p>
+              <p className="text-xs text-slate-500">BC cities covered</p>
+            </div>
+            <div className="stat-hero">
               <p className="font-display text-2xl font-bold text-brand-950">
-                {stats.providers > 0 ? stats.providers : "Growing"}
+                {stats.providers > 0 ? stats.providers : "Free"}
               </p>
               <p className="text-xs text-slate-500">
-                {stats.providers > 0 ? "Local pros" : "Be the first pro in your city"}
+                {stats.providers > 0 ? "Listed pros" : "Job posts"}
               </p>
             </div>
             <div className="stat-hero">
-              <p className="font-display text-2xl font-bold text-brand-950">{stats.verified || "—"}</p>
-              <p className="text-xs text-slate-500">Verified</p>
-            </div>
-            <div className="stat-hero">
-              <p className="font-display text-2xl font-bold text-brand-950">{stats.reviews || "—"}</p>
-              <p className="text-xs text-slate-500">Reviews</p>
+              <p className="font-display text-2xl font-bold text-brand-950">
+                {stats.reviews > 0 ? stats.reviews : "Direct"}
+              </p>
+              <p className="text-xs text-slate-500">
+                {stats.reviews > 0 ? "Homeowner reviews" : "Call pros — no middleman"}
+              </p>
             </div>
           </div>
         </div>
@@ -169,6 +199,32 @@ export default async function HomePage() {
         </section>
       )}
 
+      <section className="border-t border-slate-200/70 bg-white py-16">
+        <div className="mx-auto max-w-6xl px-4 sm:px-8">
+          <p className="section-eyebrow text-center">Social proof</p>
+          <h2 className="font-display mt-2 text-center text-3xl font-bold tracking-tight text-brand-950">
+            Homeowners & tradies in BC
+          </h2>
+          <p className="mx-auto mt-2 max-w-lg text-center text-xs text-slate-400">
+            Representative stories — replace with your real customers as you grow.
+          </p>
+          <div className="mt-10 grid gap-6 md:grid-cols-3">
+            {HOMEOWNER_TESTIMONIALS.map((t) => (
+              <blockquote key={t.name + t.city} className="surface-card p-6">
+                <p className="text-sm leading-relaxed text-slate-700">&ldquo;{t.quote}&rdquo;</p>
+                <footer className="mt-4">
+                  <p className="text-sm font-semibold text-brand-950">{t.name}</p>
+                  <p className="text-xs text-slate-500">
+                    {t.role}
+                    {"business" in t && t.business ? `, ${t.business}` : ""} · {t.city}
+                  </p>
+                </footer>
+              </blockquote>
+            ))}
+          </div>
+        </div>
+      </section>
+
       <section className="hero-dark px-4 py-16 sm:px-8">
         <div className="hero-glow left-1/4 top-0 h-64 w-64 bg-teal-500/25" />
         <div className="relative mx-auto max-w-3xl text-center text-white">
@@ -187,6 +243,8 @@ export default async function HomePage() {
           </div>
         </div>
       </section>
+
+      <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }} />
 
       <SiteFooter />
     </main>

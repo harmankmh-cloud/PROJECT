@@ -1,10 +1,28 @@
+import type { Metadata } from "next";
 import Link from "next/link";
 import { notFound } from "next/navigation";
 import { SiteFooter } from "@/components/SiteFooter";
 import { SiteHeader } from "@/components/SiteHeader";
 import { ProviderCard } from "@/components/ProviderCard";
-import { COST_GUIDES } from "@/lib/constants";
+import { COST_GUIDES, SERVE_LOCAL } from "@/lib/constants";
+import { GUIDE_EXTENDED } from "@/lib/marketing-content";
 import { getApprovedProviders, getCategoryBySlug } from "@/lib/data";
+
+export async function generateMetadata({
+  params,
+}: {
+  params: Promise<{ category: string }>;
+}): Promise<Metadata> {
+  const { category } = await params;
+  const cat = await getCategoryBySlug(category);
+  if (!cat) return { title: "Guide not found" };
+
+  return {
+    title: `${cat.name} Cost Guide BC | ${SERVE_LOCAL.name}`,
+    description: `Typical ${cat.name.toLowerCase()} prices in British Columbia — Fraser Valley & Metro Vancouver ranges, hiring tips, and FAQs.`,
+    alternates: { canonical: `/guides/${category}` },
+  };
+}
 
 export default async function GuideCategoryPage({ params }: { params: Promise<{ category: string }> }) {
   const { category } = await params;
@@ -12,16 +30,35 @@ export default async function GuideCategoryPage({ params }: { params: Promise<{ 
   if (!cat) notFound();
 
   const guide = COST_GUIDES[category];
+  const extended = GUIDE_EXTENDED[category];
   const pros = await getApprovedProviders({ categorySlug: category, sort: "rating" });
+
+  const breadcrumbJsonLd = {
+    "@context": "https://schema.org",
+    "@type": "BreadcrumbList",
+    itemListElement: [
+      { "@type": "ListItem", position: 1, name: "Home", item: "https://www.servelocal.ca" },
+      { "@type": "ListItem", position: 2, name: "Cost guides", item: "https://www.servelocal.ca/guides" },
+      {
+        "@type": "ListItem",
+        position: 3,
+        name: `${cat.name} costs`,
+        item: `https://www.servelocal.ca/guides/${category}`,
+      },
+    ],
+  };
 
   return (
     <main className="mesh-bg min-h-screen">
       <SiteHeader compact />
       <div className="mx-auto max-w-6xl px-4 py-12 sm:px-8">
-        <Link href="/guides" className="text-sm font-semibold text-teal-600 hover:underline">← All guides</Link>
+        <Link href="/guides" className="text-sm font-semibold text-teal-600 hover:underline">
+          ← All guides
+        </Link>
         <h1 className="font-display mt-4 text-4xl text-brand-950">
           {cat.icon} {cat.name} costs in BC
         </h1>
+        {extended && <p className="mt-4 max-w-3xl leading-relaxed text-slate-600">{extended.intro}</p>}
 
         {guide ? (
           <div className="mt-8 grid gap-6 lg:grid-cols-2">
@@ -68,6 +105,47 @@ export default async function GuideCategoryPage({ params }: { params: Promise<{ 
           </div>
         )}
 
+        {extended && (
+          <div className="mt-10 grid gap-6 lg:grid-cols-2">
+            <div className="surface-card p-6">
+              <h2 className="font-semibold text-brand-950">What affects price</h2>
+              <ul className="mt-4 space-y-2 text-sm text-slate-700">
+                {extended.factors.map((factor) => (
+                  <li key={factor} className="flex gap-2">
+                    <span className="text-teal-500">•</span>
+                    {factor}
+                  </li>
+                ))}
+              </ul>
+              <p className="mt-6 text-sm text-slate-600">
+                <strong>Typical timeline:</strong> {extended.timeline}
+              </p>
+            </div>
+            <div className="surface-card p-6">
+              <h2 className="font-semibold text-brand-950">Before you hire</h2>
+              <ul className="mt-4 space-y-2 text-sm text-slate-700">
+                {extended.hiring.map((item) => (
+                  <li key={item} className="flex gap-2">
+                    <span className="text-teal-500">✓</span>
+                    {item}
+                  </li>
+                ))}
+              </ul>
+            </div>
+            <div className="surface-card p-6 lg:col-span-2">
+              <h2 className="font-semibold text-brand-950">FAQ</h2>
+              <dl className="mt-4 space-y-4">
+                {extended.faqs.map((faq) => (
+                  <div key={faq.q}>
+                    <dt className="font-medium text-brand-950">{faq.q}</dt>
+                    <dd className="mt-1 text-sm text-slate-600">{faq.a}</dd>
+                  </div>
+                ))}
+              </dl>
+            </div>
+          </div>
+        )}
+
         {pros.length > 0 && (
           <div className="mt-12">
             <h2 className="font-display text-2xl text-brand-950">Top-rated {cat.name.toLowerCase()} pros</h2>
@@ -79,6 +157,9 @@ export default async function GuideCategoryPage({ params }: { params: Promise<{ 
           </div>
         )}
       </div>
+
+      <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(breadcrumbJsonLd) }} />
+
       <SiteFooter />
     </main>
   );
