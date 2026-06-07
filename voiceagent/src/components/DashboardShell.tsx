@@ -101,7 +101,7 @@ export function DashboardShell({
     pathname === href || (href !== "/dashboard" && pathname.startsWith(href));
 
   return (
-    <div className="dark-mesh-bg grid-pattern min-h-screen text-on-surface">
+    <div className="page-shell min-h-screen text-on-surface">
       {/* Desktop sidebar */}
       <aside className="sidebar-shell fixed left-0 top-0 z-40 hidden h-screen w-64 flex-col lg:flex">
         <div className="flex h-20 items-center gap-3 border-b border-glass-border-subtle px-5">

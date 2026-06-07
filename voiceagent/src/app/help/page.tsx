@@ -15,7 +15,7 @@ export default async function HelpPage({
   const isDemo = params.intent === "demo";
 
   return (
-    <div className="dark-mesh-bg grid-pattern flex min-h-screen flex-col">
+    <div className="page-shell flex min-h-screen flex-col">
       <SkipToContent />
       <MarketingHeader />
       <main id="main-content" className="mx-auto w-full max-w-2xl flex-1 space-y-8 px-4 py-12">

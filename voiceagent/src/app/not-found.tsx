@@ -5,7 +5,7 @@ import { SkipToContent } from "@/components/SkipToContent";
 
 export default function NotFound() {
   return (
-    <div className="dark-mesh-bg grid-pattern flex min-h-screen flex-col">
+    <div className="page-shell flex min-h-screen flex-col">
       <SkipToContent />
       <MarketingHeader />
       <main id="main-content" className="mx-auto flex max-w-lg flex-1 flex-col items-center justify-center px-6 py-20 text-center">

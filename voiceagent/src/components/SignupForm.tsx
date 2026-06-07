@@ -66,7 +66,7 @@ export function SignupForm({
   }
 
   return (
-    <div className="dark-mesh-bg grid-pattern flex min-h-screen flex-col">
+    <div className="page-shell flex min-h-screen flex-col">
       <SkipToContent />
       <div className="flex flex-1">
         <AuthMarketingPanel footer={`Start with ${BRAND.name}`} />

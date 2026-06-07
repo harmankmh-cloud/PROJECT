@@ -39,7 +39,7 @@ export function LoginForm({ initialError = "" }: { initialError?: string }) {
   }
 
   return (
-    <div className="dark-mesh-bg grid-pattern flex min-h-screen flex-col">
+    <div className="page-shell flex min-h-screen flex-col">
       <SkipToContent />
       <div className="flex flex-1">
         <AuthMarketingPanel footer="Sign in to your command center" />

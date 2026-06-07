@@ -89,7 +89,7 @@ export default function HomePage() {
   };
 
   return (
-    <div className="dark-mesh-bg grid-pattern flex min-h-screen flex-col overflow-x-hidden">
+    <div className="page-shell flex min-h-screen flex-col overflow-x-hidden">
       <SkipToContent />
       <MarketingHeader />
 
@@ -104,7 +104,7 @@ export default function HomePage() {
               </div>
               <h1 className="font-display mb-6 text-4xl leading-tight text-ghost-white md:text-5xl lg:text-[48px] lg:leading-[1.1]">
                 AI phone agents that{" "}
-                <span className="text-gradient">never miss a call</span>
+                <span className="text-accent">never miss a call</span>
               </h1>
               <p className="mx-auto mb-10 max-w-xl text-lg text-on-surface-variant md:mx-0">
                 Answer inbound calls, book appointments, update your CRM, and warm-transfer to humans — with audit
