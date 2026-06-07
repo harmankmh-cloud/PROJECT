@@ -46,14 +46,14 @@ export default function AgentsPage() {
         </div>
         <Link
           href="/dashboard/agents/new"
-          className="flex shrink-0 items-center gap-2 rounded-xl bg-primary px-4 py-3 text-sm font-semibold text-on-primary shadow-lg transition-transform hover:scale-105 active:scale-95"
+          className="btn-primary flex shrink-0 items-center gap-2 rounded-xl px-4 py-3 text-sm shadow-lg transition-transform hover:scale-105 active:scale-95"
         >
           <MaterialIcon name="add" />
           New agent
         </Link>
       </header>
 
-      {error && <p className="mb-4 text-sm text-red-600">{error}</p>}
+      {error && <p className="mb-4 text-sm text-error">{error}</p>}
 
       {loading ? (
         <p className="text-on-primary-container">Loading agents…</p>
@@ -66,7 +66,7 @@ export default function AgentsPage() {
           </p>
           <Link
             href="/dashboard/agents/new"
-            className="mt-6 inline-flex items-center gap-2 rounded-xl bg-primary px-6 py-3 text-sm font-semibold text-on-primary"
+            className="btn-primary mt-6 inline-flex items-center gap-2 rounded-xl px-6 py-3 text-sm"
           >
             <MaterialIcon name="add" />
             Configure Agent

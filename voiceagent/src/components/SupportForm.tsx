@@ -67,8 +67,8 @@ export function SupportForm({
     return (
       <div className="surface-card p-8 text-center">
         <p className="text-3xl">✓</p>
-        <h3 className="font-display mt-3 text-xl text-brand-900">Message sent</h3>
-        <p className="mt-2 text-sm text-slate-600">
+        <h3 className="font-display mt-3 text-xl text-ghost-white">Message sent</h3>
+        <p className="mt-2 text-sm text-on-surface-variant">
           The {BRAND.name} team got your note. We usually reply within 1–2 business days.
         </p>
         <button type="button" onClick={() => setSent(false)} className="btn-ghost mt-6 px-4 py-2 text-sm">
@@ -82,13 +82,13 @@ export function SupportForm({
     <form onSubmit={handleSubmit} className={compact ? "space-y-4" : "surface-card space-y-5 p-6 sm:p-8"}>
       {!compact && (
         <div>
-          <h2 className="font-display text-xl text-brand-900">Send us a message</h2>
-          <p className="mt-1 text-sm text-slate-600">Questions, ideas, or issues — we read every one.</p>
+          <h2 className="font-display text-xl text-ghost-white">Send us a message</h2>
+          <p className="mt-1 text-sm text-on-surface-variant">Questions, ideas, or issues — we read every one.</p>
         </div>
       )}
 
       <label className="block space-y-2 text-sm">
-        <span className="font-semibold text-brand-900">Your email</span>
+        <span className="font-semibold text-ghost-white">Your email</span>
         <input
           type="email"
           value={email}
@@ -100,7 +100,7 @@ export function SupportForm({
       </label>
 
       <label className="block space-y-2 text-sm">
-        <span className="font-semibold text-brand-900">Organization (optional)</span>
+        <span className="font-semibold text-ghost-white">Organization (optional)</span>
         <input
           value={orgName}
           onChange={(e) => setOrgName(e.target.value)}
@@ -110,7 +110,7 @@ export function SupportForm({
       </label>
 
       <label className="block space-y-2 text-sm">
-        <span className="font-semibold text-brand-900">Topic</span>
+        <span className="font-semibold text-ghost-white">Topic</span>
         <select
           value={category}
           onChange={(e) => setCategory(e.target.value as (typeof categories)[number]["value"])}
@@ -125,7 +125,7 @@ export function SupportForm({
       </label>
 
       <label className="block space-y-2 text-sm">
-        <span className="font-semibold text-brand-900">Message</span>
+        <span className="font-semibold text-ghost-white">Message</span>
         <textarea
           value={message}
           onChange={(e) => setMessage(e.target.value)}

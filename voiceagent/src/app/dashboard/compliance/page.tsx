@@ -24,13 +24,13 @@ export default function CompliancePage() {
 
   return (
     <div>
-      <h1 className="text-2xl font-bold text-brand-900">Compliance</h1>
-      <p className="mt-1 text-slate-500">TCPA consent, HIPAA controls, and SOC 2 readiness.</p>
+      <h1 className="text-2xl font-bold text-ghost-white">Compliance</h1>
+      <p className="mt-1 text-on-surface-variant">TCPA consent, HIPAA controls, and SOC 2 readiness.</p>
 
       <div className="mt-8 grid gap-6 lg:grid-cols-2">
         <div className="surface-card p-6">
           <h2 className="font-semibold">TCPA Consent Capture</h2>
-          <p className="mt-2 text-sm text-slate-600">{TCPA_DISCLOSURE}</p>
+          <p className="mt-2 text-sm text-on-surface-variant">{TCPA_DISCLOSURE}</p>
           <form onSubmit={recordConsent} className="mt-4 space-y-3">
             <input className="input-field" placeholder="+1..." value={phone} onChange={(e) => setPhone(e.target.value)} required />
             <button type="submit" className="btn-primary">Record PEWC</button>
@@ -40,7 +40,7 @@ export default function CompliancePage() {
 
         <div className="surface-card p-6">
           <h2 className="font-semibold">HIPAA Controls</h2>
-          <ul className="mt-3 space-y-2 text-sm text-slate-600">
+          <ul className="mt-3 space-y-2 text-sm text-on-surface-variant">
             <li>Encryption at rest: {HIPAA_CONTROLS.encryptionAtRest}</li>
             <li>Encryption in transit: {HIPAA_CONTROLS.encryptionInTransit}</li>
             <li>Default retention: {HIPAA_CONTROLS.defaultRetentionDays} days</li>
@@ -53,7 +53,7 @@ export default function CompliancePage() {
           <h2 className="font-semibold">SOC 2 Type II Checklist</h2>
           <ul className="mt-3 grid gap-2 sm:grid-cols-2">
             {SOC2_CHECKLIST.map((item) => (
-              <li key={item} className="flex items-start gap-2 text-sm text-slate-600">
+              <li key={item} className="flex items-start gap-2 text-sm text-on-surface-variant">
                 <span className="text-teal-500">✓</span> {item}
               </li>
             ))}

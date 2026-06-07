@@ -61,9 +61,9 @@ export function SubscribeButton({
         {loading ? "Redirecting…" : label || `Subscribe to ${plan}`}
       </button>
       {!stripeReady && (
-        <p className="mt-2 text-xs text-slate-400">Stripe price IDs required in env.</p>
+        <p className="mt-2 text-xs text-slate-text">Stripe price IDs required in env.</p>
       )}
-      {error && <p className="mt-2 text-xs text-red-600">{error}</p>}
+      {error && <p className="mt-2 text-xs text-error">{error}</p>}
     </div>
   );
 }

@@ -50,7 +50,7 @@ export function BusinessHoursEditor({
                   value={day.open}
                   onChange={(e) => updateDay(key, { open: e.target.value })}
                 />
-                <span className="text-slate-400">to</span>
+                <span className="text-slate-text">to</span>
                 <input
                   type="time"
                   className="input-field w-32 py-2"

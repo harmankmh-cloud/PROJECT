@@ -121,8 +121,8 @@ export default function FlowsPage() {
     <div className="mx-auto max-w-6xl">
       <div className="flex flex-wrap items-start justify-between gap-4">
         <div>
-          <h1 className="font-display text-2xl text-brand-900">Flow Builder</h1>
-          <p className="mt-1 text-slate-500">
+          <h1 className="font-display text-2xl text-ghost-white">Flow Builder</h1>
+          <p className="mt-1 text-on-surface-variant">
             Published flows drive live call logic for the selected agent.
           </p>
         </div>
@@ -133,7 +133,7 @@ export default function FlowsPage() {
         )}
       </div>
 
-      {error && <p className="mt-4 text-sm text-red-600">{error}</p>}
+      {error && <p className="mt-4 text-sm text-error">{error}</p>}
 
       <div className="mt-6 flex flex-wrap items-center gap-3">
         <input
@@ -151,7 +151,7 @@ export default function FlowsPage() {
           ))}
         </select>
         {editingId && <span className="text-sm text-teal-600">Editing existing flow</span>}
-        {saving && <span className="text-sm text-slate-400">Saving…</span>}
+        {saving && <span className="text-sm text-slate-text">Saving…</span>}
       </div>
 
       <div className="mt-4">
@@ -171,16 +171,16 @@ export default function FlowsPage() {
               <li key={f.id} className="surface-card flex flex-wrap items-center justify-between gap-3 px-4 py-3 text-sm">
                 <div>
                   <span className="font-medium">{f.name}</span>
-                  <span className="ml-2 text-slate-400">→ {agentLabel(f.agent_id)}</span>
+                  <span className="ml-2 text-slate-text">→ {agentLabel(f.agent_id)}</span>
                 </div>
                 <div className="flex items-center gap-3">
-                  <span className={f.is_published ? "text-teal-600" : "text-slate-400"}>
+                  <span className={f.is_published ? "text-teal-600" : "text-slate-text"}>
                     {f.is_published ? "Published" : "Draft"}
                   </span>
                   <button type="button" onClick={() => loadFlow(f)} className="text-teal-700 hover:underline">
                     Edit
                   </button>
-                  <button type="button" onClick={() => deleteFlow(f.id)} className="text-red-600 hover:underline">
+                  <button type="button" onClick={() => deleteFlow(f.id)} className="text-error hover:underline">
                     Delete
                   </button>
                 </div>

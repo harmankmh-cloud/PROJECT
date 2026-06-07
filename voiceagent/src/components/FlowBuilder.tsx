@@ -74,7 +74,7 @@ export function FlowBuilder({
       </div>
 
       <div className="surface-card p-4">
-        <h3 className="text-sm font-semibold text-brand-900">Connections</h3>
+        <h3 className="text-sm font-semibold text-ghost-white">Connections</h3>
         <div className="mt-3 flex flex-wrap items-end gap-2">
           <select className="input-field max-w-[10rem]" value={edgeFrom} onChange={(e) => setEdgeFrom(e.target.value)}>
             <option value="">From node</option>
@@ -84,7 +84,7 @@ export function FlowBuilder({
               </option>
             ))}
           </select>
-          <span className="text-slate-400">→</span>
+          <span className="text-slate-text">→</span>
           <select className="input-field max-w-[10rem]" value={edgeTo} onChange={(e) => setEdgeTo(e.target.value)}>
             <option value="">To node</option>
             {nodes.map((n) => (
@@ -98,14 +98,14 @@ export function FlowBuilder({
           </button>
         </div>
         {edges.length > 0 && (
-          <ul className="mt-3 space-y-1 text-xs text-slate-600">
+          <ul className="mt-3 space-y-1 text-xs text-on-surface-variant">
             {edges.map((e) => (
-              <li key={e.id} className="flex items-center justify-between rounded-lg bg-slate-50 px-3 py-2">
+              <li key={e.id} className="flex items-center justify-between rounded-lg bg-surface-container px-3 py-2">
                 <span>
                   {nodes.find((n) => n.id === e.source)?.label || e.source} →{" "}
                   {nodes.find((n) => n.id === e.target)?.label || e.target}
                 </span>
-                <button type="button" onClick={() => removeEdge(e.id)} className="text-red-600 hover:underline">
+                <button type="button" onClick={() => removeEdge(e.id)} className="text-error hover:underline">
                   Remove
                 </button>
               </li>
@@ -119,7 +119,7 @@ export function FlowBuilder({
           <div key={node.id} className="surface-card p-4">
             <div className="flex items-center justify-between gap-2">
               <span className="text-xs font-semibold uppercase tracking-wide text-violet-500">{node.type}</span>
-              <button type="button" onClick={() => removeNode(node.id)} className="text-xs text-red-600 hover:underline">
+              <button type="button" onClick={() => removeNode(node.id)} className="text-xs text-error hover:underline">
                 Delete
               </button>
             </div>

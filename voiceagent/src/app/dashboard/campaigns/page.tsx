@@ -75,9 +75,9 @@ export default function CampaignsPage() {
 
   return (
     <div>
-      <h1 className="text-2xl font-bold text-brand-900">Outbound Campaigns</h1>
-      <p className="mt-1 text-slate-500">TCPA-compliant outbound calling. Requires prior express written consent per contact.</p>
-      {error && <p className="mt-4 text-sm text-red-600">{error}</p>}
+      <h1 className="text-2xl font-bold text-ghost-white">Outbound Campaigns</h1>
+      <p className="mt-1 text-on-surface-variant">TCPA-compliant outbound calling. Requires prior express written consent per contact.</p>
+      {error && <p className="mt-4 text-sm text-error">{error}</p>}
 
       <form onSubmit={createCampaign} className="mt-8 surface-card space-y-4 p-6">
         <input className="input-field" placeholder="Campaign name" value={name} onChange={(e) => setName(e.target.value)} required />
@@ -94,13 +94,13 @@ export default function CampaignsPage() {
 
       <div className="mt-8 space-y-3">
         {campaigns.length === 0 ? (
-          <p className="text-slate-400">No campaigns yet.</p>
+          <p className="text-slate-text">No campaigns yet.</p>
         ) : (
           campaigns.map((c) => (
             <div key={c.id} className="surface-card flex items-center justify-between p-4">
               <div>
                 <p className="font-medium">{c.name}</p>
-                <p className="text-sm text-slate-500">
+                <p className="text-sm text-on-surface-variant">
                   {Array.isArray(c.contact_list) ? c.contact_list.length : 0} contacts · {c.status}
                 </p>
               </div>

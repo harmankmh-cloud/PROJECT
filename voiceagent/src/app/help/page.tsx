@@ -15,13 +15,13 @@ export default async function HelpPage({
   const isDemo = params.intent === "demo";
 
   return (
-    <div className="mesh-bg flex min-h-screen flex-col">
+    <div className="dark-mesh-bg grid-pattern flex min-h-screen flex-col">
       <SkipToContent />
       <MarketingHeader />
       <main id="main-content" className="mx-auto w-full max-w-2xl flex-1 space-y-8 px-4 py-12">
         <header>
-          <h1 className="font-display text-3xl text-brand-900">Help & contact</h1>
-          <p className="mt-2 text-sm text-slate-500">
+          <h1 className="font-display text-3xl text-ghost-white">Help & contact</h1>
+          <p className="mt-2 text-sm text-on-surface-variant">
             {isEnterprise
               ? `Tell us about your Enterprise needs — the ${BRAND.name} team will follow up.`
               : isDemo
@@ -39,7 +39,7 @@ export default async function HelpPage({
                 : ""
           }
         />
-        <p className="text-center text-sm text-slate-500">
+        <p className="text-center text-sm text-on-surface-variant">
           Have an account?{" "}
           <Link href="/login" className="link-accent">
             Sign in

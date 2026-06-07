@@ -17,14 +17,14 @@ export const metadata: Metadata = {
 
 export default function PricingPage() {
   return (
-    <div className="flex min-h-screen flex-col bg-surface">
+    <div className="dark-mesh-bg grid-pattern flex min-h-screen flex-col">
       <SkipToContent />
       <MarketingHeader />
       <main id="main-content" className="flex-1 pt-20">
         <section className="py-[120px]">
           <div className="marketing-container">
             <div className="mb-16 text-center">
-              <h1 className="font-display text-3xl font-bold text-on-surface md:text-4xl">Simple, predictable pricing</h1>
+              <h1 className="font-display text-3xl font-bold text-ghost-white md:text-4xl">Simple, predictable pricing</h1>
               <p className="mx-auto mt-4 max-w-2xl text-lg text-slate-text">
                 Monthly subscription plus metered voice minutes. Sandbox testing is always free — no credit card
                 required to explore.

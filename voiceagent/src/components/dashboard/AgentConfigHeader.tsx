@@ -20,7 +20,7 @@ export function AgentConfigHeader({
   const router = useRouter();
 
   return (
-    <div className="sticky top-20 z-40 -mx-5 border-b border-outline-variant/10 bg-surface/80 backdrop-blur-xl md:-mx-16">
+    <div className="sticky top-16 z-40 -mx-5 border-b border-glass-border-subtle bg-obsidian/90 backdrop-blur-xl md:-mx-10 lg:-mx-12">
       <div className="mx-auto flex h-16 max-w-lg items-center justify-between px-5">
         <div className="flex items-center gap-3">
           <button
@@ -38,14 +38,14 @@ export function AgentConfigHeader({
             type="button"
             onClick={onSave}
             disabled={saving}
-            className="rounded-lg px-4 py-2 text-sm font-semibold text-secondary transition-all hover:bg-secondary/5 active:scale-95 disabled:opacity-50"
+            className="rounded-lg px-4 py-2 text-sm font-semibold text-primary transition-all hover:bg-primary/10 active:scale-95 disabled:opacity-50"
           >
             {saving ? "Saving…" : saveLabel}
           </button>
         ) : (
           <Link
             href={backHref}
-            className="rounded-lg px-4 py-2 text-sm font-semibold text-secondary transition-all hover:bg-secondary/5"
+            className="rounded-lg px-4 py-2 text-sm font-semibold text-primary transition-all hover:bg-primary/10"
           >
             Done
           </Link>

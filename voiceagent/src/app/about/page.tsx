@@ -13,12 +13,12 @@ export const metadata: Metadata = {
 
 export default function AboutPage() {
   return (
-    <div className="mesh-bg flex min-h-screen flex-col">
+    <div className="dark-mesh-bg grid-pattern flex min-h-screen flex-col">
       <SkipToContent />
       <MarketingHeader />
       <main id="main-content" className="mx-auto max-w-3xl flex-1 px-6 py-16">
-        <h1 className="font-display text-3xl text-brand-900">About {BRAND.name}</h1>
-        <div className="mt-8 space-y-6 text-sm leading-relaxed text-slate-600">
+        <h1 className="font-display text-3xl text-ghost-white">About {BRAND.name}</h1>
+        <div className="mt-8 space-y-6 text-sm leading-relaxed text-on-surface-variant">
           <p>
             {BRAND.name} helps local businesses answer every inbound call with AI agents that sound natural,
             follow your scripts, book appointments, and hand off to humans when needed.
@@ -27,13 +27,13 @@ export default function AboutPage() {
             We built the platform for operators — salon owners, clinic administrators, and service company
             dispatchers — who cannot afford missed calls but also cannot staff a 24/7 phone team.
           </p>
-          <h2 className="text-lg font-semibold text-brand-900">What we believe</h2>
+          <h2 className="text-lg font-semibold text-ghost-white">What we believe</h2>
           <ul className="list-inside list-disc space-y-2">
             <li>Voice AI should be measurable — transcripts, quality scores, and intent trends.</li>
             <li>Compliance is a product feature, not a footnote.</li>
             <li>Setup should take hours, not months.</li>
           </ul>
-          <h2 className="text-lg font-semibold text-brand-900">Contact</h2>
+          <h2 className="text-lg font-semibold text-ghost-white">Contact</h2>
           <p>
             Questions? Reach us through{" "}
             <Link href="/help" className="text-teal-600 hover:underline">

@@ -66,7 +66,7 @@ export function SignupForm({
   }
 
   return (
-    <div className="mesh-bg flex min-h-screen flex-col">
+    <div className="dark-mesh-bg grid-pattern flex min-h-screen flex-col">
       <SkipToContent />
       <div className="flex flex-1">
         <AuthMarketingPanel footer={`Start with ${BRAND.name}`} />
@@ -78,8 +78,8 @@ export function SignupForm({
             </div>
             <div className="auth-card">
               <p className="page-eyebrow">Get started</p>
-              <h1 className="font-display mt-2 text-3xl tracking-tight text-brand-900">Create account</h1>
-              <p className="mt-2 text-sm text-slate-500">
+              <h1 className="font-display mt-2 text-3xl tracking-tight text-ghost-white">Create account</h1>
+              <p className="mt-2 text-sm text-on-surface-variant">
                 {initialPlan
                   ? `We'll set up your org, then continue to ${initialPlan} checkout.`
                   : "We'll set up your org and default agent."}
@@ -87,7 +87,7 @@ export function SignupForm({
 
               <form onSubmit={handleSubmit} className="mt-8 space-y-4" noValidate>
                 <div>
-                  <label htmlFor="signup-business" className="mb-1.5 block text-sm font-medium text-slate-700">
+                  <label htmlFor="signup-business" className="mb-1.5 block text-sm font-medium text-on-surface-variant">
                     Business name
                   </label>
                   <input
@@ -102,7 +102,7 @@ export function SignupForm({
                   />
                 </div>
                 <div>
-                  <label htmlFor="signup-email" className="mb-1.5 block text-sm font-medium text-slate-700">
+                  <label htmlFor="signup-email" className="mb-1.5 block text-sm font-medium text-on-surface-variant">
                     Work email
                   </label>
                   <input
@@ -118,7 +118,7 @@ export function SignupForm({
                   />
                 </div>
                 <div>
-                  <label htmlFor="signup-password" className="mb-1.5 block text-sm font-medium text-slate-700">
+                  <label htmlFor="signup-password" className="mb-1.5 block text-sm font-medium text-on-surface-variant">
                     Password
                   </label>
                   <input
@@ -134,7 +134,7 @@ export function SignupForm({
                     required
                   />
                 </div>
-                <label className="flex items-start gap-3 text-sm text-slate-600">
+                <label className="flex items-start gap-3 text-sm text-on-surface-variant">
                   <input
                     type="checkbox"
                     name="acceptTerms"
@@ -156,7 +156,7 @@ export function SignupForm({
                   </span>
                 </label>
                 {error && (
-                  <p className="text-sm text-red-600" role="alert">
+                  <p className="text-sm text-error" role="alert">
                     {error}
                   </p>
                 )}
@@ -165,7 +165,7 @@ export function SignupForm({
                 </button>
               </form>
 
-              <p className="mt-6 text-center text-sm text-slate-500">
+              <p className="mt-6 text-center text-sm text-on-surface-variant">
                 Already have an account?{" "}
                 <Link href="/login" className="link-accent">
                   Sign in

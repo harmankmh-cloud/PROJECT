@@ -88,13 +88,13 @@ export default function PhoneNumbersPage() {
 
   return (
     <div>
-      <h1 className="text-2xl font-bold text-brand-900">Phone Numbers</h1>
-      <p className="mt-1 text-slate-500">
+      <h1 className="text-2xl font-bold text-ghost-white">Phone Numbers</h1>
+      <p className="mt-1 text-on-surface-variant">
         Map your Twilio numbers to agents. Inbound calls route by the number dialed.
       </p>
 
       {message && <p className="mt-4 text-sm text-teal-700">{message}</p>}
-      {error && <p className="mt-4 text-sm text-red-600">{error}</p>}
+      {error && <p className="mt-4 text-sm text-error">{error}</p>}
 
       <form onSubmit={addNumber} className="mt-8 surface-card space-y-4 p-6">
         <h2 className="font-semibold">Add number</h2>
@@ -130,16 +130,16 @@ export default function PhoneNumbersPage() {
 
       <div className="mt-8 space-y-3">
         {loading ? (
-          <p className="text-slate-400">Loading…</p>
+          <p className="text-slate-text">Loading…</p>
         ) : numbers.length === 0 ? (
-          <p className="text-slate-400">No phone numbers yet. Add your Twilio number above.</p>
+          <p className="text-slate-text">No phone numbers yet. Add your Twilio number above.</p>
         ) : (
           numbers.map((n) => (
             <div key={n.id} className="surface-card flex flex-wrap items-center justify-between gap-4 p-5">
               <div>
                 <p className="font-semibold">{n.phone_number}</p>
-                {n.label && <p className="text-sm text-slate-500">{n.label}</p>}
-                <p className="mt-1 text-xs text-slate-400">Agent: {agentName(n)}</p>
+                {n.label && <p className="text-sm text-on-surface-variant">{n.label}</p>}
+                <p className="mt-1 text-xs text-slate-text">Agent: {agentName(n)}</p>
               </div>
               <div className="flex items-center gap-2">
                 <select

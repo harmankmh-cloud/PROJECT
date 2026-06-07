@@ -86,7 +86,7 @@ function SandboxContent() {
         </button>
       </div>
 
-      {error && <p className="text-sm text-red-600">{error}</p>}
+      {error && <p className="text-sm text-error">{error}</p>}
 
       <div className="glass-panel min-h-[24rem] space-y-3 overflow-y-auto rounded-xl p-5">
         {messages.length === 0 ? (
@@ -119,7 +119,7 @@ function SandboxContent() {
         />
         <button
           type="submit"
-          className="rounded-xl bg-primary px-5 py-3 text-sm font-semibold text-on-primary disabled:opacity-50"
+          className="btn-primary rounded-xl px-5 py-3 text-sm disabled:opacity-50"
           disabled={loading || !agentId}
         >
           Send

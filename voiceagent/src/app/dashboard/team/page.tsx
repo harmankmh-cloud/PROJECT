@@ -82,19 +82,19 @@ export default function TeamPage() {
   return (
     <div className="mx-auto max-w-3xl space-y-8">
       <header>
-        <h1 className="font-display text-2xl text-brand-900">Team</h1>
-        <p className="mt-1 text-slate-500">
+        <h1 className="font-display text-2xl text-ghost-white">Team</h1>
+        <p className="mt-1 text-on-surface-variant">
           Add teammates who already have an account. Viewers can read; operators can edit agents and calls.
         </p>
       </header>
 
       {message && <p className="text-sm text-teal-700">{message}</p>}
-      {error && <p className="text-sm text-red-600">{error}</p>}
+      {error && <p className="text-sm text-error">{error}</p>}
 
       {canManage && (
         <form onSubmit={addMember} className="surface-card space-y-4 p-6">
           <h2 className="font-semibold">Add member</h2>
-          <p className="text-sm text-slate-500">
+          <p className="text-sm text-on-surface-variant">
             The person must sign up at Intellivo first, then you add them here by email.
           </p>
           <input
@@ -118,7 +118,7 @@ export default function TeamPage() {
 
       <div className="surface-card overflow-hidden">
         <table className="w-full text-left text-sm">
-          <thead className="bg-slate-50 text-slate-500">
+          <thead className="bg-surface-container text-on-surface-variant">
             <tr>
               <th className="px-5 py-3">Email</th>
               <th className="px-5 py-3">Role</th>
@@ -135,7 +135,7 @@ export default function TeamPage() {
             </tr>
             {loading ? (
               <tr>
-                <td colSpan={4} className="px-5 py-6 text-slate-400">
+                <td colSpan={4} className="px-5 py-6 text-slate-text">
                   Loading…
                 </td>
               </tr>
@@ -163,7 +163,7 @@ export default function TeamPage() {
                     <td className="px-5 py-3">
                       <button
                         type="button"
-                        className="text-sm text-red-600 hover:underline"
+                        className="text-sm text-error hover:underline"
                         onClick={() => removeMember(m.id)}
                       >
                         Remove

@@ -18,16 +18,16 @@ export default async function DashboardHelpPage() {
     <div className="mx-auto max-w-2xl space-y-8">
       <header>
         <p className="page-eyebrow">Support</p>
-        <h1 className="font-display mt-1 text-3xl text-brand-900">Help & suggestions</h1>
-        <p className="mt-2 text-sm text-slate-500">
+        <h1 className="font-display mt-1 text-3xl text-ghost-white">Help & suggestions</h1>
+        <p className="mt-2 text-sm text-on-surface-variant">
           Message the {BRAND.name} team — your request is saved to our support queue.
         </p>
       </header>
 
       <SupportForm defaultEmail={user.email || ""} defaultOrgName={org?.name || ""} />
 
-      <div className="surface-card p-5 text-sm text-slate-600">
-        <p className="font-semibold text-brand-900">Quick tips</p>
+      <div className="surface-card p-5 text-sm text-on-surface-variant">
+        <p className="font-semibold text-ghost-white">Quick tips</p>
         <ul className="mt-2 list-inside list-disc space-y-1">
           <li>Calls not routing? Check Phone Numbers and your Twilio/Telnyx webhook URL.</li>
           <li>Agent giving wrong answers? Add knowledge docs and enable knowledge on the agent.</li>

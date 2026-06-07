@@ -39,8 +39,8 @@ export default async function BillingPage({
 
   return (
     <div>
-      <h1 className="text-2xl font-bold text-brand-900">Billing</h1>
-      <p className="mt-1 text-slate-500">Usage-based voice minutes + subscription.</p>
+      <h1 className="text-2xl font-bold text-ghost-white">Billing</h1>
+      <p className="mt-1 text-on-surface-variant">Usage-based voice minutes + subscription.</p>
 
       {params.success && (
         <p className="mt-4 rounded-lg bg-teal-50 px-4 py-3 text-sm text-teal-800">
@@ -61,15 +61,15 @@ export default async function BillingPage({
 
       <div className="mt-8 grid gap-4 sm:grid-cols-3">
         <div className="surface-card p-5">
-          <p className="text-sm text-slate-500">Current plan</p>
+          <p className="text-sm text-on-surface-variant">Current plan</p>
           <p className="text-2xl font-bold capitalize">{planInfo.name}</p>
         </div>
         <div className="surface-card p-5">
-          <p className="text-sm text-slate-500">Minutes this period</p>
+          <p className="text-sm text-on-surface-variant">Minutes this period</p>
           <p className="text-2xl font-bold">{totalMinutes}</p>
         </div>
         <div className="surface-card p-5">
-          <p className="text-sm text-slate-500">Est. overage</p>
+          <p className="text-sm text-on-surface-variant">Est. overage</p>
           <p className="text-2xl font-bold">${(totalMinutes * planInfo.perMinute).toFixed(2)}</p>
         </div>
       </div>
@@ -78,12 +78,12 @@ export default async function BillingPage({
         <div className="flex flex-wrap items-start justify-between gap-4">
           <div>
             <h2 className="font-semibold">Stripe metered billing</h2>
-            <p className="mt-2 text-sm text-slate-600">
+            <p className="mt-2 text-sm text-on-surface-variant">
               {stripeReady
                 ? "Stripe is configured. Voice minutes are reported via meter events on invoice creation."
                 : "Add STRIPE_SECRET_KEY and price IDs to enable billing."}
             </p>
-            <p className="mt-4 text-xs text-slate-400">Webhook endpoint: /api/webhooks/stripe</p>
+            <p className="mt-4 text-xs text-slate-text">Webhook endpoint: /api/webhooks/stripe</p>
           </div>
           <ManageSubscriptionButton hasCustomer={Boolean(org?.stripe_customer_id)} />
         </div>
@@ -94,8 +94,8 @@ export default async function BillingPage({
           <div key={key} className={`surface-card p-5 ${plan === key ? "ring-2 ring-teal-500" : ""}`}>
             <h3 className="font-bold">{p.name}</h3>
             <p className="mt-1 text-2xl font-bold">${p.monthlyPrice}/mo</p>
-            <p className="text-sm text-slate-500">+ ${p.perMinute}/min</p>
-            <ul className="mt-3 space-y-1 text-xs text-slate-500">
+            <p className="text-sm text-on-surface-variant">+ ${p.perMinute}/min</p>
+            <ul className="mt-3 space-y-1 text-xs text-on-surface-variant">
               {p.features.map((f) => (
                 <li key={f}>• {f}</li>
               ))}

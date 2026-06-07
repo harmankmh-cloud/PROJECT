@@ -8,7 +8,7 @@ export function CallDetailHeader({ title = "Call Details" }: { title?: string })
   const router = useRouter();
 
   return (
-    <div className="sticky top-20 z-40 -mx-5 border-b border-outline-variant/20 glass-panel shadow-sm md:-mx-16">
+    <div className="sticky top-16 z-40 -mx-5 border-b border-glass-border-subtle glass-panel shadow-sm md:-mx-10 lg:-mx-12">
       <div className="mx-auto flex h-16 max-w-lg items-center justify-between px-4">
         <button
           type="button"

@@ -52,15 +52,15 @@ export default function DeveloperPage() {
   return (
     <div className="mx-auto max-w-3xl space-y-8">
       <header>
-        <h1 className="font-display text-2xl text-brand-900">Developer</h1>
-        <p className="mt-1 text-slate-500">API keys and webhooks for your integrations.</p>
+        <h1 className="font-display text-2xl text-ghost-white">Developer</h1>
+        <p className="mt-1 text-on-surface-variant">API keys and webhooks for your integrations.</p>
       </header>
 
-      {error && <p className="text-sm text-red-600">{error}</p>}
+      {error && <p className="text-sm text-error">{error}</p>}
 
       <div className="surface-card space-y-4 p-6">
         <h2 className="font-semibold">REST API</h2>
-        <p className="text-sm text-slate-600">
+        <p className="text-sm text-on-surface-variant">
           List recent calls with your API key:
         </p>
         <code className="block rounded-xl bg-slate-900 px-4 py-3 text-sm text-teal-300">
@@ -89,7 +89,7 @@ export default function DeveloperPage() {
 
       <div className="surface-card overflow-hidden">
         <table className="w-full text-left text-sm">
-          <thead className="bg-slate-50 text-slate-500">
+          <thead className="bg-surface-container text-on-surface-variant">
             <tr>
               <th className="px-5 py-3">Name</th>
               <th className="px-5 py-3">Prefix</th>
@@ -100,13 +100,13 @@ export default function DeveloperPage() {
           <tbody>
             {loading ? (
               <tr>
-                <td colSpan={4} className="px-5 py-6 text-slate-400">
+                <td colSpan={4} className="px-5 py-6 text-slate-text">
                   Loading…
                 </td>
               </tr>
             ) : keys.length === 0 ? (
               <tr>
-                <td colSpan={4} className="px-5 py-8 text-center text-slate-400">
+                <td colSpan={4} className="px-5 py-8 text-center text-slate-text">
                   No API keys yet.
                 </td>
               </tr>
@@ -121,7 +121,7 @@ export default function DeveloperPage() {
                   <td className="px-5 py-3">
                     <button
                       type="button"
-                      className="text-sm text-red-600 hover:underline"
+                      className="text-sm text-error hover:underline"
                       onClick={() => revokeKey(k.id)}
                     >
                       Revoke
@@ -134,8 +134,8 @@ export default function DeveloperPage() {
         </table>
       </div>
 
-      <div className="surface-card space-y-3 p-6 text-sm text-slate-600">
-        <h2 className="font-semibold text-brand-900">Outbound webhooks</h2>
+      <div className="surface-card space-y-3 p-6 text-sm text-on-surface-variant">
+        <h2 className="font-semibold text-ghost-white">Outbound webhooks</h2>
         <p>
           Configure your webhook URL in <strong>Settings</strong>. Intellivo sends a signed{" "}
           <code className="text-xs">call.completed</code> event after each call with transcript analysis.

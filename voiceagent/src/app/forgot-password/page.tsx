@@ -36,8 +36,8 @@ export default function ForgotPasswordPage() {
   return (
     <div className="flex min-h-screen items-center justify-center px-4">
       <div className="surface-card w-full max-w-md p-8">
-        <h1 className="text-2xl font-bold text-brand-900">Reset password</h1>
-        <p className="mt-2 text-sm text-slate-500">
+        <h1 className="text-2xl font-bold text-ghost-white">Reset password</h1>
+        <p className="mt-2 text-sm text-on-surface-variant">
           Enter your {BRAND.name} account email and we&apos;ll send a reset link.
         </p>
 
@@ -50,14 +50,14 @@ export default function ForgotPasswordPage() {
             className="input-field"
             required
           />
-          {error && <p className="text-sm text-red-600">{error}</p>}
+          {error && <p className="text-sm text-error">{error}</p>}
           {message && <p className="text-sm text-teal-700">{message}</p>}
           <button type="submit" disabled={loading} className="btn-primary w-full">
             {loading ? "Sending…" : "Send reset link"}
           </button>
         </form>
 
-        <p className="mt-4 text-center text-sm text-slate-500">
+        <p className="mt-4 text-center text-sm text-on-surface-variant">
           <Link href="/login" className="text-teal-600 hover:underline">
             Back to log in
           </Link>

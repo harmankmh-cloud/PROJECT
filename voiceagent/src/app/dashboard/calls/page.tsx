@@ -30,14 +30,14 @@ export default function CallsPage() {
 
   return (
     <div>
-      <h1 className="text-2xl font-bold text-brand-900">Call Logs</h1>
-      <p className="mt-1 text-slate-500">{stats.totalMinutes} minutes · {stats.containmentRate}% contained</p>
-      {error && <p className="mt-4 text-sm text-red-600">{error}</p>}
-      {loading && <p className="mt-4 text-sm text-slate-400">Loading calls…</p>}
+      <h1 className="text-2xl font-bold text-ghost-white">Call Logs</h1>
+      <p className="mt-1 text-on-surface-variant">{stats.totalMinutes} minutes · {stats.containmentRate}% contained</p>
+      {error && <p className="mt-4 text-sm text-error">{error}</p>}
+      {loading && <p className="mt-4 text-sm text-slate-text">Loading calls…</p>}
 
       <div className="mt-8 surface-card overflow-x-auto">
         <table className="w-full text-left text-sm">
-          <thead className="bg-slate-50 text-slate-500">
+          <thead className="bg-surface-container text-on-surface-variant">
             <tr>
               <th className="px-5 py-3">Direction</th>
               <th className="px-5 py-3">From / Detail</th>
@@ -51,7 +51,7 @@ export default function CallsPage() {
           </thead>
           <tbody>
             {calls.length === 0 && !loading ? (
-              <tr><td colSpan={8} className="px-5 py-8 text-center text-slate-400">No calls yet.</td></tr>
+              <tr><td colSpan={8} className="px-5 py-8 text-center text-slate-text">No calls yet.</td></tr>
             ) : (
               calls.map((call) => (
                 <tr key={call.id} className="border-t border-slate-100">

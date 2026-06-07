@@ -8,8 +8,8 @@ export default async function AdminPage() {
     <div className="space-y-8">
       <header>
         <p className="page-eyebrow">Platform panel</p>
-        <h1 className="font-display mt-1 text-3xl text-brand-900">{BRAND.name} admin</h1>
-        <p className="mt-2 text-sm text-slate-500">Organizations, usage, and support messages.</p>
+        <h1 className="font-display mt-1 text-3xl text-ghost-white">{BRAND.name} admin</h1>
+        <p className="mt-2 text-sm text-on-surface-variant">Organizations, usage, and support messages.</p>
       </header>
 
       <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
@@ -20,8 +20,8 @@ export default async function AdminPage() {
           { label: "Published flows", value: totals.flowCount },
         ].map((stat) => (
           <div key={stat.label} className="surface-card p-5">
-            <p className="text-sm text-slate-500">{stat.label}</p>
-            <p className="mt-1 text-3xl font-bold text-brand-900">{stat.value}</p>
+            <p className="text-sm text-on-surface-variant">{stat.label}</p>
+            <p className="mt-1 text-3xl font-bold text-ghost-white">{stat.value}</p>
           </div>
         ))}
       </div>
@@ -31,7 +31,7 @@ export default async function AdminPage() {
           <h2 className="font-semibold">Organizations</h2>
         </div>
         <table className="w-full text-left text-sm">
-          <thead className="bg-slate-50 text-slate-500">
+          <thead className="bg-surface-container text-on-surface-variant">
             <tr>
               <th className="px-5 py-3">Name</th>
               <th className="px-5 py-3">Plan</th>
@@ -42,7 +42,7 @@ export default async function AdminPage() {
           <tbody>
             {totals.orgs.length === 0 ? (
               <tr>
-                <td colSpan={4} className="px-5 py-8 text-center text-slate-400">
+                <td colSpan={4} className="px-5 py-8 text-center text-slate-text">
                   No organizations yet.
                 </td>
               </tr>
@@ -64,9 +64,9 @@ export default async function AdminPage() {
         <div className="border-b border-slate-100 px-5 py-4">
           <h2 className="font-semibold">Recent support messages</h2>
         </div>
-        <ul className="divide-y divide-slate-100">
+        <ul className="divide-y divide-glass-border-subtle">
           {totals.supportLogs.length === 0 ? (
-            <li className="px-5 py-8 text-center text-sm text-slate-400">No support messages yet.</li>
+            <li className="px-5 py-8 text-center text-sm text-slate-text">No support messages yet.</li>
           ) : (
             totals.supportLogs.map((log) => {
               const meta = (log.metadata || {}) as {
@@ -77,11 +77,11 @@ export default async function AdminPage() {
               };
               return (
                 <li key={log.id} className="px-5 py-4 text-sm">
-                  <p className="font-medium text-brand-900">
+                  <p className="font-medium text-ghost-white">
                     {meta.category || "help"} · {meta.email || "unknown"}
                   </p>
-                  <p className="mt-1 text-slate-600 line-clamp-2">{meta.message}</p>
-                  <p className="mt-1 text-xs text-slate-400">
+                  <p className="mt-1 text-on-surface-variant line-clamp-2">{meta.message}</p>
+                  <p className="mt-1 text-xs text-slate-text">
                     {meta.orgName || log.org_id} · {new Date(log.created_at).toLocaleString()}
                   </p>
                 </li>

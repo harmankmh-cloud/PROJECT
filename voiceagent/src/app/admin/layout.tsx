@@ -19,10 +19,10 @@ export default async function AdminLayout({ children }: { children: React.ReactN
         <div className="mx-auto flex max-w-6xl items-center justify-between px-6 py-4">
           <BrandLogo href="/admin" size="sm" />
           <nav className="flex gap-4 text-sm">
-            <Link href="/admin" className="font-medium text-brand-900 hover:text-teal-600">
+            <Link href="/admin" className="font-medium text-ghost-white hover:text-teal-600">
               Platform
             </Link>
-            <Link href="/dashboard" className="text-slate-500 hover:text-teal-600">
+            <Link href="/dashboard" className="text-on-surface-variant hover:text-teal-600">
               Dashboard
             </Link>
           </nav>

@@ -40,24 +40,24 @@ const SECTIONS = [
 
 export default function SecurityPage() {
   return (
-    <div className="mesh-bg flex min-h-screen flex-col">
+    <div className="dark-mesh-bg grid-pattern flex min-h-screen flex-col">
       <SkipToContent />
       <MarketingHeader />
       <main id="main-content" className="mx-auto max-w-3xl flex-1 px-6 py-16">
-        <h1 className="font-display text-3xl text-brand-900">Security & compliance</h1>
-        <p className="mt-3 text-sm text-slate-500">
+        <h1 className="font-display text-3xl text-ghost-white">Security & compliance</h1>
+        <p className="mt-3 text-sm text-on-surface-variant">
           How {BRAND.name} supports regulated and high-trust buyers. This page explains our controls — it is
           not legal advice.
         </p>
         <div className="mt-10 space-y-8">
           {SECTIONS.map((s) => (
             <section key={s.title}>
-              <h2 className="text-lg font-semibold text-brand-900">{s.title}</h2>
-              <p className="mt-2 text-sm leading-relaxed text-slate-600">{s.body}</p>
+              <h2 className="text-lg font-semibold text-ghost-white">{s.title}</h2>
+              <p className="mt-2 text-sm leading-relaxed text-on-surface-variant">{s.body}</p>
             </section>
           ))}
         </div>
-        <p className="mt-10 text-sm text-slate-600">
+        <p className="mt-10 text-sm text-on-surface-variant">
           See also{" "}
           <Link href="/privacy" className="text-teal-600 hover:underline">
             Privacy Policy

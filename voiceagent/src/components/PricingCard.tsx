@@ -10,10 +10,7 @@ export function PricingCard({ planKey, highlighted = false }: { planKey: PlanKey
   const isEnterprise = planKey === "enterprise";
 
   const cta = isEnterprise ? (
-    <Link
-      href="/help?intent=enterprise"
-      className="block w-full rounded-xl bg-white py-4 text-center font-bold text-on-surface transition-all hover:bg-surface-container-high"
-    >
+    <Link href="/help?intent=enterprise" className="btn-secondary block w-full rounded-xl py-4 text-center font-bold">
       Contact Sales
     </Link>
   ) : (
@@ -21,8 +18,8 @@ export function PricingCard({ planKey, highlighted = false }: { planKey: PlanKey
       href={`/signup?plan=${planKey}`}
       className={`block w-full rounded-xl py-4 text-center font-bold transition-all ${
         highlighted
-          ? "bg-electric-blue text-white shadow-lg hover:bg-blue-600"
-          : "border border-on-surface text-on-surface hover:bg-on-surface hover:text-white"
+          ? "bg-gradient-to-r from-violet-500 to-electric-cyan text-ghost-white shadow-[0_0_24px_rgba(34,211,238,0.3)] hover:shadow-[0_0_32px_rgba(34,211,238,0.45)]"
+          : "border border-primary/40 bg-primary/10 text-primary hover:bg-primary/20"
       }`}
     >
       Start free trial
@@ -31,19 +28,19 @@ export function PricingCard({ planKey, highlighted = false }: { planKey: PlanKey
 
   if (isEnterprise) {
     return (
-      <div className="flex h-full flex-col rounded-3xl bg-primary-container p-8 text-white transition-all hover:shadow-xl">
+      <div className="glow-border flex h-full flex-col rounded-3xl bg-gradient-to-br from-surface-container to-brand-900 p-8 text-on-surface transition-all hover:shadow-[0_0_32px_rgba(167,139,250,0.15)]">
         <div className="mb-8">
-          <h3 className="text-xl font-bold">{plan.name}</h3>
+          <h3 className="text-xl font-bold text-ghost-white">{plan.name}</h3>
           <div className="mt-2 flex items-baseline gap-1">
-            <span className="text-3xl font-bold">{`$${plan.monthlyPrice}`}</span>
-            <span className="text-on-primary-container">/mo</span>
+            <span className="text-3xl font-bold text-ghost-white">{`$${plan.monthlyPrice}`}</span>
+            <span className="text-on-surface-variant">/mo</span>
           </div>
-          <p className="mt-2 text-xs text-on-primary-container">{`+ $${plan.perMinute}/min voice usage`}</p>
+          <p className="mt-2 text-xs text-on-surface-variant">{`+ $${plan.perMinute}/min voice usage`}</p>
         </div>
         <ul className="mb-10 flex-grow space-y-4 text-sm">
           {plan.features.slice(0, 3).map((f) => (
-            <li key={f} className="flex gap-2">
-              <MaterialIcon name="verified" className="text-tertiary-fixed text-[20px]" />
+            <li key={f} className="flex gap-2 text-on-surface-variant">
+              <MaterialIcon name="verified" className="text-primary text-[20px]" />
               {f}
             </li>
           ))}
@@ -55,30 +52,32 @@ export function PricingCard({ planKey, highlighted = false }: { planKey: PlanKey
 
   return (
     <div
-      className={`relative flex h-full flex-col rounded-3xl border bg-white p-8 transition-all hover:shadow-lg ${
-        highlighted ? "z-10 scale-105 border-2 border-electric-blue shadow-xl" : "border-outline-variant/20"
+      className={`relative flex h-full flex-col rounded-3xl border p-8 transition-all ${
+        highlighted
+          ? "z-10 scale-105 border-primary/40 bg-surface-container shadow-[0_0_32px_rgba(79,219,200,0.15)]"
+          : "border-glass-border-subtle bg-surface-container/60 hover:border-primary/25"
       }`}
     >
       {highlighted && (
-        <div className="absolute -top-4 left-1/2 -translate-x-1/2 rounded-full bg-electric-blue px-4 py-1 text-xs font-bold text-white">
+        <div className="absolute -top-4 left-1/2 -translate-x-1/2 rounded-full bg-gradient-to-r from-violet-500 to-electric-cyan px-4 py-1 text-xs font-bold text-ghost-white">
           MOST POPULAR
         </div>
       )}
       <div className="mb-8">
-        <h3 className="text-xl font-bold text-on-surface">{plan.name}</h3>
+        <h3 className="text-xl font-bold text-ghost-white">{plan.name}</h3>
         <div className="mt-2 flex items-baseline gap-1">
-          <span className="text-3xl font-bold">{`$${plan.monthlyPrice}`}</span>
-          <span className="text-slate-text">/mo</span>
+          <span className="text-3xl font-bold text-ghost-white">{`$${plan.monthlyPrice}`}</span>
+          <span className="text-on-surface-variant">/mo</span>
         </div>
-        <p className="mt-2 text-xs text-slate-text">{`+ $${plan.perMinute}/min voice usage`}</p>
-        <p className="mt-2 text-xs text-slate-500">
-          ~{EXAMPLE_MINUTES} min/mo ≈ <strong>${estimate}/mo</strong> all-in
+        <p className="mt-2 text-xs text-on-surface-variant">{`+ $${plan.perMinute}/min voice usage`}</p>
+        <p className="mt-2 text-xs text-slate-text">
+          ~{EXAMPLE_MINUTES} min/mo ≈ <strong className="text-on-surface">${estimate}/mo</strong> all-in
         </p>
       </div>
       <ul className="mb-10 flex-grow space-y-4 text-sm">
         {plan.features.map((f) => (
-          <li key={f} className={`flex gap-2 ${highlighted ? "text-on-surface" : "text-slate-text"}`}>
-            <MaterialIcon name="check" className="text-[20px] text-electric-blue" />
+          <li key={f} className="flex gap-2 text-on-surface-variant">
+            <MaterialIcon name="check" className="text-[20px] text-primary" />
             {f}
           </li>
         ))}

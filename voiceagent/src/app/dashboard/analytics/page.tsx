@@ -49,15 +49,15 @@ export default function AnalyticsPage() {
   }, [days, agentId]);
 
   if (loading && !analytics) {
-    return <p className="text-slate-400">Loading analytics…</p>;
+    return <p className="text-slate-text">Loading analytics…</p>;
   }
 
   return (
     <div className="mx-auto max-w-6xl space-y-8">
       <header className="flex flex-wrap items-end justify-between gap-4">
         <div>
-          <h1 className="font-display text-2xl text-brand-900">Analytics</h1>
-          <p className="mt-1 text-slate-500">Call volume, quality scores, and sentiment trends.</p>
+          <h1 className="font-display text-2xl text-ghost-white">Analytics</h1>
+          <p className="mt-1 text-on-surface-variant">Call volume, quality scores, and sentiment trends.</p>
         </div>
         <div className="flex flex-wrap gap-3">
           <select className="input-field w-auto py-2" value={days} onChange={(e) => setDays(Number(e.target.value))}>
@@ -76,7 +76,7 @@ export default function AnalyticsPage() {
         </div>
       </header>
 
-      {error && <p className="text-sm text-red-600">{error}</p>}
+      {error && <p className="text-sm text-error">{error}</p>}
 
       {analytics && (
         <>
@@ -106,7 +106,7 @@ export default function AnalyticsPage() {
 
           <div className="grid gap-6 lg:grid-cols-2">
             <div className="surface-card p-6">
-              <h2 className="font-semibold text-brand-900">Sentiment breakdown</h2>
+              <h2 className="font-semibold text-ghost-white">Sentiment breakdown</h2>
               <div className="mt-4 space-y-3">
                 {(["positive", "neutral", "negative"] as const).map((key) => {
                   const count = analytics.sentimentCounts[key];
@@ -115,7 +115,7 @@ export default function AnalyticsPage() {
                     <div key={key}>
                       <div className="mb-1 flex justify-between text-sm capitalize">
                         <span>{key}</span>
-                        <span className="text-slate-500">
+                        <span className="text-on-surface-variant">
                           {count} ({pct}%)
                         </span>
                       </div>
@@ -138,15 +138,15 @@ export default function AnalyticsPage() {
             </div>
 
             <div className="surface-card p-6">
-              <h2 className="font-semibold text-brand-900">Top caller intents</h2>
+              <h2 className="font-semibold text-ghost-white">Top caller intents</h2>
               <ul className="mt-4 space-y-2">
                 {analytics.topIntents.length === 0 ? (
-                  <li className="text-sm text-slate-400">No intents recorded yet.</li>
+                  <li className="text-sm text-slate-text">No intents recorded yet.</li>
                 ) : (
                   analytics.topIntents.map((row) => (
                     <li key={row.intent} className="flex justify-between text-sm">
                       <span className="truncate pr-4">{row.intent}</span>
-                      <span className="font-medium text-slate-600">{row.count}</span>
+                      <span className="font-medium text-on-surface-variant">{row.count}</span>
                     </li>
                   ))
                 )}

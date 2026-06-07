@@ -63,7 +63,7 @@ export default function ResetPasswordPage() {
   return (
     <div className="flex min-h-screen items-center justify-center px-4">
       <div className="surface-card w-full max-w-md p-8">
-        <h1 className="text-2xl font-bold text-brand-900">Set new password</h1>
+        <h1 className="text-2xl font-bold text-ghost-white">Set new password</h1>
 
         {ready ? (
           <form onSubmit={handleSubmit} className="mt-6 space-y-4">
@@ -85,14 +85,14 @@ export default function ResetPasswordPage() {
               minLength={8}
               required
             />
-            {error && <p className="text-sm text-red-600">{error}</p>}
+            {error && <p className="text-sm text-error">{error}</p>}
             <button type="submit" disabled={loading} className="btn-primary w-full">
               {loading ? "Saving…" : "Update password"}
             </button>
           </form>
         ) : (
           <div className="mt-6">
-            {error && <p className="text-sm text-red-600">{error}</p>}
+            {error && <p className="text-sm text-error">{error}</p>}
             <p className="mt-4 text-center text-sm">
               <Link href="/forgot-password" className="text-teal-600 hover:underline">
                 Request a new reset link

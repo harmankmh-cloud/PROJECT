@@ -58,17 +58,17 @@ export default function ChannelsPage() {
 
   return (
     <div>
-      <h1 className="text-2xl font-bold text-brand-900">Omnichannel</h1>
-      <p className="mt-1 text-slate-500">Enable SMS, WhatsApp, and web chat for your agents.</p>
+      <h1 className="text-2xl font-bold text-ghost-white">Omnichannel</h1>
+      <p className="mt-1 text-on-surface-variant">Enable SMS, WhatsApp, and web chat for your agents.</p>
 
-      {error && <p className="mt-4 text-sm text-red-600">{error}</p>}
-      {loading && <p className="mt-4 text-sm text-slate-400">Loading channels…</p>}
+      {error && <p className="mt-4 text-sm text-error">{error}</p>}
+      {loading && <p className="mt-4 text-sm text-slate-text">Loading channels…</p>}
 
       <div className="mt-8 grid gap-4 md:grid-cols-3">
         {CHANNEL_META.map((ch) => (
           <div key={ch.id} className="surface-card p-6">
             <h3 className="font-semibold">{ch.name}</h3>
-            <p className="mt-2 text-sm text-slate-600">{ch.desc}</p>
+            <p className="mt-2 text-sm text-on-surface-variant">{ch.desc}</p>
             <button
               type="button"
               onClick={() => toggleChannel(ch.id)}
@@ -87,10 +87,10 @@ export default function ChannelsPage() {
         ))}
       </div>
 
-      <div className="mt-8 surface-card p-6 text-sm text-slate-600">
-        <p className="font-medium text-brand-900">Webhook setup</p>
+      <div className="mt-8 surface-card p-6 text-sm text-on-surface-variant">
+        <p className="font-medium text-ghost-white">Webhook setup</p>
         <p className="mt-2">Point Twilio Messaging inbound webhook to:</p>
-        <code className="mt-2 block rounded-lg bg-slate-50 p-3 text-xs break-all">{webhookUrl}</code>
+        <code className="mt-2 block rounded-lg bg-surface-container p-3 text-xs break-all">{webhookUrl}</code>
       </div>
     </div>
   );

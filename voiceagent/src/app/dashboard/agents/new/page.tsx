@@ -78,7 +78,7 @@ export default function NewAgentPage() {
         saving={saving}
       />
       <main className="dashboard-container mx-auto max-w-lg pt-4">
-        {error && <p className="mb-4 text-sm text-red-600">{error}</p>}
+        {error && <p className="mb-4 text-sm text-error">{error}</p>}
         <AgentConfigureForm
           formId={FORM_ID}
           values={values}

@@ -42,7 +42,7 @@ export function IntegrationConnectors({ initialMessage = "" }: { initialMessage?
       <div className="mt-8 grid gap-4 md:grid-cols-2">
         <div className="surface-card p-6">
           <h2 className="font-semibold">HubSpot</h2>
-          <p className="mt-2 text-sm text-slate-600">Log calls and sync contacts after each conversation.</p>
+          <p className="mt-2 text-sm text-on-surface-variant">Log calls and sync contacts after each conversation.</p>
           {isConnected("hubspot") && (
             <p className="mt-2 text-xs text-teal-600">Connected</p>
           )}
@@ -52,7 +52,7 @@ export function IntegrationConnectors({ initialMessage = "" }: { initialMessage?
         </div>
         <div className="surface-card p-6">
           <h2 className="font-semibold">Google Calendar</h2>
-          <p className="mt-2 text-sm text-slate-600">Book appointments during live calls.</p>
+          <p className="mt-2 text-sm text-on-surface-variant">Book appointments during live calls.</p>
           {isConnected("google_calendar") && (
             <p className="mt-2 text-xs text-teal-600">Connected</p>
           )}

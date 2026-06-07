@@ -106,7 +106,7 @@ export default function CallDetailPage() {
   if (error || !call) {
     return (
       <div className="dashboard-container py-12">
-        <p className="text-red-600">{error || "Call not found"}</p>
+        <p className="text-error">{error || "Call not found"}</p>
         <Link href="/dashboard/calls" className="mt-4 inline-block text-sm font-semibold text-secondary hover:underline">
           Back to calls
         </Link>

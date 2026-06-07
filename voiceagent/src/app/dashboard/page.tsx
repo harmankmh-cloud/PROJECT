@@ -173,7 +173,7 @@ export default async function DashboardPage() {
               <MaterialIcon name="support_agent" filled className="text-secondary" />
               <span className="text-sm font-semibold text-secondary">Operational Status</span>
             </div>
-            <div className="text-[40px] font-extrabold leading-tight tracking-tight text-primary">
+            <div className="text-[40px] font-extrabold leading-tight tracking-tight text-ghost-white">
               {activeAgents} Agent{activeAgents === 1 ? "" : "s"} Online
             </div>
           </div>
@@ -199,7 +199,7 @@ export default async function DashboardPage() {
                 </span>
               )}
             </div>
-            <div className="text-[40px] font-extrabold leading-tight tracking-tight text-primary">
+            <div className="text-[40px] font-extrabold leading-tight tracking-tight text-ghost-white">
               {todayCalls} Call{todayCalls === 1 ? "" : "s"}
             </div>
           </div>
@@ -239,7 +239,7 @@ export default async function DashboardPage() {
       </section>
 
       {unclassifiedToday > 0 && (
-        <div className="relative mt-12 overflow-hidden rounded-2xl bg-primary-container p-6 text-white">
+        <div className="glow-border relative mt-12 overflow-hidden rounded-2xl bg-gradient-to-br from-surface-container to-brand-900 p-6">
           <div className="relative z-10">
             <h3 className="text-xl font-bold">Training Session Available</h3>
             <p className="mt-2 mb-4 text-sm text-on-primary-container">
@@ -248,7 +248,7 @@ export default async function DashboardPage() {
             </p>
             <Link
               href="/dashboard/calls"
-              className="inline-block rounded-full bg-white px-6 py-3 text-sm font-semibold text-primary transition-colors hover:bg-surface"
+              className="btn-primary inline-block rounded-full px-6 py-3 text-sm"
             >
               Start Review
             </Link>

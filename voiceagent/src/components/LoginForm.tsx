@@ -39,7 +39,7 @@ export function LoginForm({ initialError = "" }: { initialError?: string }) {
   }
 
   return (
-    <div className="mesh-bg flex min-h-screen flex-col">
+    <div className="dark-mesh-bg grid-pattern flex min-h-screen flex-col">
       <SkipToContent />
       <div className="flex flex-1">
         <AuthMarketingPanel footer="Sign in to your command center" />
@@ -51,12 +51,12 @@ export function LoginForm({ initialError = "" }: { initialError?: string }) {
             </div>
             <div className="auth-card">
               <p className="page-eyebrow">Welcome back</p>
-              <h1 className="font-display mt-2 text-3xl tracking-tight text-brand-900">Sign in</h1>
-              <p className="mt-2 text-sm text-slate-500">Your dashboard opens next.</p>
+              <h1 className="font-display mt-2 text-3xl tracking-tight text-ghost-white">Sign in</h1>
+              <p className="mt-2 text-sm text-on-surface-variant">Your dashboard opens next.</p>
 
               <form onSubmit={handleSubmit} className="mt-8 space-y-4" noValidate>
                 <div>
-                  <label htmlFor="login-email" className="mb-1.5 block text-sm font-medium text-slate-700">
+                  <label htmlFor="login-email" className="mb-1.5 block text-sm font-medium text-on-surface-variant">
                     Work email
                   </label>
                   <input
@@ -72,7 +72,7 @@ export function LoginForm({ initialError = "" }: { initialError?: string }) {
                   />
                 </div>
                 <div>
-                  <label htmlFor="login-password" className="mb-1.5 block text-sm font-medium text-slate-700">
+                  <label htmlFor="login-password" className="mb-1.5 block text-sm font-medium text-on-surface-variant">
                     Password
                   </label>
                   <input
@@ -88,7 +88,7 @@ export function LoginForm({ initialError = "" }: { initialError?: string }) {
                   />
                 </div>
                 {error && (
-                  <p className="text-sm text-red-600" role="alert">
+                  <p className="text-sm text-error" role="alert">
                     {error}
                   </p>
                 )}
@@ -102,7 +102,7 @@ export function LoginForm({ initialError = "" }: { initialError?: string }) {
                   Forgot password?
                 </Link>
               </p>
-              <p className="mt-6 text-center text-sm text-slate-500">
+              <p className="mt-6 text-center text-sm text-on-surface-variant">
                 No account?{" "}
                 <Link href="/signup" className="link-accent">
                   Start free trial

@@ -94,7 +94,7 @@ export default function EditAgentPage() {
   if (!values) {
     return (
       <div className="dashboard-container py-12">
-        <p className="text-red-600">{error || "Agent not found"}</p>
+        <p className="text-error">{error || "Agent not found"}</p>
         <button
           type="button"
           onClick={() => router.push("/dashboard/agents")}
@@ -110,7 +110,7 @@ export default function EditAgentPage() {
     <div className="pb-36">
       <AgentConfigHeader title="Configure Agent" onSave={() => void saveAgent()} saving={saving} />
       <main className="dashboard-container mx-auto max-w-lg pt-4">
-        {error && <p className="mb-4 text-sm text-red-600">{error}</p>}
+        {error && <p className="mb-4 text-sm text-error">{error}</p>}
         <AgentConfigureForm
           formId={FORM_ID}
           values={values}

@@ -13,12 +13,12 @@ export function TrendChart({
   const max = Math.max(...values, 1);
 
   if (!data.length) {
-    return <p className="text-sm text-slate-400">No data for this period.</p>;
+    return <p className="text-sm text-slate-text">No data for this period.</p>;
   }
 
   return (
     <div>
-      <p className="mb-3 text-xs font-medium uppercase tracking-wide text-slate-500">{label}</p>
+      <p className="mb-3 text-xs font-medium uppercase tracking-wide text-on-surface-variant">{label}</p>
       <div className="flex h-32 items-end gap-1">
         {data.map((row) => {
           const value = Number(row[valueKey]) || 0;
@@ -30,7 +30,7 @@ export function TrendChart({
                 style={{ height: `${height}%` }}
                 title={`${row.date}: ${value}`}
               />
-              <span className="hidden text-[10px] text-slate-400 sm:block">
+              <span className="hidden text-[10px] text-slate-text sm:block">
                 {row.date.slice(5)}
               </span>
             </div>

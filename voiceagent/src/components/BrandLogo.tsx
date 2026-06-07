@@ -24,7 +24,7 @@ export function BrandLogo({
       >
         ☎
       </div>
-      <span className={`font-display tracking-tight ${s.text} ${light ? "text-white" : "text-brand-900"}`}>
+      <span className={`font-display tracking-tight ${s.text} ${light ? "text-white" : "text-ghost-white"}`}>
         {BRAND.name}
         {size === "lg" && !light && (
           <span className="mt-0.5 block font-sans text-[10px] font-semibold uppercase tracking-[0.2em] text-teal-600">

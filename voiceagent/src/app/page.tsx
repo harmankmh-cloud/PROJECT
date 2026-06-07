@@ -89,7 +89,7 @@ export default function HomePage() {
   };
 
   return (
-    <div className="flex min-h-screen flex-col overflow-x-hidden bg-surface">
+    <div className="dark-mesh-bg grid-pattern flex min-h-screen flex-col overflow-x-hidden">
       <SkipToContent />
       <MarketingHeader />
 
@@ -98,33 +98,31 @@ export default function HomePage() {
         <section className="hero-mesh relative overflow-hidden pb-[120px] pt-12">
           <div className="marketing-container grid items-center gap-6 md:grid-cols-2">
             <div className="z-10 text-center md:text-left">
-              <div className="mb-6 inline-flex items-center gap-2 rounded-full border border-electric-blue/20 bg-electric-blue/10 px-3 py-1 text-electric-blue">
+              <div className="mb-6 inline-flex items-center gap-2 rounded-full border border-primary/30 bg-primary/10 px-3 py-1 text-primary">
                 <MaterialIcon name="verified" className="text-[18px]" />
-                <span className="text-xs font-semibold uppercase tracking-wider">The Future of Local Business</span>
+                <span className="text-xs font-semibold uppercase tracking-wider">Voice AI for local businesses</span>
               </div>
-              <h1 className="font-display mb-6 text-4xl leading-tight text-gradient md:text-5xl lg:text-[48px] lg:leading-[56px]">
+              <h1 className="font-display mb-6 text-4xl leading-tight text-gradient md:text-5xl lg:text-[48px] lg:leading-[1.1]">
                 AI phone agents that never miss a call
               </h1>
-              <p className="mx-auto mb-10 max-w-xl text-lg text-slate-text md:mx-0">
+              <p className="mx-auto mb-10 max-w-xl text-lg text-on-surface-variant md:mx-0">
                 Answer inbound calls, book appointments, update your CRM, and warm-transfer to humans — with audit
                 logs and compliance tooling built in.
               </p>
               <div className="flex flex-col justify-center gap-4 sm:flex-row md:justify-start">
-                <Link
-                  href="/signup"
-                  className="rounded-full bg-primary px-8 py-4 text-sm font-semibold text-on-primary shadow-lg transition-all hover:shadow-xl"
-                >
+                <Link href="/signup" className="btn-primary rounded-full px-8 py-4 text-sm">
                   Start free trial
+                  <MaterialIcon name="arrow_forward" className="ml-2 text-[18px]" />
                 </Link>
-                <Link
-                  href="/help?intent=demo"
-                  className="rounded-full border border-outline-variant/30 bg-surface-container-low px-8 py-4 text-sm font-semibold text-primary transition-all hover:bg-surface-container-high"
-                >
+                <Link href="/help?intent=demo" className="btn-secondary rounded-full px-8 py-4 text-sm">
                   Book a demo
                 </Link>
               </div>
-              <p className="mt-6 text-xs text-on-primary-container/60">
-                No credit card to explore · Sandbox testing included
+              <p className="mt-6 text-xs text-slate-text">
+                No credit card to explore · Sandbox testing included ·{" "}
+                <Link href="/security" className="text-primary hover:underline">
+                  Security details
+                </Link>
               </p>
             </div>
             <HeroCallPreview />
@@ -132,12 +130,12 @@ export default function HomePage() {
         </section>
 
         {/* Trust bar */}
-        <section className="relative overflow-hidden bg-primary-container py-12">
+        <section className="relative overflow-hidden border-y border-glass-border-subtle bg-surface-container/40 py-12 backdrop-blur-xl">
           <div className="marketing-container grid grid-cols-2 gap-8 text-center md:grid-cols-4">
             {TRUST_STATS.map((s) => (
               <div key={s.label}>
-                <p className="font-display text-2xl font-bold text-on-primary md:text-[32px]">{s.value}</p>
-                <p className="mt-1 text-xs font-semibold uppercase tracking-wide text-on-primary-container">
+                <p className="font-display text-2xl font-bold text-ghost-white md:text-[32px]">{s.value}</p>
+                <p className="mt-1 text-xs font-semibold uppercase tracking-wide text-on-surface-variant">
                   {s.label}
                 </p>
               </div>
@@ -145,31 +143,60 @@ export default function HomePage() {
           </div>
         </section>
 
+        {/* Process */}
+        <section className="py-[120px]" id="process">
+          <div className="marketing-container">
+            <div className="mb-16 text-center">
+              <p className="section-eyebrow mb-3">Process</p>
+              <h2 className="font-display text-3xl font-bold text-ghost-white">Go live in an afternoon</h2>
+              <p className="mx-auto mt-4 max-w-2xl text-lg text-on-surface-variant">
+                Intellivo is a full voice AI platform — not just a chatbot wrapper. Configure agents, knowledge, flows,
+                and telephony from one dashboard.
+              </p>
+            </div>
+            <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-4">
+              {[
+                { n: "01", icon: "smart_toy", title: "Create your agent", desc: "Set greeting, system prompt, and escalation number. Test in the sandbox first." },
+                { n: "02", icon: "settings_phone", title: "Connect your number", desc: "Point Telnyx or Twilio to Intellivo webhooks. Map the line to your agent." },
+                { n: "03", icon: "auto_stories", title: "Add knowledge & flows", desc: "Upload FAQs, hours, and services. Publish flows for booking and warm transfer." },
+                { n: "04", icon: "query_stats", title: "Go live & measure", desc: "Review transcripts, analytics, and quality scores. Tune from real caller intents." },
+              ].map((step) => (
+                <div key={step.n} className="surface-card-hover p-8">
+                  <span className="text-xs font-bold text-primary">{step.n}</span>
+                  <div className="mb-4 mt-4 flex h-12 w-12 items-center justify-center rounded-xl bg-primary/10 text-primary">
+                    <MaterialIcon name={step.icon} filled className="text-[24px]" />
+                  </div>
+                  <h3 className="mb-3 text-lg font-bold text-ghost-white">{step.title}</h3>
+                  <p className="text-sm text-on-surface-variant">{step.desc}</p>
+                </div>
+              ))}
+            </div>
+          </div>
+        </section>
+
         {/* Features */}
         <section className="py-[120px]" id="product">
           <div className="marketing-container">
             <div className="mb-16 text-center">
-              <h2 className="font-display text-3xl font-bold text-on-surface">Everything you need on day one</h2>
-              <p className="mx-auto mt-4 max-w-2xl text-lg text-slate-text">
-                Intellivo is a full voice AI platform — not just a chatbot wrapper. Configure agents, knowledge, and
-                flows in one dashboard.
+              <p className="section-eyebrow mb-3">Capabilities</p>
+              <h2 className="font-display text-3xl font-bold text-ghost-white">Everything you need on day one</h2>
+              <p className="mx-auto mt-4 max-w-2xl text-lg text-on-surface-variant">
+                View all features in the dashboard — inbound AI, warm transfer, outbound campaigns, analytics, and
+                compliance.
               </p>
             </div>
-            <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-4">
+            <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
               {HOME_FEATURES.map((f) => (
-                <div
-                  key={f.title}
-                  className="group rounded-2xl border border-outline-variant/20 bg-surface p-8 transition-all duration-300 hover:border-electric-blue/50"
-                >
-                  <div className="mb-6 flex h-12 w-12 items-center justify-center rounded-xl bg-electric-blue/10 text-electric-blue transition-colors group-hover:bg-electric-blue group-hover:text-white">
+                <div key={f.title} className="surface-card-hover group p-8">
+                  <div className="mb-6 flex h-12 w-12 items-center justify-center rounded-xl bg-primary/10 text-primary transition-colors group-hover:bg-gradient-to-br group-hover:from-violet-500 group-hover:to-electric-cyan group-hover:text-ghost-white">
                     <MaterialIcon name={f.icon} filled className="text-[24px]" />
                   </div>
-                  <h3 className="mb-4 text-xl font-bold text-on-surface">{f.title}</h3>
-                  <p className="mb-6 text-sm text-slate-text">{f.desc}</p>
+                  <h3 className="mb-4 text-xl font-bold text-ghost-white">{f.title}</h3>
+                  <p className="mb-6 text-sm text-on-surface-variant">{f.desc}</p>
                   <ul className="space-y-3">
                     {f.bullets.map((b) => (
-                      <li key={b} className="flex items-center gap-2 text-xs font-semibold">
-                        <MaterialIcon name="check_circle" className="text-[18px] text-green-500" />
+                      <li key={b} className="flex items-center gap-2 text-xs font-semibold text-on-surface-variant">
+                        <MaterialIcon name="check_circle" className="text-[18px] text-primary" />
                         {b}
                       </li>
                     ))}
@@ -181,31 +208,29 @@ export default function HomePage() {
         </section>
 
         {/* Solutions bento */}
-        <section className="bg-surface-container-low py-[120px]" id="solutions">
+        <section className="border-t border-glass-border-subtle bg-surface-container/30 py-[120px]" id="solutions">
           <div className="marketing-container">
             <div className="mb-16 text-center">
-              <h2 className="font-display text-3xl font-bold text-on-surface">Built for operators, not engineers</h2>
-              <p className="mx-auto mt-4 max-w-2xl text-lg text-slate-text">
+              <p className="section-eyebrow mb-3">Solutions</p>
+              <h2 className="font-display text-3xl font-bold text-ghost-white">Built for operators, not engineers</h2>
+              <p className="mx-auto mt-4 max-w-2xl text-lg text-on-surface-variant">
                 Intellivo handles routine calls so your staff focuses on in-person work.
               </p>
             </div>
             <div className="grid grid-cols-1 gap-6 md:grid-cols-3">
-              {/* Salon */}
-              <div className="group col-span-1 flex flex-col items-center gap-8 overflow-hidden rounded-3xl border border-outline-variant/10 bg-white p-10 shadow-sm md:col-span-2 md:flex-row">
+              <div className="group col-span-1 flex flex-col items-center gap-8 overflow-hidden rounded-3xl border border-glass-border-subtle bg-surface-container/60 p-10 md:col-span-2 md:flex-row">
                 <div className="order-2 flex-1 md:order-1">
-                  <span className="mb-2 block text-sm font-semibold text-electric-blue">{salon.industry}</span>
-                  <h3 className="mb-4 text-2xl font-bold text-on-surface">{salon.headline}</h3>
+                  <span className="mb-2 block text-sm font-semibold text-primary">{salon.industry}</span>
+                  <h3 className="mb-4 text-2xl font-bold text-ghost-white">{salon.headline}</h3>
                   <ul className="mb-8 space-y-4">
                     {salon.points.map((p) => (
-                      <li key={p} className="flex gap-3 text-slate-text">
-                        <span className="text-xl text-electric-blue">•</span>
+                      <li key={p} className="flex gap-3 text-on-surface-variant">
+                        <span className="text-xl text-primary">•</span>
                         <span>{p}</span>
                       </li>
                     ))}
                   </ul>
-                  <p className="text-xs font-semibold italic text-on-tertiary-container">
-                    &ldquo;{salon.outcome}&rdquo;
-                  </p>
+                  <p className="text-xs font-semibold italic text-primary">&ldquo;{salon.outcome}&rdquo;</p>
                 </div>
                 <div className="order-1 flex-1 md:order-2">
                   <Image
@@ -218,68 +243,65 @@ export default function HomePage() {
                 </div>
               </div>
 
-              {/* Clinic */}
-              <div className="flex flex-col justify-between rounded-3xl border border-glass-border bg-primary-container p-10 text-white">
+              <div className="glow-border flex flex-col justify-between rounded-3xl bg-gradient-to-br from-surface-container to-brand-900 p-10">
                 <div>
-                  <span className="mb-2 block text-sm font-semibold text-tertiary-fixed">{clinic.industry}</span>
-                  <h3 className="mb-6 text-2xl font-bold">{clinic.headline}</h3>
-                  <p className="mb-8 text-on-primary-container">{clinic.outcome}</p>
+                  <span className="mb-2 block text-sm font-semibold text-primary">{clinic.industry}</span>
+                  <h3 className="mb-6 text-2xl font-bold text-ghost-white">{clinic.headline}</h3>
+                  <p className="mb-8 text-on-surface-variant">{clinic.outcome}</p>
                 </div>
                 <div className="space-y-4">
-                  <div className="flex items-center gap-4 rounded-xl border border-white/10 bg-white/5 p-4">
-                    <MaterialIcon name="health_and_safety" className="text-tertiary-fixed" />
-                    <span className="text-xs font-semibold">Enterprise HIPAA Mode</span>
+                  <div className="flex items-center gap-4 rounded-xl border border-primary/20 bg-primary/5 p-4">
+                    <MaterialIcon name="health_and_safety" className="text-primary" />
+                    <span className="text-xs font-semibold text-ghost-white">Enterprise HIPAA Mode</span>
                   </div>
-                  <div className="flex items-center gap-4 rounded-xl border border-white/10 bg-white/5 p-4">
-                    <MaterialIcon name="calendar_month" className="text-tertiary-fixed" />
-                    <span className="text-xs font-semibold">Google Calendar Sync</span>
+                  <div className="flex items-center gap-4 rounded-xl border border-primary/20 bg-primary/5 p-4">
+                    <MaterialIcon name="calendar_month" className="text-primary" />
+                    <span className="text-xs font-semibold text-ghost-white">Google Calendar Sync</span>
                   </div>
                 </div>
               </div>
 
-              {/* Home services */}
-              <div className="flex flex-col justify-between rounded-3xl border border-outline-variant/10 bg-white p-10 shadow-sm">
+              <div className="flex flex-col justify-between rounded-3xl border border-glass-border-subtle bg-surface-container/60 p-10">
                 <div>
-                  <span className="mb-2 block text-sm font-semibold text-electric-blue">{home.industry}</span>
-                  <h3 className="mb-4 text-2xl font-bold text-on-surface">{home.headline}</h3>
-                  <p className="mb-6 text-slate-text">{home.points[0]}</p>
+                  <span className="mb-2 block text-sm font-semibold text-primary">{home.industry}</span>
+                  <h3 className="mb-4 text-2xl font-bold text-ghost-white">{home.headline}</h3>
+                  <p className="mb-6 text-on-surface-variant">{home.points[0]}</p>
                 </div>
                 <Image
                   src={HOME_SERVICES_IMAGE}
                   alt="Home service technician"
                   width={480}
                   height={280}
-                  className="mb-6 rounded-2xl grayscale transition-all duration-500 hover:grayscale-0"
+                  className="mb-6 rounded-2xl opacity-80 transition-all duration-500 hover:opacity-100"
                 />
-                <div className="border-t border-outline-variant/10 pt-6">
-                  <p className="text-xs font-semibold text-on-tertiary-container">SMS follow-up on Growth+ plans</p>
+                <div className="border-t border-glass-border-subtle pt-6">
+                  <p className="text-xs font-semibold text-primary">SMS follow-up on Growth+ plans</p>
                 </div>
               </div>
 
-              {/* Professional services */}
               <div
-                className="col-span-1 flex flex-col gap-8 overflow-hidden rounded-3xl border border-outline-variant/10 bg-gradient-to-br from-white to-surface-container-high p-10 shadow-sm md:col-span-2 md:flex-row"
+                className="col-span-1 flex flex-col gap-8 overflow-hidden rounded-3xl border border-glass-border-subtle bg-surface-container/60 p-10 md:col-span-2 md:flex-row"
                 id="integrations"
               >
                 <div className="flex-1">
-                  <span className="mb-2 block text-sm font-semibold text-electric-blue">{pro.industry}</span>
-                  <h3 className="mb-4 text-2xl font-bold text-on-surface">{pro.headline}</h3>
-                  <p className="mb-6 text-slate-text">{pro.points[1]}</p>
-                  <div className="flex items-center gap-4 opacity-60 grayscale transition-all hover:grayscale-0">
-                    <Image src={HUBSPOT_LOGO} alt="HubSpot" width={100} height={24} className="h-6 w-auto" />
+                  <span className="mb-2 block text-sm font-semibold text-primary">{pro.industry}</span>
+                  <h3 className="mb-4 text-2xl font-bold text-ghost-white">{pro.headline}</h3>
+                  <p className="mb-6 text-on-surface-variant">{pro.points[1]}</p>
+                  <div className="flex items-center gap-4 opacity-70 transition-all hover:opacity-100">
+                    <Image src={HUBSPOT_LOGO} alt="HubSpot" width={100} height={24} className="h-6 w-auto brightness-200" />
                     <div className="h-6 w-px bg-outline-variant" />
-                    <Image src={ZAPIER_LOGO} alt="Zapier" width={80} height={24} className="h-6 w-auto" />
+                    <Image src={ZAPIER_LOGO} alt="Zapier" width={80} height={24} className="h-6 w-auto brightness-200" />
                   </div>
                 </div>
-                <div className="flex-1 rounded-2xl border border-white bg-surface-container p-6">
+                <div className="flex-1 rounded-2xl border border-glass-border-subtle bg-obsidian/60 p-6">
                   <div className="space-y-3">
-                    <div className="h-3 w-3/4 animate-pulse rounded bg-slate-200" />
-                    <div className="h-3 w-full animate-pulse rounded bg-slate-200" />
-                    <div className="h-3 w-1/2 animate-pulse rounded bg-slate-200" />
-                    <div className="mt-4 border-t border-slate-200 pt-4">
+                    <div className="h-3 w-3/4 animate-pulse rounded bg-surface-container-high" />
+                    <div className="h-3 w-full animate-pulse rounded bg-surface-container-high" />
+                    <div className="h-3 w-1/2 animate-pulse rounded bg-surface-container-high" />
+                    <div className="mt-4 border-t border-glass-border-subtle pt-4">
                       <div className="flex items-center gap-3">
-                        <div className="h-8 w-8 rounded bg-electric-blue/20" />
-                        <div className="h-2 w-1/3 rounded bg-slate-300" />
+                        <div className="h-8 w-8 rounded bg-primary/20" />
+                        <div className="h-2 w-1/3 rounded bg-surface-container-highest" />
                       </div>
                     </div>
                   </div>
@@ -293,9 +315,10 @@ export default function HomePage() {
         <section className="py-[120px]" id="pricing">
           <div className="marketing-container">
             <div className="mb-16 text-center">
-              <h2 className="font-display text-3xl font-bold text-on-surface">Simple, predictable pricing</h2>
-              <p className="mx-auto mt-4 max-w-2xl text-lg text-slate-text">
-                Monthly subscription plus metered voice minutes. Sandbox testing is always free.
+              <p className="section-eyebrow mb-3">Pricing</p>
+              <h2 className="font-display text-3xl font-bold text-ghost-white">Transparent usage-based plans</h2>
+              <p className="mx-auto mt-4 max-w-2xl text-lg text-on-surface-variant">
+                Sandbox testing is free — no credit card required to explore.
               </p>
             </div>
             <div className="grid grid-cols-1 gap-6 md:grid-cols-2 lg:grid-cols-4">
@@ -307,9 +330,9 @@ export default function HomePage() {
         </section>
 
         {/* FAQ */}
-        <section className="bg-surface py-[120px]" id="faq">
+        <section className="py-[120px]" id="faq">
           <div className="mx-auto max-w-3xl px-5">
-            <h2 className="font-display mb-12 text-center text-3xl font-bold text-on-surface">
+            <h2 className="font-display mb-12 text-center text-3xl font-bold text-ghost-white">
               Frequently asked questions
             </h2>
             <FaqAccordion items={FAQ_ITEMS} />
@@ -319,28 +342,22 @@ export default function HomePage() {
         {/* CTA */}
         <section className="py-[120px]">
           <div className="marketing-container">
-            <div className="relative overflow-hidden rounded-[40px] bg-primary p-12 text-center text-white md:p-20">
-              <div className="absolute inset-0 opacity-10">
-                <div className="absolute -left-1/4 -top-1/2 h-[1000px] w-[1000px] rounded-full bg-electric-blue blur-[100px]" />
+            <div className="glow-border relative overflow-hidden rounded-[40px] bg-gradient-to-br from-surface-container via-brand-900 to-obsidian p-12 text-center md:p-20">
+              <div className="absolute inset-0 opacity-30">
+                <div className="absolute -left-1/4 -top-1/2 h-[1000px] w-[1000px] rounded-full bg-violet-500 blur-[120px]" />
+                <div className="absolute -bottom-1/2 -right-1/4 h-[800px] w-[800px] rounded-full bg-electric-cyan blur-[100px]" />
               </div>
-              <h2 className="font-display relative z-10 mb-6 text-4xl font-extrabold md:text-5xl">
+              <h2 className="font-display relative z-10 mb-6 text-4xl font-extrabold text-ghost-white md:text-5xl">
                 Ready to stop missing calls?
               </h2>
-              <p className="relative z-10 mx-auto mb-10 max-w-xl text-lg text-on-primary-container">
-                Create your agent, test in the sandbox, and connect your line when you are ready. No credit card
-                required.
+              <p className="relative z-10 mx-auto mb-10 max-w-xl text-lg text-on-surface-variant">
+                Create your agent, test in the sandbox, and connect your line when you are ready.
               </p>
               <div className="relative z-10 flex flex-col justify-center gap-4 sm:flex-row">
-                <Link
-                  href="/signup"
-                  className="rounded-full bg-white px-10 py-5 font-bold text-primary shadow-xl transition-transform hover:scale-105 active:scale-95"
-                >
+                <Link href="/signup" className="btn-primary rounded-full px-10 py-5 font-bold">
                   Start free trial
                 </Link>
-                <Link
-                  href="/help?intent=demo"
-                  className="rounded-full border border-white/20 bg-white/10 px-10 py-5 font-bold text-white backdrop-blur-md transition-all hover:bg-white/20"
-                >
+                <Link href="/help?intent=demo" className="btn-secondary rounded-full px-10 py-5 font-bold">
                   Talk to sales
                 </Link>
               </div>

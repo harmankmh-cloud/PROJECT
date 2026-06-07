@@ -17,12 +17,12 @@ export function FaqAccordion({ items }: { items: ReadonlyArray<{ q: string; a: s
         return (
           <article
             key={item.q}
-            className="overflow-hidden rounded-2xl border border-outline-variant/20 bg-white"
+            className="overflow-hidden rounded-2xl border border-glass-border-subtle bg-surface-container/60"
           >
             <h3 id={headingId} className="m-0">
               <button
                 type="button"
-                className="group flex w-full items-center justify-between gap-4 px-6 py-5 text-left text-sm font-semibold text-on-surface"
+                className="group flex w-full items-center justify-between gap-4 px-6 py-5 text-left text-sm font-semibold text-ghost-white"
                 aria-expanded={isOpen}
                 aria-controls={panelId}
                 onClick={() => setOpen(isOpen ? null : i)}
@@ -30,7 +30,7 @@ export function FaqAccordion({ items }: { items: ReadonlyArray<{ q: string; a: s
                 {item.q}
                 <MaterialIcon
                   name="expand_more"
-                  className={`text-slate-400 transition-transform ${isOpen ? "rotate-180" : ""}`}
+                  className={`text-on-surface-variant transition-transform ${isOpen ? "rotate-180" : ""}`}
                 />
               </button>
             </h3>
@@ -39,7 +39,7 @@ export function FaqAccordion({ items }: { items: ReadonlyArray<{ q: string; a: s
               role="region"
               aria-labelledby={headingId}
               hidden={!isOpen}
-              className="px-6 pb-5 text-sm leading-relaxed text-slate-text"
+              className="px-6 pb-5 text-sm leading-relaxed text-on-surface-variant"
             >
               {item.a}
             </div>

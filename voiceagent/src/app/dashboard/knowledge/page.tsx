@@ -94,11 +94,11 @@ export default function KnowledgePage() {
 
   return (
     <div>
-      <h1 className="text-2xl font-bold text-brand-900">Knowledge Base</h1>
-      <p className="mt-1 text-slate-500">
+      <h1 className="text-2xl font-bold text-ghost-white">Knowledge Base</h1>
+      <p className="mt-1 text-on-surface-variant">
         Add FAQs and business info your agents use during live calls.
       </p>
-      {error && <p className="mt-4 text-sm text-red-600">{error}</p>}
+      {error && <p className="mt-4 text-sm text-error">{error}</p>}
 
       <form onSubmit={saveDoc} className="mt-8 surface-card space-y-4 p-6">
         <h2 className="font-semibold">{editingId ? "Edit document" : "Add document"}</h2>
@@ -155,16 +155,16 @@ export default function KnowledgePage() {
 
       <div className="mt-8 space-y-3">
         {loading ? (
-          <p className="text-slate-400">Loading…</p>
+          <p className="text-slate-text">Loading…</p>
         ) : docs.length === 0 ? (
-          <p className="text-slate-400">No knowledge documents yet.</p>
+          <p className="text-slate-text">No knowledge documents yet.</p>
         ) : (
           docs.map((doc) => (
             <div key={doc.id} className="surface-card p-5">
               <div className="flex items-start justify-between gap-4">
                 <div>
                   <h3 className="font-semibold">{doc.title}</h3>
-                  <p className="mt-2 text-sm text-slate-600 line-clamp-3">{doc.content}</p>
+                  <p className="mt-2 text-sm text-on-surface-variant line-clamp-3">{doc.content}</p>
                 </div>
                 <div className="flex shrink-0 gap-2">
                   <button type="button" onClick={() => startEdit(doc)} className="btn-secondary text-xs">

@@ -53,16 +53,16 @@ export default function SettingsPage() {
     }
   }
 
-  if (loading) return <p className="text-slate-400">Loading settings…</p>;
-  if (!settings) return <p className="text-red-600">{error || "Could not load settings."}</p>;
+  if (loading) return <p className="text-slate-text">Loading settings…</p>;
+  if (!settings) return <p className="text-error">{error || "Could not load settings."}</p>;
 
   return (
     <div>
-      <h1 className="text-2xl font-bold text-brand-900">Settings</h1>
-      <p className="mt-1 text-slate-500">Organization defaults and compliance options.</p>
+      <h1 className="text-2xl font-bold text-ghost-white">Settings</h1>
+      <p className="mt-1 text-on-surface-variant">Organization defaults and compliance options.</p>
 
       {message && <p className="mt-4 text-sm text-teal-700">{message}</p>}
-      {error && <p className="mt-4 text-sm text-red-600">{error}</p>}
+      {error && <p className="mt-4 text-sm text-error">{error}</p>}
 
       <form onSubmit={handleSave} className="mt-8 space-y-6">
         <div className="surface-card p-6 space-y-4">
@@ -83,7 +83,7 @@ export default function SettingsPage() {
 
         <div className="surface-card p-6 space-y-4">
           <h2 className="font-semibold">Business hours</h2>
-          <p className="text-sm text-slate-500">
+          <p className="text-sm text-on-surface-variant">
             Inbound calls outside these hours hear an after-hours message instead of your agent.
           </p>
           <BusinessHoursEditor

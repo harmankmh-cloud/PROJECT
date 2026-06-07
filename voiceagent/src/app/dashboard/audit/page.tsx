@@ -29,16 +29,16 @@ export default function AuditPage() {
   return (
     <div className="mx-auto max-w-5xl space-y-6">
       <header>
-        <h1 className="font-display text-2xl text-brand-900">Audit log</h1>
-        <p className="mt-1 text-slate-500">Compliance trail of settings, team, and API changes.</p>
+        <h1 className="font-display text-2xl text-ghost-white">Audit log</h1>
+        <p className="mt-1 text-on-surface-variant">Compliance trail of settings, team, and API changes.</p>
       </header>
 
-      {error && <p className="text-sm text-red-600">{error}</p>}
-      {loading && <p className="text-slate-400">Loading…</p>}
+      {error && <p className="text-sm text-error">{error}</p>}
+      {loading && <p className="text-slate-text">Loading…</p>}
 
       <div className="surface-card overflow-hidden">
         <table className="w-full text-left text-sm">
-          <thead className="bg-slate-50 text-slate-500">
+          <thead className="bg-surface-container text-on-surface-variant">
             <tr>
               <th className="px-5 py-3">Time</th>
               <th className="px-5 py-3">Action</th>
@@ -49,7 +49,7 @@ export default function AuditPage() {
           <tbody>
             {logs.length === 0 && !loading ? (
               <tr>
-                <td colSpan={4} className="px-5 py-8 text-center text-slate-400">
+                <td colSpan={4} className="px-5 py-8 text-center text-slate-text">
                   No audit events yet.
                 </td>
               </tr>
@@ -64,7 +64,7 @@ export default function AuditPage() {
                     {log.resource_type}
                     {log.resource_id ? ` · ${log.resource_id.slice(0, 8)}…` : ""}
                   </td>
-                  <td className="max-w-xs truncate px-5 py-3 text-slate-500">
+                  <td className="max-w-xs truncate px-5 py-3 text-on-surface-variant">
                     {log.metadata ? JSON.stringify(log.metadata) : "—"}
                   </td>
                 </tr>
