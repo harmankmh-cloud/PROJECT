@@ -200,7 +200,7 @@ export const COST_GUIDES: Record<
 };
 
 export const TRUST_BADGES = [
-  { icon: "✓", label: "Verified pros", desc: "We check licence claims before the verified badge goes live" },
+  { icon: "✓", label: "Admin-verified badges", desc: "We review licence claims before a verified badge goes live" },
   { icon: "★", label: "Real reviews", desc: "Homeowner ratings moderated by our team" },
   { icon: "⚡", label: "Fast response", desc: "See typical response times on each profile" },
   { icon: "📞", label: "Direct contact", desc: "No lead fees for customers — call the pro you pick" },

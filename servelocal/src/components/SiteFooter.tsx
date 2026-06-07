@@ -85,8 +85,8 @@ export function SiteFooter() {
         </div>
       </div>
       <p className="mt-12 text-center text-xs text-zinc-400">
-        © {new Date().getFullYear()} {SERVE_LOCAL.name} · Hire direct · Verify licence & insurance before work
-        begins
+        © {new Date().getFullYear()} {SERVE_LOCAL.name} · Hire direct · Admin reviews licence claims · Confirm
+        insurance before work begins
       </p>
     </footer>
   );
