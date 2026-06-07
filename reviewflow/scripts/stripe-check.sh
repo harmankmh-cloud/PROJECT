@@ -33,7 +33,12 @@ fi
 check() {
   local name="$1"
   local val="${2:-}"
+  local optional="${3:-}"
   if [[ -z "$val" || "$val" == *"your-"* ]]; then
+    if [[ "$optional" == "optional" ]]; then
+      echo "○ $name — not set (optional: setup fee is waived by default)"
+      return
+    fi
     echo "✗ $name — not set yet"
     warn=$((warn + 1))
     return
@@ -56,15 +61,15 @@ echo "ReviewFlow Stripe checklist"
 echo ""
 
 check "STRIPE_SECRET_KEY" "$STRIPE_SECRET_KEY"
-check "STRIPE_PRICE_SETUP (\$99 one-time)" "$STRIPE_PRICE_SETUP"
 check "STRIPE_PRICE_MONTHLY (\$39/mo)" "$STRIPE_PRICE_MONTHLY"
+check "STRIPE_PRICE_SETUP (one-time, optional)" "$STRIPE_PRICE_SETUP" optional
 check "STRIPE_WEBHOOK_SECRET" "$STRIPE_WEBHOOK_SECRET"
 check "SUPABASE_SERVICE_ROLE_KEY" "$SUPABASE_SERVICE_ROLE_KEY"
 
 echo ""
 echo "ID prefixes (must start with price_):"
-echo "  Setup:   ${STRIPE_PRICE_SETUP:0:12}..."
 echo "  Monthly: ${STRIPE_PRICE_MONTHLY:0:12}..."
+echo "  Setup:   ${STRIPE_PRICE_SETUP:0:12}... (optional)"
 echo ""
 if [[ $warn -eq 0 ]]; then
   echo "All set. Restart app, then test at /dashboard/billing"

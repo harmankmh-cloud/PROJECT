@@ -138,6 +138,9 @@ export default function HomePage() {
                   <span className="text-teal-400">✓</span> No app download
                 </li>
                 <li className="flex items-center gap-2">
+                  <span className="text-teal-400">✓</span> No setup fee
+                </li>
+                <li className="flex items-center gap-2">
                   <span className="text-teal-400">✓</span> Print-ready QR poster
                 </li>
                 <li className="flex items-center gap-2">
