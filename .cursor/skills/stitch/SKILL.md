@@ -31,7 +31,7 @@ Default stance:
 ## Default workflow
 
 - If auth is missing, run `stitch auth set`
-- Sanity check auth: `stitch doctor --json`
+- Sanity check auth: `npm run stitch:doctor` (repo script; upstream `stitch doctor` may false-fail on `api.tools.list`)
 - Inspect auth state: `stitch auth status --json`
 - List tools: `stitch tool list --json`
 - List projects: `stitch project list --json`
@@ -49,18 +49,20 @@ The CLI supports both auth modes exposed by the official Stitch SDK:
 - API key
 - OAuth access token plus project id
 
-If `stitch doctor --json` reports missing auth:
+If `npm run stitch:doctor` reports missing auth:
 
 - Best interactive path: `stitch auth set`
-- Best ephemeral path: `STITCH_API_KEY=... stitch doctor --json`
+- Best ephemeral path: `STITCH_API_KEY=... npm run stitch:doctor`
 - Saved local config: `printf '%s' "$STITCH_API_KEY" | stitch auth set --stdin`
 - OAuth local config: `stitch auth set --access-token "$STITCH_ACCESS_TOKEN" --project-id "$GOOGLE_CLOUD_PROJECT"`
-- OAuth env path: `STITCH_ACCESS_TOKEN=... GOOGLE_CLOUD_PROJECT=... stitch doctor --json`
+- OAuth env path: `STITCH_ACCESS_TOKEN=... GOOGLE_CLOUD_PROJECT=... npm run stitch:doctor`
 
 Avoid pasting full keys into logs or chat.
 
 ## Quick verification
 
 ```bash
-command -v stitch >/dev/null 2>&1 && stitch doctor --json || npx -y stitch-design-cli doctor --json
+npm run stitch:doctor
+# Upstream doctor may false-fail on api.tools.list — use project list to confirm:
+npx -y stitch-design-cli project list --json
 ```
