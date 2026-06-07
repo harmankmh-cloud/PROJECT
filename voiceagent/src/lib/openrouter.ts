@@ -31,11 +31,16 @@ export async function chatCompletion(params: {
   max_tokens?: number;
   temperature?: number;
   jsonMode?: boolean;
+  model?: string;
 }): Promise<string | null> {
   const apiKey = process.env.OPENROUTER_API_KEY;
   if (!apiKey) return null;
 
-  for (const model of MODEL_CHAIN) {
+  const chain = params.model
+    ? [params.model, ...MODEL_CHAIN.filter((m) => m !== params.model)]
+    : MODEL_CHAIN;
+
+  for (const model of chain) {
     try {
       const res = await fetch("https://openrouter.ai/api/v1/chat/completions", {
         method: "POST",
@@ -72,11 +77,16 @@ export async function chatCompletionVoice(params: {
   messages: ChatMessage[];
   max_tokens?: number;
   temperature?: number;
+  model?: string;
 }): Promise<string | null> {
   const apiKey = process.env.OPENROUTER_API_KEY;
   if (!apiKey) return null;
 
-  for (const model of VOICE_MODEL_CHAIN) {
+  const chain = params.model
+    ? [params.model, ...VOICE_MODEL_CHAIN.filter((m) => m !== params.model)]
+    : VOICE_MODEL_CHAIN;
+
+  for (const model of chain) {
     try {
       const res = await fetch("https://openrouter.ai/api/v1/chat/completions", {
         method: "POST",

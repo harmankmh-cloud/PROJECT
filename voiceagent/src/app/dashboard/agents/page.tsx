@@ -3,6 +3,7 @@
 import Link from "next/link";
 import { useEffect, useState } from "react";
 import { MaterialIcon } from "@/components/MaterialIcon";
+import { getVoiceById } from "@/lib/voice-catalog";
 import type { Agent } from "@/lib/types";
 import { apiFetch } from "@/lib/api-client";
 
@@ -87,7 +88,8 @@ export default function AgentsPage() {
                   <h3 className="font-semibold text-on-surface">{agent.name}</h3>
                   <p className="mt-1 line-clamp-1 text-sm text-slate-text">{agent.system_prompt || "No prompt set"}</p>
                   <p className="mt-1 text-xs text-on-primary-container">
-                    {agent.voice} · {agent.language}
+                    {getVoiceById(agent.voice_id || "")?.name || agent.voice} · {agent.language}
+                    {agent.llm_model ? ` · ${agent.llm_model.split("/").pop()}` : ""}
                   </p>
                 </div>
               </div>
@@ -108,6 +110,12 @@ export default function AgentsPage() {
                 >
                   {agent.is_active ? "Deactivate" : "Activate"}
                 </button>
+                <Link
+                  href={`/dashboard/sandbox?agent=${agent.id}`}
+                  className="rounded-lg border border-primary/30 px-3 py-1.5 text-xs font-semibold text-primary hover:bg-primary/10"
+                >
+                  Test
+                </Link>
                 <Link
                   href={`/dashboard/agents/${agent.id}`}
                   className="rounded-lg bg-secondary px-4 py-1.5 text-xs font-semibold text-on-secondary"

@@ -3,6 +3,8 @@ import { createClient } from "@/lib/supabase/server";
 import { getUserOrg } from "@/lib/auth";
 import { logAudit } from "@/lib/compliance/audit";
 import { denyUnlessCanOperate } from "@/lib/require-org-access";
+import { createAdminClient } from "@/lib/supabase/admin";
+import { embedText } from "@/lib/embeddings";
 
 export async function GET() {
   const supabase = await createClient();
@@ -58,6 +60,12 @@ export async function POST(request: NextRequest) {
 
   if (error) return NextResponse.json({ error: error.message }, { status: 400 });
 
+  const embedding = await embedText(`${title}\n${content}`);
+  if (embedding) {
+    const admin = createAdminClient();
+    await admin.from("va_knowledge_docs").update({ embedding }).eq("id", data.id);
+  }
+
   await logAudit({
     orgId: org.id,
     userId: user.id,
@@ -66,7 +74,7 @@ export async function POST(request: NextRequest) {
     resourceId: data.id,
   });
 
-  return NextResponse.json({ doc: data });
+  return NextResponse.json({ doc: { ...data, embedding: embedding || null } });
 }
 
 export async function PATCH(request: NextRequest) {
@@ -100,6 +108,15 @@ export async function PATCH(request: NextRequest) {
     .single();
 
   if (error) return NextResponse.json({ error: error.message }, { status: 400 });
+
+  if (body.title !== undefined || body.content !== undefined) {
+    const embedding = await embedText(`${data.title}\n${data.content}`);
+    if (embedding) {
+      const admin = createAdminClient();
+      await admin.from("va_knowledge_docs").update({ embedding }).eq("id", data.id);
+    }
+  }
+
   return NextResponse.json({ doc: data });
 }
 

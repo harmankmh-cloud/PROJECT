@@ -5,6 +5,7 @@ import { bookAppointment } from "@/lib/integrations/google-calendar";
 import { loadKnowledgeContext } from "@/lib/knowledge-context";
 import { FlowEngine } from "@/lib/flow-engine";
 import type { FlowEdge, FlowNode } from "@/lib/types";
+import { resolveAgentModel } from "@/lib/model-catalog";
 import { generateVoiceReply } from "@/lib/voice-conversation";
 
 export interface FlowState {
@@ -157,6 +158,9 @@ async function executeFlowTool(params: {
   knowledgeContext?: string;
   history: Array<{ role: string; content: string }>;
   callerPhone?: string;
+  llmModel?: string;
+  temperature?: number;
+  maxTokens?: number;
 }): Promise<{ text: string; shouldTransfer: boolean; transferSummary?: string }> {
   if (params.toolName === "book_appointment") {
     const booking = await extractBookingDetails({
@@ -202,8 +206,17 @@ async function executeFlowTool(params: {
     knowledgeContext: knowledge || undefined,
     history: params.history,
     userMessage: params.userMessage,
+    llmModel: params.llmModel,
+    temperature: params.temperature,
+    maxTokens: params.maxTokens,
   });
 }
+
+export type AgentRuntimeConfig = {
+  llm_model?: string | null;
+  temperature?: number;
+  max_tokens?: number;
+};
 
 export async function processVoiceTurn(params: {
   callSid: string;
@@ -215,7 +228,12 @@ export async function processVoiceTurn(params: {
   escalationPhone?: string;
   callerPhone?: string;
   history: Array<{ role: string; content: string }>;
+  agentConfig?: AgentRuntimeConfig;
 }): Promise<{ text: string; shouldTransfer: boolean; transferSummary?: string }> {
+  const llmModel = resolveAgentModel(params.agentConfig?.llm_model);
+  const temperature = params.agentConfig?.temperature ?? 0.2;
+  const maxTokens = params.agentConfig?.max_tokens ?? 50;
+
   const flow = await loadPublishedFlow(params.orgId, params.agentId);
   if (!flow) {
     return generateVoiceReply({
@@ -223,6 +241,9 @@ export async function processVoiceTurn(params: {
       knowledgeContext: params.knowledgeContext,
       history: params.history,
       userMessage: params.userMessage,
+      llmModel,
+      temperature,
+      maxTokens,
     });
   }
 
@@ -266,6 +287,9 @@ export async function processVoiceTurn(params: {
       knowledgeContext: params.knowledgeContext,
       history: params.history,
       callerPhone: params.callerPhone,
+      llmModel,
+      temperature,
+      maxTokens,
     });
 
     const nextId = result.nextNodeId || engine.getNextNodeId(nodeId) || nodeId;

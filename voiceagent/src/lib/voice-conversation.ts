@@ -6,6 +6,9 @@ export async function generateVoiceReply(params: {
   knowledgeContext?: string;
   history: Array<{ role: string; content: string }>;
   userMessage: string;
+  llmModel?: string | null;
+  temperature?: number;
+  maxTokens?: number;
 }): Promise<{ text: string; shouldTransfer: boolean; transferSummary?: string }> {
   if (!hasOpenRouter()) {
     return {
@@ -32,8 +35,9 @@ export async function generateVoiceReply(params: {
       })),
       { role: "user", content: params.userMessage },
     ],
-    max_tokens: 50,
-    temperature: 0.2,
+    max_tokens: params.maxTokens ?? 50,
+    temperature: params.temperature ?? 0.2,
+    model: params.llmModel || undefined,
   });
 
   if (!content) {

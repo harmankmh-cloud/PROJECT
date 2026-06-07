@@ -7,4 +7,8 @@ export const DEFAULT_AGENT_GREETING =
 export const DEFAULT_AGENT_NAME = "Receptionist";
 
 export const DEFAULT_AGENT_VOICE = "Polly.Joanna";
+export const DEFAULT_AGENT_VOICE_ID = "telnyx-female";
+export const DEFAULT_AGENT_VOICE_PROVIDER = "telnyx" as const;
 export const DEFAULT_AGENT_LANGUAGE = "en-US";
+export const DEFAULT_AGENT_LLM_MODEL = "google/gemini-2.5-flash";
+export const DEFAULT_AGENT_PERSONA = "receptionist" as const;

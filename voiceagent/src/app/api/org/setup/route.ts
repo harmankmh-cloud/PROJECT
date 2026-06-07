@@ -54,6 +54,12 @@ export async function POST(request: Request) {
     name: "Default Agent",
     system_prompt: DEFAULT_AGENT_SYSTEM_PROMPT,
     welcome_greeting: "Hello! Thanks for calling. How can I help you today?",
+    voice_id: "telnyx-female",
+    voice_provider: "telnyx",
+    persona_template: "receptionist",
+    llm_model: "google/gemini-2.5-flash",
+    temperature: 0.2,
+    max_tokens: 50,
   });
 
   return NextResponse.json({ org });

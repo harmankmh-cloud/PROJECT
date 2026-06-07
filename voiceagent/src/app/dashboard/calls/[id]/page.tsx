@@ -51,16 +51,24 @@ export default function CallDetailPage() {
   const [loading, setLoading] = useState(true);
   const [syncing, setSyncing] = useState(false);
   const [toast, setToast] = useState<string | null>(null);
+  const [recordings, setRecordings] = useState<
+    Array<{ id: string; storage_url: string | null; created_at: string }>
+  >([]);
 
   const clearToast = useCallback(() => setToast(null), []);
 
   useEffect(() => {
     let active = true;
-    apiFetch<{ call: Call; transcripts: TranscriptRow[] }>(`/api/calls/${id}`).then((res) => {
+    apiFetch<{
+      call: Call;
+      transcripts: TranscriptRow[];
+      recordings: Array<{ id: string; storage_url: string | null; created_at: string }>;
+    }>(`/api/calls/${id}`).then((res) => {
       if (!active) return;
       if (res.ok) {
         setCall(res.data.call);
         setTranscripts(res.data.transcripts || []);
+        setRecordings(res.data.recordings || []);
       } else {
         setError(res.error);
       }
@@ -158,6 +166,26 @@ export default function CallDetailPage() {
             </div>
           </div>
         </section>
+
+        {recordings.length > 0 && (
+          <section className="mb-8">
+            <h3 className="mb-3 text-sm font-bold uppercase tracking-wider text-slate-text">
+              Recording
+            </h3>
+            {recordings.map((r) =>
+              r.storage_url ? (
+                <audio
+                  key={r.id}
+                  controls
+                  className="w-full rounded-xl"
+                  src={r.storage_url}
+                >
+                  Your browser does not support audio playback.
+                </audio>
+              ) : null
+            )}
+          </section>
+        )}
 
         <section className="mb-8 flex gap-3">
           <button

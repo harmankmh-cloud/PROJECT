@@ -50,6 +50,13 @@ export async function POST(request: NextRequest) {
     escalationPhone: agent?.escalation_phone || org?.transfer_phone || undefined,
     callerPhone: callRow?.from_number || undefined,
     history,
+    agentConfig: agent
+      ? {
+          llm_model: agent.llm_model,
+          temperature: agent.temperature,
+          max_tokens: agent.max_tokens,
+        }
+      : undefined,
   });
 
   after(async () => {

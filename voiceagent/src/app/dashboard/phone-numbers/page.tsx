@@ -20,6 +20,11 @@ export default function PhoneNumbersPage() {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState("");
   const [message, setMessage] = useState("");
+  const [areaCode, setAreaCode] = useState("");
+  const [available, setAvailable] = useState<
+    Array<{ phone_number: string; region: string; monthly_cost_cents: number }>
+  >([]);
+  const [searching, setSearching] = useState(false);
 
   useEffect(() => {
     Promise.all([
@@ -86,15 +91,89 @@ export default function PhoneNumbersPage() {
     return agent?.name || "Unassigned";
   }
 
+  async function searchNumbers(e: React.FormEvent) {
+    e.preventDefault();
+    setSearching(true);
+    setError("");
+    const q = areaCode ? `?area_code=${areaCode}` : "";
+    const res = await apiFetch<{ numbers: typeof available }>(`/api/phone-numbers/search${q}`);
+    setSearching(false);
+    if (res.ok) setAvailable(res.data.numbers || []);
+    else setError(res.error);
+  }
+
+  async function purchaseNumber(phone: string) {
+    setError("");
+    setMessage("");
+    const res = await apiFetch<{ phoneNumber: PhoneNumber; message?: string }>(
+      "/api/phone-numbers/purchase",
+      {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          phone_number: phone,
+          agent_id: form.agent_id || agents[0]?.id || null,
+        }),
+      }
+    );
+    if (res.ok) {
+      setNumbers((prev) => [res.data.phoneNumber, ...prev]);
+      setMessage(res.data.message || "Number purchased.");
+    } else {
+      setError(res.error);
+    }
+  }
+
   return (
     <div>
       <h1 className="text-2xl font-bold text-ghost-white">Phone Numbers</h1>
       <p className="mt-1 text-on-surface-variant">
-        Map your Twilio numbers to agents. Inbound calls route by the number dialed.
+        Search Telnyx numbers or map an existing line. Inbound calls route by the number dialed.
       </p>
 
-      {message && <p className="mt-4 text-sm text-teal-700">{message}</p>}
+      {message && <p className="mt-4 text-sm text-primary">{message}</p>}
       {error && <p className="mt-4 text-sm text-error">{error}</p>}
+
+      <form onSubmit={searchNumbers} className="mt-8 surface-card flex flex-wrap items-end gap-4 p-6">
+        <div>
+          <h2 className="font-semibold text-ghost-white">Search Telnyx numbers</h2>
+          <p className="mt-1 text-xs text-on-surface-variant">US numbers by area code (optional)</p>
+        </div>
+        <input
+          className="input-field w-32"
+          placeholder="604"
+          value={areaCode}
+          onChange={(e) => setAreaCode(e.target.value.replace(/\D/g, "").slice(0, 3))}
+        />
+        <button type="submit" disabled={searching} className="btn-secondary">
+          {searching ? "Searching…" : "Search"}
+        </button>
+      </form>
+
+      {available.length > 0 && (
+        <div className="mt-4 space-y-2">
+          {available.map((n) => (
+            <div
+              key={n.phone_number}
+              className="surface-card flex items-center justify-between gap-4 p-4"
+            >
+              <div>
+                <p className="font-semibold text-ghost-white">{n.phone_number}</p>
+                <p className="text-xs text-slate-text">
+                  {n.region} · ${(n.monthly_cost_cents / 100).toFixed(2)}/mo
+                </p>
+              </div>
+              <button
+                type="button"
+                onClick={() => void purchaseNumber(n.phone_number)}
+                className="btn-primary text-xs"
+              >
+                Buy & assign
+              </button>
+            </div>
+          ))}
+        </div>
+      )}
 
       <form onSubmit={addNumber} className="mt-8 surface-card space-y-4 p-6">
         <h2 className="font-semibold">Add number</h2>
