@@ -12,6 +12,7 @@
     "dev:proxy": "node scripts/dev-proxy.mjs",
     "dev:relay": "node scripts/start-relay-dev.mjs",
     "stripe:setup": "node scripts/stripe-setup.mjs",
+    "greetq:provision": "node scripts/greetq-provision.mjs",
     "stitch": "npx -y stitch-design-cli",
     "stitch:doctor": "bash ../scripts/stitch-doctor.sh"
   },
