@@ -30,4 +30,12 @@ When a pro pays, their listing tier updates automatically (`featured` or `premiu
 4. Stripe Checkout → pay with test/live card
 5. Webhook fires → listing becomes Featured
 
-Dashboard: https://dashboard.stripe.com/acct_1MVTKVDwgNgi4Q9V/products
+## Billing portal
+
+Paid pros can cancel or update payment at **Manage billing** on `/dashboard/pro`.  
+Uses Stripe Customer Portal (same Stripe account). Enable at:  
+https://dashboard.stripe.com/settings/billing/portal
+
+## Upgrade emails
+
+On successful checkout, the pro gets a confirmation email and `ADMIN_EMAILS` get a revenue alert.

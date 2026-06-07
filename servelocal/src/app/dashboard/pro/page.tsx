@@ -1,4 +1,5 @@
 import Link from "next/link";
+import { Suspense } from "react";
 import { redirect } from "next/navigation";
 import { SiteFooter } from "@/components/SiteFooter";
 import { SiteHeader } from "@/components/SiteHeader";
@@ -8,6 +9,8 @@ import { getCategoryBySlug, getJobLeadsForProvider, getProviderReviewsForProvide
 import { cityName, LISTING_PLANS } from "@/lib/constants";
 import { ProJobLeadsList } from "@/components/ProJobLeadsList";
 import { UpgradeCheckoutButton } from "@/components/UpgradeCheckoutButton";
+import { ManageBillingButton } from "@/components/ManageBillingButton";
+import { UpgradeSuccessBanner } from "@/components/UpgradeSuccessBanner";
 import { FOUNDING_PRO } from "@/lib/tradie-program";
 import { createClient } from "@/lib/supabase/server";
 import { isSupabaseConfigured } from "@/lib/supabase/config";
@@ -71,6 +74,10 @@ export default async function ProDashboardPage() {
           <SignOutButton />
         </div>
 
+        <Suspense fallback={null}>
+          <UpgradeSuccessBanner />
+        </Suspense>
+
         <div className="mt-8 grid gap-3 sm:grid-cols-3">
           <div className="stat-hero">
             <p className="font-display text-2xl font-bold text-brand-950">{listing.contact_clicks}</p>
@@ -132,6 +139,11 @@ export default async function ProDashboardPage() {
             {listing.response_time && <li>Response time: {listing.response_time}</li>}
             {listing.emergency_available && <li>24/7 emergency: Enabled</li>}
           </ul>
+          {isPaid && (
+            <div className="mt-4 max-w-xs">
+              <ManageBillingButton />
+            </div>
+          )}
           <p className="mt-4 text-xs text-slate-500">
             Profile edits go through admin for now — contact us for updates.
           </p>

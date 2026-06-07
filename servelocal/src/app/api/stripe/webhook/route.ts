@@ -2,6 +2,7 @@ import { NextResponse } from "next/server";
 import Stripe from "stripe";
 import { getStripe } from "@/lib/stripe";
 import { updateProviderFromSubscription } from "@/lib/stripe-subscription";
+import { notifyProUpgradeEmails } from "@/lib/stripe-notify";
 
 export const runtime = "nodejs";
 
@@ -47,6 +48,7 @@ export async function POST(request: Request) {
           console.error("[servelocal stripe] checkout.session.completed:", result.error);
           return NextResponse.json({ error: result.error }, { status: 500 });
         }
+        await notifyProUpgradeEmails(providerId, plan);
       }
     }
 
