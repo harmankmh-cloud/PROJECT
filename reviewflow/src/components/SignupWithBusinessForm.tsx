@@ -5,6 +5,7 @@ import { createClient, isSupabaseConfigured } from "@/lib/supabase/client";
 import { friendlyAuthError } from "@/lib/auth-errors";
 import { useRouter } from "next/navigation";
 import { IndustryPicker } from "@/components/IndustryPicker";
+import { TermsConsent } from "@/components/TermsConsent";
 
 async function createBusiness(
   name: string,
@@ -32,6 +33,7 @@ export function SignupWithBusinessForm() {
   const [name, setName] = useState("");
   const [businessType, setBusinessType] = useState("");
   const [googleReviewUrl, setGoogleReviewUrl] = useState("");
+  const [termsAccepted, setTermsAccepted] = useState(false);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
   const [info, setInfo] = useState("");
@@ -50,8 +52,14 @@ export function SignupWithBusinessForm() {
     setError("");
     setInfo("");
 
-    if (password.length < 6) {
-      setError("Password must be at least 6 characters.");
+    if (!termsAccepted) {
+      setError("Please accept the Terms and Privacy Policy to continue.");
+      setLoading(false);
+      return;
+    }
+
+    if (password.length < 8) {
+      setError("Password must be at least 8 characters.");
       setLoading(false);
       return;
     }
@@ -102,35 +110,48 @@ export function SignupWithBusinessForm() {
     <form onSubmit={handleSubmit} className="space-y-5">
       <div className="space-y-4">
         <p className="text-xs font-semibold uppercase tracking-wide text-stone-400">Your account</p>
-        <input
-          type="email"
-          value={email}
-          onChange={(e) => setEmail(e.target.value)}
-          placeholder="you@yourbusiness.com"
-          className="input-field"
-          required
-          autoComplete="email"
-        />
-        <input
-          type="password"
-          value={password}
-          onChange={(e) => setPassword(e.target.value)}
-          placeholder="Password (6+ characters)"
-          className="input-field"
-          required
-          autoComplete="new-password"
-        />
+        <label htmlFor="signup-email" className="block space-y-1.5">
+          <span className="text-sm font-semibold text-brand-950">Email</span>
+          <input
+            id="signup-email"
+            type="email"
+            value={email}
+            onChange={(e) => setEmail(e.target.value)}
+            placeholder="you@yourbusiness.com"
+            className="input-field"
+            required
+            autoComplete="email"
+          />
+        </label>
+        <label htmlFor="signup-password" className="block space-y-1.5">
+          <span className="text-sm font-semibold text-brand-950">Password</span>
+          <input
+            id="signup-password"
+            type="password"
+            value={password}
+            onChange={(e) => setPassword(e.target.value)}
+            placeholder="At least 8 characters"
+            className="input-field"
+            required
+            minLength={8}
+            autoComplete="new-password"
+          />
+        </label>
       </div>
 
       <div className="space-y-4 border-t border-[#e8e2d9] pt-5">
         <p className="text-xs font-semibold uppercase tracking-wide text-stone-400">Your business</p>
-        <input
-          value={name}
-          onChange={(e) => setName(e.target.value)}
-          placeholder="Mike's Barber Shop"
-          className="input-field"
-          required
-        />
+        <label htmlFor="signup-business-name" className="block space-y-1.5">
+          <span className="text-sm font-semibold text-brand-950">Business name</span>
+          <input
+            id="signup-business-name"
+            value={name}
+            onChange={(e) => setName(e.target.value)}
+            placeholder="Mike's Barber Shop"
+            className="input-field"
+            required
+          />
+        </label>
         <div>
           <p className="mb-2 text-sm font-medium text-brand-950">Industry</p>
           <IndustryPicker value={businessType} onChange={setBusinessType} />
@@ -142,6 +163,8 @@ export function SignupWithBusinessForm() {
           className="input-field"
         />
       </div>
+
+      <TermsConsent checked={termsAccepted} onChange={setTermsAccepted} />
 
       {error && <p className="text-sm text-rose-600">{error}</p>}
       {info && <p className="rounded-xl bg-emerald-50 px-3 py-3 text-sm text-emerald-800">{info}</p>}

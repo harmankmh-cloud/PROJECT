@@ -2,13 +2,15 @@ import Link from "next/link";
 import { AuthMarketingPanel } from "@/components/AuthMarketingPanel";
 import { SignupWithBusinessForm } from "@/components/SignupWithBusinessForm";
 import { BrandLogo } from "@/components/BrandLogo";
+import { SiteFooter } from "@/components/SiteFooter";
 
 export default function SignupPage() {
   return (
-    <main className="mesh-bg flex min-h-screen">
-      <AuthMarketingPanel footer="No credit card required to start" />
+    <main className="mesh-bg flex min-h-screen flex-col">
+      <div className="flex flex-1">
+        <AuthMarketingPanel footer="No credit card required to start" />
 
-      <div className="flex flex-1 items-center justify-center px-4 py-12">
+        <div className="flex flex-1 items-center justify-center px-4 py-12">
         <div className="w-full max-w-lg">
           <div className="mb-8 lg:hidden">
             <BrandLogo href="/" />
@@ -35,7 +37,9 @@ export default function SignupPage() {
             </p>
           </div>
         </div>
+        </div>
       </div>
+      <SiteFooter />
     </main>
   );
 }

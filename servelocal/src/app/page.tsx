@@ -15,7 +15,7 @@ export default async function HomePage() {
 
   return (
     <main className="mesh-bg min-h-screen">
-      <SiteHeader />
+      <SiteHeader compact />
 
       <section className="hero-light px-4 pb-16 pt-12 sm:px-8 sm:pb-24 sm:pt-16">
         <div className="hero-glow -left-20 top-0 h-72 w-72 bg-teal-500/20" />
@@ -56,8 +56,12 @@ export default async function HomePage() {
           </p>
           <div className="mx-auto mt-12 grid max-w-2xl grid-cols-3 gap-3 sm:gap-4">
             <div className="stat-hero">
-              <p className="font-display text-2xl font-bold text-brand-950">{stats.providers || "50+"}</p>
-              <p className="text-xs text-slate-500">Local pros</p>
+              <p className="font-display text-2xl font-bold text-brand-950">
+                {stats.providers > 0 ? stats.providers : "Growing"}
+              </p>
+              <p className="text-xs text-slate-500">
+                {stats.providers > 0 ? "Local pros" : "Be the first pro in your city"}
+              </p>
             </div>
             <div className="stat-hero">
               <p className="font-display text-2xl font-bold text-brand-950">{stats.verified || "—"}</p>

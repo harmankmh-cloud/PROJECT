@@ -2,6 +2,7 @@ import Link from "next/link";
 import { AuthForm } from "@/components/Forms";
 import { AuthMarketingPanel } from "@/components/AuthMarketingPanel";
 import { BrandLogo } from "@/components/BrandLogo";
+import { SiteFooter } from "@/components/SiteFooter";
 
 export default async function LoginPage({
   searchParams,
@@ -12,10 +13,11 @@ export default async function LoginPage({
   const message = params.message ? decodeURIComponent(params.message) : "";
 
   return (
-    <main className="mesh-bg flex min-h-screen">
-      <AuthMarketingPanel footer="Sign in to your command center" />
+    <main className="mesh-bg flex min-h-screen flex-col">
+      <div className="flex flex-1">
+        <AuthMarketingPanel footer="Sign in to your command center" />
 
-      <div className="flex flex-1 items-center justify-center px-4 py-12">
+        <div className="flex flex-1 items-center justify-center px-4 py-12">
         <div className="w-full max-w-md">
           <div className="mb-8 lg:hidden">
             <BrandLogo href="/" />
@@ -45,7 +47,9 @@ export default async function LoginPage({
             </p>
           </div>
         </div>
+        </div>
       </div>
+      <SiteFooter />
     </main>
   );
 }

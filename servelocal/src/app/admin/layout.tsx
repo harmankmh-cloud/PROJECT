@@ -31,8 +31,11 @@ export default async function AdminLayout({ children }: { children: React.ReactN
         </Link>
         <p className="mt-1 text-xs text-white/50">Admin</p>
         <nav className="mt-8 space-y-1">
-          <Link href="/admin" className="nav-item nav-item-active">
+          <Link href="/admin" className="nav-item">
             Directory
+          </Link>
+          <Link href="/admin/settings" className="nav-item">
+            Settings
           </Link>
           <Link href="/dashboard" className="nav-item">
             My dashboard

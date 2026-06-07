@@ -45,11 +45,9 @@ export function SiteAuthNav({ compact }: { compact?: boolean }) {
       >
         Log in
       </Link>
-      {!compact && (
-        <Link href="/signup" className="btn-ghost px-3 py-1.5 text-xs sm:px-4 sm:py-2 sm:text-sm">
-          Sign up
-        </Link>
-      )}
+      <Link href="/signup" className="btn-ghost px-3 py-1.5 text-xs sm:px-4 sm:py-2 sm:text-sm">
+        Sign up
+      </Link>
     </>
   );
 }

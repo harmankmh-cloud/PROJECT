@@ -5,6 +5,7 @@ import { createClient, isSupabaseConfigured } from "@/lib/supabase/client";
 import { friendlyAuthError } from "@/lib/auth-errors";
 import { useRouter } from "next/navigation";
 import { IndustryPicker } from "@/components/IndustryPicker";
+import { TermsConsent } from "@/components/TermsConsent";
 
 export function SetupBusinessForm() {
   const router = useRouter();
@@ -111,6 +112,7 @@ export function AuthForm({ mode }: { mode: "login" | "signup" }) {
   const router = useRouter();
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+  const [termsAccepted, setTermsAccepted] = useState(false);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
   const [info, setInfo] = useState("");
@@ -129,8 +131,14 @@ export function AuthForm({ mode }: { mode: "login" | "signup" }) {
     setError("");
     setInfo("");
 
-    if (password.length < 6) {
-      setError("Password must be at least 6 characters.");
+    if (mode === "signup" && !termsAccepted) {
+      setError("Please accept the Terms and Privacy Policy to continue.");
+      setLoading(false);
+      return;
+    }
+
+    if (password.length < 8) {
+      setError("Password must be at least 8 characters.");
       setLoading(false);
       return;
     }
@@ -193,24 +201,36 @@ export function AuthForm({ mode }: { mode: "login" | "signup" }) {
 
   return (
     <form onSubmit={handleSubmit} className="space-y-4">
-      <input
-        type="email"
-        value={email}
-        onChange={(e) => setEmail(e.target.value)}
-        placeholder="you@yourbusiness.com"
-        className="input-field"
-        required
-        autoComplete="email"
-      />
-      <input
-        type="password"
-        value={password}
-        onChange={(e) => setPassword(e.target.value)}
-        placeholder="Password (6+ characters)"
-        className="input-field"
-        required
-        autoComplete={mode === "signup" ? "new-password" : "current-password"}
-      />
+      <label htmlFor="auth-email" className="block space-y-1.5">
+        <span className="text-sm font-semibold text-brand-950">Email</span>
+        <input
+          id="auth-email"
+          type="email"
+          value={email}
+          onChange={(e) => setEmail(e.target.value)}
+          placeholder="you@yourbusiness.com"
+          className="input-field"
+          required
+          autoComplete="email"
+        />
+      </label>
+      <label htmlFor="auth-password" className="block space-y-1.5">
+        <span className="text-sm font-semibold text-brand-950">Password</span>
+        <input
+          id="auth-password"
+          type="password"
+          value={password}
+          onChange={(e) => setPassword(e.target.value)}
+          placeholder={mode === "signup" ? "At least 8 characters" : "Your password"}
+          className="input-field"
+          required
+          minLength={mode === "signup" ? 8 : undefined}
+          autoComplete={mode === "signup" ? "new-password" : "current-password"}
+        />
+      </label>
+      {mode === "signup" && (
+        <TermsConsent checked={termsAccepted} onChange={setTermsAccepted} />
+      )}
       {mode === "login" && (
         <button
           type="button"
