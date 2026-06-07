@@ -42,6 +42,9 @@ export function ServiceRequestForm({
   const [customerPhone, setCustomerPhone] = useState("");
   const [customerEmail, setCustomerEmail] = useState(defaultEmail);
   const [description, setDescription] = useState("");
+  const [urgency, setUrgency] = useState<string>("this_week");
+  const [budgetMin, setBudgetMin] = useState("");
+  const [budgetMax, setBudgetMax] = useState("");
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
   const [matches, setMatches] = useState<ServiceProvider[] | null>(null);
@@ -78,6 +81,9 @@ export function ServiceRequestForm({
           customerPhone: normalizePhone(customerPhone),
           customerEmail: customerEmail.trim(),
           description: description.trim(),
+          urgency,
+          budgetMin: budgetMin ? Number(budgetMin) : undefined,
+          budgetMax: budgetMax ? Number(budgetMax) : undefined,
         }),
       });
       const data = await response.json();
@@ -147,6 +153,39 @@ export function ServiceRequestForm({
         <span className="font-semibold">Email (optional)</span>
         <input type="email" value={customerEmail} onChange={(e) => setCustomerEmail(e.target.value)} className="input-field" />
       </label>
+      <label className="block space-y-2 text-sm">
+        <span className="font-semibold">When do you need this?</span>
+        <select value={urgency} onChange={(e) => setUrgency(e.target.value)} className="input-field select-field">
+          <option value="asap">ASAP / emergency</option>
+          <option value="this_week">This week</option>
+          <option value="this_month">This month</option>
+          <option value="flexible">Flexible</option>
+        </select>
+      </label>
+      <div className="grid gap-4 sm:grid-cols-2">
+        <label className="block space-y-2 text-sm">
+          <span className="font-semibold">Budget min ($)</span>
+          <input
+            type="number"
+            min={0}
+            value={budgetMin}
+            onChange={(e) => setBudgetMin(e.target.value)}
+            className="input-field"
+            placeholder="Optional"
+          />
+        </label>
+        <label className="block space-y-2 text-sm">
+          <span className="font-semibold">Budget max ($)</span>
+          <input
+            type="number"
+            min={0}
+            value={budgetMax}
+            onChange={(e) => setBudgetMax(e.target.value)}
+            className="input-field"
+            placeholder="Optional"
+          />
+        </label>
+      </div>
       <label className="block space-y-2 text-sm">
         <span className="font-semibold">What do you need done?</span>
         <textarea

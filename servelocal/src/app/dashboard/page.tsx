@@ -5,7 +5,6 @@ import { SiteHeader } from "@/components/SiteHeader";
 import { SignOutButton } from "@/components/SignOutButton";
 import { cityName } from "@/lib/constants";
 import { getServiceCategories, getUserServiceRequests } from "@/lib/data";
-import { isPlatformAdmin } from "@/lib/admin-auth";
 import { createClient } from "@/lib/supabase/server";
 import { isSupabaseConfigured } from "@/lib/supabase/config";
 
@@ -22,10 +21,6 @@ export default async function DashboardPage() {
   } = await supabase.auth.getUser();
 
   if (!user) redirect("/login");
-
-  if (isPlatformAdmin(user.email)) {
-    redirect("/admin");
-  }
 
   const [requests, categories] = await Promise.all([
     getUserServiceRequests(user.id, user.email ?? undefined),
@@ -52,7 +47,11 @@ export default async function DashboardPage() {
             <p className="font-semibold text-brand-950">Post a new job</p>
             <p className="mt-1 text-sm text-slate-500">Get free quotes from local pros</p>
           </Link>
-          <Link href="/join" className="surface-card-hover p-5">
+          <Link href="/dashboard/pro" className="surface-card-hover p-5">
+            <p className="font-semibold text-brand-950">Pro dashboard</p>
+            <p className="mt-1 text-sm text-slate-500">View listing stats, clicks & reviews</p>
+          </Link>
+          <Link href="/join" className="surface-card-hover p-5 sm:col-span-2">
             <p className="font-semibold text-brand-950">List my business</p>
             <p className="mt-1 text-sm text-slate-500">Apply as a tradie on ServeLocal</p>
           </Link>

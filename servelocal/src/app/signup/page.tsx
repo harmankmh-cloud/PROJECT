@@ -1,9 +1,20 @@
+import type { Metadata } from "next";
 import Link from "next/link";
 import { redirect } from "next/navigation";
 import { AuthForm } from "@/components/AuthForm";
 import { SERVE_LOCAL } from "@/lib/constants";
+import { pageMetadata } from "@/lib/seo";
 import { createClient } from "@/lib/supabase/server";
 import { isSupabaseConfigured } from "@/lib/supabase/config";
+
+export const metadata: Metadata = {
+  ...pageMetadata({
+    title: "Create Your Account",
+    description: "Sign up for a free ServeLocal account to track job requests and manage your tradie listing.",
+    path: "/signup",
+  }),
+  robots: { index: false, follow: false },
+};
 
 export default async function SignupPage() {
   if (isSupabaseConfigured()) {

@@ -96,6 +96,106 @@ export async function getCategoryBySlug(slug: string) {
   return categories.find((c) => c.slug === slug) || null;
 }
 
+export async function getProvidersForUser(userId: string, email?: string) {
+  const admin = createDbClient();
+  if (!admin) return [];
+
+  const { data: byOwner } = await admin
+    .from("service_providers")
+    .select("*")
+    .eq("owner_user_id", userId)
+    .order("created_at", { ascending: false });
+
+  if (byOwner?.length) {
+    return (byOwner as ServiceProvider[]).map((row) =>
+      normalizeProvider(row as unknown as Record<string, unknown>)
+    );
+  }
+
+  if (!email) return [];
+
+  const { data: byEmail } = await admin
+    .from("service_providers")
+    .select("*")
+    .ilike("email", email)
+    .order("created_at", { ascending: false });
+
+  return ((byEmail || []) as ServiceProvider[]).map((row) =>
+    normalizeProvider(row as unknown as Record<string, unknown>)
+  );
+}
+
+export async function getProviderReviewsForProvider(providerId: string, limit = 20) {
+  const admin = createDbClient();
+  if (!admin) return [];
+
+  try {
+    const { data } = await admin
+      .from("provider_reviews")
+      .select("*")
+      .eq("provider_id", providerId)
+      .order("created_at", { ascending: false })
+      .limit(limit);
+
+    return (data || []) as ProviderReview[];
+  } catch {
+    return [];
+  }
+}
+
+export async function createContactMessage(input: {
+  name: string;
+  email: string;
+  subject?: string;
+  message: string;
+}) {
+  const admin = createDbClient();
+  if (!admin) {
+    return createSiteSuggestion({
+      message: `[Contact] ${input.subject || "General"} — ${input.message}`,
+      email: input.email,
+    });
+  }
+
+  try {
+    const { error } = await admin.from("contact_messages").insert({
+      name: input.name.trim(),
+      email: input.email.trim(),
+      subject: input.subject?.trim() || null,
+      message: input.message.trim(),
+    });
+    if (error) throw error;
+    return { ok: true as const };
+  } catch {
+    return createSiteSuggestion({
+      message: `[Contact] ${input.name}: ${input.subject || ""} — ${input.message}`,
+      email: input.email,
+    });
+  }
+}
+
+export async function subscribeNewsletter(email: string) {
+  const admin = createDbClient();
+  if (!admin) {
+    return createSiteSuggestion({
+      message: `[Newsletter] Subscribe: ${email}`,
+      email,
+    });
+  }
+
+  try {
+    const { error } = await admin.from("newsletter_subscribers").insert({ email: email.trim().toLowerCase() });
+    if (error?.code === "23505") return { ok: true as const };
+    if (error) throw error;
+    return { ok: true as const };
+  } catch {
+    return createSiteSuggestion({
+      message: `[Newsletter] Subscribe: ${email}`,
+      email,
+    });
+  }
+}
+
 export async function getApprovedProviders(filters: ProviderFilters = {}) {
   const admin = createDbClient();
   if (!admin) return [];
@@ -272,6 +372,7 @@ export async function createProviderApplication(input: {
   requestedPlan?: string;
   minCalloutFee?: string;
   businessHours?: string;
+  ownerUserId?: string;
 }) {
   const admin = createDbClient();
   if (!admin) return { ok: false as const, error: "Server not configured" };
@@ -307,6 +408,7 @@ export async function createProviderApplication(input: {
       min_callout_fee: input.minCalloutFee?.trim() || null,
       business_hours: input.businessHours?.trim() || null,
       status: "pending",
+      owner_user_id: input.ownerUserId || null,
     })
     .select("id, slug")
     .single();
@@ -323,6 +425,9 @@ export async function createServiceRequest(input: {
   customerEmail?: string;
   description: string;
   userId?: string;
+  urgency?: string;
+  budgetMin?: number;
+  budgetMax?: number;
 }) {
   const admin = createDbClient();
   if (!admin) return { ok: false as const, error: "Server not configured" };
@@ -336,9 +441,10 @@ export async function createServiceRequest(input: {
     description: input.description.trim(),
   };
 
-  if (input.userId) {
-    row.user_id = input.userId;
-  }
+  if (input.userId) row.user_id = input.userId;
+  if (input.urgency) row.urgency = input.urgency;
+  if (input.budgetMin != null) row.budget_min = input.budgetMin;
+  if (input.budgetMax != null) row.budget_max = input.budgetMax;
 
   let { data, error } = await admin.from("service_requests").insert(row).select("id").single();
 
@@ -346,6 +452,19 @@ export async function createServiceRequest(input: {
     const withoutUser = { ...row };
     delete withoutUser.user_id;
     ({ data, error } = await admin.from("service_requests").insert(withoutUser).select("id").single());
+  }
+
+  if (error?.message?.includes("urgency") || error?.message?.includes("budget")) {
+    const minimal = {
+      category_slug: row.category_slug,
+      city_slug: row.city_slug,
+      customer_name: row.customer_name,
+      customer_phone: row.customer_phone,
+      customer_email: row.customer_email,
+      description: row.description,
+      ...(row.user_id ? { user_id: row.user_id } : {}),
+    };
+    ({ data, error } = await admin.from("service_requests").insert(minimal).select("id").single());
   }
 
   if (error || !data) return { ok: false as const, error: error?.message || "Could not submit" };

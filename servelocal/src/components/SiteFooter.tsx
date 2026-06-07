@@ -1,11 +1,12 @@
 import Link from "next/link";
 import { TRADE_CITIES, SERVE_LOCAL } from "@/lib/constants";
+import { NewsletterSignup } from "@/components/NewsletterSignup";
 
 export function SiteFooter() {
   return (
     <footer className="border-t border-slate-200/70 bg-white/80 py-14">
-      <div className="mx-auto grid max-w-6xl gap-10 px-4 sm:grid-cols-2 sm:px-8 lg:grid-cols-4">
-        <div>
+      <div className="mx-auto grid max-w-6xl gap-10 px-4 sm:grid-cols-2 sm:px-8 lg:grid-cols-5">
+        <div className="lg:col-span-2">
           <div className="flex items-center gap-2.5">
             <span className="flex h-8 w-8 items-center justify-center rounded-lg bg-gradient-to-br from-gold-500 to-teal-500 text-xs font-bold text-white">
               S
@@ -15,6 +16,9 @@ export function SiteFooter() {
           <p className="mt-3 text-sm leading-relaxed text-zinc-500">
             {SERVE_LOCAL.region}, Canada · Find local trades and contact them directly.
           </p>
+          <div className="mt-6 max-w-sm">
+            <NewsletterSignup compact />
+          </div>
         </div>
         <div>
           <p className="text-xs font-semibold uppercase tracking-wider text-zinc-400">Customers</p>
@@ -34,6 +38,11 @@ export function SiteFooter() {
                 Search pros
               </Link>
             </li>
+            <li>
+              <Link href="/faq" className="text-zinc-600 transition hover:text-teal-600">
+                FAQ
+              </Link>
+            </li>
           </ul>
         </div>
         <div>
@@ -49,11 +58,36 @@ export function SiteFooter() {
                 Plans & pricing
               </Link>
             </li>
+            <li>
+              <Link href="/dashboard/pro" className="text-zinc-600 transition hover:text-teal-600">
+                Pro dashboard
+              </Link>
+            </li>
+            <li>
+              <Link href="/refer" className="text-zinc-600 transition hover:text-teal-600">
+                Refer a friend
+              </Link>
+            </li>
           </ul>
         </div>
         <div>
-          <p className="text-xs font-semibold uppercase tracking-wider text-zinc-400">Legal</p>
+          <p className="text-xs font-semibold uppercase tracking-wider text-zinc-400">Company</p>
           <ul className="mt-4 space-y-2.5 text-sm">
+            <li>
+              <Link href="/about" className="text-zinc-600 transition hover:text-teal-600">
+                About us
+              </Link>
+            </li>
+            <li>
+              <Link href="/blog" className="text-zinc-600 transition hover:text-teal-600">
+                Blog
+              </Link>
+            </li>
+            <li>
+              <Link href="/contact" className="text-zinc-600 transition hover:text-teal-600">
+                Contact
+              </Link>
+            </li>
             <li>
               <Link href="/privacy" className="text-zinc-600 transition hover:text-teal-600">
                 Privacy Policy
@@ -64,17 +98,12 @@ export function SiteFooter() {
                 Terms of Service
               </Link>
             </li>
-            <li>
-              <a href="mailto:hello@servelocal.ca" className="text-zinc-600 transition hover:text-teal-600">
-                Help & contact
-              </a>
-            </li>
           </ul>
         </div>
-        <div>
+        <div className="lg:col-span-5">
           <p className="text-xs font-semibold uppercase tracking-wider text-zinc-400">Cities</p>
           <ul className="mt-4 flex flex-wrap gap-x-3 gap-y-2 text-sm">
-            {TRADE_CITIES.slice(0, 6).map((c) => (
+            {TRADE_CITIES.map((c) => (
               <li key={c.slug}>
                 <Link href={`/${c.slug}`} className="text-zinc-600 transition hover:text-teal-600">
                   {c.name}

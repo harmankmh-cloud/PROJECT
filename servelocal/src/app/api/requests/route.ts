@@ -14,6 +14,9 @@ const bodySchema = z.object({
   customerPhone: z.string().transform(normalizePhone).pipe(z.string().length(10)),
   customerEmail: z.union([z.string().email(), z.literal("")]).optional(),
   description: z.string().min(10).max(2000),
+  urgency: z.enum(["asap", "this_week", "this_month", "flexible"]).optional(),
+  budgetMin: z.number().int().min(0).optional(),
+  budgetMax: z.number().int().min(0).optional(),
 });
 
 export async function POST(request: Request) {
@@ -37,6 +40,9 @@ export async function POST(request: Request) {
       customerEmail: body.customerEmail || user?.email || undefined,
       description: body.description,
       userId: user?.id,
+      urgency: body.urgency,
+      budgetMin: body.budgetMin,
+      budgetMax: body.budgetMax,
     });
 
     if (!result.ok) {

@@ -1,13 +1,33 @@
+import type { Metadata } from "next";
 import Link from "next/link";
 import { notFound } from "next/navigation";
 import { Suspense } from "react";
 import { CategoryFilters } from "@/components/CategoryFilters";
 import { ProviderCard } from "@/components/ProviderCard";
+import { ProvidersMapSection } from "@/components/ProvidersMapSection";
 import { SiteFooter } from "@/components/SiteFooter";
 import { SiteHeader } from "@/components/SiteHeader";
-import { TRADE_CITIES, SERVE_LOCAL, cityName } from "@/lib/constants";
+import { TRADE_CITIES, SERVE_LOCAL, cityName, SERVICE_SUBCATEGORIES } from "@/lib/constants";
+import { pageMetadata } from "@/lib/seo";
 import { getApprovedProviders, getCategoryBySlug } from "@/lib/data";
 import type { ProviderSort } from "@/lib/types";
+
+export async function generateMetadata({
+  params,
+}: {
+  params: Promise<{ city: string; category: string }>;
+}): Promise<Metadata> {
+  const { city, category } = await params;
+  const cityMeta = TRADE_CITIES.find((c) => c.slug === city);
+  const cat = await getCategoryBySlug(category);
+  if (!cityMeta || !cat) return { title: "Not found" };
+
+  return pageMetadata({
+    title: `${cat.name} in ${cityMeta.name} BC`,
+    description: `Find ${cat.name.toLowerCase()} pros in ${cityMeta.name}, ${cityMeta.region}. Compare verified listings, reviews, and contact trades direct on ${SERVE_LOCAL.name}.`,
+    path: `/${city}/${category}`,
+  });
+}
 
 export default async function CategoryPage({
   params,
@@ -51,6 +71,20 @@ export default async function CategoryPage({
         <Suspense fallback={null}>
           <CategoryFilters />
         </Suspense>
+
+        {SERVICE_SUBCATEGORIES[category] && (
+          <div className="mt-4 flex flex-wrap gap-2">
+            {SERVICE_SUBCATEGORIES[category].map((sub) => (
+              <Link
+                key={sub.slug}
+                href={`/${city}/${category}?q=${encodeURIComponent(sub.label)}`}
+                className="chip-tag text-xs"
+              >
+                {sub.label}
+              </Link>
+            ))}
+          </div>
+        )}
 
         {providers.length === 0 ? (
           <div className="surface-card mt-10 p-8 text-center">

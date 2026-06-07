@@ -1,3 +1,4 @@
+import type { Metadata } from "next";
 import Link from "next/link";
 import { notFound } from "next/navigation";
 import { ProviderBadges } from "@/components/ProviderBadges";
@@ -8,7 +9,26 @@ import { SiteFooter } from "@/components/SiteFooter";
 import { SiteHeader } from "@/components/SiteHeader";
 import { StarRating } from "@/components/StarRating";
 import { SERVE_LOCAL, cityName } from "@/lib/constants";
+import { pageMetadata } from "@/lib/seo";
 import { getCategoryBySlug, getProviderBySlug, getProviderReviews } from "@/lib/data";
+
+export async function generateMetadata({
+  params,
+}: {
+  params: Promise<{ slug: string }>;
+}): Promise<Metadata> {
+  const { slug } = await params;
+  const provider = await getProviderBySlug(slug);
+  if (!provider) return { title: "Pro not found" };
+
+  const category = await getCategoryBySlug(provider.category_slug);
+
+  return pageMetadata({
+    title: `${provider.display_name} — ${category?.name || "Local pro"} in ${cityName(provider.city_slug)}`,
+    description: `Contact ${provider.display_name} directly for ${category?.name.toLowerCase() || "local trade"} work in ${cityName(provider.city_slug)}, BC. Call or WhatsApp — no middleman on ${SERVE_LOCAL.name}.`,
+    path: `/pro/${slug}`,
+  });
+}
 
 export default async function ProviderPage({ params }: { params: Promise<{ slug: string }> }) {
   const { slug } = await params;

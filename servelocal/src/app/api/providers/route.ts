@@ -3,6 +3,7 @@ import { z } from "zod";
 import { TRADE_CITIES } from "@/lib/constants";
 import { normalizePhone, zodFieldError } from "@/lib/form-utils";
 import { createProviderApplication, getServiceCategories } from "@/lib/data";
+import { createClient } from "@/lib/supabase/server";
 
 const citySlugs = TRADE_CITIES.map((c) => c.slug);
 
@@ -32,6 +33,11 @@ export async function POST(request: Request) {
       return NextResponse.json({ error: "Invalid category" }, { status: 400 });
     }
 
+    const supabase = await createClient();
+    const {
+      data: { user },
+    } = supabase ? await supabase.auth.getUser() : { data: { user: null } };
+
     const result = await createProviderApplication({
       displayName: body.displayName,
       categorySlug: body.categorySlug,
@@ -48,6 +54,7 @@ export async function POST(request: Request) {
       businessHours: body.businessHours,
       emergencyAvailable: body.emergencyAvailable,
       requestedPlan: body.requestedPlan,
+      ownerUserId: user?.id,
     });
 
     if (!result.ok) {

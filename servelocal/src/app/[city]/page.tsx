@@ -2,9 +2,11 @@ import type { Metadata } from "next";
 import Link from "next/link";
 import { notFound } from "next/navigation";
 import { ProviderCard } from "@/components/ProviderCard";
+import { ProvidersMapSection } from "@/components/ProvidersMapSection";
 import { SiteFooter } from "@/components/SiteFooter";
 import { SiteHeader } from "@/components/SiteHeader";
 import { TRADE_CITIES, SERVE_LOCAL } from "@/lib/constants";
+import { pageMetadata } from "@/lib/seo";
 import { getApprovedProviders, getServiceCategories } from "@/lib/data";
 
 export async function generateMetadata({
@@ -16,11 +18,11 @@ export async function generateMetadata({
   const cityMeta = TRADE_CITIES.find((c) => c.slug === city);
   if (!cityMeta) return { title: "City not found" };
 
-  return {
-    title: `Find Local Trades in ${cityMeta.name} | ${SERVE_LOCAL.name} BC`,
+  return pageMetadata({
+    title: `Local Trades in ${cityMeta.name} BC`,
     description: `Browse plumbers, electricians, and handymen in ${cityMeta.name}, ${cityMeta.region}. Post a job or compare verified local pros on ${SERVE_LOCAL.name}.`,
-    alternates: { canonical: `/${city}` },
-  };
+    path: `/${city}`,
+  });
 }
 
 export default async function CityPage({ params }: { params: Promise<{ city: string }> }) {
@@ -82,15 +84,18 @@ export default async function CityPage({ params }: { params: Promise<{ city: str
             </div>
           </div>
         ) : (
-          <div className="mt-12">
-            <h2 className="font-semibold text-brand-950">Top pros in {cityMeta.name}</h2>
-            <div className="mt-4 grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
-              {providers.map((p) => {
-                const cat = categories.find((c) => c.slug === p.category_slug);
-                return <ProviderCard key={p.id} provider={p} categoryName={cat?.name} />;
-              })}
+          <>
+            <div className="mt-12">
+              <h2 className="font-semibold text-brand-950">Top pros in {cityMeta.name}</h2>
+              <div className="mt-4 grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
+                {providers.map((p) => {
+                  const cat = categories.find((c) => c.slug === p.category_slug);
+                  return <ProviderCard key={p.id} provider={p} categoryName={cat?.name} />;
+                })}
+              </div>
             </div>
-          </div>
+            <ProvidersMapSection citySlug={city} />
+          </>
         )}
 
         <div className="mt-12 flex flex-wrap gap-3">
