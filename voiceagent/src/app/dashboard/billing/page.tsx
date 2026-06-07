@@ -4,13 +4,19 @@ import { getUserOrg } from "@/lib/auth";
 import { isStripeConfigured } from "@/lib/stripe";
 import { SubscribeButton } from "@/components/SubscribeButton";
 import { ManageSubscriptionButton } from "@/components/ManageSubscriptionButton";
+import { BillingAutoSubscribe } from "@/components/BillingAutoSubscribe";
+import type { PlanKey } from "@/lib/plans";
 
 export default async function BillingPage({
   searchParams,
 }: {
-  searchParams: Promise<{ success?: string; canceled?: string }>;
+  searchParams: Promise<{ success?: string; canceled?: string; subscribe?: string }>;
 }) {
   const params = await searchParams;
+  const subscribePlan =
+    params.subscribe === "starter" || params.subscribe === "pro" || params.subscribe === "enterprise"
+      ? (params.subscribe as PlanKey)
+      : null;
   const supabase = await createClient();
   const { data: { user } } = await supabase.auth.getUser();
   const org = user ? await getUserOrg(user.id) : null;
@@ -43,6 +49,12 @@ export default async function BillingPage({
           Checkout canceled — no changes were made.
         </p>
       )}
+
+      <BillingAutoSubscribe
+        plan={subscribePlan}
+        stripeReady={stripeReady}
+        currentPlan={plan}
+      />
 
       <div className="mt-8 grid gap-4 sm:grid-cols-3">
         <div className="surface-card p-5">

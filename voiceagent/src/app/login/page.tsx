@@ -6,6 +6,7 @@ import { Suspense, useState } from "react";
 import { createClient } from "@/lib/supabase/client";
 import { AuthMarketingPanel } from "@/components/AuthMarketingPanel";
 import { BrandLogo } from "@/components/BrandLogo";
+import { MarketingFooter } from "@/components/MarketingFooter";
 
 function LoginForm() {
   const searchParams = useSearchParams();
@@ -41,7 +42,8 @@ function LoginForm() {
   }
 
   return (
-    <main className="mesh-bg flex min-h-screen">
+    <main className="mesh-bg flex min-h-screen flex-col">
+      <div className="flex flex-1">
       <AuthMarketingPanel footer="Sign in to your command center" />
 
       <div className="flex flex-1 items-center justify-center px-4 py-12">
@@ -91,6 +93,8 @@ function LoginForm() {
           </div>
         </div>
       </div>
+      </div>
+      <MarketingFooter />
     </main>
   );
 }
