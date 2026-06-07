@@ -163,7 +163,7 @@ async function main() {
 
   if (process.env.CLOUDFLARE_API_TOKEN && process.env.CLOUDFLARE_ZONE_ID) {
     try {
-      steps.push(await upsertDns("greetq.com", "cname.vercel-dns.com"));
+      steps.push(await upsertDns("greetq.com", "76.76.21.21", "A"));
       steps.push(await upsertDns("www.greetq.com", "cname.vercel-dns.com"));
     } catch (e) {
       steps.push(`Cloudflare DNS: ${e.message}`);
