@@ -1,6 +1,6 @@
 {
   "eslint.config.mjs": {
-    "mtime": 1780798886.8473322,
+    "mtime": 1780799721.0601306,
     "ast_hash": "94aa000dae45b89eede1274eac20c974",
     "semantic_hash": ""
   },
@@ -30,8 +30,8 @@
     "semantic_hash": ""
   },
   "orchestrator/src/session.ts": {
-    "mtime": 1780793597.4131918,
-    "ast_hash": "ecd64bfd970edc32e33d14d3179a1a57",
+    "mtime": 1780801846.2997067,
+    "ast_hash": "4157843affb4faed055834ccece812ff",
     "semantic_hash": ""
   },
   "orchestrator/src/types.ts": {
@@ -45,8 +45,8 @@
     "semantic_hash": ""
   },
   "package.json": {
-    "mtime": 1780793597.4131918,
-    "ast_hash": "8072d9bed421fbf20d71a882f6a9e153",
+    "mtime": 1780801651.148463,
+    "ast_hash": "ddf2bbca1045afded60f8ff8f068c341",
     "semantic_hash": ""
   },
   "postcss.config.mjs": {
@@ -70,7 +70,7 @@
     "semantic_hash": ""
   },
   "src/app/api/agents/route.ts": {
-    "mtime": 1780798886.879332,
+    "mtime": 1780799721.0601306,
     "ast_hash": "661718820d08513944537f8781b988c1",
     "semantic_hash": ""
   },
@@ -85,8 +85,8 @@
     "semantic_hash": ""
   },
   "src/app/api/campaigns/route.ts": {
-    "mtime": 1780798886.875332,
-    "ast_hash": "a3c32b3fff216627cb671ef8972954cb",
+    "mtime": 1780801860.2996526,
+    "ast_hash": "8438a3101b4c1a313c8eb69a313d5087",
     "semantic_hash": ""
   },
   "src/app/api/compliance/consent/route.ts": {
@@ -100,7 +100,7 @@
     "semantic_hash": ""
   },
   "src/app/api/integrations/google-calendar/callback/route.ts": {
-    "mtime": 1780798830.355551,
+    "mtime": 1780799721.0601306,
     "ast_hash": "7a4fdedd3d6f26835df058a232496eac",
     "semantic_hash": ""
   },
@@ -110,7 +110,7 @@
     "semantic_hash": ""
   },
   "src/app/api/integrations/hubspot/callback/route.ts": {
-    "mtime": 1780798830.4235506,
+    "mtime": 1780799721.0601306,
     "ast_hash": "e33d0f704121eb074c1bd5b5a3db1e1e",
     "semantic_hash": ""
   },
@@ -135,33 +135,33 @@
     "semantic_hash": ""
   },
   "src/app/api/telnyx/webhook/route.ts": {
-    "mtime": 1780798945.871104,
+    "mtime": 1780799721.0601306,
     "ast_hash": "05995287e86bbe4431e5056ee10552eb",
     "semantic_hash": ""
   },
   "src/app/api/twilio/gather/route.ts": {
-    "mtime": 1780798820.23159,
+    "mtime": 1780799721.0601306,
     "ast_hash": "bc7ef9dc9f4440fd12fdfbeb9feb8588",
     "semantic_hash": ""
   },
   "src/app/api/twilio/reply/route.ts": {
-    "mtime": 1780798820.29559,
-    "ast_hash": "4ef4ffee9f5f00195dc35185e054a207",
+    "mtime": 1780801838.0397387,
+    "ast_hash": "5fa7b4836eb56db21a5698339e4ec39b",
     "semantic_hash": ""
   },
   "src/app/api/twilio/status/route.ts": {
-    "mtime": 1780798894.4273028,
+    "mtime": 1780799721.0601306,
     "ast_hash": "f85c90ebcccc33aa20d6ed4b792d43ce",
     "semantic_hash": ""
   },
   "src/app/api/twilio/transfer/route.ts": {
-    "mtime": 1780798820.5715888,
+    "mtime": 1780799721.0601306,
     "ast_hash": "cde6825822f3fa2b311db5fb97e479e7",
     "semantic_hash": ""
   },
   "src/app/api/twilio/voice/route.ts": {
-    "mtime": 1780798938.8751311,
-    "ast_hash": "27ed9808063bfaa48a3183dd9389273f",
+    "mtime": 1780801838.5197368,
+    "ast_hash": "0edf4341657358ba1f07241284ec9a91",
     "semantic_hash": ""
   },
   "src/app/api/webhooks/post-call/route.ts": {
@@ -170,33 +170,33 @@
     "semantic_hash": ""
   },
   "src/app/api/webhooks/stripe/route.ts": {
-    "mtime": 1780798830.383551,
-    "ast_hash": "213033804e1801dcc62a74b9f4b09eef",
+    "mtime": 1780801651.148463,
+    "ast_hash": "1a7577bd68c8fc885579660375cb192f",
     "semantic_hash": ""
   },
   "src/app/dashboard/agents/page.tsx": {
-    "mtime": 1780793597.4171917,
-    "ast_hash": "0bb9b24afc099b31c6a63fc8039406e5",
+    "mtime": 1780801736.5921319,
+    "ast_hash": "efe0f337efef7a7a442ef0140b38135f",
     "semantic_hash": ""
   },
   "src/app/dashboard/billing/page.tsx": {
-    "mtime": 1780798886.903332,
+    "mtime": 1780799721.0641308,
     "ast_hash": "56259c3da46f186119bbe2198ae295e0",
     "semantic_hash": ""
   },
   "src/app/dashboard/calls/page.tsx": {
-    "mtime": 1780793597.4171917,
-    "ast_hash": "f08fafd630594f6c1766cb3ee2a4114f",
+    "mtime": 1780801736.568132,
+    "ast_hash": "127c25f1182ebf23923af992dd560601",
     "semantic_hash": ""
   },
   "src/app/dashboard/campaigns/page.tsx": {
-    "mtime": 1780793597.4171917,
-    "ast_hash": "6988214c9b69a9d12e7f9d54b44f70c7",
+    "mtime": 1780801736.7361312,
+    "ast_hash": "adba78a83c094ec58360b1dcd3100b4d",
     "semantic_hash": ""
   },
   "src/app/dashboard/channels/page.tsx": {
-    "mtime": 1780793597.4171917,
-    "ast_hash": "b2e79e3277a43169548a7fb511b78317",
+    "mtime": 1780801680.6083488,
+    "ast_hash": "f435def30105af664f55f6695ef2e005",
     "semantic_hash": ""
   },
   "src/app/dashboard/compliance/page.tsx": {
@@ -205,12 +205,12 @@
     "semantic_hash": ""
   },
   "src/app/dashboard/flows/page.tsx": {
-    "mtime": 1780793597.4171917,
-    "ast_hash": "c1e36fce1a538d9af82025f1022c5102",
+    "mtime": 1780801860.2516527,
+    "ast_hash": "88e0ecbeb253b8813bb3c57a8a30998e",
     "semantic_hash": ""
   },
   "src/app/dashboard/integrations/page.tsx": {
-    "mtime": 1780798978.9869764,
+    "mtime": 1780799721.0641308,
     "ast_hash": "c783812b1c52cf64c3ec65f45c6ba0a8",
     "semantic_hash": ""
   },
@@ -220,13 +220,13 @@
     "semantic_hash": ""
   },
   "src/app/dashboard/page.tsx": {
-    "mtime": 1780798886.927332,
+    "mtime": 1780799721.0641308,
     "ast_hash": "c95ee1c0eb1818942d896492805d0dd8",
     "semantic_hash": ""
   },
   "src/app/dashboard/settings/page.tsx": {
-    "mtime": 1780798945.603105,
-    "ast_hash": "9d65f3ab93c88edc68395dcc417a8030",
+    "mtime": 1780801680.7523484,
+    "ast_hash": "2e9f139bc9d1d53ac2f6d63549b4927d",
     "semantic_hash": ""
   },
   "src/app/layout.tsx": {
@@ -235,8 +235,8 @@
     "semantic_hash": ""
   },
   "src/app/login/page.tsx": {
-    "mtime": 1780798886.887332,
-    "ast_hash": "379ee2b5b5aff75de3202933b47ddd7b",
+    "mtime": 1780801680.600349,
+    "ast_hash": "1a75a6b1b6845df2ce4d35cf143a7dd7",
     "semantic_hash": ""
   },
   "src/app/page.tsx": {
@@ -250,12 +250,12 @@
     "semantic_hash": ""
   },
   "src/components/DashboardShell.tsx": {
-    "mtime": 1780793597.421192,
-    "ast_hash": "6833455896d109382b4aefc2c534eee4",
+    "mtime": 1780801860.2556527,
+    "ast_hash": "cee223d685c66c84eb22b86f1e0c01a8",
     "semantic_hash": ""
   },
   "src/components/FlowBuilder.tsx": {
-    "mtime": 1780798945.931104,
+    "mtime": 1780799721.0641308,
     "ast_hash": "d1863d435b69e496a0234e85cf74b847",
     "semantic_hash": ""
   },
@@ -265,7 +265,7 @@
     "semantic_hash": ""
   },
   "src/lib/auth.ts": {
-    "mtime": 1780798807.7156386,
+    "mtime": 1780799721.0641308,
     "ast_hash": "0988589425ca3ff44cd534663bd99b87",
     "semantic_hash": ""
   },
@@ -290,8 +290,8 @@
     "semantic_hash": ""
   },
   "src/lib/flow-engine/index.ts": {
-    "mtime": 1780793597.421192,
-    "ast_hash": "e499d1fe1c8301b5643f3dc21d86806c",
+    "mtime": 1780801817.1798196,
+    "ast_hash": "c82efa8b2668967f49ac06d4ba888017",
     "semantic_hash": ""
   },
   "src/lib/integrations/google-calendar.ts": {
@@ -335,7 +335,7 @@
     "semantic_hash": ""
   },
   "src/lib/stripe.ts": {
-    "mtime": 1780798807.7956383,
+    "mtime": 1780799721.0641308,
     "ast_hash": "1a6a516aad87a4a0d55a65640216508c",
     "semantic_hash": ""
   },
@@ -360,12 +360,12 @@
     "semantic_hash": ""
   },
   "src/lib/twilio-voice-context.ts": {
-    "mtime": 1780798938.639132,
+    "mtime": 1780799721.0641308,
     "ast_hash": "8d4b1ea06312b1dd7bb7d6bfe2fd12b9",
     "semantic_hash": ""
   },
   "src/lib/twilio.ts": {
-    "mtime": 1780798938.7871315,
+    "mtime": 1780799721.0641308,
     "ast_hash": "a15a3c16f234470948d0eb6f3e3f6471",
     "semantic_hash": ""
   },
@@ -380,8 +380,8 @@
     "semantic_hash": ""
   },
   "src/middleware.ts": {
-    "mtime": 1780798807.6676388,
-    "ast_hash": "1efad0764d5c0bc82bb02a7b2acfe225",
+    "mtime": 1780801680.7523484,
+    "ast_hash": "4d6d346dc008d38b704bc22fbfb4d30b",
     "semantic_hash": ""
   },
   "supabase/fix-grants.sql": {
@@ -415,48 +415,133 @@
     "semantic_hash": ""
   },
   "src/app/api/auth/sso/callback/route.ts": {
-    "mtime": 1780798946.0071037,
+    "mtime": 1780799721.0601306,
     "ast_hash": "dfb1b8e82c0daa5b5f5e2f1748ef20d1",
     "semantic_hash": ""
   },
   "src/app/api/billing/checkout/route.ts": {
-    "mtime": 1780798888.1353273,
-    "ast_hash": "b46cdf25ecca40ab1375d134ad9c7d6d",
+    "mtime": 1780801651.148463,
+    "ast_hash": "2e9c312c55fd250f87094c5f8e3e17ed",
     "semantic_hash": ""
   },
   "src/components/IntegrationConnectors.tsx": {
-    "mtime": 1780798979.2509754,
-    "ast_hash": "60341e53f63a07204ba3e3cc363cd0cb",
+    "mtime": 1780801693.2562997,
+    "ast_hash": "d138d49c3c2eb7a86822ed0b4c47ee36",
     "semantic_hash": ""
   },
   "src/components/SubscribeButton.tsx": {
-    "mtime": 1780798886.9553318,
+    "mtime": 1780799721.0641308,
     "ast_hash": "3b981af9e1783f8ef136a4101ca0297b",
     "semantic_hash": ""
   },
   "src/lib/call-stats.ts": {
-    "mtime": 1780798800.443667,
+    "mtime": 1780799721.0641308,
     "ast_hash": "90c31f2d618857b9f151c94089ef7924",
     "semantic_hash": ""
   },
   "src/lib/integration-auth.ts": {
-    "mtime": 1780798800.3716671,
+    "mtime": 1780799721.0641308,
     "ast_hash": "24a29c18c5723864075d1ad237b50d09",
     "semantic_hash": ""
   },
   "src/lib/telnyx-webhook.ts": {
-    "mtime": 1780798901.391276,
+    "mtime": 1780799721.0641308,
     "ast_hash": "a11eed99522e28bc1c1eb160c1309023",
     "semantic_hash": ""
   },
   "src/lib/twilio-webhook.ts": {
-    "mtime": 1780798800.3596673,
+    "mtime": 1780799721.0641308,
     "ast_hash": "80e765e939eaa55adbfa9abf8462c60d",
     "semantic_hash": ""
   },
   "vercel.json": {
     "mtime": 1780798794.1436913,
     "ast_hash": "4188dd8d6b745cca5d443108639b1fe2",
+    "semantic_hash": ""
+  },
+  "scripts/stripe-setup.mjs": {
+    "mtime": 1780801651.148463,
+    "ast_hash": "dd19ee57acf7319aa812bbdebff5e246",
+    "semantic_hash": ""
+  },
+  "src/app/api/billing/status/route.ts": {
+    "mtime": 1780801651.148463,
+    "ast_hash": "187563e90471e2178fd9c1a5242b24b3",
+    "semantic_hash": ""
+  },
+  "src/app/api/channels/route.ts": {
+    "mtime": 1780801664.1404128,
+    "ast_hash": "0f77b4b5ed1dcb500e1f878782ee912d",
+    "semantic_hash": ""
+  },
+  "src/app/api/integrations/status/route.ts": {
+    "mtime": 1780801664.1684127,
+    "ast_hash": "f72b505f76acf7ca7d8de9e0812c883b",
+    "semantic_hash": ""
+  },
+  "src/app/api/settings/route.ts": {
+    "mtime": 1780801664.1964126,
+    "ast_hash": "412ac26f1b93d8ed5278857fc3aedf83",
+    "semantic_hash": ""
+  },
+  "src/app/auth/callback/route.ts": {
+    "mtime": 1780801664.112413,
+    "ast_hash": "d803c2bc2935618132b825cb85b13594",
+    "semantic_hash": ""
+  },
+  "src/app/dashboard/error.tsx": {
+    "mtime": 1780801693.4242992,
+    "ast_hash": "20816c4b2f2c0a44a47598d52cfc9c80",
+    "semantic_hash": ""
+  },
+  "src/app/forgot-password/page.tsx": {
+    "mtime": 1780801664.108413,
+    "ast_hash": "6832e01a845a8ce116b8c7a5f2ecda87",
+    "semantic_hash": ""
+  },
+  "src/app/reset-password/page.tsx": {
+    "mtime": 1780801664.1324127,
+    "ast_hash": "bf5928e360780b864cf9e283137e7dad",
+    "semantic_hash": ""
+  },
+  "src/lib/api-client.ts": {
+    "mtime": 1780801664.092413,
+    "ast_hash": "397f11f10993883d4d7fd9ba9fd6f000",
+    "semantic_hash": ""
+  },
+  "src/lib/stripe-prices.ts": {
+    "mtime": 1780801651.148463,
+    "ast_hash": "9eee7e366894af68058b4ceb17a85dc6",
+    "semantic_hash": ""
+  },
+  "src/app/api/knowledge/route.ts": {
+    "mtime": 1780801830.5557678,
+    "ast_hash": "60367d0faf49e9a508e11292ac7b35b4",
+    "semantic_hash": ""
+  },
+  "src/app/api/orchestrator/reply/route.ts": {
+    "mtime": 1780801830.483768,
+    "ast_hash": "175627624f77f3320821fd79b0169ab0",
+    "semantic_hash": ""
+  },
+  "src/app/api/phone-numbers/route.ts": {
+    "mtime": 1780801830.5797677,
+    "ast_hash": "9fed4ece01b47f0435e6c81d7ee5e700",
+    "semantic_hash": ""
+  },
+  "src/app/dashboard/knowledge/page.tsx": {
+    "mtime": 1780801860.3236525,
+    "ast_hash": "a42fd4d9e49b63ebcbb16233d7482724",
+    "semantic_hash": ""
+  },
+  "src/app/dashboard/phone-numbers/page.tsx": {
+    "mtime": 1780801860.191653,
+    "ast_hash": "5c6cd6cd3c99fb02f31f3785354d6bbd",
+    "semantic_hash": ""
+  },
+  "src/lib/voice-flow-runtime.ts": {
+    "mtime": 1780801830.483768,
+    "ast_hash": "1b8e097098738ec816e04302a6ff089c",
     "semantic_hash": ""
   }
 }

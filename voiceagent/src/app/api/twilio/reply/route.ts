@@ -10,10 +10,10 @@ import {
   loadCallHistory,
   resolveVoiceContext,
 } from "@/lib/twilio-voice-context";
-import { generateVoiceReply } from "@/lib/voice-conversation";
+import { processVoiceTurn } from "@/lib/voice-flow-runtime";
+import { createAdminClient } from "@/lib/supabase/admin";
 import { getPublicAppUrl } from "@/lib/public-url";
 import { takePendingSpeech } from "@/lib/pending-speech";
-import { createAdminClient } from "@/lib/supabase/admin";
 import { validateTwilioWebhook } from "@/lib/twilio-webhook";
 
 export async function POST(request: NextRequest) {
@@ -43,10 +43,43 @@ export async function POST(request: NextRequest) {
       loadCallHistory(callSid),
     ]);
 
-    const reply = await generateVoiceReply({
-      systemPrompt: ctx.systemPrompt,
-      history,
+    let knowledgeContext: string | undefined;
+    if (ctx.orgId !== "default") {
+      try {
+        const admin = createAdminClient();
+        const { data: agent } = await admin
+          .from("va_agents")
+          .select("knowledge_base_enabled")
+          .eq("id", ctx.agentId)
+          .maybeSingle();
+        if (agent?.knowledge_base_enabled) {
+          const { data: docs } = await admin
+            .from("va_knowledge_docs")
+            .select("title, content")
+            .eq("org_id", ctx.orgId)
+            .limit(10);
+          if (docs?.length) {
+            knowledgeContext = docs
+              .slice(0, 3)
+              .map((d) => `## ${d.title}\n${String(d.content).slice(0, 400)}`)
+              .join("\n\n")
+              .slice(0, 1500);
+          }
+        }
+      } catch {
+        /* knowledge optional */
+      }
+    }
+
+    const reply = await processVoiceTurn({
+      callSid,
+      orgId: ctx.orgId,
+      agentId: ctx.agentId,
       userMessage: pending.speech,
+      systemPrompt: ctx.systemPrompt,
+      knowledgeContext,
+      escalationPhone: ctx.escalationPhone,
+      history,
     });
 
     after(async () => {

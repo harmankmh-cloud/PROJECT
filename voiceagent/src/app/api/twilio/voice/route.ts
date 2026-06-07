@@ -7,6 +7,7 @@ import {
   isSimpleTwilioVoiceMode,
 } from "@/lib/twilio";
 import { ensureCallRecord, resolveVoiceContext } from "@/lib/twilio-voice-context";
+import { getFlowWelcomeGreeting } from "@/lib/voice-flow-runtime";
 import { getPublicAppUrl } from "@/lib/public-url";
 import { validateTwilioWebhook } from "@/lib/twilio-webhook";
 
@@ -24,6 +25,11 @@ export async function POST(request: NextRequest) {
     const lookupNumber = direction.toLowerCase().startsWith("outbound") ? from : to;
 
     const ctx = await resolveVoiceContext(lookupNumber);
+    const welcomeGreeting = await getFlowWelcomeGreeting(
+      ctx.orgId,
+      ctx.agentId,
+      ctx.welcomeGreeting
+    );
     await ensureCallRecord({
       callSid,
       orgId: ctx.orgId,
@@ -36,7 +42,7 @@ export async function POST(request: NextRequest) {
 
     if (isSimpleTwilioVoiceMode()) {
       const twiml = buildSimpleVoiceTwiml({
-        message: ctx.welcomeGreeting,
+        message: welcomeGreeting,
         gatherUrl: `${appUrl}/api/twilio/gather`,
       });
       return twimlResponse(twiml);
@@ -45,7 +51,7 @@ export async function POST(request: NextRequest) {
     const twiml = buildConversationRelayTwiml({
       orgId: ctx.orgId,
       agentId: ctx.agentId,
-      welcomeGreeting: ctx.welcomeGreeting,
+      welcomeGreeting,
       actionUrl: `${appUrl}/api/twilio/status`,
       voice: ctx.voice,
     });

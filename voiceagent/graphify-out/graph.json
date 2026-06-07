@@ -421,7 +421,7 @@
       "label": "CallSession",
       "file_type": "code",
       "source_file": "orchestrator/src/session.ts",
-      "source_location": "L5",
+      "source_location": "L4",
       "id": "src_session_callsession",
       "community": 0,
       "norm_label": "callsession"
@@ -430,7 +430,7 @@
       "label": ".constructor()",
       "file_type": "code",
       "source_file": "orchestrator/src/session.ts",
-      "source_location": "L14",
+      "source_location": "L12",
       "id": "src_session_callsession_constructor",
       "community": 0,
       "norm_label": ".constructor()"
@@ -439,16 +439,25 @@
       "label": ".handleMessage()",
       "file_type": "code",
       "source_file": "orchestrator/src/session.ts",
-      "source_location": "L19",
+      "source_location": "L17",
       "id": "src_session_callsession_handlemessage",
       "community": 0,
       "norm_label": ".handlemessage()"
     },
     {
+      "label": ".fetchReply()",
+      "file_type": "code",
+      "source_file": "orchestrator/src/session.ts",
+      "source_location": "L99",
+      "id": "src_session_callsession_fetchreply",
+      "community": 0,
+      "norm_label": ".fetchreply()"
+    },
+    {
       "label": ".streamText()",
       "file_type": "code",
       "source_file": "orchestrator/src/session.ts",
-      "source_location": "L110",
+      "source_location": "L137",
       "id": "src_session_callsession_streamtext",
       "community": 0,
       "norm_label": ".streamtext()"
@@ -457,7 +466,7 @@
       "label": ".send()",
       "file_type": "code",
       "source_file": "orchestrator/src/session.ts",
-      "source_location": "L115",
+      "source_location": "L142",
       "id": "src_session_callsession_send",
       "community": 0,
       "norm_label": ".send()"
@@ -466,7 +475,7 @@
       "label": ".notifyTransfer()",
       "file_type": "code",
       "source_file": "orchestrator/src/session.ts",
-      "source_location": "L121",
+      "source_location": "L148",
       "id": "src_session_callsession_notifytransfer",
       "community": 0,
       "norm_label": ".notifytransfer()"
@@ -475,7 +484,7 @@
       "label": ".getCallSid()",
       "file_type": "code",
       "source_file": "orchestrator/src/session.ts",
-      "source_location": "L150",
+      "source_location": "L177",
       "id": "src_session_callsession_getcallsid",
       "community": 0,
       "norm_label": ".getcallsid()"
@@ -484,7 +493,7 @@
       "label": ".getTranscripts()",
       "file_type": "code",
       "source_file": "orchestrator/src/session.ts",
-      "source_location": "L154",
+      "source_location": "L181",
       "id": "src_session_callsession_gettranscripts",
       "community": 0,
       "norm_label": ".gettranscripts()"
@@ -692,7 +701,7 @@
       "file_type": "code",
       "source_file": "package.json",
       "source_location": "L1",
-      "id": "users_dorrus_project_voiceagent_package_json",
+      "id": "package",
       "community": 4,
       "norm_label": "package.json"
     },
@@ -805,10 +814,19 @@
       "norm_label": "dev:relay"
     },
     {
+      "label": "stripe:setup",
+      "file_type": "code",
+      "source_file": "package.json",
+      "source_location": "L14",
+      "id": "package_scripts_stripe_setup",
+      "community": 4,
+      "norm_label": "stripe:setup"
+    },
+    {
       "label": "dependencies",
       "file_type": "code",
       "source_file": "package.json",
-      "source_location": "L15",
+      "source_location": "L16",
       "id": "package_dependencies",
       "community": 4,
       "norm_label": "dependencies"
@@ -817,7 +835,7 @@
       "label": "@supabase/ssr",
       "file_type": "code",
       "source_file": "package.json",
-      "source_location": "L16",
+      "source_location": "L17",
       "id": "package_dependencies_supabase_ssr",
       "community": 4,
       "norm_label": "@supabase/ssr"
@@ -826,7 +844,7 @@
       "label": "@supabase/supabase-js",
       "file_type": "code",
       "source_file": "package.json",
-      "source_location": "L17",
+      "source_location": "L18",
       "id": "package_dependencies_supabase_supabase_js",
       "community": 4,
       "norm_label": "@supabase/supabase-js"
@@ -835,7 +853,7 @@
       "label": "googleapis",
       "file_type": "code",
       "source_file": "package.json",
-      "source_location": "L18",
+      "source_location": "L19",
       "id": "package_dependencies_googleapis",
       "community": 4,
       "norm_label": "googleapis"
@@ -844,7 +862,7 @@
       "label": "next",
       "file_type": "code",
       "source_file": "package.json",
-      "source_location": "L19",
+      "source_location": "L20",
       "id": "package_dependencies_next",
       "community": 4,
       "norm_label": "next"
@@ -853,7 +871,7 @@
       "label": "react",
       "file_type": "code",
       "source_file": "package.json",
-      "source_location": "L20",
+      "source_location": "L21",
       "id": "package_dependencies_react",
       "community": 4,
       "norm_label": "react"
@@ -862,7 +880,7 @@
       "label": "react-dom",
       "file_type": "code",
       "source_file": "package.json",
-      "source_location": "L21",
+      "source_location": "L22",
       "id": "package_dependencies_react_dom",
       "community": 4,
       "norm_label": "react-dom"
@@ -871,7 +889,7 @@
       "label": "stripe",
       "file_type": "code",
       "source_file": "package.json",
-      "source_location": "L22",
+      "source_location": "L23",
       "id": "package_dependencies_stripe",
       "community": 4,
       "norm_label": "stripe"
@@ -880,7 +898,7 @@
       "label": "twilio",
       "file_type": "code",
       "source_file": "package.json",
-      "source_location": "L23",
+      "source_location": "L24",
       "id": "package_dependencies_twilio",
       "community": 4,
       "norm_label": "twilio"
@@ -889,7 +907,7 @@
       "label": "zod",
       "file_type": "code",
       "source_file": "package.json",
-      "source_location": "L24",
+      "source_location": "L25",
       "id": "package_dependencies_zod",
       "community": 4,
       "norm_label": "zod"
@@ -898,7 +916,7 @@
       "label": "devDependencies",
       "file_type": "code",
       "source_file": "package.json",
-      "source_location": "L26",
+      "source_location": "L27",
       "id": "package_devdependencies",
       "community": 4,
       "norm_label": "devdependencies"
@@ -907,7 +925,7 @@
       "label": "@tailwindcss/postcss",
       "file_type": "code",
       "source_file": "package.json",
-      "source_location": "L27",
+      "source_location": "L28",
       "id": "package_devdependencies_tailwindcss_postcss",
       "community": 4,
       "norm_label": "@tailwindcss/postcss"
@@ -916,7 +934,7 @@
       "label": "@types/node",
       "file_type": "code",
       "source_file": "package.json",
-      "source_location": "L28",
+      "source_location": "L29",
       "id": "package_devdependencies_types_node",
       "community": 4,
       "norm_label": "@types/node"
@@ -925,7 +943,7 @@
       "label": "@types/react",
       "file_type": "code",
       "source_file": "package.json",
-      "source_location": "L29",
+      "source_location": "L30",
       "id": "package_devdependencies_types_react",
       "community": 4,
       "norm_label": "@types/react"
@@ -934,7 +952,7 @@
       "label": "@types/react-dom",
       "file_type": "code",
       "source_file": "package.json",
-      "source_location": "L30",
+      "source_location": "L31",
       "id": "package_devdependencies_types_react_dom",
       "community": 4,
       "norm_label": "@types/react-dom"
@@ -943,7 +961,7 @@
       "label": "eslint",
       "file_type": "code",
       "source_file": "package.json",
-      "source_location": "L31",
+      "source_location": "L32",
       "id": "package_devdependencies_eslint",
       "community": 4,
       "norm_label": "eslint"
@@ -952,7 +970,7 @@
       "label": "eslint-config-next",
       "file_type": "code",
       "source_file": "package.json",
-      "source_location": "L32",
+      "source_location": "L33",
       "id": "package_devdependencies_eslint_config_next",
       "community": 4,
       "norm_label": "eslint-config-next"
@@ -961,7 +979,7 @@
       "label": "http-proxy",
       "file_type": "code",
       "source_file": "package.json",
-      "source_location": "L33",
+      "source_location": "L34",
       "id": "package_devdependencies_http_proxy",
       "community": 4,
       "norm_label": "http-proxy"
@@ -970,7 +988,7 @@
       "label": "tailwindcss",
       "file_type": "code",
       "source_file": "package.json",
-      "source_location": "L34",
+      "source_location": "L35",
       "id": "package_devdependencies_tailwindcss",
       "community": 4,
       "norm_label": "tailwindcss"
@@ -979,7 +997,7 @@
       "label": "typescript",
       "file_type": "code",
       "source_file": "package.json",
-      "source_location": "L35",
+      "source_location": "L36",
       "id": "package_devdependencies_typescript",
       "community": 4,
       "norm_label": "typescript"
@@ -1084,6 +1102,42 @@
       "norm_label": "run()"
     },
     {
+      "label": "stripe-setup.mjs",
+      "file_type": "code",
+      "source_file": "scripts/stripe-setup.mjs",
+      "source_location": "L1",
+      "id": "scripts_stripe_setup",
+      "community": 16,
+      "norm_label": "stripe-setup.mjs"
+    },
+    {
+      "label": "PLANS",
+      "file_type": "code",
+      "source_file": "scripts/stripe-setup.mjs",
+      "source_location": "L11",
+      "id": "scripts_stripe_setup_plans",
+      "community": 16,
+      "norm_label": "plans"
+    },
+    {
+      "label": "EVENTS",
+      "file_type": "code",
+      "source_file": "scripts/stripe-setup.mjs",
+      "source_location": "L17",
+      "id": "scripts_stripe_setup_events",
+      "community": 16,
+      "norm_label": "events"
+    },
+    {
+      "label": "main()",
+      "file_type": "code",
+      "source_file": "scripts/stripe-setup.mjs",
+      "source_location": "L25",
+      "id": "scripts_stripe_setup_main",
+      "community": 16,
+      "norm_label": "main()"
+    },
+    {
       "label": "route.ts",
       "file_type": "code",
       "source_file": "src/app/api/agents/route.ts",
@@ -1165,22 +1219,31 @@
       "norm_label": "route.ts"
     },
     {
-      "label": "PlanKey",
-      "file_type": "code",
-      "source_file": "src/app/api/billing/checkout/route.ts",
-      "source_location": "L8",
-      "id": "checkout_route_plankey",
-      "community": 13,
-      "norm_label": "plankey"
-    },
-    {
       "label": "POST()",
       "file_type": "code",
       "source_file": "src/app/api/billing/checkout/route.ts",
-      "source_location": "L10",
+      "source_location": "L9",
       "id": "checkout_route_post",
       "community": 13,
       "norm_label": "post()"
+    },
+    {
+      "label": "route.ts",
+      "file_type": "code",
+      "source_file": "src/app/api/billing/status/route.ts",
+      "source_location": "L1",
+      "id": "src_app_api_billing_status_route_ts_status_route",
+      "community": 13,
+      "norm_label": "route.ts"
+    },
+    {
+      "label": "GET()",
+      "file_type": "code",
+      "source_file": "src/app/api/billing/status/route.ts",
+      "source_location": "L7",
+      "id": "src_app_api_billing_status_route_ts_status_route_get",
+      "community": 13,
+      "norm_label": "get()"
     },
     {
       "label": "route.ts",
@@ -1224,7 +1287,7 @@
       "source_file": "src/app/api/campaigns/route.ts",
       "source_location": "L28",
       "id": "campaigns_route_post",
-      "community": 1,
+      "community": 7,
       "norm_label": "post()"
     },
     {
@@ -1234,6 +1297,42 @@
       "source_location": "L67",
       "id": "campaigns_route_patch",
       "community": 7,
+      "norm_label": "patch()"
+    },
+    {
+      "label": "route.ts",
+      "file_type": "code",
+      "source_file": "src/app/api/channels/route.ts",
+      "source_location": "L1",
+      "id": "channels_route",
+      "community": 3,
+      "norm_label": "route.ts"
+    },
+    {
+      "label": "CHANNEL_TYPES",
+      "file_type": "code",
+      "source_file": "src/app/api/channels/route.ts",
+      "source_location": "L7",
+      "id": "channels_route_channel_types",
+      "community": 3,
+      "norm_label": "channel_types"
+    },
+    {
+      "label": "GET()",
+      "file_type": "code",
+      "source_file": "src/app/api/channels/route.ts",
+      "source_location": "L9",
+      "id": "channels_route_get",
+      "community": 3,
+      "norm_label": "get()"
+    },
+    {
+      "label": "PATCH()",
+      "file_type": "code",
+      "source_file": "src/app/api/channels/route.ts",
+      "source_location": "L37",
+      "id": "channels_route_patch",
+      "community": 3,
       "norm_label": "patch()"
     },
     {
@@ -1359,7 +1458,7 @@
       "source_file": "src/app/api/integrations/hubspot/route.ts",
       "source_location": "L1",
       "id": "hubspot_route",
-      "community": 1,
+      "community": 7,
       "norm_label": "route.ts"
     },
     {
@@ -1368,8 +1467,71 @@
       "source_file": "src/app/api/integrations/hubspot/route.ts",
       "source_location": "L6",
       "id": "hubspot_route_get",
+      "community": 7,
+      "norm_label": "get()"
+    },
+    {
+      "label": "route.ts",
+      "file_type": "code",
+      "source_file": "src/app/api/integrations/status/route.ts",
+      "source_location": "L1",
+      "id": "src_app_api_integrations_status_route_ts_status_route",
+      "community": 1,
+      "norm_label": "route.ts"
+    },
+    {
+      "label": "GET()",
+      "file_type": "code",
+      "source_file": "src/app/api/integrations/status/route.ts",
+      "source_location": "L5",
+      "id": "src_app_api_integrations_status_route_ts_status_route_get",
       "community": 1,
       "norm_label": "get()"
+    },
+    {
+      "label": "route.ts",
+      "file_type": "code",
+      "source_file": "src/app/api/knowledge/route.ts",
+      "source_location": "L1",
+      "id": "knowledge_route",
+      "community": 1,
+      "norm_label": "route.ts"
+    },
+    {
+      "label": "GET()",
+      "file_type": "code",
+      "source_file": "src/app/api/knowledge/route.ts",
+      "source_location": "L6",
+      "id": "knowledge_route_get",
+      "community": 1,
+      "norm_label": "get()"
+    },
+    {
+      "label": "POST()",
+      "file_type": "code",
+      "source_file": "src/app/api/knowledge/route.ts",
+      "source_location": "L25",
+      "id": "knowledge_route_post",
+      "community": 1,
+      "norm_label": "post()"
+    },
+    {
+      "label": "PATCH()",
+      "file_type": "code",
+      "source_file": "src/app/api/knowledge/route.ts",
+      "source_location": "L68",
+      "id": "knowledge_route_patch",
+      "community": 1,
+      "norm_label": "patch()"
+    },
+    {
+      "label": "DELETE()",
+      "file_type": "code",
+      "source_file": "src/app/api/knowledge/route.ts",
+      "source_location": "L99",
+      "id": "knowledge_route_delete",
+      "community": 1,
+      "norm_label": "delete()"
     },
     {
       "label": "route.ts",
@@ -1410,10 +1572,28 @@
     {
       "label": "route.ts",
       "file_type": "code",
+      "source_file": "src/app/api/orchestrator/reply/route.ts",
+      "source_location": "L1",
+      "id": "src_app_api_orchestrator_reply_route_ts_reply_route",
+      "community": 3,
+      "norm_label": "route.ts"
+    },
+    {
+      "label": "POST()",
+      "file_type": "code",
+      "source_file": "src/app/api/orchestrator/reply/route.ts",
+      "source_location": "L8",
+      "id": "src_app_api_orchestrator_reply_route_ts_reply_route_post",
+      "community": 3,
+      "norm_label": "post()"
+    },
+    {
+      "label": "route.ts",
+      "file_type": "code",
       "source_file": "src/app/api/org/setup/route.ts",
       "source_location": "L1",
       "id": "setup_route",
-      "community": 3,
+      "community": 1,
       "norm_label": "route.ts"
     },
     {
@@ -1422,8 +1602,89 @@
       "source_file": "src/app/api/org/setup/route.ts",
       "source_location": "L5",
       "id": "setup_route_post",
-      "community": 3,
+      "community": 1,
       "norm_label": "post()"
+    },
+    {
+      "label": "route.ts",
+      "file_type": "code",
+      "source_file": "src/app/api/phone-numbers/route.ts",
+      "source_location": "L1",
+      "id": "phone_numbers_route",
+      "community": 1,
+      "norm_label": "route.ts"
+    },
+    {
+      "label": "normalizePhone()",
+      "file_type": "code",
+      "source_file": "src/app/api/phone-numbers/route.ts",
+      "source_location": "L6",
+      "id": "phone_numbers_route_normalizephone",
+      "community": 1,
+      "norm_label": "normalizephone()"
+    },
+    {
+      "label": "GET()",
+      "file_type": "code",
+      "source_file": "src/app/api/phone-numbers/route.ts",
+      "source_location": "L13",
+      "id": "phone_numbers_route_get",
+      "community": 1,
+      "norm_label": "get()"
+    },
+    {
+      "label": "POST()",
+      "file_type": "code",
+      "source_file": "src/app/api/phone-numbers/route.ts",
+      "source_location": "L32",
+      "id": "phone_numbers_route_post",
+      "community": 1,
+      "norm_label": "post()"
+    },
+    {
+      "label": "PATCH()",
+      "file_type": "code",
+      "source_file": "src/app/api/phone-numbers/route.ts",
+      "source_location": "L73",
+      "id": "phone_numbers_route_patch",
+      "community": 1,
+      "norm_label": "patch()"
+    },
+    {
+      "label": "DELETE()",
+      "file_type": "code",
+      "source_file": "src/app/api/phone-numbers/route.ts",
+      "source_location": "L103",
+      "id": "phone_numbers_route_delete",
+      "community": 1,
+      "norm_label": "delete()"
+    },
+    {
+      "label": "route.ts",
+      "file_type": "code",
+      "source_file": "src/app/api/settings/route.ts",
+      "source_location": "L1",
+      "id": "settings_route",
+      "community": 1,
+      "norm_label": "route.ts"
+    },
+    {
+      "label": "GET()",
+      "file_type": "code",
+      "source_file": "src/app/api/settings/route.ts",
+      "source_location": "L6",
+      "id": "settings_route_get",
+      "community": 1,
+      "norm_label": "get()"
+    },
+    {
+      "label": "PATCH()",
+      "file_type": "code",
+      "source_file": "src/app/api/settings/route.ts",
+      "source_location": "L28",
+      "id": "settings_route_patch",
+      "community": 1,
+      "norm_label": "patch()"
     },
     {
       "label": "route.ts",
@@ -1466,7 +1727,7 @@
       "file_type": "code",
       "source_file": "src/app/api/twilio/reply/route.ts",
       "source_location": "L1",
-      "id": "reply_route",
+      "id": "src_app_api_twilio_reply_route_ts_reply_route",
       "community": 2,
       "norm_label": "route.ts"
     },
@@ -1475,7 +1736,7 @@
       "file_type": "code",
       "source_file": "src/app/api/twilio/reply/route.ts",
       "source_location": "L19",
-      "id": "reply_route_post",
+      "id": "src_app_api_twilio_reply_route_ts_reply_route_post",
       "community": 2,
       "norm_label": "post()"
     },
@@ -1484,8 +1745,8 @@
       "file_type": "code",
       "source_file": "src/app/api/twilio/status/route.ts",
       "source_location": "L1",
-      "id": "status_route",
-      "community": 2,
+      "id": "src_app_api_twilio_status_route_ts_status_route",
+      "community": 3,
       "norm_label": "route.ts"
     },
     {
@@ -1494,7 +1755,7 @@
       "source_file": "src/app/api/twilio/status/route.ts",
       "source_location": "L5",
       "id": "status_route_post",
-      "community": 2,
+      "community": 3,
       "norm_label": "post()"
     },
     {
@@ -1503,7 +1764,7 @@
       "source_file": "src/app/api/twilio/transfer/route.ts",
       "source_location": "L1",
       "id": "transfer_route",
-      "community": 3,
+      "community": 2,
       "norm_label": "route.ts"
     },
     {
@@ -1512,7 +1773,7 @@
       "source_file": "src/app/api/twilio/transfer/route.ts",
       "source_location": "L9",
       "id": "transfer_route_post",
-      "community": 3,
+      "community": 2,
       "norm_label": "post()"
     },
     {
@@ -1528,7 +1789,7 @@
       "label": "POST()",
       "file_type": "code",
       "source_file": "src/app/api/twilio/voice/route.ts",
-      "source_location": "L13",
+      "source_location": "L14",
       "id": "voice_route_post",
       "community": 2,
       "norm_label": "post()"
@@ -1539,7 +1800,7 @@
       "source_file": "src/app/api/webhooks/post-call/route.ts",
       "source_location": "L1",
       "id": "post_call_route",
-      "community": 27,
+      "community": 7,
       "norm_label": "route.ts"
     },
     {
@@ -1548,7 +1809,7 @@
       "source_file": "src/app/api/webhooks/post-call/route.ts",
       "source_location": "L7",
       "id": "post_call_route_post",
-      "community": 27,
+      "community": 7,
       "norm_label": "post()"
     },
     {
@@ -1564,7 +1825,7 @@
       "label": "updateOrgPlan()",
       "file_type": "code",
       "source_file": "src/app/api/webhooks/stripe/route.ts",
-      "source_location": "L6",
+      "source_location": "L7",
       "id": "stripe_route_updateorgplan",
       "community": 13,
       "norm_label": "updateorgplan()"
@@ -1573,10 +1834,28 @@
       "label": "POST()",
       "file_type": "code",
       "source_file": "src/app/api/webhooks/stripe/route.ts",
-      "source_location": "L27",
+      "source_location": "L29",
       "id": "stripe_route_post",
       "community": 13,
       "norm_label": "post()"
+    },
+    {
+      "label": "route.ts",
+      "file_type": "code",
+      "source_file": "src/app/auth/callback/route.ts",
+      "source_location": "L1",
+      "id": "src_app_auth_callback_route_ts_callback_route",
+      "community": 1,
+      "norm_label": "route.ts"
+    },
+    {
+      "label": "GET()",
+      "file_type": "code",
+      "source_file": "src/app/auth/callback/route.ts",
+      "source_location": "L4",
+      "id": "src_app_auth_callback_route_ts_callback_route_get",
+      "community": 1,
+      "norm_label": "get()"
     },
     {
       "label": "page.tsx",
@@ -1591,10 +1870,19 @@
       "label": "AgentsPage()",
       "file_type": "code",
       "source_file": "src/app/dashboard/agents/page.tsx",
-      "source_location": "L6",
+      "source_location": "L7",
       "id": "agents_page_agentspage",
       "community": 6,
       "norm_label": "agentspage()"
+    },
+    {
+      "label": "AgentEditForm()",
+      "file_type": "code",
+      "source_file": "src/app/dashboard/agents/page.tsx",
+      "source_location": "L122",
+      "id": "agents_page_agenteditform",
+      "community": 6,
+      "norm_label": "agenteditform()"
     },
     {
       "label": "page.tsx",
@@ -1602,7 +1890,7 @@
       "source_file": "src/app/dashboard/billing/page.tsx",
       "source_location": "L1",
       "id": "billing_page",
-      "community": 1,
+      "community": 13,
       "norm_label": "page.tsx"
     },
     {
@@ -1627,7 +1915,7 @@
       "label": "CallsPage()",
       "file_type": "code",
       "source_file": "src/app/dashboard/calls/page.tsx",
-      "source_location": "L6",
+      "source_location": "L7",
       "id": "calls_page_callspage",
       "community": 6,
       "norm_label": "callspage()"
@@ -1638,16 +1926,16 @@
       "source_file": "src/app/dashboard/campaigns/page.tsx",
       "source_location": "L1",
       "id": "campaigns_page",
-      "community": 19,
+      "community": 6,
       "norm_label": "page.tsx"
     },
     {
       "label": "CampaignsPage()",
       "file_type": "code",
       "source_file": "src/app/dashboard/campaigns/page.tsx",
-      "source_location": "L5",
+      "source_location": "L7",
       "id": "campaigns_page_campaignspage",
-      "community": 19,
+      "community": 6,
       "norm_label": "campaignspage()"
     },
     {
@@ -1656,25 +1944,25 @@
       "source_file": "src/app/dashboard/channels/page.tsx",
       "source_location": "L1",
       "id": "channels_page",
-      "community": 16,
+      "community": 6,
       "norm_label": "page.tsx"
     },
     {
-      "label": "CHANNELS",
+      "label": "CHANNEL_META",
       "file_type": "code",
       "source_file": "src/app/dashboard/channels/page.tsx",
-      "source_location": "L5",
-      "id": "channels_page_channels",
-      "community": 16,
-      "norm_label": "channels"
+      "source_location": "L6",
+      "id": "channels_page_channel_meta",
+      "community": 6,
+      "norm_label": "channel_meta"
     },
     {
       "label": "ChannelsPage()",
       "file_type": "code",
       "source_file": "src/app/dashboard/channels/page.tsx",
-      "source_location": "L11",
+      "source_location": "L12",
       "id": "channels_page_channelspage",
-      "community": 16,
+      "community": 6,
       "norm_label": "channelspage()"
     },
     {
@@ -1696,6 +1984,24 @@
       "norm_label": "compliancepage()"
     },
     {
+      "label": "error.tsx",
+      "file_type": "code",
+      "source_file": "src/app/dashboard/error.tsx",
+      "source_location": "L1",
+      "id": "dashboard_error",
+      "community": 19,
+      "norm_label": "error.tsx"
+    },
+    {
+      "label": "DashboardError()",
+      "file_type": "code",
+      "source_file": "src/app/dashboard/error.tsx",
+      "source_location": "L3",
+      "id": "dashboard_error_dashboarderror",
+      "community": 19,
+      "norm_label": "dashboarderror()"
+    },
+    {
       "label": "page.tsx",
       "file_type": "code",
       "source_file": "src/app/dashboard/flows/page.tsx",
@@ -1705,10 +2011,19 @@
       "norm_label": "page.tsx"
     },
     {
+      "label": "Flow",
+      "file_type": "code",
+      "source_file": "src/app/dashboard/flows/page.tsx",
+      "source_location": "L9",
+      "id": "flows_page_flow",
+      "community": 6,
+      "norm_label": "flow"
+    },
+    {
       "label": "FlowsPage()",
       "file_type": "code",
       "source_file": "src/app/dashboard/flows/page.tsx",
-      "source_location": "L7",
+      "source_location": "L18",
       "id": "flows_page_flowspage",
       "community": 6,
       "norm_label": "flowspage()"
@@ -1719,7 +2034,7 @@
       "source_file": "src/app/dashboard/integrations/page.tsx",
       "source_location": "L1",
       "id": "integrations_page",
-      "community": 20,
+      "community": 6,
       "norm_label": "page.tsx"
     },
     {
@@ -1728,8 +2043,35 @@
       "source_file": "src/app/dashboard/integrations/page.tsx",
       "source_location": "L3",
       "id": "integrations_page_integrationspage",
-      "community": 20,
+      "community": 6,
       "norm_label": "integrationspage()"
+    },
+    {
+      "label": "page.tsx",
+      "file_type": "code",
+      "source_file": "src/app/dashboard/knowledge/page.tsx",
+      "source_location": "L1",
+      "id": "knowledge_page",
+      "community": 6,
+      "norm_label": "page.tsx"
+    },
+    {
+      "label": "KnowledgeDoc",
+      "file_type": "code",
+      "source_file": "src/app/dashboard/knowledge/page.tsx",
+      "source_location": "L7",
+      "id": "knowledge_page_knowledgedoc",
+      "community": 6,
+      "norm_label": "knowledgedoc"
+    },
+    {
+      "label": "KnowledgePage()",
+      "file_type": "code",
+      "source_file": "src/app/dashboard/knowledge/page.tsx",
+      "source_location": "L16",
+      "id": "knowledge_page_knowledgepage",
+      "community": 6,
+      "norm_label": "knowledgepage()"
     },
     {
       "label": "layout.tsx",
@@ -1770,20 +2112,74 @@
     {
       "label": "page.tsx",
       "file_type": "code",
+      "source_file": "src/app/dashboard/phone-numbers/page.tsx",
+      "source_location": "L1",
+      "id": "phone_numbers_page",
+      "community": 6,
+      "norm_label": "page.tsx"
+    },
+    {
+      "label": "PhoneNumber",
+      "file_type": "code",
+      "source_file": "src/app/dashboard/phone-numbers/page.tsx",
+      "source_location": "L7",
+      "id": "phone_numbers_page_phonenumber",
+      "community": 6,
+      "norm_label": "phonenumber"
+    },
+    {
+      "label": "PhoneNumbersPage()",
+      "file_type": "code",
+      "source_file": "src/app/dashboard/phone-numbers/page.tsx",
+      "source_location": "L16",
+      "id": "phone_numbers_page_phonenumberspage",
+      "community": 6,
+      "norm_label": "phonenumberspage()"
+    },
+    {
+      "label": "page.tsx",
+      "file_type": "code",
       "source_file": "src/app/dashboard/settings/page.tsx",
       "source_location": "L1",
       "id": "settings_page",
-      "community": 24,
+      "community": 6,
       "norm_label": "page.tsx"
+    },
+    {
+      "label": "Settings",
+      "file_type": "code",
+      "source_file": "src/app/dashboard/settings/page.tsx",
+      "source_location": "L6",
+      "id": "settings_page_settings",
+      "community": 6,
+      "norm_label": "settings"
     },
     {
       "label": "SettingsPage()",
       "file_type": "code",
       "source_file": "src/app/dashboard/settings/page.tsx",
-      "source_location": "L5",
+      "source_location": "L15",
       "id": "settings_page_settingspage",
-      "community": 24,
+      "community": 6,
       "norm_label": "settingspage()"
+    },
+    {
+      "label": "page.tsx",
+      "file_type": "code",
+      "source_file": "src/app/forgot-password/page.tsx",
+      "source_location": "L1",
+      "id": "forgot_password_page",
+      "community": 5,
+      "norm_label": "page.tsx"
+    },
+    {
+      "label": "ForgotPasswordPage()",
+      "file_type": "code",
+      "source_file": "src/app/forgot-password/page.tsx",
+      "source_location": "L8",
+      "id": "forgot_password_page_forgotpasswordpage",
+      "community": 5,
+      "norm_label": "forgotpasswordpage()"
     },
     {
       "label": "layout.tsx",
@@ -1831,10 +2227,19 @@
       "norm_label": "page.tsx"
     },
     {
+      "label": "LoginForm()",
+      "file_type": "code",
+      "source_file": "src/app/login/page.tsx",
+      "source_location": "L9",
+      "id": "login_page_loginform",
+      "community": 5,
+      "norm_label": "loginform()"
+    },
+    {
       "label": "LoginPage()",
       "file_type": "code",
       "source_file": "src/app/login/page.tsx",
-      "source_location": "L8",
+      "source_location": "L57",
       "id": "login_page_loginpage",
       "community": 5,
       "norm_label": "loginpage()"
@@ -1856,6 +2261,24 @@
       "id": "app_page_homepage",
       "community": 5,
       "norm_label": "homepage()"
+    },
+    {
+      "label": "page.tsx",
+      "file_type": "code",
+      "source_file": "src/app/reset-password/page.tsx",
+      "source_location": "L1",
+      "id": "reset_password_page",
+      "community": 5,
+      "norm_label": "page.tsx"
+    },
+    {
+      "label": "ResetPasswordPage()",
+      "file_type": "code",
+      "source_file": "src/app/reset-password/page.tsx",
+      "source_location": "L7",
+      "id": "reset_password_page_resetpasswordpage",
+      "community": 5,
+      "norm_label": "resetpasswordpage()"
     },
     {
       "label": "page.tsx",
@@ -1897,7 +2320,7 @@
       "label": "DashboardShell()",
       "file_type": "code",
       "source_file": "src/components/DashboardShell.tsx",
-      "source_location": "L20",
+      "source_location": "L22",
       "id": "components_dashboardshell_dashboardshell",
       "community": 5,
       "norm_label": "dashboardshell()"
@@ -1935,16 +2358,25 @@
       "source_file": "src/components/IntegrationConnectors.tsx",
       "source_location": "L1",
       "id": "components_integrationconnectors",
-      "community": 20,
+      "community": 6,
       "norm_label": "integrationconnectors.tsx"
+    },
+    {
+      "label": "Integration",
+      "file_type": "code",
+      "source_file": "src/components/IntegrationConnectors.tsx",
+      "source_location": "L6",
+      "id": "components_integrationconnectors_integration",
+      "community": 6,
+      "norm_label": "integration"
     },
     {
       "label": "IntegrationConnectors()",
       "file_type": "code",
       "source_file": "src/components/IntegrationConnectors.tsx",
-      "source_location": "L5",
+      "source_location": "L12",
       "id": "components_integrationconnectors_integrationconnectors",
-      "community": 20,
+      "community": 6,
       "norm_label": "integrationconnectors()"
     },
     {
@@ -1971,7 +2403,7 @@
       "source_file": "src/components/SubscribeButton.tsx",
       "source_location": "L1",
       "id": "components_subscribebutton",
-      "community": 1,
+      "community": 13,
       "norm_label": "subscribebutton.tsx"
     },
     {
@@ -1980,7 +2412,7 @@
       "source_file": "src/components/SubscribeButton.tsx",
       "source_location": "L5",
       "id": "components_subscribebutton_plankey",
-      "community": 1,
+      "community": 13,
       "norm_label": "plankey"
     },
     {
@@ -1989,8 +2421,26 @@
       "source_file": "src/components/SubscribeButton.tsx",
       "source_location": "L7",
       "id": "components_subscribebutton_subscribebutton",
-      "community": 1,
+      "community": 13,
       "norm_label": "subscribebutton()"
+    },
+    {
+      "label": "api-client.ts",
+      "file_type": "code",
+      "source_file": "src/lib/api-client.ts",
+      "source_location": "L1",
+      "id": "lib_api_client",
+      "community": 6,
+      "norm_label": "api-client.ts"
+    },
+    {
+      "label": "apiFetch()",
+      "file_type": "code",
+      "source_file": "src/lib/api-client.ts",
+      "source_location": "L2",
+      "id": "lib_api_client_apifetch",
+      "community": 6,
+      "norm_label": "apifetch()"
     },
     {
       "label": "auth.ts",
@@ -2236,10 +2686,19 @@
       "norm_label": ".execute()"
     },
     {
-      "label": ".getNextNode()",
+      "label": ".getNextNodeId()",
       "file_type": "code",
       "source_file": "src/lib/flow-engine/index.ts",
       "source_location": "L85",
+      "id": "flow_engine_index_flowengine_getnextnodeid",
+      "community": 6,
+      "norm_label": ".getnextnodeid()"
+    },
+    {
+      "label": ".getNextNode()",
+      "file_type": "code",
+      "source_file": "src/lib/flow-engine/index.ts",
+      "source_location": "L90",
       "id": "flow_engine_index_flowengine_getnextnode",
       "community": 6,
       "norm_label": ".getnextnode()"
@@ -2248,7 +2707,7 @@
       "label": ".validate()",
       "file_type": "code",
       "source_file": "src/lib/flow-engine/index.ts",
-      "source_location": "L90",
+      "source_location": "L94",
       "id": "flow_engine_index_flowengine_validate",
       "community": 6,
       "norm_label": ".validate()"
@@ -2257,7 +2716,7 @@
       "label": "DEFAULT_FLOW_NODES",
       "file_type": "code",
       "source_file": "src/lib/flow-engine/index.ts",
-      "source_location": "L105",
+      "source_location": "L109",
       "id": "flow_engine_index_default_flow_nodes",
       "community": 6,
       "norm_label": "default_flow_nodes"
@@ -2266,7 +2725,7 @@
       "label": "DEFAULT_FLOW_EDGES",
       "file_type": "code",
       "source_file": "src/lib/flow-engine/index.ts",
-      "source_location": "L126",
+      "source_location": "L130",
       "id": "flow_engine_index_default_flow_edges",
       "community": 6,
       "norm_label": "default_flow_edges"
@@ -2277,7 +2736,7 @@
       "source_file": "src/lib/integration-auth.ts",
       "source_location": "L1",
       "id": "lib_integration_auth",
-      "community": 1,
+      "community": 3,
       "norm_label": "integration-auth.ts"
     },
     {
@@ -2331,7 +2790,7 @@
       "source_file": "src/lib/integrations/hubspot.ts",
       "source_location": "L1",
       "id": "integrations_hubspot",
-      "community": 3,
+      "community": 7,
       "norm_label": "hubspot.ts"
     },
     {
@@ -2340,7 +2799,7 @@
       "source_file": "src/lib/integrations/hubspot.ts",
       "source_location": "L4",
       "id": "integrations_hubspot_gethubspottoken",
-      "community": 3,
+      "community": 7,
       "norm_label": "gethubspottoken()"
     },
     {
@@ -2349,7 +2808,7 @@
       "source_file": "src/lib/integrations/hubspot.ts",
       "source_location": "L17",
       "id": "integrations_hubspot_loghubspotcall",
-      "community": 3,
+      "community": 7,
       "norm_label": "loghubspotcall()"
     },
     {
@@ -2358,7 +2817,7 @@
       "source_file": "src/lib/integrations/hubspot.ts",
       "source_location": "L90",
       "id": "integrations_hubspot_gethubspotauthurl",
-      "community": 1,
+      "community": 7,
       "norm_label": "gethubspotauthurl()"
     },
     {
@@ -2367,7 +2826,7 @@
       "source_file": "src/lib/intelligence.ts",
       "source_location": "L1",
       "id": "lib_intelligence",
-      "community": 27,
+      "community": 7,
       "norm_label": "intelligence.ts"
     },
     {
@@ -2376,7 +2835,7 @@
       "source_file": "src/lib/intelligence.ts",
       "source_location": "L3",
       "id": "lib_intelligence_callintelligence",
-      "community": 27,
+      "community": 7,
       "norm_label": "callintelligence"
     },
     {
@@ -2385,7 +2844,7 @@
       "source_file": "src/lib/intelligence.ts",
       "source_location": "L12",
       "id": "lib_intelligence_formattranscript",
-      "community": 27,
+      "community": 7,
       "norm_label": "formattranscript()"
     },
     {
@@ -2394,7 +2853,7 @@
       "source_file": "src/lib/intelligence.ts",
       "source_location": "L19",
       "id": "lib_intelligence_analyzecall",
-      "community": 27,
+      "community": 7,
       "norm_label": "analyzecall()"
     },
     {
@@ -2448,7 +2907,7 @@
       "source_file": "src/lib/openrouter.ts",
       "source_location": "L1",
       "id": "lib_openrouter",
-      "community": 27,
+      "community": 20,
       "norm_label": "openrouter.ts"
     },
     {
@@ -2457,7 +2916,7 @@
       "source_file": "src/lib/openrouter.ts",
       "source_location": "L4",
       "id": "lib_openrouter_normalizemodelid",
-      "community": 27,
+      "community": 20,
       "norm_label": "normalizemodelid()"
     },
     {
@@ -2466,7 +2925,7 @@
       "source_file": "src/lib/openrouter.ts",
       "source_location": "L9",
       "id": "lib_openrouter_model_chain",
-      "community": 27,
+      "community": 20,
       "norm_label": "model_chain"
     },
     {
@@ -2475,7 +2934,7 @@
       "source_file": "src/lib/openrouter.ts",
       "source_location": "L17",
       "id": "lib_openrouter_voice_model_chain",
-      "community": 27,
+      "community": 20,
       "norm_label": "voice_model_chain"
     },
     {
@@ -2484,7 +2943,7 @@
       "source_file": "src/lib/openrouter.ts",
       "source_location": "L23",
       "id": "lib_openrouter_hasopenrouter",
-      "community": 27,
+      "community": 20,
       "norm_label": "hasopenrouter()"
     },
     {
@@ -2493,7 +2952,7 @@
       "source_file": "src/lib/openrouter.ts",
       "source_location": "L27",
       "id": "lib_openrouter_chatmessage",
-      "community": 27,
+      "community": 20,
       "norm_label": "chatmessage"
     },
     {
@@ -2502,7 +2961,7 @@
       "source_file": "src/lib/openrouter.ts",
       "source_location": "L29",
       "id": "lib_openrouter_chatcompletion",
-      "community": 27,
+      "community": 7,
       "norm_label": "chatcompletion()"
     },
     {
@@ -2511,7 +2970,7 @@
       "source_file": "src/lib/openrouter.ts",
       "source_location": "L71",
       "id": "lib_openrouter_chatcompletionvoice",
-      "community": 27,
+      "community": 20,
       "norm_label": "chatcompletionvoice()"
     },
     {
@@ -2565,7 +3024,7 @@
       "source_file": "src/lib/plans.ts",
       "source_location": "L1",
       "id": "lib_plans",
-      "community": 5,
+      "community": 13,
       "norm_label": "plans.ts"
     },
     {
@@ -2574,7 +3033,7 @@
       "source_file": "src/lib/plans.ts",
       "source_location": "L1",
       "id": "lib_plans_plans",
-      "community": 5,
+      "community": 13,
       "norm_label": "plans"
     },
     {
@@ -2603,6 +3062,87 @@
       "id": "lib_public_url_getpublicappurl",
       "community": 2,
       "norm_label": "getpublicappurl()"
+    },
+    {
+      "label": "stripe-prices.ts",
+      "file_type": "code",
+      "source_file": "src/lib/stripe-prices.ts",
+      "source_location": "L1",
+      "id": "lib_stripe_prices",
+      "community": 13,
+      "norm_label": "stripe-prices.ts"
+    },
+    {
+      "label": "PlanKey",
+      "file_type": "code",
+      "source_file": "src/lib/stripe-prices.ts",
+      "source_location": "L5",
+      "id": "lib_stripe_prices_plankey",
+      "community": 13,
+      "norm_label": "plankey"
+    },
+    {
+      "label": "PLAN_HINTS",
+      "file_type": "code",
+      "source_file": "src/lib/stripe-prices.ts",
+      "source_location": "L7",
+      "id": "lib_stripe_prices_plan_hints",
+      "community": 13,
+      "norm_label": "plan_hints"
+    },
+    {
+      "label": "LOOKUP_KEYS",
+      "file_type": "code",
+      "source_file": "src/lib/stripe-prices.ts",
+      "source_location": "L16",
+      "id": "lib_stripe_prices_lookup_keys",
+      "community": 13,
+      "norm_label": "lookup_keys"
+    },
+    {
+      "label": "ResolvedStripePrices",
+      "file_type": "code",
+      "source_file": "src/lib/stripe-prices.ts",
+      "source_location": "L22",
+      "id": "lib_stripe_prices_resolvedstripeprices",
+      "community": 13,
+      "norm_label": "resolvedstripeprices"
+    },
+    {
+      "label": "fromEnv()",
+      "file_type": "code",
+      "source_file": "src/lib/stripe-prices.ts",
+      "source_location": "L24",
+      "id": "lib_stripe_prices_fromenv",
+      "community": 13,
+      "norm_label": "fromenv()"
+    },
+    {
+      "label": "matchPlan()",
+      "file_type": "code",
+      "source_file": "src/lib/stripe-prices.ts",
+      "source_location": "L32",
+      "id": "lib_stripe_prices_matchplan",
+      "community": 13,
+      "norm_label": "matchplan()"
+    },
+    {
+      "label": "resolveStripePriceIds()",
+      "file_type": "code",
+      "source_file": "src/lib/stripe-prices.ts",
+      "source_location": "L46",
+      "id": "lib_stripe_prices_resolvestripepriceids",
+      "community": 13,
+      "norm_label": "resolvestripepriceids()"
+    },
+    {
+      "label": "planFromResolvedPrices()",
+      "file_type": "code",
+      "source_file": "src/lib/stripe-prices.ts",
+      "source_location": "L117",
+      "id": "lib_stripe_prices_planfromresolvedprices",
+      "community": 13,
+      "norm_label": "planfromresolvedprices()"
     },
     {
       "label": "stripe.ts",
@@ -2943,7 +3483,7 @@
       "source_file": "src/lib/twilio-webhook.ts",
       "source_location": "L31",
       "id": "lib_twilio_webhook_escapexml",
-      "community": 3,
+      "community": 2,
       "norm_label": "escapexml()"
     },
     {
@@ -2961,7 +3501,7 @@
       "source_file": "src/lib/twilio.ts",
       "source_location": "L4",
       "id": "lib_twilio_gettwilioclient",
-      "community": 3,
+      "community": 2,
       "norm_label": "gettwilioclient()"
     },
     {
@@ -3150,7 +3690,7 @@
       "source_file": "src/lib/voice-conversation.ts",
       "source_location": "L1",
       "id": "lib_voice_conversation",
-      "community": 27,
+      "community": 20,
       "norm_label": "voice-conversation.ts"
     },
     {
@@ -3159,8 +3699,107 @@
       "source_file": "src/lib/voice-conversation.ts",
       "source_location": "L4",
       "id": "lib_voice_conversation_generatevoicereply",
-      "community": 27,
+      "community": 20,
       "norm_label": "generatevoicereply()"
+    },
+    {
+      "label": "voice-flow-runtime.ts",
+      "file_type": "code",
+      "source_file": "src/lib/voice-flow-runtime.ts",
+      "source_location": "L1",
+      "id": "lib_voice_flow_runtime",
+      "community": 20,
+      "norm_label": "voice-flow-runtime.ts"
+    },
+    {
+      "label": "FlowState",
+      "file_type": "code",
+      "source_file": "src/lib/voice-flow-runtime.ts",
+      "source_location": "L7",
+      "id": "lib_voice_flow_runtime_flowstate",
+      "community": 20,
+      "norm_label": "flowstate"
+    },
+    {
+      "label": "PublishedFlow",
+      "file_type": "code",
+      "source_file": "src/lib/voice-flow-runtime.ts",
+      "source_location": "L13",
+      "id": "lib_voice_flow_runtime_publishedflow",
+      "community": 6,
+      "norm_label": "publishedflow"
+    },
+    {
+      "label": "getAdmin()",
+      "file_type": "code",
+      "source_file": "src/lib/voice-flow-runtime.ts",
+      "source_location": "L19",
+      "id": "lib_voice_flow_runtime_getadmin",
+      "community": 20,
+      "norm_label": "getadmin()"
+    },
+    {
+      "label": "loadPublishedFlow()",
+      "file_type": "code",
+      "source_file": "src/lib/voice-flow-runtime.ts",
+      "source_location": "L27",
+      "id": "lib_voice_flow_runtime_loadpublishedflow",
+      "community": 20,
+      "norm_label": "loadpublishedflow()"
+    },
+    {
+      "label": "getFlowWelcomeGreeting()",
+      "file_type": "code",
+      "source_file": "src/lib/voice-flow-runtime.ts",
+      "source_location": "L50",
+      "id": "lib_voice_flow_runtime_getflowwelcomegreeting",
+      "community": 20,
+      "norm_label": "getflowwelcomegreeting()"
+    },
+    {
+      "label": "loadFlowState()",
+      "file_type": "code",
+      "source_file": "src/lib/voice-flow-runtime.ts",
+      "source_location": "L62",
+      "id": "lib_voice_flow_runtime_loadflowstate",
+      "community": 20,
+      "norm_label": "loadflowstate()"
+    },
+    {
+      "label": "saveFlowState()",
+      "file_type": "code",
+      "source_file": "src/lib/voice-flow-runtime.ts",
+      "source_location": "L76",
+      "id": "lib_voice_flow_runtime_saveflowstate",
+      "community": 20,
+      "norm_label": "saveflowstate()"
+    },
+    {
+      "label": "initialFlowState()",
+      "file_type": "code",
+      "source_file": "src/lib/voice-flow-runtime.ts",
+      "source_location": "L95",
+      "id": "lib_voice_flow_runtime_initialflowstate",
+      "community": 20,
+      "norm_label": "initialflowstate()"
+    },
+    {
+      "label": "runUntilResponse()",
+      "file_type": "code",
+      "source_file": "src/lib/voice-flow-runtime.ts",
+      "source_location": "L108",
+      "id": "lib_voice_flow_runtime_rununtilresponse",
+      "community": 20,
+      "norm_label": "rununtilresponse()"
+    },
+    {
+      "label": "processVoiceTurn()",
+      "file_type": "code",
+      "source_file": "src/lib/voice-flow-runtime.ts",
+      "source_location": "L148",
+      "id": "lib_voice_flow_runtime_processvoiceturn",
+      "community": 20,
+      "norm_label": "processvoiceturn()"
     },
     {
       "label": "middleware.ts",
@@ -3172,10 +3811,19 @@
       "norm_label": "middleware.ts"
     },
     {
-      "label": "middleware()",
+      "label": "PUBLIC_PATHS",
       "file_type": "code",
       "source_file": "src/middleware.ts",
       "source_location": "L4",
+      "id": "src_middleware_public_paths",
+      "community": 18,
+      "norm_label": "public_paths"
+    },
+    {
+      "label": "middleware()",
+      "file_type": "code",
+      "source_file": "src/middleware.ts",
+      "source_location": "L6",
       "id": "src_middleware_middleware",
       "community": 18,
       "norm_label": "middleware()"
@@ -3184,7 +3832,7 @@
       "label": "config",
       "file_type": "code",
       "source_file": "src/middleware.ts",
-      "source_location": "L48",
+      "source_location": "L50",
       "id": "src_middleware_config",
       "community": 18,
       "norm_label": "config"
@@ -3550,6 +4198,60 @@
       "norm_label": "ports"
     },
     {
+      "label": "route.ts",
+      "file_type": "code",
+      "source_file": "src/app/api/twilio/reply/route.ts",
+      "source_location": "L1",
+      "community": 2,
+      "norm_label": "route.ts",
+      "id": "reply_route"
+    },
+    {
+      "label": "POST()",
+      "file_type": "code",
+      "source_file": "src/app/api/twilio/reply/route.ts",
+      "source_location": "L19",
+      "community": 2,
+      "norm_label": "post()",
+      "id": "reply_route_post"
+    },
+    {
+      "label": "package.json",
+      "file_type": "code",
+      "source_file": "package.json",
+      "source_location": "L1",
+      "community": 4,
+      "norm_label": "package.json",
+      "id": "users_dorrus_project_voiceagent_package_json"
+    },
+    {
+      "label": "PlanKey",
+      "file_type": "code",
+      "source_file": "src/app/api/billing/checkout/route.ts",
+      "source_location": "L8",
+      "community": 13,
+      "norm_label": "plankey",
+      "id": "checkout_route_plankey"
+    },
+    {
+      "label": "route.ts",
+      "file_type": "code",
+      "source_file": "src/app/api/twilio/status/route.ts",
+      "source_location": "L1",
+      "community": 3,
+      "norm_label": "route.ts",
+      "id": "status_route"
+    },
+    {
+      "label": "CHANNELS",
+      "file_type": "code",
+      "source_file": "src/app/dashboard/channels/page.tsx",
+      "source_location": "L5",
+      "community": 6,
+      "norm_label": "channels",
+      "id": "channels_page_channels"
+    },
+    {
       "label": "__filename",
       "file_type": "code",
       "source_file": "eslint.config.mjs",
@@ -3593,15 +4295,6 @@
       "community": 10,
       "norm_label": "tsconfig.json",
       "id": "orchestrator_tsconfig"
-    },
-    {
-      "label": "package.json",
-      "file_type": "code",
-      "source_file": "package.json",
-      "source_location": "L1",
-      "community": 4,
-      "norm_label": "package.json",
-      "id": "package"
     },
     {
       "label": "useSimpleTwilioVoice()",
@@ -3697,9 +4390,9 @@
       "source_file": "orchestrator/package.json",
       "source_location": "L11",
       "weight": 1.0,
+      "confidence_score": 1.0,
       "source": "users_dorrus_project_voiceagent_orchestrator_package_json",
-      "target": "orchestrator_package_dependencies",
-      "confidence_score": 1.0
+      "target": "orchestrator_package_dependencies"
     },
     {
       "relation": "contains",
@@ -3707,9 +4400,9 @@
       "source_file": "orchestrator/package.json",
       "source_location": "L17",
       "weight": 1.0,
+      "confidence_score": 1.0,
       "source": "users_dorrus_project_voiceagent_orchestrator_package_json",
-      "target": "orchestrator_package_devdependencies",
-      "confidence_score": 1.0
+      "target": "orchestrator_package_devdependencies"
     },
     {
       "relation": "contains",
@@ -3717,9 +4410,9 @@
       "source_file": "orchestrator/package.json",
       "source_location": "L2",
       "weight": 1.0,
+      "confidence_score": 1.0,
       "source": "users_dorrus_project_voiceagent_orchestrator_package_json",
-      "target": "orchestrator_package_name",
-      "confidence_score": 1.0
+      "target": "orchestrator_package_name"
     },
     {
       "relation": "contains",
@@ -3727,9 +4420,9 @@
       "source_file": "orchestrator/package.json",
       "source_location": "L4",
       "weight": 1.0,
+      "confidence_score": 1.0,
       "source": "users_dorrus_project_voiceagent_orchestrator_package_json",
-      "target": "orchestrator_package_private",
-      "confidence_score": 1.0
+      "target": "orchestrator_package_private"
     },
     {
       "relation": "contains",
@@ -3737,9 +4430,9 @@
       "source_file": "orchestrator/package.json",
       "source_location": "L6",
       "weight": 1.0,
+      "confidence_score": 1.0,
       "source": "users_dorrus_project_voiceagent_orchestrator_package_json",
-      "target": "orchestrator_package_scripts",
-      "confidence_score": 1.0
+      "target": "orchestrator_package_scripts"
     },
     {
       "relation": "contains",
@@ -3747,9 +4440,9 @@
       "source_file": "orchestrator/package.json",
       "source_location": "L5",
       "weight": 1.0,
+      "confidence_score": 1.0,
       "source": "users_dorrus_project_voiceagent_orchestrator_package_json",
-      "target": "orchestrator_package_type",
-      "confidence_score": 1.0
+      "target": "orchestrator_package_type"
     },
     {
       "relation": "contains",
@@ -3757,9 +4450,9 @@
       "source_file": "orchestrator/package.json",
       "source_location": "L3",
       "weight": 1.0,
+      "confidence_score": 1.0,
       "source": "users_dorrus_project_voiceagent_orchestrator_package_json",
-      "target": "orchestrator_package_version",
-      "confidence_score": 1.0
+      "target": "orchestrator_package_version"
     },
     {
       "relation": "contains",
@@ -3967,9 +4660,9 @@
       "source_file": "orchestrator/src/index.ts",
       "source_location": "L51",
       "weight": 1.0,
+      "confidence_score": 1.0,
       "source": "src_index",
-      "target": "src_index_getwssvalidationurls",
-      "confidence_score": 1.0
+      "target": "src_index_getwssvalidationurls"
     },
     {
       "relation": "contains",
@@ -4342,6 +5035,16 @@
       "relation": "method",
       "confidence": "EXTRACTED",
       "source_file": "orchestrator/src/session.ts",
+      "source_location": "L99",
+      "weight": 1.0,
+      "source": "src_session_callsession",
+      "target": "src_session_callsession_fetchreply",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "method",
+      "confidence": "EXTRACTED",
+      "source_file": "orchestrator/src/session.ts",
       "source_location": "L150",
       "weight": 1.0,
       "confidence_score": 1.0,
@@ -4408,6 +5111,17 @@
       "confidence_score": 1.0,
       "source": "src_session_callsession_constructor",
       "target": "src_types_agentconfig"
+    },
+    {
+      "relation": "calls",
+      "context": "call",
+      "confidence": "EXTRACTED",
+      "source_file": "orchestrator/src/session.ts",
+      "source_location": "L54",
+      "weight": 1.0,
+      "source": "src_session_callsession_handlemessage",
+      "target": "src_session_callsession_fetchreply",
+      "confidence_score": 1.0
     },
     {
       "relation": "calls",
@@ -4570,9 +5284,9 @@
       "source_file": "orchestrator/tsconfig.json",
       "source_location": "L2",
       "weight": 1.0,
+      "confidence_score": 1.0,
       "source": "users_dorrus_project_voiceagent_orchestrator_tsconfig_json",
-      "target": "orchestrator_tsconfig_compileroptions",
-      "confidence_score": 1.0
+      "target": "orchestrator_tsconfig_compileroptions"
     },
     {
       "relation": "contains",
@@ -4580,9 +5294,9 @@
       "source_file": "orchestrator/tsconfig.json",
       "source_location": "L12",
       "weight": 1.0,
+      "confidence_score": 1.0,
       "source": "users_dorrus_project_voiceagent_orchestrator_tsconfig_json",
-      "target": "orchestrator_tsconfig_include",
-      "confidence_score": 1.0
+      "target": "orchestrator_tsconfig_include"
     },
     {
       "relation": "contains",
@@ -4690,9 +5404,9 @@
       "source_file": "package.json",
       "source_location": "L15",
       "weight": 1.0,
-      "source": "users_dorrus_project_voiceagent_package_json",
-      "target": "package_dependencies",
-      "confidence_score": 1.0
+      "confidence_score": 1.0,
+      "source": "package",
+      "target": "package_dependencies"
     },
     {
       "relation": "contains",
@@ -4700,49 +5414,9 @@
       "source_file": "package.json",
       "source_location": "L26",
       "weight": 1.0,
-      "source": "users_dorrus_project_voiceagent_package_json",
-      "target": "package_devdependencies",
-      "confidence_score": 1.0
-    },
-    {
-      "relation": "contains",
-      "confidence": "EXTRACTED",
-      "source_file": "package.json",
-      "source_location": "L2",
-      "weight": 1.0,
-      "source": "users_dorrus_project_voiceagent_package_json",
-      "target": "package_name",
-      "confidence_score": 1.0
-    },
-    {
-      "relation": "contains",
-      "confidence": "EXTRACTED",
-      "source_file": "package.json",
-      "source_location": "L4",
-      "weight": 1.0,
-      "source": "users_dorrus_project_voiceagent_package_json",
-      "target": "package_private",
-      "confidence_score": 1.0
-    },
-    {
-      "relation": "contains",
-      "confidence": "EXTRACTED",
-      "source_file": "package.json",
-      "source_location": "L5",
-      "weight": 1.0,
-      "source": "users_dorrus_project_voiceagent_package_json",
-      "target": "package_scripts",
-      "confidence_score": 1.0
-    },
-    {
-      "relation": "contains",
-      "confidence": "EXTRACTED",
-      "source_file": "package.json",
-      "source_location": "L3",
-      "weight": 1.0,
-      "source": "users_dorrus_project_voiceagent_package_json",
-      "target": "package_version",
-      "confidence_score": 1.0
+      "confidence_score": 1.0,
+      "source": "package",
+      "target": "package_devdependencies"
     },
     {
       "relation": "contains",
@@ -4753,16 +5427,6 @@
       "confidence_score": 1.0,
       "source": "package",
       "target": "package_name"
-    },
-    {
-      "relation": "contains",
-      "confidence": "EXTRACTED",
-      "source_file": "package.json",
-      "source_location": "L3",
-      "weight": 1.0,
-      "confidence_score": 1.0,
-      "source": "package",
-      "target": "package_version"
     },
     {
       "relation": "contains",
@@ -4783,6 +5447,46 @@
       "confidence_score": 1.0,
       "source": "package",
       "target": "package_scripts"
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "package.json",
+      "source_location": "L3",
+      "weight": 1.0,
+      "confidence_score": 1.0,
+      "source": "package",
+      "target": "package_version"
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "package.json",
+      "source_location": "L2",
+      "weight": 1.0,
+      "confidence_score": 1.0,
+      "source": "users_dorrus_project_voiceagent_package_json",
+      "target": "package_name"
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "package.json",
+      "source_location": "L3",
+      "weight": 1.0,
+      "confidence_score": 1.0,
+      "source": "users_dorrus_project_voiceagent_package_json",
+      "target": "package_version"
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "package.json",
+      "source_location": "L4",
+      "weight": 1.0,
+      "confidence_score": 1.0,
+      "source": "users_dorrus_project_voiceagent_package_json",
+      "target": "package_private"
     },
     {
       "relation": "contains",
@@ -4868,11 +5572,21 @@
       "relation": "contains",
       "confidence": "EXTRACTED",
       "source_file": "package.json",
-      "source_location": "L15",
+      "source_location": "L14",
       "weight": 1.0,
       "confidence_score": 1.0,
-      "source": "package",
-      "target": "package_dependencies"
+      "source": "package_scripts",
+      "target": "package_scripts_stripe_setup"
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "package.json",
+      "source_location": "L5",
+      "weight": 1.0,
+      "confidence_score": 1.0,
+      "source": "users_dorrus_project_voiceagent_package_json",
+      "target": "package_scripts"
     },
     {
       "relation": "contains",
@@ -4968,11 +5682,11 @@
       "relation": "contains",
       "confidence": "EXTRACTED",
       "source_file": "package.json",
-      "source_location": "L26",
+      "source_location": "L15",
       "weight": 1.0,
       "confidence_score": 1.0,
-      "source": "package",
-      "target": "package_devdependencies"
+      "source": "users_dorrus_project_voiceagent_package_json",
+      "target": "package_dependencies"
     },
     {
       "relation": "contains",
@@ -5067,6 +5781,16 @@
     {
       "relation": "contains",
       "confidence": "EXTRACTED",
+      "source_file": "package.json",
+      "source_location": "L26",
+      "weight": 1.0,
+      "confidence_score": 1.0,
+      "source": "users_dorrus_project_voiceagent_package_json",
+      "target": "package_devdependencies"
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
       "source_file": "postcss.config.mjs",
       "source_location": "L1",
       "weight": 1.0,
@@ -5133,6 +5857,36 @@
       "confidence_score": 1.0,
       "source": "scripts_start_relay_dev",
       "target": "scripts_start_relay_dev_run"
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "scripts/stripe-setup.mjs",
+      "source_location": "L17",
+      "weight": 1.0,
+      "confidence_score": 1.0,
+      "source": "scripts_stripe_setup",
+      "target": "scripts_stripe_setup_events"
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "scripts/stripe-setup.mjs",
+      "source_location": "L25",
+      "weight": 1.0,
+      "confidence_score": 1.0,
+      "source": "scripts_stripe_setup",
+      "target": "scripts_stripe_setup_main"
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "scripts/stripe-setup.mjs",
+      "source_location": "L11",
+      "weight": 1.0,
+      "confidence_score": 1.0,
+      "source": "scripts_stripe_setup",
+      "target": "scripts_stripe_setup_plans"
     },
     {
       "relation": "contains",
@@ -5291,9 +6045,9 @@
       "source_file": "src/app/api/auth/sso/callback/route.ts",
       "source_location": "L3",
       "weight": 1.0,
+      "confidence_score": 1.0,
       "source": "src_app_api_auth_sso_callback_route_ts_callback_route",
-      "target": "callback_route_post",
-      "confidence_score": 1.0
+      "target": "callback_route_post"
     },
     {
       "relation": "contains",
@@ -5311,9 +6065,9 @@
       "source_file": "src/app/api/billing/checkout/route.ts",
       "source_location": "L8",
       "weight": 1.0,
+      "confidence_score": 1.0,
       "source": "checkout_route",
-      "target": "checkout_route_plankey",
-      "confidence_score": 1.0
+      "target": "checkout_route_plankey"
     },
     {
       "relation": "contains",
@@ -5321,9 +6075,9 @@
       "source_file": "src/app/api/billing/checkout/route.ts",
       "source_location": "L10",
       "weight": 1.0,
+      "confidence_score": 1.0,
       "source": "checkout_route",
-      "target": "checkout_route_post",
-      "confidence_score": 1.0
+      "target": "checkout_route_post"
     },
     {
       "relation": "imports_from",
@@ -5332,9 +6086,9 @@
       "source_file": "src/app/api/billing/checkout/route.ts",
       "source_location": "L4",
       "weight": 1.0,
+      "confidence_score": 1.0,
       "source": "checkout_route",
-      "target": "lib_auth",
-      "confidence_score": 1.0
+      "target": "lib_auth"
     },
     {
       "relation": "imports",
@@ -5343,9 +6097,9 @@
       "source_file": "src/app/api/billing/checkout/route.ts",
       "source_location": "L4",
       "weight": 1.0,
+      "confidence_score": 1.0,
       "source": "checkout_route",
-      "target": "lib_auth_getuserorg",
-      "confidence_score": 1.0
+      "target": "lib_auth_getuserorg"
     },
     {
       "relation": "imports_from",
@@ -5354,9 +6108,9 @@
       "source_file": "src/app/api/billing/checkout/route.ts",
       "source_location": "L5",
       "weight": 1.0,
+      "confidence_score": 1.0,
       "source": "checkout_route",
-      "target": "lib_public_url",
-      "confidence_score": 1.0
+      "target": "lib_public_url"
     },
     {
       "relation": "imports",
@@ -5365,9 +6119,9 @@
       "source_file": "src/app/api/billing/checkout/route.ts",
       "source_location": "L5",
       "weight": 1.0,
+      "confidence_score": 1.0,
       "source": "checkout_route",
-      "target": "lib_public_url_getpublicappurl",
-      "confidence_score": 1.0
+      "target": "lib_public_url_getpublicappurl"
     },
     {
       "relation": "imports_from",
@@ -5376,9 +6130,9 @@
       "source_file": "src/app/api/billing/checkout/route.ts",
       "source_location": "L6",
       "weight": 1.0,
+      "confidence_score": 1.0,
       "source": "checkout_route",
-      "target": "lib_stripe",
-      "confidence_score": 1.0
+      "target": "lib_stripe"
     },
     {
       "relation": "imports",
@@ -5387,9 +6141,9 @@
       "source_file": "src/app/api/billing/checkout/route.ts",
       "source_location": "L6",
       "weight": 1.0,
+      "confidence_score": 1.0,
       "source": "checkout_route",
-      "target": "lib_stripe_getstripe",
-      "confidence_score": 1.0
+      "target": "lib_stripe_getstripe"
     },
     {
       "relation": "imports",
@@ -5398,9 +6152,9 @@
       "source_file": "src/app/api/billing/checkout/route.ts",
       "source_location": "L6",
       "weight": 1.0,
+      "confidence_score": 1.0,
       "source": "checkout_route",
-      "target": "lib_stripe_isstripeconfigured",
-      "confidence_score": 1.0
+      "target": "lib_stripe_isstripeconfigured"
     },
     {
       "relation": "imports",
@@ -5409,9 +6163,42 @@
       "source_file": "src/app/api/billing/checkout/route.ts",
       "source_location": "L6",
       "weight": 1.0,
+      "confidence_score": 1.0,
       "source": "checkout_route",
-      "target": "lib_stripe_planfromstripepriceid",
-      "confidence_score": 1.0
+      "target": "lib_stripe_planfromstripepriceid"
+    },
+    {
+      "relation": "imports_from",
+      "context": "import",
+      "confidence": "EXTRACTED",
+      "source_file": "src/app/api/billing/checkout/route.ts",
+      "source_location": "L7",
+      "weight": 1.0,
+      "confidence_score": 1.0,
+      "source": "checkout_route",
+      "target": "lib_stripe_prices"
+    },
+    {
+      "relation": "imports",
+      "context": "import",
+      "confidence": "EXTRACTED",
+      "source_file": "src/app/api/billing/checkout/route.ts",
+      "source_location": "L7",
+      "weight": 1.0,
+      "confidence_score": 1.0,
+      "source": "checkout_route",
+      "target": "lib_stripe_prices_plankey"
+    },
+    {
+      "relation": "imports",
+      "context": "import",
+      "confidence": "EXTRACTED",
+      "source_file": "src/app/api/billing/checkout/route.ts",
+      "source_location": "L7",
+      "weight": 1.0,
+      "confidence_score": 1.0,
+      "source": "checkout_route",
+      "target": "lib_stripe_prices_resolvestripepriceids"
     },
     {
       "relation": "imports",
@@ -5420,9 +6207,9 @@
       "source_file": "src/app/api/billing/checkout/route.ts",
       "source_location": "L6",
       "weight": 1.0,
+      "confidence_score": 1.0,
       "source": "checkout_route",
-      "target": "lib_stripe_stripepriceids",
-      "confidence_score": 1.0
+      "target": "lib_stripe_stripepriceids"
     },
     {
       "relation": "imports_from",
@@ -5431,9 +6218,9 @@
       "source_file": "src/app/api/billing/checkout/route.ts",
       "source_location": "L3",
       "weight": 1.0,
+      "confidence_score": 1.0,
       "source": "checkout_route",
-      "target": "supabase_admin",
-      "confidence_score": 1.0
+      "target": "supabase_admin"
     },
     {
       "relation": "imports",
@@ -5442,9 +6229,9 @@
       "source_file": "src/app/api/billing/checkout/route.ts",
       "source_location": "L3",
       "weight": 1.0,
+      "confidence_score": 1.0,
       "source": "checkout_route",
-      "target": "supabase_admin_createadminclient",
-      "confidence_score": 1.0
+      "target": "supabase_admin_createadminclient"
     },
     {
       "relation": "imports_from",
@@ -5453,9 +6240,9 @@
       "source_file": "src/app/api/billing/checkout/route.ts",
       "source_location": "L2",
       "weight": 1.0,
+      "confidence_score": 1.0,
       "source": "checkout_route",
-      "target": "supabase_server",
-      "confidence_score": 1.0
+      "target": "supabase_server"
     },
     {
       "relation": "imports",
@@ -5464,9 +6251,9 @@
       "source_file": "src/app/api/billing/checkout/route.ts",
       "source_location": "L2",
       "weight": 1.0,
+      "confidence_score": 1.0,
       "source": "checkout_route",
-      "target": "supabase_server_createclient",
-      "confidence_score": 1.0
+      "target": "supabase_server_createclient"
     },
     {
       "relation": "calls",
@@ -5529,6 +6316,17 @@
       "confidence": "EXTRACTED",
       "confidence_score": 1.0,
       "source_file": "src/app/api/billing/checkout/route.ts",
+      "source_location": "L34",
+      "weight": 1.0,
+      "source": "checkout_route_post",
+      "target": "lib_stripe_prices_resolvestripepriceids"
+    },
+    {
+      "relation": "calls",
+      "context": "call",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "src/app/api/billing/checkout/route.ts",
       "source_location": "L35",
       "weight": 1.0,
       "source": "checkout_route_post",
@@ -5544,6 +6342,159 @@
       "weight": 1.0,
       "source": "checkout_route_post",
       "target": "supabase_admin_createadminclient"
+    },
+    {
+      "relation": "imports_from",
+      "context": "import",
+      "confidence": "EXTRACTED",
+      "source_file": "src/app/api/billing/status/route.ts",
+      "source_location": "L3",
+      "weight": 1.0,
+      "confidence_score": 1.0,
+      "source": "src_app_api_billing_status_route_ts_status_route",
+      "target": "lib_auth"
+    },
+    {
+      "relation": "imports",
+      "context": "import",
+      "confidence": "EXTRACTED",
+      "source_file": "src/app/api/billing/status/route.ts",
+      "source_location": "L3",
+      "weight": 1.0,
+      "confidence_score": 1.0,
+      "source": "src_app_api_billing_status_route_ts_status_route",
+      "target": "lib_auth_getuserorg"
+    },
+    {
+      "relation": "imports_from",
+      "context": "import",
+      "confidence": "EXTRACTED",
+      "source_file": "src/app/api/billing/status/route.ts",
+      "source_location": "L4",
+      "weight": 1.0,
+      "confidence_score": 1.0,
+      "source": "src_app_api_billing_status_route_ts_status_route",
+      "target": "lib_stripe"
+    },
+    {
+      "relation": "imports",
+      "context": "import",
+      "confidence": "EXTRACTED",
+      "source_file": "src/app/api/billing/status/route.ts",
+      "source_location": "L4",
+      "weight": 1.0,
+      "confidence_score": 1.0,
+      "source": "src_app_api_billing_status_route_ts_status_route",
+      "target": "lib_stripe_getstripe"
+    },
+    {
+      "relation": "imports",
+      "context": "import",
+      "confidence": "EXTRACTED",
+      "source_file": "src/app/api/billing/status/route.ts",
+      "source_location": "L4",
+      "weight": 1.0,
+      "confidence_score": 1.0,
+      "source": "src_app_api_billing_status_route_ts_status_route",
+      "target": "lib_stripe_isstripeconfigured"
+    },
+    {
+      "relation": "imports_from",
+      "context": "import",
+      "confidence": "EXTRACTED",
+      "source_file": "src/app/api/billing/status/route.ts",
+      "source_location": "L5",
+      "weight": 1.0,
+      "confidence_score": 1.0,
+      "source": "src_app_api_billing_status_route_ts_status_route",
+      "target": "lib_stripe_prices"
+    },
+    {
+      "relation": "imports",
+      "context": "import",
+      "confidence": "EXTRACTED",
+      "source_file": "src/app/api/billing/status/route.ts",
+      "source_location": "L5",
+      "weight": 1.0,
+      "confidence_score": 1.0,
+      "source": "src_app_api_billing_status_route_ts_status_route",
+      "target": "lib_stripe_prices_resolvestripepriceids"
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "src/app/api/billing/status/route.ts",
+      "source_location": "L7",
+      "weight": 1.0,
+      "confidence_score": 1.0,
+      "source": "src_app_api_billing_status_route_ts_status_route",
+      "target": "src_app_api_billing_status_route_ts_status_route_get"
+    },
+    {
+      "relation": "imports_from",
+      "context": "import",
+      "confidence": "EXTRACTED",
+      "source_file": "src/app/api/billing/status/route.ts",
+      "source_location": "L2",
+      "weight": 1.0,
+      "confidence_score": 1.0,
+      "source": "src_app_api_billing_status_route_ts_status_route",
+      "target": "supabase_server"
+    },
+    {
+      "relation": "imports",
+      "context": "import",
+      "confidence": "EXTRACTED",
+      "source_file": "src/app/api/billing/status/route.ts",
+      "source_location": "L2",
+      "weight": 1.0,
+      "confidence_score": 1.0,
+      "source": "src_app_api_billing_status_route_ts_status_route",
+      "target": "supabase_server_createclient"
+    },
+    {
+      "relation": "calls",
+      "context": "call",
+      "confidence": "INFERRED",
+      "confidence_score": 0.8,
+      "source_file": "src/app/api/billing/status/route.ts",
+      "source_location": "L14",
+      "weight": 1.0,
+      "source": "src_app_api_billing_status_route_ts_status_route_get",
+      "target": "lib_auth_getuserorg"
+    },
+    {
+      "relation": "calls",
+      "context": "call",
+      "confidence": "INFERRED",
+      "confidence_score": 0.8,
+      "source_file": "src/app/api/billing/status/route.ts",
+      "source_location": "L15",
+      "weight": 1.0,
+      "source": "src_app_api_billing_status_route_ts_status_route_get",
+      "target": "lib_stripe_getstripe"
+    },
+    {
+      "relation": "calls",
+      "context": "call",
+      "confidence": "INFERRED",
+      "confidence_score": 0.8,
+      "source_file": "src/app/api/billing/status/route.ts",
+      "source_location": "L16",
+      "weight": 1.0,
+      "source": "src_app_api_billing_status_route_ts_status_route_get",
+      "target": "lib_stripe_isstripeconfigured"
+    },
+    {
+      "relation": "calls",
+      "context": "call",
+      "confidence": "INFERRED",
+      "confidence_score": 0.8,
+      "source_file": "src/app/api/billing/status/route.ts",
+      "source_location": "L17",
+      "weight": 1.0,
+      "source": "src_app_api_billing_status_route_ts_status_route_get",
+      "target": "lib_stripe_prices_resolvestripepriceids"
     },
     {
       "relation": "contains",
@@ -5916,6 +6867,179 @@
       "target": "lib_twilio_gettwilioclient"
     },
     {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "src/app/api/channels/route.ts",
+      "source_location": "L7",
+      "weight": 1.0,
+      "confidence_score": 1.0,
+      "source": "channels_route",
+      "target": "channels_route_channel_types"
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "src/app/api/channels/route.ts",
+      "source_location": "L9",
+      "weight": 1.0,
+      "confidence_score": 1.0,
+      "source": "channels_route",
+      "target": "channels_route_get"
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "src/app/api/channels/route.ts",
+      "source_location": "L37",
+      "weight": 1.0,
+      "confidence_score": 1.0,
+      "source": "channels_route",
+      "target": "channels_route_patch"
+    },
+    {
+      "relation": "imports_from",
+      "context": "import",
+      "confidence": "EXTRACTED",
+      "source_file": "src/app/api/channels/route.ts",
+      "source_location": "L3",
+      "weight": 1.0,
+      "confidence_score": 1.0,
+      "source": "channels_route",
+      "target": "lib_auth"
+    },
+    {
+      "relation": "imports",
+      "context": "import",
+      "confidence": "EXTRACTED",
+      "source_file": "src/app/api/channels/route.ts",
+      "source_location": "L3",
+      "weight": 1.0,
+      "confidence_score": 1.0,
+      "source": "channels_route",
+      "target": "lib_auth_getuserorg"
+    },
+    {
+      "relation": "imports_from",
+      "context": "import",
+      "confidence": "EXTRACTED",
+      "source_file": "src/app/api/channels/route.ts",
+      "source_location": "L4",
+      "weight": 1.0,
+      "confidence_score": 1.0,
+      "source": "channels_route",
+      "target": "omnichannel_index"
+    },
+    {
+      "relation": "imports",
+      "context": "import",
+      "confidence": "EXTRACTED",
+      "source_file": "src/app/api/channels/route.ts",
+      "source_location": "L4",
+      "weight": 1.0,
+      "confidence_score": 1.0,
+      "source": "channels_route",
+      "target": "omnichannel_index_channeltype"
+    },
+    {
+      "relation": "imports",
+      "context": "import",
+      "confidence": "EXTRACTED",
+      "source_file": "src/app/api/channels/route.ts",
+      "source_location": "L4",
+      "weight": 1.0,
+      "confidence_score": 1.0,
+      "source": "channels_route",
+      "target": "omnichannel_index_enablechannel"
+    },
+    {
+      "relation": "imports_from",
+      "context": "import",
+      "confidence": "EXTRACTED",
+      "source_file": "src/app/api/channels/route.ts",
+      "source_location": "L5",
+      "weight": 1.0,
+      "confidence_score": 1.0,
+      "source": "channels_route",
+      "target": "supabase_admin"
+    },
+    {
+      "relation": "imports",
+      "context": "import",
+      "confidence": "EXTRACTED",
+      "source_file": "src/app/api/channels/route.ts",
+      "source_location": "L5",
+      "weight": 1.0,
+      "confidence_score": 1.0,
+      "source": "channels_route",
+      "target": "supabase_admin_createadminclient"
+    },
+    {
+      "relation": "imports_from",
+      "context": "import",
+      "confidence": "EXTRACTED",
+      "source_file": "src/app/api/channels/route.ts",
+      "source_location": "L2",
+      "weight": 1.0,
+      "confidence_score": 1.0,
+      "source": "channels_route",
+      "target": "supabase_server"
+    },
+    {
+      "relation": "imports",
+      "context": "import",
+      "confidence": "EXTRACTED",
+      "source_file": "src/app/api/channels/route.ts",
+      "source_location": "L2",
+      "weight": 1.0,
+      "confidence_score": 1.0,
+      "source": "channels_route",
+      "target": "supabase_server_createclient"
+    },
+    {
+      "relation": "calls",
+      "context": "call",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "src/app/api/channels/route.ts",
+      "source_location": "L16",
+      "weight": 1.0,
+      "source": "channels_route_get",
+      "target": "lib_auth_getuserorg"
+    },
+    {
+      "relation": "calls",
+      "context": "call",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "src/app/api/channels/route.ts",
+      "source_location": "L44",
+      "weight": 1.0,
+      "source": "channels_route_patch",
+      "target": "lib_auth_getuserorg"
+    },
+    {
+      "relation": "calls",
+      "context": "call",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "src/app/api/channels/route.ts",
+      "source_location": "L55",
+      "weight": 1.0,
+      "source": "channels_route_patch",
+      "target": "omnichannel_index_enablechannel"
+    },
+    {
+      "relation": "calls",
+      "context": "call",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "src/app/api/channels/route.ts",
+      "source_location": "L57",
+      "weight": 1.0,
+      "source": "channels_route_patch",
+      "target": "supabase_admin_createadminclient"
+    },
+    {
       "relation": "imports_from",
       "context": "import",
       "confidence": "EXTRACTED",
@@ -6214,9 +7338,9 @@
       "source_file": "src/app/api/integrations/google-calendar/callback/route.ts",
       "source_location": "L4",
       "weight": 1.0,
+      "confidence_score": 1.0,
       "source": "src_app_api_integrations_google_calendar_callback_route_ts_callback_route",
-      "target": "lib_integration_auth",
-      "confidence_score": 1.0
+      "target": "lib_integration_auth"
     },
     {
       "relation": "imports",
@@ -6225,9 +7349,9 @@
       "source_file": "src/app/api/integrations/google-calendar/callback/route.ts",
       "source_location": "L4",
       "weight": 1.0,
+      "confidence_score": 1.0,
       "source": "src_app_api_integrations_google_calendar_callback_route_ts_callback_route",
-      "target": "lib_integration_auth_verifyintegrationorgaccess",
-      "confidence_score": 1.0
+      "target": "lib_integration_auth_verifyintegrationorgaccess"
     },
     {
       "relation": "contains",
@@ -6388,9 +7512,9 @@
       "source_file": "src/app/api/integrations/hubspot/callback/route.ts",
       "source_location": "L3",
       "weight": 1.0,
+      "confidence_score": 1.0,
       "source": "src_app_api_integrations_hubspot_callback_route_ts_callback_route",
-      "target": "lib_integration_auth",
-      "confidence_score": 1.0
+      "target": "lib_integration_auth"
     },
     {
       "relation": "imports",
@@ -6399,9 +7523,9 @@
       "source_file": "src/app/api/integrations/hubspot/callback/route.ts",
       "source_location": "L3",
       "weight": 1.0,
+      "confidence_score": 1.0,
       "source": "src_app_api_integrations_hubspot_callback_route_ts_callback_route",
-      "target": "lib_integration_auth_verifyintegrationorgaccess",
-      "confidence_score": 1.0
+      "target": "lib_integration_auth_verifyintegrationorgaccess"
     },
     {
       "relation": "contains",
@@ -6553,6 +7677,232 @@
       "source_location": "L13",
       "weight": 1.0,
       "source": "hubspot_route_get",
+      "target": "lib_auth_getuserorg"
+    },
+    {
+      "relation": "imports_from",
+      "context": "import",
+      "confidence": "EXTRACTED",
+      "source_file": "src/app/api/integrations/status/route.ts",
+      "source_location": "L3",
+      "weight": 1.0,
+      "confidence_score": 1.0,
+      "source": "src_app_api_integrations_status_route_ts_status_route",
+      "target": "lib_auth"
+    },
+    {
+      "relation": "imports",
+      "context": "import",
+      "confidence": "EXTRACTED",
+      "source_file": "src/app/api/integrations/status/route.ts",
+      "source_location": "L3",
+      "weight": 1.0,
+      "confidence_score": 1.0,
+      "source": "src_app_api_integrations_status_route_ts_status_route",
+      "target": "lib_auth_getuserorg"
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "src/app/api/integrations/status/route.ts",
+      "source_location": "L5",
+      "weight": 1.0,
+      "confidence_score": 1.0,
+      "source": "src_app_api_integrations_status_route_ts_status_route",
+      "target": "src_app_api_integrations_status_route_ts_status_route_get"
+    },
+    {
+      "relation": "imports_from",
+      "context": "import",
+      "confidence": "EXTRACTED",
+      "source_file": "src/app/api/integrations/status/route.ts",
+      "source_location": "L2",
+      "weight": 1.0,
+      "confidence_score": 1.0,
+      "source": "src_app_api_integrations_status_route_ts_status_route",
+      "target": "supabase_server"
+    },
+    {
+      "relation": "imports",
+      "context": "import",
+      "confidence": "EXTRACTED",
+      "source_file": "src/app/api/integrations/status/route.ts",
+      "source_location": "L2",
+      "weight": 1.0,
+      "confidence_score": 1.0,
+      "source": "src_app_api_integrations_status_route_ts_status_route",
+      "target": "supabase_server_createclient"
+    },
+    {
+      "relation": "calls",
+      "context": "call",
+      "confidence": "INFERRED",
+      "confidence_score": 0.8,
+      "source_file": "src/app/api/integrations/status/route.ts",
+      "source_location": "L12",
+      "weight": 1.0,
+      "source": "src_app_api_integrations_status_route_ts_status_route_get",
+      "target": "lib_auth_getuserorg"
+    },
+    {
+      "relation": "imports_from",
+      "context": "import",
+      "confidence": "EXTRACTED",
+      "source_file": "src/app/api/knowledge/route.ts",
+      "source_location": "L4",
+      "weight": 1.0,
+      "source": "knowledge_route",
+      "target": "compliance_audit",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "imports",
+      "context": "import",
+      "confidence": "EXTRACTED",
+      "source_file": "src/app/api/knowledge/route.ts",
+      "source_location": "L4",
+      "weight": 1.0,
+      "source": "knowledge_route",
+      "target": "compliance_audit_logaudit",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "src/app/api/knowledge/route.ts",
+      "source_location": "L99",
+      "weight": 1.0,
+      "source": "knowledge_route",
+      "target": "knowledge_route_delete",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "src/app/api/knowledge/route.ts",
+      "source_location": "L6",
+      "weight": 1.0,
+      "source": "knowledge_route",
+      "target": "knowledge_route_get",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "src/app/api/knowledge/route.ts",
+      "source_location": "L68",
+      "weight": 1.0,
+      "source": "knowledge_route",
+      "target": "knowledge_route_patch",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "src/app/api/knowledge/route.ts",
+      "source_location": "L25",
+      "weight": 1.0,
+      "source": "knowledge_route",
+      "target": "knowledge_route_post",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "imports_from",
+      "context": "import",
+      "confidence": "EXTRACTED",
+      "source_file": "src/app/api/knowledge/route.ts",
+      "source_location": "L3",
+      "weight": 1.0,
+      "source": "knowledge_route",
+      "target": "lib_auth",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "imports",
+      "context": "import",
+      "confidence": "EXTRACTED",
+      "source_file": "src/app/api/knowledge/route.ts",
+      "source_location": "L3",
+      "weight": 1.0,
+      "source": "knowledge_route",
+      "target": "lib_auth_getuserorg",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "imports_from",
+      "context": "import",
+      "confidence": "EXTRACTED",
+      "source_file": "src/app/api/knowledge/route.ts",
+      "source_location": "L2",
+      "weight": 1.0,
+      "source": "knowledge_route",
+      "target": "supabase_server",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "imports",
+      "context": "import",
+      "confidence": "EXTRACTED",
+      "source_file": "src/app/api/knowledge/route.ts",
+      "source_location": "L2",
+      "weight": 1.0,
+      "source": "knowledge_route",
+      "target": "supabase_server_createclient",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "calls",
+      "context": "call",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "src/app/api/knowledge/route.ts",
+      "source_location": "L13",
+      "weight": 1.0,
+      "source": "knowledge_route_get",
+      "target": "lib_auth_getuserorg"
+    },
+    {
+      "relation": "calls",
+      "context": "call",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "src/app/api/knowledge/route.ts",
+      "source_location": "L57",
+      "weight": 1.0,
+      "source": "knowledge_route_post",
+      "target": "compliance_audit_logaudit"
+    },
+    {
+      "relation": "calls",
+      "context": "call",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "src/app/api/knowledge/route.ts",
+      "source_location": "L32",
+      "weight": 1.0,
+      "source": "knowledge_route_post",
+      "target": "lib_auth_getuserorg"
+    },
+    {
+      "relation": "calls",
+      "context": "call",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "src/app/api/knowledge/route.ts",
+      "source_location": "L75",
+      "weight": 1.0,
+      "source": "knowledge_route_patch",
+      "target": "lib_auth_getuserorg"
+    },
+    {
+      "relation": "calls",
+      "context": "call",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "src/app/api/knowledge/route.ts",
+      "source_location": "L106",
+      "weight": 1.0,
+      "source": "knowledge_route_delete",
       "target": "lib_auth_getuserorg"
     },
     {
@@ -6719,6 +8069,159 @@
       "target": "supabase_admin_createadminclient"
     },
     {
+      "relation": "imports_from",
+      "context": "import",
+      "confidence": "EXTRACTED",
+      "source_file": "src/app/api/orchestrator/reply/route.ts",
+      "source_location": "L3",
+      "weight": 1.0,
+      "source": "src_app_api_orchestrator_reply_route_ts_reply_route",
+      "target": "lib_auth",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "imports",
+      "context": "import",
+      "confidence": "EXTRACTED",
+      "source_file": "src/app/api/orchestrator/reply/route.ts",
+      "source_location": "L3",
+      "weight": 1.0,
+      "source": "src_app_api_orchestrator_reply_route_ts_reply_route",
+      "target": "lib_auth_verifyorchestratorkey",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "imports_from",
+      "context": "import",
+      "confidence": "EXTRACTED",
+      "source_file": "src/app/api/orchestrator/reply/route.ts",
+      "source_location": "L5",
+      "weight": 1.0,
+      "source": "src_app_api_orchestrator_reply_route_ts_reply_route",
+      "target": "lib_twilio_voice_context",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "imports",
+      "context": "import",
+      "confidence": "EXTRACTED",
+      "source_file": "src/app/api/orchestrator/reply/route.ts",
+      "source_location": "L5",
+      "weight": 1.0,
+      "source": "src_app_api_orchestrator_reply_route_ts_reply_route",
+      "target": "lib_twilio_voice_context_appendtranscript",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "imports",
+      "context": "import",
+      "confidence": "EXTRACTED",
+      "source_file": "src/app/api/orchestrator/reply/route.ts",
+      "source_location": "L5",
+      "weight": 1.0,
+      "source": "src_app_api_orchestrator_reply_route_ts_reply_route",
+      "target": "lib_twilio_voice_context_loadcallhistory",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "imports_from",
+      "context": "import",
+      "confidence": "EXTRACTED",
+      "source_file": "src/app/api/orchestrator/reply/route.ts",
+      "source_location": "L6",
+      "weight": 1.0,
+      "source": "src_app_api_orchestrator_reply_route_ts_reply_route",
+      "target": "lib_voice_flow_runtime",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "imports",
+      "context": "import",
+      "confidence": "EXTRACTED",
+      "source_file": "src/app/api/orchestrator/reply/route.ts",
+      "source_location": "L6",
+      "weight": 1.0,
+      "source": "src_app_api_orchestrator_reply_route_ts_reply_route",
+      "target": "lib_voice_flow_runtime_processvoiceturn",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "src/app/api/orchestrator/reply/route.ts",
+      "source_location": "L8",
+      "weight": 1.0,
+      "source": "src_app_api_orchestrator_reply_route_ts_reply_route",
+      "target": "src_app_api_orchestrator_reply_route_ts_reply_route_post",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "imports_from",
+      "context": "import",
+      "confidence": "EXTRACTED",
+      "source_file": "src/app/api/orchestrator/reply/route.ts",
+      "source_location": "L4",
+      "weight": 1.0,
+      "source": "src_app_api_orchestrator_reply_route_ts_reply_route",
+      "target": "supabase_admin",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "imports",
+      "context": "import",
+      "confidence": "EXTRACTED",
+      "source_file": "src/app/api/orchestrator/reply/route.ts",
+      "source_location": "L4",
+      "weight": 1.0,
+      "source": "src_app_api_orchestrator_reply_route_ts_reply_route",
+      "target": "supabase_admin_createadminclient",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "calls",
+      "context": "call",
+      "confidence": "INFERRED",
+      "confidence_score": 0.8,
+      "source_file": "src/app/api/orchestrator/reply/route.ts",
+      "source_location": "L9",
+      "weight": 1.0,
+      "source": "src_app_api_orchestrator_reply_route_ts_reply_route_post",
+      "target": "lib_auth_verifyorchestratorkey"
+    },
+    {
+      "relation": "calls",
+      "context": "call",
+      "confidence": "INFERRED",
+      "confidence_score": 0.8,
+      "source_file": "src/app/api/orchestrator/reply/route.ts",
+      "source_location": "L28",
+      "weight": 1.0,
+      "source": "src_app_api_orchestrator_reply_route_ts_reply_route_post",
+      "target": "lib_twilio_voice_context_loadcallhistory"
+    },
+    {
+      "relation": "calls",
+      "context": "call",
+      "confidence": "INFERRED",
+      "confidence_score": 0.8,
+      "source_file": "src/app/api/orchestrator/reply/route.ts",
+      "source_location": "L48",
+      "weight": 1.0,
+      "source": "src_app_api_orchestrator_reply_route_ts_reply_route_post",
+      "target": "lib_voice_flow_runtime_processvoiceturn"
+    },
+    {
+      "relation": "calls",
+      "context": "call",
+      "confidence": "INFERRED",
+      "confidence_score": 0.8,
+      "source_file": "src/app/api/orchestrator/reply/route.ts",
+      "source_location": "L23",
+      "weight": 1.0,
+      "source": "src_app_api_orchestrator_reply_route_ts_reply_route_post",
+      "target": "supabase_admin_createadminclient"
+    },
+    {
       "relation": "contains",
       "confidence": "EXTRACTED",
       "source_file": "src/app/api/org/setup/route.ts",
@@ -6782,6 +8285,307 @@
       "weight": 1.0,
       "source": "setup_route_post",
       "target": "supabase_admin_createadminclient"
+    },
+    {
+      "relation": "imports_from",
+      "context": "import",
+      "confidence": "EXTRACTED",
+      "source_file": "src/app/api/phone-numbers/route.ts",
+      "source_location": "L4",
+      "weight": 1.0,
+      "source": "phone_numbers_route",
+      "target": "compliance_audit",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "imports",
+      "context": "import",
+      "confidence": "EXTRACTED",
+      "source_file": "src/app/api/phone-numbers/route.ts",
+      "source_location": "L4",
+      "weight": 1.0,
+      "source": "phone_numbers_route",
+      "target": "compliance_audit_logaudit",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "imports_from",
+      "context": "import",
+      "confidence": "EXTRACTED",
+      "source_file": "src/app/api/phone-numbers/route.ts",
+      "source_location": "L3",
+      "weight": 1.0,
+      "source": "phone_numbers_route",
+      "target": "lib_auth",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "imports",
+      "context": "import",
+      "confidence": "EXTRACTED",
+      "source_file": "src/app/api/phone-numbers/route.ts",
+      "source_location": "L3",
+      "weight": 1.0,
+      "source": "phone_numbers_route",
+      "target": "lib_auth_getuserorg",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "src/app/api/phone-numbers/route.ts",
+      "source_location": "L103",
+      "weight": 1.0,
+      "source": "phone_numbers_route",
+      "target": "phone_numbers_route_delete",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "src/app/api/phone-numbers/route.ts",
+      "source_location": "L13",
+      "weight": 1.0,
+      "source": "phone_numbers_route",
+      "target": "phone_numbers_route_get",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "src/app/api/phone-numbers/route.ts",
+      "source_location": "L6",
+      "weight": 1.0,
+      "source": "phone_numbers_route",
+      "target": "phone_numbers_route_normalizephone",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "src/app/api/phone-numbers/route.ts",
+      "source_location": "L73",
+      "weight": 1.0,
+      "source": "phone_numbers_route",
+      "target": "phone_numbers_route_patch",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "src/app/api/phone-numbers/route.ts",
+      "source_location": "L32",
+      "weight": 1.0,
+      "source": "phone_numbers_route",
+      "target": "phone_numbers_route_post",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "imports_from",
+      "context": "import",
+      "confidence": "EXTRACTED",
+      "source_file": "src/app/api/phone-numbers/route.ts",
+      "source_location": "L2",
+      "weight": 1.0,
+      "source": "phone_numbers_route",
+      "target": "supabase_server",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "imports",
+      "context": "import",
+      "confidence": "EXTRACTED",
+      "source_file": "src/app/api/phone-numbers/route.ts",
+      "source_location": "L2",
+      "weight": 1.0,
+      "source": "phone_numbers_route",
+      "target": "supabase_server_createclient",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "calls",
+      "context": "call",
+      "confidence": "EXTRACTED",
+      "source_file": "src/app/api/phone-numbers/route.ts",
+      "source_location": "L43",
+      "weight": 1.0,
+      "source": "phone_numbers_route_post",
+      "target": "phone_numbers_route_normalizephone",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "calls",
+      "context": "call",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "src/app/api/phone-numbers/route.ts",
+      "source_location": "L20",
+      "weight": 1.0,
+      "source": "phone_numbers_route_get",
+      "target": "lib_auth_getuserorg"
+    },
+    {
+      "relation": "calls",
+      "context": "call",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "src/app/api/phone-numbers/route.ts",
+      "source_location": "L62",
+      "weight": 1.0,
+      "source": "phone_numbers_route_post",
+      "target": "compliance_audit_logaudit"
+    },
+    {
+      "relation": "calls",
+      "context": "call",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "src/app/api/phone-numbers/route.ts",
+      "source_location": "L39",
+      "weight": 1.0,
+      "source": "phone_numbers_route_post",
+      "target": "lib_auth_getuserorg"
+    },
+    {
+      "relation": "calls",
+      "context": "call",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "src/app/api/phone-numbers/route.ts",
+      "source_location": "L80",
+      "weight": 1.0,
+      "source": "phone_numbers_route_patch",
+      "target": "lib_auth_getuserorg"
+    },
+    {
+      "relation": "calls",
+      "context": "call",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "src/app/api/phone-numbers/route.ts",
+      "source_location": "L110",
+      "weight": 1.0,
+      "source": "phone_numbers_route_delete",
+      "target": "lib_auth_getuserorg"
+    },
+    {
+      "relation": "imports_from",
+      "context": "import",
+      "confidence": "EXTRACTED",
+      "source_file": "src/app/api/settings/route.ts",
+      "source_location": "L4",
+      "weight": 1.0,
+      "confidence_score": 1.0,
+      "source": "settings_route",
+      "target": "compliance_audit"
+    },
+    {
+      "relation": "imports",
+      "context": "import",
+      "confidence": "EXTRACTED",
+      "source_file": "src/app/api/settings/route.ts",
+      "source_location": "L4",
+      "weight": 1.0,
+      "confidence_score": 1.0,
+      "source": "settings_route",
+      "target": "compliance_audit_logaudit"
+    },
+    {
+      "relation": "imports_from",
+      "context": "import",
+      "confidence": "EXTRACTED",
+      "source_file": "src/app/api/settings/route.ts",
+      "source_location": "L3",
+      "weight": 1.0,
+      "confidence_score": 1.0,
+      "source": "settings_route",
+      "target": "lib_auth"
+    },
+    {
+      "relation": "imports",
+      "context": "import",
+      "confidence": "EXTRACTED",
+      "source_file": "src/app/api/settings/route.ts",
+      "source_location": "L3",
+      "weight": 1.0,
+      "confidence_score": 1.0,
+      "source": "settings_route",
+      "target": "lib_auth_getuserorg"
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "src/app/api/settings/route.ts",
+      "source_location": "L6",
+      "weight": 1.0,
+      "confidence_score": 1.0,
+      "source": "settings_route",
+      "target": "settings_route_get"
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "src/app/api/settings/route.ts",
+      "source_location": "L28",
+      "weight": 1.0,
+      "confidence_score": 1.0,
+      "source": "settings_route",
+      "target": "settings_route_patch"
+    },
+    {
+      "relation": "imports_from",
+      "context": "import",
+      "confidence": "EXTRACTED",
+      "source_file": "src/app/api/settings/route.ts",
+      "source_location": "L2",
+      "weight": 1.0,
+      "confidence_score": 1.0,
+      "source": "settings_route",
+      "target": "supabase_server"
+    },
+    {
+      "relation": "imports",
+      "context": "import",
+      "confidence": "EXTRACTED",
+      "source_file": "src/app/api/settings/route.ts",
+      "source_location": "L2",
+      "weight": 1.0,
+      "confidence_score": 1.0,
+      "source": "settings_route",
+      "target": "supabase_server_createclient"
+    },
+    {
+      "relation": "calls",
+      "context": "call",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "src/app/api/settings/route.ts",
+      "source_location": "L13",
+      "weight": 1.0,
+      "source": "settings_route_get",
+      "target": "lib_auth_getuserorg"
+    },
+    {
+      "relation": "calls",
+      "context": "call",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "src/app/api/settings/route.ts",
+      "source_location": "L59",
+      "weight": 1.0,
+      "source": "settings_route_patch",
+      "target": "compliance_audit_logaudit"
+    },
+    {
+      "relation": "calls",
+      "context": "call",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "src/app/api/settings/route.ts",
+      "source_location": "L35",
+      "weight": 1.0,
+      "source": "settings_route_patch",
+      "target": "lib_auth_getuserorg"
     },
     {
       "relation": "imports_from",
@@ -6911,9 +8715,9 @@
       "source_file": "src/app/api/telnyx/webhook/route.ts",
       "source_location": "L3",
       "weight": 1.0,
+      "confidence_score": 1.0,
       "source": "webhook_route",
-      "target": "lib_telnyx_webhook",
-      "confidence_score": 1.0
+      "target": "lib_telnyx_webhook"
     },
     {
       "relation": "imports",
@@ -6922,9 +8726,9 @@
       "source_file": "src/app/api/telnyx/webhook/route.ts",
       "source_location": "L3",
       "weight": 1.0,
+      "confidence_score": 1.0,
       "source": "webhook_route",
-      "target": "lib_telnyx_webhook_validatetelnyxwebhook",
-      "confidence_score": 1.0
+      "target": "lib_telnyx_webhook_validatetelnyxwebhook"
     },
     {
       "relation": "imports_from",
@@ -7206,9 +9010,9 @@
       "source_file": "src/app/api/twilio/gather/route.ts",
       "source_location": "L9",
       "weight": 1.0,
+      "confidence_score": 1.0,
       "source": "gather_route",
-      "target": "lib_twilio_webhook",
-      "confidence_score": 1.0
+      "target": "lib_twilio_webhook"
     },
     {
       "relation": "imports",
@@ -7217,9 +9021,9 @@
       "source_file": "src/app/api/twilio/gather/route.ts",
       "source_location": "L9",
       "weight": 1.0,
+      "confidence_score": 1.0,
       "source": "gather_route",
-      "target": "lib_twilio_webhook_validatetwiliowebhook",
-      "confidence_score": 1.0
+      "target": "lib_twilio_webhook_validatetwiliowebhook"
     },
     {
       "relation": "calls",
@@ -7292,11 +9096,33 @@
       "context": "import",
       "confidence": "EXTRACTED",
       "source_file": "src/app/api/twilio/reply/route.ts",
+      "source_location": "L16",
+      "weight": 1.0,
+      "source": "src_app_api_twilio_reply_route_ts_reply_route",
+      "target": "lib_pending_speech",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "imports",
+      "context": "import",
+      "confidence": "EXTRACTED",
+      "source_file": "src/app/api/twilio/reply/route.ts",
+      "source_location": "L16",
+      "weight": 1.0,
+      "source": "src_app_api_twilio_reply_route_ts_reply_route",
+      "target": "lib_pending_speech_takependingspeech",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "imports_from",
+      "context": "import",
+      "confidence": "EXTRACTED",
+      "source_file": "src/app/api/twilio/reply/route.ts",
       "source_location": "L15",
       "weight": 1.0,
-      "confidence_score": 1.0,
-      "source": "reply_route",
-      "target": "lib_pending_speech"
+      "source": "src_app_api_twilio_reply_route_ts_reply_route",
+      "target": "lib_public_url",
+      "confidence_score": 1.0
     },
     {
       "relation": "imports",
@@ -7305,31 +9131,9 @@
       "source_file": "src/app/api/twilio/reply/route.ts",
       "source_location": "L15",
       "weight": 1.0,
-      "confidence_score": 1.0,
-      "source": "reply_route",
-      "target": "lib_pending_speech_takependingspeech"
-    },
-    {
-      "relation": "imports_from",
-      "context": "import",
-      "confidence": "EXTRACTED",
-      "source_file": "src/app/api/twilio/reply/route.ts",
-      "source_location": "L14",
-      "weight": 1.0,
-      "confidence_score": 1.0,
-      "source": "reply_route",
-      "target": "lib_public_url"
-    },
-    {
-      "relation": "imports",
-      "context": "import",
-      "confidence": "EXTRACTED",
-      "source_file": "src/app/api/twilio/reply/route.ts",
-      "source_location": "L14",
-      "weight": 1.0,
-      "confidence_score": 1.0,
-      "source": "reply_route",
-      "target": "lib_public_url_getpublicappurl"
+      "source": "src_app_api_twilio_reply_route_ts_reply_route",
+      "target": "lib_public_url_getpublicappurl",
+      "confidence_score": 1.0
     },
     {
       "relation": "imports_from",
@@ -7338,9 +9142,9 @@
       "source_file": "src/app/api/twilio/reply/route.ts",
       "source_location": "L3",
       "weight": 1.0,
-      "confidence_score": 1.0,
-      "source": "reply_route",
-      "target": "lib_twilio"
+      "source": "src_app_api_twilio_reply_route_ts_reply_route",
+      "target": "lib_twilio",
+      "confidence_score": 1.0
     },
     {
       "relation": "imports",
@@ -7349,9 +9153,9 @@
       "source_file": "src/app/api/twilio/reply/route.ts",
       "source_location": "L3",
       "weight": 1.0,
-      "confidence_score": 1.0,
-      "source": "reply_route",
-      "target": "lib_twilio_buildsimplevoicetwiml"
+      "source": "src_app_api_twilio_reply_route_ts_reply_route",
+      "target": "lib_twilio_buildsimplevoicetwiml",
+      "confidence_score": 1.0
     },
     {
       "relation": "imports",
@@ -7360,9 +9164,9 @@
       "source_file": "src/app/api/twilio/reply/route.ts",
       "source_location": "L3",
       "weight": 1.0,
-      "confidence_score": 1.0,
-      "source": "reply_route",
-      "target": "lib_twilio_buildtransfertwiml"
+      "source": "src_app_api_twilio_reply_route_ts_reply_route",
+      "target": "lib_twilio_buildtransfertwiml",
+      "confidence_score": 1.0
     },
     {
       "relation": "imports",
@@ -7371,9 +9175,9 @@
       "source_file": "src/app/api/twilio/reply/route.ts",
       "source_location": "L3",
       "weight": 1.0,
-      "confidence_score": 1.0,
-      "source": "reply_route",
-      "target": "lib_twilio_twimlresponse"
+      "source": "src_app_api_twilio_reply_route_ts_reply_route",
+      "target": "lib_twilio_twimlresponse",
+      "confidence_score": 1.0
     },
     {
       "relation": "imports_from",
@@ -7382,9 +9186,9 @@
       "source_file": "src/app/api/twilio/reply/route.ts",
       "source_location": "L8",
       "weight": 1.0,
-      "confidence_score": 1.0,
-      "source": "reply_route",
-      "target": "lib_twilio_voice_context"
+      "source": "src_app_api_twilio_reply_route_ts_reply_route",
+      "target": "lib_twilio_voice_context",
+      "confidence_score": 1.0
     },
     {
       "relation": "imports",
@@ -7393,9 +9197,9 @@
       "source_file": "src/app/api/twilio/reply/route.ts",
       "source_location": "L8",
       "weight": 1.0,
-      "confidence_score": 1.0,
-      "source": "reply_route",
-      "target": "lib_twilio_voice_context_appendtranscript"
+      "source": "src_app_api_twilio_reply_route_ts_reply_route",
+      "target": "lib_twilio_voice_context_appendtranscript",
+      "confidence_score": 1.0
     },
     {
       "relation": "imports",
@@ -7404,9 +9208,9 @@
       "source_file": "src/app/api/twilio/reply/route.ts",
       "source_location": "L8",
       "weight": 1.0,
-      "confidence_score": 1.0,
-      "source": "reply_route",
-      "target": "lib_twilio_voice_context_loadcallhistory"
+      "source": "src_app_api_twilio_reply_route_ts_reply_route",
+      "target": "lib_twilio_voice_context_loadcallhistory",
+      "confidence_score": 1.0
     },
     {
       "relation": "imports",
@@ -7415,9 +9219,9 @@
       "source_file": "src/app/api/twilio/reply/route.ts",
       "source_location": "L8",
       "weight": 1.0,
-      "confidence_score": 1.0,
-      "source": "reply_route",
-      "target": "lib_twilio_voice_context_resolvevoicecontext"
+      "source": "src_app_api_twilio_reply_route_ts_reply_route",
+      "target": "lib_twilio_voice_context_resolvevoicecontext",
+      "confidence_score": 1.0
     },
     {
       "relation": "imports_from",
@@ -7426,7 +9230,7 @@
       "source_file": "src/app/api/twilio/reply/route.ts",
       "source_location": "L17",
       "weight": 1.0,
-      "source": "reply_route",
+      "source": "src_app_api_twilio_reply_route_ts_reply_route",
       "target": "lib_twilio_webhook",
       "confidence_score": 1.0
     },
@@ -7437,7 +9241,7 @@
       "source_file": "src/app/api/twilio/reply/route.ts",
       "source_location": "L17",
       "weight": 1.0,
-      "source": "reply_route",
+      "source": "src_app_api_twilio_reply_route_ts_reply_route",
       "target": "lib_twilio_webhook_validatetwiliowebhook",
       "confidence_score": 1.0
     },
@@ -7448,9 +9252,9 @@
       "source_file": "src/app/api/twilio/reply/route.ts",
       "source_location": "L13",
       "weight": 1.0,
-      "confidence_score": 1.0,
-      "source": "reply_route",
-      "target": "lib_voice_conversation"
+      "source": "src_app_api_twilio_reply_route_ts_reply_route",
+      "target": "lib_voice_flow_runtime",
+      "confidence_score": 1.0
     },
     {
       "relation": "imports",
@@ -7459,150 +9263,150 @@
       "source_file": "src/app/api/twilio/reply/route.ts",
       "source_location": "L13",
       "weight": 1.0,
-      "confidence_score": 1.0,
-      "source": "reply_route",
-      "target": "lib_voice_conversation_generatevoicereply"
+      "source": "src_app_api_twilio_reply_route_ts_reply_route",
+      "target": "lib_voice_flow_runtime_processvoiceturn",
+      "confidence_score": 1.0
     },
     {
       "relation": "contains",
       "confidence": "EXTRACTED",
       "source_file": "src/app/api/twilio/reply/route.ts",
-      "source_location": "L18",
+      "source_location": "L19",
       "weight": 1.0,
-      "confidence_score": 1.0,
-      "source": "reply_route",
-      "target": "reply_route_post"
+      "source": "src_app_api_twilio_reply_route_ts_reply_route",
+      "target": "src_app_api_twilio_reply_route_ts_reply_route_post",
+      "confidence_score": 1.0
     },
     {
       "relation": "imports_from",
       "context": "import",
       "confidence": "EXTRACTED",
       "source_file": "src/app/api/twilio/reply/route.ts",
-      "source_location": "L16",
+      "source_location": "L14",
       "weight": 1.0,
-      "confidence_score": 1.0,
-      "source": "reply_route",
-      "target": "supabase_admin"
+      "source": "src_app_api_twilio_reply_route_ts_reply_route",
+      "target": "supabase_admin",
+      "confidence_score": 1.0
     },
     {
       "relation": "imports",
       "context": "import",
       "confidence": "EXTRACTED",
       "source_file": "src/app/api/twilio/reply/route.ts",
-      "source_location": "L16",
+      "source_location": "L14",
       "weight": 1.0,
-      "confidence_score": 1.0,
-      "source": "reply_route",
-      "target": "supabase_admin_createadminclient"
+      "source": "src_app_api_twilio_reply_route_ts_reply_route",
+      "target": "supabase_admin_createadminclient",
+      "confidence_score": 1.0
     },
     {
       "relation": "calls",
       "context": "call",
-      "confidence": "EXTRACTED",
-      "confidence_score": 1.0,
+      "confidence": "INFERRED",
+      "confidence_score": 0.8,
       "source_file": "src/app/api/twilio/reply/route.ts",
-      "source_location": "L27",
+      "source_location": "L31",
       "weight": 1.0,
-      "source": "reply_route_post",
+      "source": "src_app_api_twilio_reply_route_ts_reply_route_post",
       "target": "lib_pending_speech_takependingspeech"
     },
     {
       "relation": "calls",
       "context": "call",
-      "confidence": "EXTRACTED",
-      "confidence_score": 1.0,
+      "confidence": "INFERRED",
+      "confidence_score": 0.8,
       "source_file": "src/app/api/twilio/reply/route.ts",
-      "source_location": "L19",
+      "source_location": "L20",
       "weight": 1.0,
-      "source": "reply_route_post",
+      "source": "src_app_api_twilio_reply_route_ts_reply_route_post",
       "target": "lib_public_url_getpublicappurl"
     },
     {
       "relation": "calls",
       "context": "call",
-      "confidence": "EXTRACTED",
-      "confidence_score": 1.0,
+      "confidence": "INFERRED",
+      "confidence_score": 0.8,
       "source_file": "src/app/api/twilio/reply/route.ts",
-      "source_location": "L30",
+      "source_location": "L26",
       "weight": 1.0,
-      "source": "reply_route_post",
+      "source": "src_app_api_twilio_reply_route_ts_reply_route_post",
       "target": "lib_twilio_buildsimplevoicetwiml"
     },
     {
       "relation": "calls",
       "context": "call",
-      "confidence": "EXTRACTED",
-      "confidence_score": 1.0,
+      "confidence": "INFERRED",
+      "confidence_score": 0.8,
       "source_file": "src/app/api/twilio/reply/route.ts",
-      "source_location": "L69",
+      "source_location": "L106",
       "weight": 1.0,
-      "source": "reply_route_post",
+      "source": "src_app_api_twilio_reply_route_ts_reply_route_post",
       "target": "lib_twilio_buildtransfertwiml"
     },
     {
       "relation": "calls",
       "context": "call",
-      "confidence": "EXTRACTED",
-      "confidence_score": 1.0,
+      "confidence": "INFERRED",
+      "confidence_score": 0.8,
       "source_file": "src/app/api/twilio/reply/route.ts",
-      "source_location": "L29",
+      "source_location": "L26",
       "weight": 1.0,
-      "source": "reply_route_post",
+      "source": "src_app_api_twilio_reply_route_ts_reply_route_post",
       "target": "lib_twilio_twimlresponse"
     },
     {
       "relation": "calls",
       "context": "call",
-      "confidence": "EXTRACTED",
-      "confidence_score": 1.0,
+      "confidence": "INFERRED",
+      "confidence_score": 0.8,
       "source_file": "src/app/api/twilio/reply/route.ts",
-      "source_location": "L39",
+      "source_location": "L43",
       "weight": 1.0,
-      "source": "reply_route_post",
+      "source": "src_app_api_twilio_reply_route_ts_reply_route_post",
       "target": "lib_twilio_voice_context_loadcallhistory"
     },
     {
       "relation": "calls",
       "context": "call",
-      "confidence": "EXTRACTED",
-      "confidence_score": 1.0,
+      "confidence": "INFERRED",
+      "confidence_score": 0.8,
       "source_file": "src/app/api/twilio/reply/route.ts",
-      "source_location": "L38",
+      "source_location": "L42",
       "weight": 1.0,
-      "source": "reply_route_post",
+      "source": "src_app_api_twilio_reply_route_ts_reply_route_post",
       "target": "lib_twilio_voice_context_resolvevoicecontext"
     },
     {
       "relation": "calls",
       "context": "call",
-      "confidence": "EXTRACTED",
-      "confidence_score": 1.0,
+      "confidence": "INFERRED",
+      "confidence_score": 0.8,
       "source_file": "src/app/api/twilio/reply/route.ts",
       "source_location": "L25",
       "weight": 1.0,
-      "source": "reply_route_post",
+      "source": "src_app_api_twilio_reply_route_ts_reply_route_post",
       "target": "lib_twilio_webhook_validatetwiliowebhook"
     },
     {
       "relation": "calls",
       "context": "call",
-      "confidence": "EXTRACTED",
-      "confidence_score": 1.0,
+      "confidence": "INFERRED",
+      "confidence_score": 0.8,
       "source_file": "src/app/api/twilio/reply/route.ts",
-      "source_location": "L42",
+      "source_location": "L74",
       "weight": 1.0,
-      "source": "reply_route_post",
-      "target": "lib_voice_conversation_generatevoicereply"
+      "source": "src_app_api_twilio_reply_route_ts_reply_route_post",
+      "target": "lib_voice_flow_runtime_processvoiceturn"
     },
     {
       "relation": "calls",
       "context": "call",
-      "confidence": "EXTRACTED",
-      "confidence_score": 1.0,
+      "confidence": "INFERRED",
+      "confidence_score": 0.8,
       "source_file": "src/app/api/twilio/reply/route.ts",
-      "source_location": "L55",
+      "source_location": "L49",
       "weight": 1.0,
-      "source": "reply_route_post",
+      "source": "src_app_api_twilio_reply_route_ts_reply_route_post",
       "target": "supabase_admin_createadminclient"
     },
     {
@@ -7612,9 +9416,9 @@
       "source_file": "src/app/api/twilio/status/route.ts",
       "source_location": "L3",
       "weight": 1.0,
-      "source": "status_route",
-      "target": "lib_twilio_webhook",
-      "confidence_score": 1.0
+      "confidence_score": 1.0,
+      "source": "src_app_api_twilio_status_route_ts_status_route",
+      "target": "lib_twilio_webhook"
     },
     {
       "relation": "imports",
@@ -7623,18 +9427,18 @@
       "source_file": "src/app/api/twilio/status/route.ts",
       "source_location": "L3",
       "weight": 1.0,
-      "source": "status_route",
-      "target": "lib_twilio_webhook_validatetwiliowebhook",
-      "confidence_score": 1.0
+      "confidence_score": 1.0,
+      "source": "src_app_api_twilio_status_route_ts_status_route",
+      "target": "lib_twilio_webhook_validatetwiliowebhook"
     },
     {
       "relation": "contains",
       "confidence": "EXTRACTED",
       "source_file": "src/app/api/twilio/status/route.ts",
-      "source_location": "L4",
+      "source_location": "L5",
       "weight": 1.0,
       "confidence_score": 1.0,
-      "source": "status_route",
+      "source": "src_app_api_twilio_status_route_ts_status_route",
       "target": "status_route_post"
     },
     {
@@ -7645,7 +9449,7 @@
       "source_location": "L2",
       "weight": 1.0,
       "confidence_score": 1.0,
-      "source": "status_route",
+      "source": "src_app_api_twilio_status_route_ts_status_route",
       "target": "supabase_admin"
     },
     {
@@ -7656,8 +9460,18 @@
       "source_location": "L2",
       "weight": 1.0,
       "confidence_score": 1.0,
-      "source": "status_route",
+      "source": "src_app_api_twilio_status_route_ts_status_route",
       "target": "supabase_admin_createadminclient"
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "src/app/api/twilio/status/route.ts",
+      "source_location": "L4",
+      "weight": 1.0,
+      "confidence_score": 1.0,
+      "source": "status_route",
+      "target": "status_route_post"
     },
     {
       "relation": "calls",
@@ -7732,9 +9546,9 @@
       "source_file": "src/app/api/twilio/transfer/route.ts",
       "source_location": "L6",
       "weight": 1.0,
+      "confidence_score": 1.0,
       "source": "transfer_route",
-      "target": "lib_public_url",
-      "confidence_score": 1.0
+      "target": "lib_public_url"
     },
     {
       "relation": "imports",
@@ -7743,9 +9557,9 @@
       "source_file": "src/app/api/twilio/transfer/route.ts",
       "source_location": "L6",
       "weight": 1.0,
+      "confidence_score": 1.0,
       "source": "transfer_route",
-      "target": "lib_public_url_getpublicappurl",
-      "confidence_score": 1.0
+      "target": "lib_public_url_getpublicappurl"
     },
     {
       "relation": "imports_from",
@@ -7776,9 +9590,9 @@
       "source_file": "src/app/api/twilio/transfer/route.ts",
       "source_location": "L7",
       "weight": 1.0,
+      "confidence_score": 1.0,
       "source": "transfer_route",
-      "target": "lib_twilio_webhook",
-      "confidence_score": 1.0
+      "target": "lib_twilio_webhook"
     },
     {
       "relation": "imports",
@@ -7787,9 +9601,9 @@
       "source_file": "src/app/api/twilio/transfer/route.ts",
       "source_location": "L7",
       "weight": 1.0,
+      "confidence_score": 1.0,
       "source": "transfer_route",
-      "target": "lib_twilio_webhook_escapexml",
-      "confidence_score": 1.0
+      "target": "lib_twilio_webhook_escapexml"
     },
     {
       "relation": "imports_from",
@@ -7962,9 +9776,9 @@
       "source_file": "src/app/api/twilio/voice/route.ts",
       "source_location": "L2",
       "weight": 1.0,
+      "confidence_score": 1.0,
       "source": "voice_route",
-      "target": "lib_twilio_issimpletwiliovoicemode",
-      "confidence_score": 1.0
+      "target": "lib_twilio_issimpletwiliovoicemode"
     },
     {
       "relation": "imports",
@@ -8028,9 +9842,9 @@
       "source_file": "src/app/api/twilio/voice/route.ts",
       "source_location": "L11",
       "weight": 1.0,
+      "confidence_score": 1.0,
       "source": "voice_route",
-      "target": "lib_twilio_webhook",
-      "confidence_score": 1.0
+      "target": "lib_twilio_webhook"
     },
     {
       "relation": "imports",
@@ -8039,8 +9853,30 @@
       "source_file": "src/app/api/twilio/voice/route.ts",
       "source_location": "L11",
       "weight": 1.0,
+      "confidence_score": 1.0,
       "source": "voice_route",
-      "target": "lib_twilio_webhook_validatetwiliowebhook",
+      "target": "lib_twilio_webhook_validatetwiliowebhook"
+    },
+    {
+      "relation": "imports_from",
+      "context": "import",
+      "confidence": "EXTRACTED",
+      "source_file": "src/app/api/twilio/voice/route.ts",
+      "source_location": "L10",
+      "weight": 1.0,
+      "source": "voice_route",
+      "target": "lib_voice_flow_runtime",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "imports",
+      "context": "import",
+      "confidence": "EXTRACTED",
+      "source_file": "src/app/api/twilio/voice/route.ts",
+      "source_location": "L10",
+      "weight": 1.0,
+      "source": "voice_route",
+      "target": "lib_voice_flow_runtime_getflowwelcomegreeting",
       "confidence_score": 1.0
     },
     {
@@ -8162,6 +9998,17 @@
       "weight": 1.0,
       "source": "voice_route_post",
       "target": "lib_twilio_webhook_validatetwiliowebhook"
+    },
+    {
+      "relation": "calls",
+      "context": "call",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "src/app/api/twilio/voice/route.ts",
+      "source_location": "L28",
+      "weight": 1.0,
+      "source": "voice_route_post",
+      "target": "lib_voice_flow_runtime_getflowwelcomegreeting"
     },
     {
       "relation": "imports_from",
@@ -8334,9 +10181,42 @@
       "source_file": "src/app/api/webhooks/stripe/route.ts",
       "source_location": "L4",
       "weight": 1.0,
+      "confidence_score": 1.0,
       "source": "stripe_route",
-      "target": "lib_stripe_planfromstripepriceid",
-      "confidence_score": 1.0
+      "target": "lib_stripe_planfromstripepriceid"
+    },
+    {
+      "relation": "imports_from",
+      "context": "import",
+      "confidence": "EXTRACTED",
+      "source_file": "src/app/api/webhooks/stripe/route.ts",
+      "source_location": "L5",
+      "weight": 1.0,
+      "confidence_score": 1.0,
+      "source": "stripe_route",
+      "target": "lib_stripe_prices"
+    },
+    {
+      "relation": "imports",
+      "context": "import",
+      "confidence": "EXTRACTED",
+      "source_file": "src/app/api/webhooks/stripe/route.ts",
+      "source_location": "L5",
+      "weight": 1.0,
+      "confidence_score": 1.0,
+      "source": "stripe_route",
+      "target": "lib_stripe_prices_planfromresolvedprices"
+    },
+    {
+      "relation": "imports",
+      "context": "import",
+      "confidence": "EXTRACTED",
+      "source_file": "src/app/api/webhooks/stripe/route.ts",
+      "source_location": "L5",
+      "weight": 1.0,
+      "confidence_score": 1.0,
+      "source": "stripe_route",
+      "target": "lib_stripe_prices_resolvestripepriceids"
     },
     {
       "relation": "imports",
@@ -8365,9 +10245,9 @@
       "source_file": "src/app/api/webhooks/stripe/route.ts",
       "source_location": "L6",
       "weight": 1.0,
+      "confidence_score": 1.0,
       "source": "stripe_route",
-      "target": "stripe_route_updateorgplan",
-      "confidence_score": 1.0
+      "target": "stripe_route_updateorgplan"
     },
     {
       "relation": "imports_from",
@@ -8398,9 +10278,9 @@
       "source_file": "src/app/api/webhooks/stripe/route.ts",
       "source_location": "L83",
       "weight": 1.0,
+      "confidence_score": 1.0,
       "source": "stripe_route_post",
-      "target": "stripe_route_updateorgplan",
-      "confidence_score": 1.0
+      "target": "stripe_route_updateorgplan"
     },
     {
       "relation": "calls",
@@ -8409,9 +10289,31 @@
       "source_file": "src/app/api/webhooks/stripe/route.ts",
       "source_location": "L16",
       "weight": 1.0,
+      "confidence_score": 1.0,
       "source": "stripe_route_updateorgplan",
-      "target": "lib_stripe_planfromstripepriceid",
-      "confidence_score": 1.0
+      "target": "lib_stripe_planfromstripepriceid"
+    },
+    {
+      "relation": "calls",
+      "context": "call",
+      "confidence": "EXTRACTED",
+      "source_file": "src/app/api/webhooks/stripe/route.ts",
+      "source_location": "L18",
+      "weight": 1.0,
+      "confidence_score": 1.0,
+      "source": "stripe_route_updateorgplan",
+      "target": "lib_stripe_prices_planfromresolvedprices"
+    },
+    {
+      "relation": "calls",
+      "context": "call",
+      "confidence": "EXTRACTED",
+      "source_file": "src/app/api/webhooks/stripe/route.ts",
+      "source_location": "L14",
+      "weight": 1.0,
+      "confidence_score": 1.0,
+      "source": "stripe_route_updateorgplan",
+      "target": "lib_stripe_prices_resolvestripepriceids"
     },
     {
       "relation": "calls",
@@ -8449,12 +10351,76 @@
     {
       "relation": "contains",
       "confidence": "EXTRACTED",
+      "source_file": "src/app/auth/callback/route.ts",
+      "source_location": "L4",
+      "weight": 1.0,
+      "confidence_score": 1.0,
+      "source": "src_app_auth_callback_route_ts_callback_route",
+      "target": "src_app_auth_callback_route_ts_callback_route_get"
+    },
+    {
+      "relation": "imports_from",
+      "context": "import",
+      "confidence": "EXTRACTED",
+      "source_file": "src/app/auth/callback/route.ts",
+      "source_location": "L2",
+      "weight": 1.0,
+      "confidence_score": 1.0,
+      "source": "src_app_auth_callback_route_ts_callback_route",
+      "target": "supabase_server"
+    },
+    {
+      "relation": "imports",
+      "context": "import",
+      "confidence": "EXTRACTED",
+      "source_file": "src/app/auth/callback/route.ts",
+      "source_location": "L2",
+      "weight": 1.0,
+      "confidence_score": 1.0,
+      "source": "src_app_auth_callback_route_ts_callback_route",
+      "target": "supabase_server_createclient"
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "src/app/dashboard/agents/page.tsx",
+      "source_location": "L122",
+      "weight": 1.0,
+      "confidence_score": 1.0,
+      "source": "agents_page",
+      "target": "agents_page_agenteditform"
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
       "source_file": "src/app/dashboard/agents/page.tsx",
       "source_location": "L6",
       "weight": 1.0,
       "confidence_score": 1.0,
       "source": "agents_page",
       "target": "agents_page_agentspage"
+    },
+    {
+      "relation": "imports_from",
+      "context": "import",
+      "confidence": "EXTRACTED",
+      "source_file": "src/app/dashboard/agents/page.tsx",
+      "source_location": "L5",
+      "weight": 1.0,
+      "confidence_score": 1.0,
+      "source": "agents_page",
+      "target": "lib_api_client"
+    },
+    {
+      "relation": "imports",
+      "context": "import",
+      "confidence": "EXTRACTED",
+      "source_file": "src/app/dashboard/agents/page.tsx",
+      "source_location": "L5",
+      "weight": 1.0,
+      "confidence_score": 1.0,
+      "source": "agents_page",
+      "target": "lib_api_client_apifetch"
     },
     {
       "relation": "imports_from",
@@ -8495,9 +10461,9 @@
       "source_file": "src/app/dashboard/billing/page.tsx",
       "source_location": "L5",
       "weight": 1.0,
+      "confidence_score": 1.0,
       "source": "billing_page",
-      "target": "components_subscribebutton",
-      "confidence_score": 1.0
+      "target": "components_subscribebutton"
     },
     {
       "relation": "imports",
@@ -8506,9 +10472,9 @@
       "source_file": "src/app/dashboard/billing/page.tsx",
       "source_location": "L5",
       "weight": 1.0,
+      "confidence_score": 1.0,
       "source": "billing_page",
-      "target": "components_subscribebutton_subscribebutton",
-      "confidence_score": 1.0
+      "target": "components_subscribebutton_subscribebutton"
     },
     {
       "relation": "imports_from",
@@ -8635,6 +10601,28 @@
       "context": "import",
       "confidence": "EXTRACTED",
       "source_file": "src/app/dashboard/calls/page.tsx",
+      "source_location": "L5",
+      "weight": 1.0,
+      "confidence_score": 1.0,
+      "source": "calls_page",
+      "target": "lib_api_client"
+    },
+    {
+      "relation": "imports",
+      "context": "import",
+      "confidence": "EXTRACTED",
+      "source_file": "src/app/dashboard/calls/page.tsx",
+      "source_location": "L5",
+      "weight": 1.0,
+      "confidence_score": 1.0,
+      "source": "calls_page",
+      "target": "lib_api_client_apifetch"
+    },
+    {
+      "relation": "imports_from",
+      "context": "import",
+      "confidence": "EXTRACTED",
+      "source_file": "src/app/dashboard/calls/page.tsx",
       "source_location": "L4",
       "weight": 1.0,
       "confidence_score": 1.0,
@@ -8663,6 +10651,60 @@
       "target": "campaigns_page_campaignspage"
     },
     {
+      "relation": "imports_from",
+      "context": "import",
+      "confidence": "EXTRACTED",
+      "source_file": "src/app/dashboard/campaigns/page.tsx",
+      "source_location": "L4",
+      "weight": 1.0,
+      "confidence_score": 1.0,
+      "source": "campaigns_page",
+      "target": "lib_api_client"
+    },
+    {
+      "relation": "imports",
+      "context": "import",
+      "confidence": "EXTRACTED",
+      "source_file": "src/app/dashboard/campaigns/page.tsx",
+      "source_location": "L4",
+      "weight": 1.0,
+      "confidence_score": 1.0,
+      "source": "campaigns_page",
+      "target": "lib_api_client_apifetch"
+    },
+    {
+      "relation": "imports_from",
+      "context": "import",
+      "confidence": "EXTRACTED",
+      "source_file": "src/app/dashboard/campaigns/page.tsx",
+      "source_location": "L5",
+      "weight": 1.0,
+      "confidence_score": 1.0,
+      "source": "campaigns_page",
+      "target": "lib_types"
+    },
+    {
+      "relation": "imports",
+      "context": "import",
+      "confidence": "EXTRACTED",
+      "source_file": "src/app/dashboard/campaigns/page.tsx",
+      "source_location": "L5",
+      "weight": 1.0,
+      "confidence_score": 1.0,
+      "source": "campaigns_page",
+      "target": "lib_types_agent"
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "src/app/dashboard/channels/page.tsx",
+      "source_location": "L6",
+      "weight": 1.0,
+      "confidence_score": 1.0,
+      "source": "channels_page",
+      "target": "channels_page_channel_meta"
+    },
+    {
       "relation": "contains",
       "confidence": "EXTRACTED",
       "source_file": "src/app/dashboard/channels/page.tsx",
@@ -8681,6 +10723,28 @@
       "confidence_score": 1.0,
       "source": "channels_page",
       "target": "channels_page_channelspage"
+    },
+    {
+      "relation": "imports_from",
+      "context": "import",
+      "confidence": "EXTRACTED",
+      "source_file": "src/app/dashboard/channels/page.tsx",
+      "source_location": "L4",
+      "weight": 1.0,
+      "confidence_score": 1.0,
+      "source": "channels_page",
+      "target": "lib_api_client"
+    },
+    {
+      "relation": "imports",
+      "context": "import",
+      "confidence": "EXTRACTED",
+      "source_file": "src/app/dashboard/channels/page.tsx",
+      "source_location": "L4",
+      "weight": 1.0,
+      "confidence_score": 1.0,
+      "source": "channels_page",
+      "target": "lib_api_client_apifetch"
     },
     {
       "relation": "imports_from",
@@ -8724,6 +10788,16 @@
       "confidence_score": 1.0,
       "source": "compliance_page",
       "target": "compliance_page_compliancepage"
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "src/app/dashboard/error.tsx",
+      "source_location": "L3",
+      "weight": 1.0,
+      "confidence_score": 1.0,
+      "source": "dashboard_error",
+      "target": "dashboard_error_dashboarderror"
     },
     {
       "relation": "imports_from",
@@ -8784,6 +10858,16 @@
       "relation": "contains",
       "confidence": "EXTRACTED",
       "source_file": "src/app/dashboard/flows/page.tsx",
+      "source_location": "L8",
+      "weight": 1.0,
+      "confidence_score": 1.0,
+      "source": "flows_page",
+      "target": "flows_page_flow"
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "src/app/dashboard/flows/page.tsx",
       "source_location": "L7",
       "weight": 1.0,
       "confidence_score": 1.0,
@@ -8794,12 +10878,56 @@
       "relation": "imports_from",
       "context": "import",
       "confidence": "EXTRACTED",
+      "source_file": "src/app/dashboard/flows/page.tsx",
+      "source_location": "L6",
+      "weight": 1.0,
+      "confidence_score": 1.0,
+      "source": "flows_page",
+      "target": "lib_api_client"
+    },
+    {
+      "relation": "imports",
+      "context": "import",
+      "confidence": "EXTRACTED",
+      "source_file": "src/app/dashboard/flows/page.tsx",
+      "source_location": "L6",
+      "weight": 1.0,
+      "confidence_score": 1.0,
+      "source": "flows_page",
+      "target": "lib_api_client_apifetch"
+    },
+    {
+      "relation": "imports_from",
+      "context": "import",
+      "confidence": "EXTRACTED",
+      "source_file": "src/app/dashboard/flows/page.tsx",
+      "source_location": "L6",
+      "weight": 1.0,
+      "source": "flows_page",
+      "target": "lib_types",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "imports",
+      "context": "import",
+      "confidence": "EXTRACTED",
+      "source_file": "src/app/dashboard/flows/page.tsx",
+      "source_location": "L6",
+      "weight": 1.0,
+      "source": "flows_page",
+      "target": "lib_types_agent",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "imports_from",
+      "context": "import",
+      "confidence": "EXTRACTED",
       "source_file": "src/app/dashboard/integrations/page.tsx",
       "source_location": "L1",
       "weight": 1.0,
+      "confidence_score": 1.0,
       "source": "integrations_page",
-      "target": "components_integrationconnectors",
-      "confidence_score": 1.0
+      "target": "components_integrationconnectors"
     },
     {
       "relation": "imports",
@@ -8808,9 +10936,9 @@
       "source_file": "src/app/dashboard/integrations/page.tsx",
       "source_location": "L1",
       "weight": 1.0,
+      "confidence_score": 1.0,
       "source": "integrations_page",
-      "target": "components_integrationconnectors_integrationconnectors",
-      "confidence_score": 1.0
+      "target": "components_integrationconnectors_integrationconnectors"
     },
     {
       "relation": "contains",
@@ -8821,6 +10949,70 @@
       "confidence_score": 1.0,
       "source": "integrations_page",
       "target": "integrations_page_integrationspage"
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "src/app/dashboard/knowledge/page.tsx",
+      "source_location": "L7",
+      "weight": 1.0,
+      "source": "knowledge_page",
+      "target": "knowledge_page_knowledgedoc",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "src/app/dashboard/knowledge/page.tsx",
+      "source_location": "L16",
+      "weight": 1.0,
+      "source": "knowledge_page",
+      "target": "knowledge_page_knowledgepage",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "imports_from",
+      "context": "import",
+      "confidence": "EXTRACTED",
+      "source_file": "src/app/dashboard/knowledge/page.tsx",
+      "source_location": "L5",
+      "weight": 1.0,
+      "source": "knowledge_page",
+      "target": "lib_api_client",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "imports",
+      "context": "import",
+      "confidence": "EXTRACTED",
+      "source_file": "src/app/dashboard/knowledge/page.tsx",
+      "source_location": "L5",
+      "weight": 1.0,
+      "source": "knowledge_page",
+      "target": "lib_api_client_apifetch",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "imports_from",
+      "context": "import",
+      "confidence": "EXTRACTED",
+      "source_file": "src/app/dashboard/knowledge/page.tsx",
+      "source_location": "L4",
+      "weight": 1.0,
+      "source": "knowledge_page",
+      "target": "lib_types",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "imports",
+      "context": "import",
+      "confidence": "EXTRACTED",
+      "source_file": "src/app/dashboard/knowledge/page.tsx",
+      "source_location": "L4",
+      "weight": 1.0,
+      "source": "knowledge_page",
+      "target": "lib_types_agent",
+      "confidence_score": 1.0
     },
     {
       "relation": "imports_from",
@@ -8915,9 +11107,9 @@
       "source_file": "src/app/dashboard/page.tsx",
       "source_location": "L4",
       "weight": 1.0,
+      "confidence_score": 1.0,
       "source": "dashboard_page",
-      "target": "lib_call_stats",
-      "confidence_score": 1.0
+      "target": "lib_call_stats"
     },
     {
       "relation": "imports",
@@ -8926,9 +11118,9 @@
       "source_file": "src/app/dashboard/page.tsx",
       "source_location": "L4",
       "weight": 1.0,
+      "confidence_score": 1.0,
       "source": "dashboard_page",
-      "target": "lib_call_stats_computecallstats",
-      "confidence_score": 1.0
+      "target": "lib_call_stats_computecallstats"
     },
     {
       "relation": "imports_from",
@@ -8975,6 +11167,102 @@
       "target": "lib_call_stats_computecallstats"
     },
     {
+      "relation": "imports_from",
+      "context": "import",
+      "confidence": "EXTRACTED",
+      "source_file": "src/app/dashboard/phone-numbers/page.tsx",
+      "source_location": "L5",
+      "weight": 1.0,
+      "source": "phone_numbers_page",
+      "target": "lib_api_client",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "imports",
+      "context": "import",
+      "confidence": "EXTRACTED",
+      "source_file": "src/app/dashboard/phone-numbers/page.tsx",
+      "source_location": "L5",
+      "weight": 1.0,
+      "source": "phone_numbers_page",
+      "target": "lib_api_client_apifetch",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "imports_from",
+      "context": "import",
+      "confidence": "EXTRACTED",
+      "source_file": "src/app/dashboard/phone-numbers/page.tsx",
+      "source_location": "L4",
+      "weight": 1.0,
+      "source": "phone_numbers_page",
+      "target": "lib_types",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "imports",
+      "context": "import",
+      "confidence": "EXTRACTED",
+      "source_file": "src/app/dashboard/phone-numbers/page.tsx",
+      "source_location": "L4",
+      "weight": 1.0,
+      "source": "phone_numbers_page",
+      "target": "lib_types_agent",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "src/app/dashboard/phone-numbers/page.tsx",
+      "source_location": "L7",
+      "weight": 1.0,
+      "source": "phone_numbers_page",
+      "target": "phone_numbers_page_phonenumber",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "src/app/dashboard/phone-numbers/page.tsx",
+      "source_location": "L16",
+      "weight": 1.0,
+      "source": "phone_numbers_page",
+      "target": "phone_numbers_page_phonenumberspage",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "imports_from",
+      "context": "import",
+      "confidence": "EXTRACTED",
+      "source_file": "src/app/dashboard/settings/page.tsx",
+      "source_location": "L4",
+      "weight": 1.0,
+      "confidence_score": 1.0,
+      "source": "settings_page",
+      "target": "lib_api_client"
+    },
+    {
+      "relation": "imports",
+      "context": "import",
+      "confidence": "EXTRACTED",
+      "source_file": "src/app/dashboard/settings/page.tsx",
+      "source_location": "L4",
+      "weight": 1.0,
+      "confidence_score": 1.0,
+      "source": "settings_page",
+      "target": "lib_api_client_apifetch"
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "src/app/dashboard/settings/page.tsx",
+      "source_location": "L6",
+      "weight": 1.0,
+      "confidence_score": 1.0,
+      "source": "settings_page",
+      "target": "settings_page_settings"
+    },
+    {
       "relation": "contains",
       "confidence": "EXTRACTED",
       "source_file": "src/app/dashboard/settings/page.tsx",
@@ -8983,6 +11271,60 @@
       "confidence_score": 1.0,
       "source": "settings_page",
       "target": "settings_page_settingspage"
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "src/app/forgot-password/page.tsx",
+      "source_location": "L8",
+      "weight": 1.0,
+      "confidence_score": 1.0,
+      "source": "forgot_password_page",
+      "target": "forgot_password_page_forgotpasswordpage"
+    },
+    {
+      "relation": "imports_from",
+      "context": "import",
+      "confidence": "EXTRACTED",
+      "source_file": "src/app/forgot-password/page.tsx",
+      "source_location": "L6",
+      "weight": 1.0,
+      "confidence_score": 1.0,
+      "source": "forgot_password_page",
+      "target": "lib_brand"
+    },
+    {
+      "relation": "imports",
+      "context": "import",
+      "confidence": "EXTRACTED",
+      "source_file": "src/app/forgot-password/page.tsx",
+      "source_location": "L6",
+      "weight": 1.0,
+      "confidence_score": 1.0,
+      "source": "forgot_password_page",
+      "target": "lib_brand_brand"
+    },
+    {
+      "relation": "imports_from",
+      "context": "import",
+      "confidence": "EXTRACTED",
+      "source_file": "src/app/forgot-password/page.tsx",
+      "source_location": "L5",
+      "weight": 1.0,
+      "confidence_score": 1.0,
+      "source": "forgot_password_page",
+      "target": "supabase_client"
+    },
+    {
+      "relation": "imports",
+      "context": "import",
+      "confidence": "EXTRACTED",
+      "source_file": "src/app/forgot-password/page.tsx",
+      "source_location": "L5",
+      "weight": 1.0,
+      "confidence_score": 1.0,
+      "source": "forgot_password_page",
+      "target": "supabase_client_createclient"
     },
     {
       "relation": "contains",
@@ -9057,6 +11399,16 @@
       "confidence_score": 1.0,
       "source": "login_page",
       "target": "lib_brand_brand"
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "src/app/login/page.tsx",
+      "source_location": "L9",
+      "weight": 1.0,
+      "confidence_score": 1.0,
+      "source": "login_page",
+      "target": "login_page_loginform"
     },
     {
       "relation": "contains",
@@ -9143,6 +11495,38 @@
       "confidence_score": 1.0,
       "source": "app_page",
       "target": "lib_plans_plans"
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "src/app/reset-password/page.tsx",
+      "source_location": "L7",
+      "weight": 1.0,
+      "confidence_score": 1.0,
+      "source": "reset_password_page",
+      "target": "reset_password_page_resetpasswordpage"
+    },
+    {
+      "relation": "imports_from",
+      "context": "import",
+      "confidence": "EXTRACTED",
+      "source_file": "src/app/reset-password/page.tsx",
+      "source_location": "L5",
+      "weight": 1.0,
+      "confidence_score": 1.0,
+      "source": "reset_password_page",
+      "target": "supabase_client"
+    },
+    {
+      "relation": "imports",
+      "context": "import",
+      "confidence": "EXTRACTED",
+      "source_file": "src/app/reset-password/page.tsx",
+      "source_location": "L5",
+      "weight": 1.0,
+      "confidence_score": 1.0,
+      "source": "reset_password_page",
+      "target": "supabase_client_createclient"
     },
     {
       "relation": "imports_from",
@@ -9330,11 +11714,43 @@
       "relation": "contains",
       "confidence": "EXTRACTED",
       "source_file": "src/components/IntegrationConnectors.tsx",
+      "source_location": "L6",
+      "weight": 1.0,
+      "confidence_score": 1.0,
+      "source": "components_integrationconnectors",
+      "target": "components_integrationconnectors_integration"
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "src/components/IntegrationConnectors.tsx",
       "source_location": "L5",
       "weight": 1.0,
+      "confidence_score": 1.0,
       "source": "components_integrationconnectors",
-      "target": "components_integrationconnectors_integrationconnectors",
-      "confidence_score": 1.0
+      "target": "components_integrationconnectors_integrationconnectors"
+    },
+    {
+      "relation": "imports_from",
+      "context": "import",
+      "confidence": "EXTRACTED",
+      "source_file": "src/components/IntegrationConnectors.tsx",
+      "source_location": "L4",
+      "weight": 1.0,
+      "confidence_score": 1.0,
+      "source": "components_integrationconnectors",
+      "target": "lib_api_client"
+    },
+    {
+      "relation": "imports",
+      "context": "import",
+      "confidence": "EXTRACTED",
+      "source_file": "src/components/IntegrationConnectors.tsx",
+      "source_location": "L4",
+      "weight": 1.0,
+      "confidence_score": 1.0,
+      "source": "components_integrationconnectors",
+      "target": "lib_api_client_apifetch"
     },
     {
       "relation": "contains",
@@ -9352,9 +11768,9 @@
       "source_file": "src/components/SubscribeButton.tsx",
       "source_location": "L5",
       "weight": 1.0,
+      "confidence_score": 1.0,
       "source": "components_subscribebutton",
-      "target": "components_subscribebutton_plankey",
-      "confidence_score": 1.0
+      "target": "components_subscribebutton_plankey"
     },
     {
       "relation": "contains",
@@ -9362,9 +11778,19 @@
       "source_file": "src/components/SubscribeButton.tsx",
       "source_location": "L7",
       "weight": 1.0,
+      "confidence_score": 1.0,
       "source": "components_subscribebutton",
-      "target": "components_subscribebutton_subscribebutton",
-      "confidence_score": 1.0
+      "target": "components_subscribebutton_subscribebutton"
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "src/lib/api-client.ts",
+      "source_location": "L2",
+      "weight": 1.0,
+      "confidence_score": 1.0,
+      "source": "lib_api_client",
+      "target": "lib_api_client_apifetch"
     },
     {
       "relation": "contains",
@@ -9457,9 +11883,9 @@
       "source_file": "src/lib/integration-auth.ts",
       "source_location": "L3",
       "weight": 1.0,
+      "confidence_score": 1.0,
       "source": "lib_integration_auth",
-      "target": "lib_auth",
-      "confidence_score": 1.0
+      "target": "lib_auth"
     },
     {
       "relation": "calls",
@@ -9501,9 +11927,9 @@
       "source_file": "src/lib/integration-auth.ts",
       "source_location": "L3",
       "weight": 1.0,
+      "confidence_score": 1.0,
       "source": "lib_integration_auth",
-      "target": "lib_auth_getuserorg",
-      "confidence_score": 1.0
+      "target": "lib_auth_getuserorg"
     },
     {
       "relation": "calls",
@@ -9554,9 +11980,9 @@
       "source_file": "src/lib/call-stats.ts",
       "source_location": "L3",
       "weight": 1.0,
+      "confidence_score": 1.0,
       "source": "lib_call_stats",
-      "target": "lib_call_stats_callrow",
-      "confidence_score": 1.0
+      "target": "lib_call_stats_callrow"
     },
     {
       "relation": "contains",
@@ -9564,9 +11990,9 @@
       "source_file": "src/lib/call-stats.ts",
       "source_location": "L9",
       "weight": 1.0,
+      "confidence_score": 1.0,
       "source": "lib_call_stats",
-      "target": "lib_call_stats_computecallstats",
-      "confidence_score": 1.0
+      "target": "lib_call_stats_computecallstats"
     },
     {
       "relation": "contains",
@@ -9832,6 +12258,17 @@
       "target": "lib_types_flownode"
     },
     {
+      "relation": "imports_from",
+      "context": "import",
+      "confidence": "EXTRACTED",
+      "source_file": "src/lib/voice-flow-runtime.ts",
+      "source_location": "L3",
+      "weight": 1.0,
+      "source": "lib_voice_flow_runtime",
+      "target": "flow_engine_index",
+      "confidence_score": 1.0
+    },
+    {
       "relation": "method",
       "confidence": "EXTRACTED",
       "source_file": "src/lib/flow-engine/index.ts",
@@ -9865,6 +12302,16 @@
       "relation": "method",
       "confidence": "EXTRACTED",
       "source_file": "src/lib/flow-engine/index.ts",
+      "source_location": "L85",
+      "weight": 1.0,
+      "source": "flow_engine_index_flowengine",
+      "target": "flow_engine_index_flowengine_getnextnodeid",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "method",
+      "confidence": "EXTRACTED",
+      "source_file": "src/lib/flow-engine/index.ts",
       "source_location": "L23",
       "weight": 1.0,
       "confidence_score": 1.0,
@@ -9880,6 +12327,17 @@
       "confidence_score": 1.0,
       "source": "flow_engine_index_flowengine",
       "target": "flow_engine_index_flowengine_validate"
+    },
+    {
+      "relation": "imports",
+      "context": "import",
+      "confidence": "EXTRACTED",
+      "source_file": "src/lib/voice-flow-runtime.ts",
+      "source_location": "L3",
+      "weight": 1.0,
+      "source": "lib_voice_flow_runtime",
+      "target": "flow_engine_index_flowengine",
+      "confidence_score": 1.0
     },
     {
       "relation": "references",
@@ -9926,14 +12384,25 @@
       "target": "flow_engine_index_flowengine_getnextnode"
     },
     {
+      "relation": "calls",
+      "context": "call",
+      "confidence": "EXTRACTED",
+      "source_file": "src/lib/flow-engine/index.ts",
+      "source_location": "L91",
+      "weight": 1.0,
+      "source": "flow_engine_index_flowengine_getnextnode",
+      "target": "flow_engine_index_flowengine_getnextnodeid",
+      "confidence_score": 1.0
+    },
+    {
       "relation": "contains",
       "confidence": "EXTRACTED",
       "source_file": "src/lib/integration-auth.ts",
       "source_location": "L6",
       "weight": 1.0,
+      "confidence_score": 1.0,
       "source": "lib_integration_auth",
-      "target": "lib_integration_auth_verifyintegrationorgaccess",
-      "confidence_score": 1.0
+      "target": "lib_integration_auth_verifyintegrationorgaccess"
     },
     {
       "relation": "imports_from",
@@ -9942,9 +12411,9 @@
       "source_file": "src/lib/integration-auth.ts",
       "source_location": "L2",
       "weight": 1.0,
+      "confidence_score": 1.0,
       "source": "lib_integration_auth",
-      "target": "supabase_server",
-      "confidence_score": 1.0
+      "target": "supabase_server"
     },
     {
       "relation": "imports",
@@ -9953,9 +12422,9 @@
       "source_file": "src/lib/integration-auth.ts",
       "source_location": "L2",
       "weight": 1.0,
+      "confidence_score": 1.0,
       "source": "lib_integration_auth",
-      "target": "supabase_server_createclient",
-      "confidence_score": 1.0
+      "target": "supabase_server_createclient"
     },
     {
       "relation": "contains",
@@ -10462,6 +12931,39 @@
       "target": "lib_pending_speech_takependingspeech"
     },
     {
+      "relation": "imports_from",
+      "context": "import",
+      "confidence": "EXTRACTED",
+      "source_file": "src/app/api/twilio/reply/route.ts",
+      "source_location": "L15",
+      "weight": 1.0,
+      "confidence_score": 1.0,
+      "source": "reply_route",
+      "target": "lib_pending_speech"
+    },
+    {
+      "relation": "imports",
+      "context": "import",
+      "confidence": "EXTRACTED",
+      "source_file": "src/app/api/twilio/reply/route.ts",
+      "source_location": "L15",
+      "weight": 1.0,
+      "confidence_score": 1.0,
+      "source": "reply_route",
+      "target": "lib_pending_speech_takependingspeech"
+    },
+    {
+      "relation": "calls",
+      "context": "call",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "src/app/api/twilio/reply/route.ts",
+      "source_location": "L27",
+      "weight": 1.0,
+      "source": "reply_route_post",
+      "target": "lib_pending_speech_takependingspeech"
+    },
+    {
       "relation": "contains",
       "confidence": "EXTRACTED",
       "source_file": "src/lib/plans.ts",
@@ -10498,9 +13000,20 @@
       "source_file": "src/lib/twilio-webhook.ts",
       "source_location": "L4",
       "weight": 1.0,
+      "confidence_score": 1.0,
       "source": "lib_twilio_webhook",
-      "target": "lib_public_url",
-      "confidence_score": 1.0
+      "target": "lib_public_url"
+    },
+    {
+      "relation": "imports_from",
+      "context": "import",
+      "confidence": "EXTRACTED",
+      "source_file": "src/app/api/twilio/reply/route.ts",
+      "source_location": "L14",
+      "weight": 1.0,
+      "confidence_score": 1.0,
+      "source": "reply_route",
+      "target": "lib_public_url"
     },
     {
       "relation": "calls",
@@ -10520,9 +13033,9 @@
       "source_file": "src/lib/twilio-webhook.ts",
       "source_location": "L4",
       "weight": 1.0,
+      "confidence_score": 1.0,
       "source": "lib_twilio_webhook",
-      "target": "lib_public_url_getpublicappurl",
-      "confidence_score": 1.0
+      "target": "lib_public_url_getpublicappurl"
     },
     {
       "relation": "calls",
@@ -10534,6 +13047,163 @@
       "weight": 1.0,
       "source": "lib_twilio_webhook_validatetwiliowebhook",
       "target": "lib_public_url_getpublicappurl"
+    },
+    {
+      "relation": "imports",
+      "context": "import",
+      "confidence": "EXTRACTED",
+      "source_file": "src/app/api/twilio/reply/route.ts",
+      "source_location": "L14",
+      "weight": 1.0,
+      "confidence_score": 1.0,
+      "source": "reply_route",
+      "target": "lib_public_url_getpublicappurl"
+    },
+    {
+      "relation": "calls",
+      "context": "call",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "src/app/api/twilio/reply/route.ts",
+      "source_location": "L19",
+      "weight": 1.0,
+      "source": "reply_route_post",
+      "target": "lib_public_url_getpublicappurl"
+    },
+    {
+      "relation": "imports_from",
+      "context": "import",
+      "confidence": "EXTRACTED",
+      "source_file": "src/lib/stripe-prices.ts",
+      "source_location": "L3",
+      "weight": 1.0,
+      "confidence_score": 1.0,
+      "source": "lib_stripe_prices",
+      "target": "lib_stripe"
+    },
+    {
+      "relation": "imports",
+      "context": "import",
+      "confidence": "EXTRACTED",
+      "source_file": "src/lib/stripe-prices.ts",
+      "source_location": "L3",
+      "weight": 1.0,
+      "confidence_score": 1.0,
+      "source": "lib_stripe_prices",
+      "target": "lib_stripe_getstripe"
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "src/lib/stripe-prices.ts",
+      "source_location": "L24",
+      "weight": 1.0,
+      "confidence_score": 1.0,
+      "source": "lib_stripe_prices",
+      "target": "lib_stripe_prices_fromenv"
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "src/lib/stripe-prices.ts",
+      "source_location": "L16",
+      "weight": 1.0,
+      "confidence_score": 1.0,
+      "source": "lib_stripe_prices",
+      "target": "lib_stripe_prices_lookup_keys"
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "src/lib/stripe-prices.ts",
+      "source_location": "L32",
+      "weight": 1.0,
+      "confidence_score": 1.0,
+      "source": "lib_stripe_prices",
+      "target": "lib_stripe_prices_matchplan"
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "src/lib/stripe-prices.ts",
+      "source_location": "L7",
+      "weight": 1.0,
+      "confidence_score": 1.0,
+      "source": "lib_stripe_prices",
+      "target": "lib_stripe_prices_plan_hints"
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "src/lib/stripe-prices.ts",
+      "source_location": "L117",
+      "weight": 1.0,
+      "confidence_score": 1.0,
+      "source": "lib_stripe_prices",
+      "target": "lib_stripe_prices_planfromresolvedprices"
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "src/lib/stripe-prices.ts",
+      "source_location": "L5",
+      "weight": 1.0,
+      "confidence_score": 1.0,
+      "source": "lib_stripe_prices",
+      "target": "lib_stripe_prices_plankey"
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "src/lib/stripe-prices.ts",
+      "source_location": "L22",
+      "weight": 1.0,
+      "confidence_score": 1.0,
+      "source": "lib_stripe_prices",
+      "target": "lib_stripe_prices_resolvedstripeprices"
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "src/lib/stripe-prices.ts",
+      "source_location": "L46",
+      "weight": 1.0,
+      "confidence_score": 1.0,
+      "source": "lib_stripe_prices",
+      "target": "lib_stripe_prices_resolvestripepriceids"
+    },
+    {
+      "relation": "calls",
+      "context": "call",
+      "confidence": "EXTRACTED",
+      "source_file": "src/lib/stripe-prices.ts",
+      "source_location": "L47",
+      "weight": 1.0,
+      "confidence_score": 1.0,
+      "source": "lib_stripe_prices_resolvestripepriceids",
+      "target": "lib_stripe_prices_fromenv"
+    },
+    {
+      "relation": "calls",
+      "context": "call",
+      "confidence": "EXTRACTED",
+      "source_file": "src/lib/stripe-prices.ts",
+      "source_location": "L104",
+      "weight": 1.0,
+      "confidence_score": 1.0,
+      "source": "lib_stripe_prices_resolvestripepriceids",
+      "target": "lib_stripe_prices_matchplan"
+    },
+    {
+      "relation": "calls",
+      "context": "call",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "src/lib/stripe-prices.ts",
+      "source_location": "L58",
+      "weight": 1.0,
+      "source": "lib_stripe_prices_resolvestripepriceids",
+      "target": "lib_stripe_getstripe"
     },
     {
       "relation": "contains",
@@ -10561,9 +13231,9 @@
       "source_file": "src/lib/stripe.ts",
       "source_location": "L23",
       "weight": 1.0,
+      "confidence_score": 1.0,
       "source": "lib_stripe",
-      "target": "lib_stripe_planfromstripepriceid",
-      "confidence_score": 1.0
+      "target": "lib_stripe_planfromstripepriceid"
     },
     {
       "relation": "contains",
@@ -10581,9 +13251,9 @@
       "source_file": "src/lib/stripe.ts",
       "source_location": "L32",
       "weight": 1.0,
+      "confidence_score": 1.0,
       "source": "lib_stripe",
-      "target": "lib_stripe_stripemetereventname",
-      "confidence_score": 1.0
+      "target": "lib_stripe_stripemetereventname"
     },
     {
       "relation": "contains",
@@ -10613,9 +13283,9 @@
       "source_file": "src/lib/stripe.ts",
       "source_location": "L24",
       "weight": 1.0,
+      "confidence_score": 1.0,
       "source": "lib_stripe_planfromstripepriceid",
-      "target": "lib_stripe_stripepriceids",
-      "confidence_score": 1.0
+      "target": "lib_stripe_stripepriceids"
     },
     {
       "relation": "calls",
@@ -10624,9 +13294,9 @@
       "source_file": "src/lib/stripe.ts",
       "source_location": "L45",
       "weight": 1.0,
+      "confidence_score": 1.0,
       "source": "lib_stripe_reportvoiceminutes",
-      "target": "lib_stripe_stripemetereventname",
-      "confidence_score": 1.0
+      "target": "lib_stripe_stripemetereventname"
     },
     {
       "relation": "imports_from",
@@ -10637,6 +13307,39 @@
       "weight": 1.0,
       "confidence_score": 1.0,
       "source": "lib_twilio_voice_context",
+      "target": "supabase_admin"
+    },
+    {
+      "relation": "imports_from",
+      "context": "import",
+      "confidence": "EXTRACTED",
+      "source_file": "src/lib/voice-flow-runtime.ts",
+      "source_location": "L2",
+      "weight": 1.0,
+      "source": "lib_voice_flow_runtime",
+      "target": "supabase_admin",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "imports_from",
+      "context": "import",
+      "confidence": "EXTRACTED",
+      "source_file": "src/app/api/twilio/reply/route.ts",
+      "source_location": "L16",
+      "weight": 1.0,
+      "confidence_score": 1.0,
+      "source": "reply_route",
+      "target": "supabase_admin"
+    },
+    {
+      "relation": "imports_from",
+      "context": "import",
+      "confidence": "EXTRACTED",
+      "source_file": "src/app/api/twilio/status/route.ts",
+      "source_location": "L2",
+      "weight": 1.0,
+      "confidence_score": 1.0,
+      "source": "status_route",
       "target": "supabase_admin"
     },
     {
@@ -10672,6 +13375,61 @@
       "target": "supabase_admin_createadminclient"
     },
     {
+      "relation": "imports",
+      "context": "import",
+      "confidence": "EXTRACTED",
+      "source_file": "src/lib/voice-flow-runtime.ts",
+      "source_location": "L2",
+      "weight": 1.0,
+      "source": "lib_voice_flow_runtime",
+      "target": "supabase_admin_createadminclient",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "calls",
+      "context": "call",
+      "confidence": "EXTRACTED",
+      "source_file": "src/lib/voice-flow-runtime.ts",
+      "source_location": "L21",
+      "weight": 1.0,
+      "source": "lib_voice_flow_runtime_getadmin",
+      "target": "supabase_admin_createadminclient",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "imports",
+      "context": "import",
+      "confidence": "EXTRACTED",
+      "source_file": "src/app/api/twilio/reply/route.ts",
+      "source_location": "L16",
+      "weight": 1.0,
+      "confidence_score": 1.0,
+      "source": "reply_route",
+      "target": "supabase_admin_createadminclient"
+    },
+    {
+      "relation": "calls",
+      "context": "call",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "src/app/api/twilio/reply/route.ts",
+      "source_location": "L55",
+      "weight": 1.0,
+      "source": "reply_route_post",
+      "target": "supabase_admin_createadminclient"
+    },
+    {
+      "relation": "imports",
+      "context": "import",
+      "confidence": "EXTRACTED",
+      "source_file": "src/app/api/twilio/status/route.ts",
+      "source_location": "L2",
+      "weight": 1.0,
+      "confidence_score": 1.0,
+      "source": "status_route",
+      "target": "supabase_admin_createadminclient"
+    },
+    {
       "relation": "contains",
       "confidence": "EXTRACTED",
       "source_file": "src/lib/supabase/client.ts",
@@ -10697,9 +13455,9 @@
       "source_file": "src/lib/telnyx-webhook.ts",
       "source_location": "L6",
       "weight": 1.0,
+      "confidence_score": 1.0,
       "source": "lib_telnyx_webhook",
-      "target": "lib_telnyx_webhook_validatetelnyxwebhook",
-      "confidence_score": 1.0
+      "target": "lib_telnyx_webhook_validatetelnyxwebhook"
     },
     {
       "relation": "contains",
@@ -10960,6 +13718,17 @@
       "target": "lib_twilio_voice_context_resolvevoicecontext"
     },
     {
+      "relation": "imports_from",
+      "context": "import",
+      "confidence": "EXTRACTED",
+      "source_file": "src/app/api/twilio/reply/route.ts",
+      "source_location": "L8",
+      "weight": 1.0,
+      "confidence_score": 1.0,
+      "source": "reply_route",
+      "target": "lib_twilio_voice_context"
+    },
+    {
       "relation": "calls",
       "context": "call",
       "confidence": "EXTRACTED",
@@ -11026,14 +13795,69 @@
       "target": "lib_twilio_voice_context_getadmin"
     },
     {
+      "relation": "imports",
+      "context": "import",
+      "confidence": "EXTRACTED",
+      "source_file": "src/app/api/twilio/reply/route.ts",
+      "source_location": "L8",
+      "weight": 1.0,
+      "confidence_score": 1.0,
+      "source": "reply_route",
+      "target": "lib_twilio_voice_context_resolvevoicecontext"
+    },
+    {
+      "relation": "calls",
+      "context": "call",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "src/app/api/twilio/reply/route.ts",
+      "source_location": "L38",
+      "weight": 1.0,
+      "source": "reply_route_post",
+      "target": "lib_twilio_voice_context_resolvevoicecontext"
+    },
+    {
+      "relation": "imports",
+      "context": "import",
+      "confidence": "EXTRACTED",
+      "source_file": "src/app/api/twilio/reply/route.ts",
+      "source_location": "L8",
+      "weight": 1.0,
+      "confidence_score": 1.0,
+      "source": "reply_route",
+      "target": "lib_twilio_voice_context_loadcallhistory"
+    },
+    {
+      "relation": "calls",
+      "context": "call",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "src/app/api/twilio/reply/route.ts",
+      "source_location": "L39",
+      "weight": 1.0,
+      "source": "reply_route_post",
+      "target": "lib_twilio_voice_context_loadcallhistory"
+    },
+    {
+      "relation": "imports",
+      "context": "import",
+      "confidence": "EXTRACTED",
+      "source_file": "src/app/api/twilio/reply/route.ts",
+      "source_location": "L8",
+      "weight": 1.0,
+      "confidence_score": 1.0,
+      "source": "reply_route",
+      "target": "lib_twilio_voice_context_appendtranscript"
+    },
+    {
       "relation": "contains",
       "confidence": "EXTRACTED",
       "source_file": "src/lib/twilio-webhook.ts",
       "source_location": "L31",
       "weight": 1.0,
+      "confidence_score": 1.0,
       "source": "lib_twilio_webhook",
-      "target": "lib_twilio_webhook_escapexml",
-      "confidence_score": 1.0
+      "target": "lib_twilio_webhook_escapexml"
     },
     {
       "relation": "contains",
@@ -11041,9 +13865,9 @@
       "source_file": "src/lib/twilio-webhook.ts",
       "source_location": "L6",
       "weight": 1.0,
+      "confidence_score": 1.0,
       "source": "lib_twilio_webhook",
-      "target": "lib_twilio_webhook_formdatatoparams",
-      "confidence_score": 1.0
+      "target": "lib_twilio_webhook_formdatatoparams"
     },
     {
       "relation": "contains",
@@ -11051,9 +13875,31 @@
       "source_file": "src/lib/twilio-webhook.ts",
       "source_location": "L15",
       "weight": 1.0,
+      "confidence_score": 1.0,
       "source": "lib_twilio_webhook",
-      "target": "lib_twilio_webhook_validatetwiliowebhook",
-      "confidence_score": 1.0
+      "target": "lib_twilio_webhook_validatetwiliowebhook"
+    },
+    {
+      "relation": "imports_from",
+      "context": "import",
+      "confidence": "EXTRACTED",
+      "source_file": "src/app/api/twilio/reply/route.ts",
+      "source_location": "L17",
+      "weight": 1.0,
+      "confidence_score": 1.0,
+      "source": "reply_route",
+      "target": "lib_twilio_webhook"
+    },
+    {
+      "relation": "imports_from",
+      "context": "import",
+      "confidence": "EXTRACTED",
+      "source_file": "src/app/api/twilio/status/route.ts",
+      "source_location": "L3",
+      "weight": 1.0,
+      "confidence_score": 1.0,
+      "source": "status_route",
+      "target": "lib_twilio_webhook"
     },
     {
       "relation": "calls",
@@ -11062,9 +13908,42 @@
       "source_file": "src/lib/twilio-webhook.ts",
       "source_location": "L28",
       "weight": 1.0,
+      "confidence_score": 1.0,
       "source": "lib_twilio_webhook_validatetwiliowebhook",
-      "target": "lib_twilio_webhook_formdatatoparams",
-      "confidence_score": 1.0
+      "target": "lib_twilio_webhook_formdatatoparams"
+    },
+    {
+      "relation": "imports",
+      "context": "import",
+      "confidence": "EXTRACTED",
+      "source_file": "src/app/api/twilio/reply/route.ts",
+      "source_location": "L17",
+      "weight": 1.0,
+      "confidence_score": 1.0,
+      "source": "reply_route",
+      "target": "lib_twilio_webhook_validatetwiliowebhook"
+    },
+    {
+      "relation": "calls",
+      "context": "call",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "src/app/api/twilio/reply/route.ts",
+      "source_location": "L25",
+      "weight": 1.0,
+      "source": "reply_route_post",
+      "target": "lib_twilio_webhook_validatetwiliowebhook"
+    },
+    {
+      "relation": "imports",
+      "context": "import",
+      "confidence": "EXTRACTED",
+      "source_file": "src/app/api/twilio/status/route.ts",
+      "source_location": "L3",
+      "weight": 1.0,
+      "confidence_score": 1.0,
+      "source": "status_route",
+      "target": "lib_twilio_webhook_validatetwiliowebhook"
     },
     {
       "relation": "contains",
@@ -11172,9 +14051,9 @@
       "source_file": "src/lib/twilio.ts",
       "source_location": "L15",
       "weight": 1.0,
+      "confidence_score": 1.0,
       "source": "lib_twilio",
-      "target": "lib_twilio_issimpletwiliovoicemode",
-      "confidence_score": 1.0
+      "target": "lib_twilio_issimpletwiliovoicemode"
     },
     {
       "relation": "contains",
@@ -11217,6 +14096,17 @@
       "target": "lib_twilio_usesimpletwiliovoice"
     },
     {
+      "relation": "imports_from",
+      "context": "import",
+      "confidence": "EXTRACTED",
+      "source_file": "src/app/api/twilio/reply/route.ts",
+      "source_location": "L3",
+      "weight": 1.0,
+      "confidence_score": 1.0,
+      "source": "reply_route",
+      "target": "lib_twilio"
+    },
+    {
       "relation": "calls",
       "context": "call",
       "confidence": "EXTRACTED",
@@ -11226,6 +14116,28 @@
       "confidence_score": 1.0,
       "source": "lib_twilio_buildconversationrelaytwiml",
       "target": "lib_twilio_getorchestratorwssurl"
+    },
+    {
+      "relation": "imports",
+      "context": "import",
+      "confidence": "EXTRACTED",
+      "source_file": "src/app/api/twilio/reply/route.ts",
+      "source_location": "L3",
+      "weight": 1.0,
+      "confidence_score": 1.0,
+      "source": "reply_route",
+      "target": "lib_twilio_twimlresponse"
+    },
+    {
+      "relation": "calls",
+      "context": "call",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "src/app/api/twilio/reply/route.ts",
+      "source_location": "L29",
+      "weight": 1.0,
+      "source": "reply_route_post",
+      "target": "lib_twilio_twimlresponse"
     },
     {
       "relation": "calls",
@@ -11259,6 +14171,50 @@
       "confidence_score": 1.0,
       "source": "lib_twilio_buildsimplevoicetwiml",
       "target": "lib_twilio_addspeechgather"
+    },
+    {
+      "relation": "imports",
+      "context": "import",
+      "confidence": "EXTRACTED",
+      "source_file": "src/app/api/twilio/reply/route.ts",
+      "source_location": "L3",
+      "weight": 1.0,
+      "confidence_score": 1.0,
+      "source": "reply_route",
+      "target": "lib_twilio_buildsimplevoicetwiml"
+    },
+    {
+      "relation": "calls",
+      "context": "call",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "src/app/api/twilio/reply/route.ts",
+      "source_location": "L30",
+      "weight": 1.0,
+      "source": "reply_route_post",
+      "target": "lib_twilio_buildsimplevoicetwiml"
+    },
+    {
+      "relation": "imports",
+      "context": "import",
+      "confidence": "EXTRACTED",
+      "source_file": "src/app/api/twilio/reply/route.ts",
+      "source_location": "L3",
+      "weight": 1.0,
+      "confidence_score": 1.0,
+      "source": "reply_route",
+      "target": "lib_twilio_buildtransfertwiml"
+    },
+    {
+      "relation": "calls",
+      "context": "call",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "src/app/api/twilio/reply/route.ts",
+      "source_location": "L69",
+      "weight": 1.0,
+      "source": "reply_route_post",
+      "target": "lib_twilio_buildtransfertwiml"
     },
     {
       "relation": "calls",
@@ -11354,6 +14310,61 @@
       "target": "lib_types_plan"
     },
     {
+      "relation": "imports_from",
+      "context": "import",
+      "confidence": "EXTRACTED",
+      "source_file": "src/lib/voice-flow-runtime.ts",
+      "source_location": "L4",
+      "weight": 1.0,
+      "source": "lib_voice_flow_runtime",
+      "target": "lib_types",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "imports",
+      "context": "import",
+      "confidence": "EXTRACTED",
+      "source_file": "src/lib/voice-flow-runtime.ts",
+      "source_location": "L4",
+      "weight": 1.0,
+      "source": "lib_voice_flow_runtime",
+      "target": "lib_types_flownode",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "references",
+      "context": "field",
+      "confidence": "EXTRACTED",
+      "source_file": "src/lib/voice-flow-runtime.ts",
+      "source_location": "L15",
+      "weight": 1.0,
+      "source": "lib_voice_flow_runtime_publishedflow",
+      "target": "lib_types_flownode",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "imports",
+      "context": "import",
+      "confidence": "EXTRACTED",
+      "source_file": "src/lib/voice-flow-runtime.ts",
+      "source_location": "L4",
+      "weight": 1.0,
+      "source": "lib_voice_flow_runtime",
+      "target": "lib_types_flowedge",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "references",
+      "context": "field",
+      "confidence": "EXTRACTED",
+      "source_file": "src/lib/voice-flow-runtime.ts",
+      "source_location": "L16",
+      "weight": 1.0,
+      "source": "lib_voice_flow_runtime_publishedflow",
+      "target": "lib_types_flowedge",
+      "confidence_score": 1.0
+    },
+    {
       "relation": "contains",
       "confidence": "EXTRACTED",
       "source_file": "src/lib/voice-conversation.ts",
@@ -11362,6 +14373,271 @@
       "confidence_score": 1.0,
       "source": "lib_voice_conversation",
       "target": "lib_voice_conversation_generatevoicereply"
+    },
+    {
+      "relation": "imports_from",
+      "context": "import",
+      "confidence": "EXTRACTED",
+      "source_file": "src/lib/voice-flow-runtime.ts",
+      "source_location": "L5",
+      "weight": 1.0,
+      "source": "lib_voice_flow_runtime",
+      "target": "lib_voice_conversation",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "imports_from",
+      "context": "import",
+      "confidence": "EXTRACTED",
+      "source_file": "src/app/api/twilio/reply/route.ts",
+      "source_location": "L13",
+      "weight": 1.0,
+      "confidence_score": 1.0,
+      "source": "reply_route",
+      "target": "lib_voice_conversation"
+    },
+    {
+      "relation": "imports",
+      "context": "import",
+      "confidence": "EXTRACTED",
+      "source_file": "src/lib/voice-flow-runtime.ts",
+      "source_location": "L5",
+      "weight": 1.0,
+      "source": "lib_voice_flow_runtime",
+      "target": "lib_voice_conversation_generatevoicereply",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "calls",
+      "context": "call",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "src/lib/voice-flow-runtime.ts",
+      "source_location": "L160",
+      "weight": 1.0,
+      "source": "lib_voice_flow_runtime_processvoiceturn",
+      "target": "lib_voice_conversation_generatevoicereply"
+    },
+    {
+      "relation": "imports",
+      "context": "import",
+      "confidence": "EXTRACTED",
+      "source_file": "src/app/api/twilio/reply/route.ts",
+      "source_location": "L13",
+      "weight": 1.0,
+      "confidence_score": 1.0,
+      "source": "reply_route",
+      "target": "lib_voice_conversation_generatevoicereply"
+    },
+    {
+      "relation": "calls",
+      "context": "call",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "src/app/api/twilio/reply/route.ts",
+      "source_location": "L42",
+      "weight": 1.0,
+      "source": "reply_route_post",
+      "target": "lib_voice_conversation_generatevoicereply"
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "src/lib/voice-flow-runtime.ts",
+      "source_location": "L7",
+      "weight": 1.0,
+      "source": "lib_voice_flow_runtime",
+      "target": "lib_voice_flow_runtime_flowstate",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "src/lib/voice-flow-runtime.ts",
+      "source_location": "L19",
+      "weight": 1.0,
+      "source": "lib_voice_flow_runtime",
+      "target": "lib_voice_flow_runtime_getadmin",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "src/lib/voice-flow-runtime.ts",
+      "source_location": "L50",
+      "weight": 1.0,
+      "source": "lib_voice_flow_runtime",
+      "target": "lib_voice_flow_runtime_getflowwelcomegreeting",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "src/lib/voice-flow-runtime.ts",
+      "source_location": "L95",
+      "weight": 1.0,
+      "source": "lib_voice_flow_runtime",
+      "target": "lib_voice_flow_runtime_initialflowstate",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "src/lib/voice-flow-runtime.ts",
+      "source_location": "L62",
+      "weight": 1.0,
+      "source": "lib_voice_flow_runtime",
+      "target": "lib_voice_flow_runtime_loadflowstate",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "src/lib/voice-flow-runtime.ts",
+      "source_location": "L27",
+      "weight": 1.0,
+      "source": "lib_voice_flow_runtime",
+      "target": "lib_voice_flow_runtime_loadpublishedflow",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "src/lib/voice-flow-runtime.ts",
+      "source_location": "L148",
+      "weight": 1.0,
+      "source": "lib_voice_flow_runtime",
+      "target": "lib_voice_flow_runtime_processvoiceturn",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "src/lib/voice-flow-runtime.ts",
+      "source_location": "L13",
+      "weight": 1.0,
+      "source": "lib_voice_flow_runtime",
+      "target": "lib_voice_flow_runtime_publishedflow",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "src/lib/voice-flow-runtime.ts",
+      "source_location": "L108",
+      "weight": 1.0,
+      "source": "lib_voice_flow_runtime",
+      "target": "lib_voice_flow_runtime_rununtilresponse",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "src/lib/voice-flow-runtime.ts",
+      "source_location": "L76",
+      "weight": 1.0,
+      "source": "lib_voice_flow_runtime",
+      "target": "lib_voice_flow_runtime_saveflowstate",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "calls",
+      "context": "call",
+      "confidence": "EXTRACTED",
+      "source_file": "src/lib/voice-flow-runtime.ts",
+      "source_location": "L63",
+      "weight": 1.0,
+      "source": "lib_voice_flow_runtime_loadflowstate",
+      "target": "lib_voice_flow_runtime_getadmin",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "calls",
+      "context": "call",
+      "confidence": "EXTRACTED",
+      "source_file": "src/lib/voice-flow-runtime.ts",
+      "source_location": "L28",
+      "weight": 1.0,
+      "source": "lib_voice_flow_runtime_loadpublishedflow",
+      "target": "lib_voice_flow_runtime_getadmin",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "calls",
+      "context": "call",
+      "confidence": "EXTRACTED",
+      "source_file": "src/lib/voice-flow-runtime.ts",
+      "source_location": "L77",
+      "weight": 1.0,
+      "source": "lib_voice_flow_runtime_saveflowstate",
+      "target": "lib_voice_flow_runtime_getadmin",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "calls",
+      "context": "call",
+      "confidence": "EXTRACTED",
+      "source_file": "src/lib/voice-flow-runtime.ts",
+      "source_location": "L51",
+      "weight": 1.0,
+      "source": "lib_voice_flow_runtime_getflowwelcomegreeting",
+      "target": "lib_voice_flow_runtime_loadpublishedflow",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "calls",
+      "context": "call",
+      "confidence": "EXTRACTED",
+      "source_file": "src/lib/voice-flow-runtime.ts",
+      "source_location": "L158",
+      "weight": 1.0,
+      "source": "lib_voice_flow_runtime_processvoiceturn",
+      "target": "lib_voice_flow_runtime_loadpublishedflow",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "calls",
+      "context": "call",
+      "confidence": "EXTRACTED",
+      "source_file": "src/lib/voice-flow-runtime.ts",
+      "source_location": "L169",
+      "weight": 1.0,
+      "source": "lib_voice_flow_runtime_processvoiceturn",
+      "target": "lib_voice_flow_runtime_loadflowstate",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "calls",
+      "context": "call",
+      "confidence": "EXTRACTED",
+      "source_file": "src/lib/voice-flow-runtime.ts",
+      "source_location": "L182",
+      "weight": 1.0,
+      "source": "lib_voice_flow_runtime_processvoiceturn",
+      "target": "lib_voice_flow_runtime_saveflowstate",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "calls",
+      "context": "call",
+      "confidence": "EXTRACTED",
+      "source_file": "src/lib/voice-flow-runtime.ts",
+      "source_location": "L171",
+      "weight": 1.0,
+      "source": "lib_voice_flow_runtime_processvoiceturn",
+      "target": "lib_voice_flow_runtime_initialflowstate",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "calls",
+      "context": "call",
+      "confidence": "EXTRACTED",
+      "source_file": "src/lib/voice-flow-runtime.ts",
+      "source_location": "L174",
+      "weight": 1.0,
+      "source": "lib_voice_flow_runtime_processvoiceturn",
+      "target": "lib_voice_flow_runtime_rununtilresponse",
+      "confidence_score": 1.0
     },
     {
       "relation": "contains",
@@ -11386,12 +14662,22 @@
     {
       "relation": "contains",
       "confidence": "EXTRACTED",
+      "source_file": "src/middleware.ts",
+      "source_location": "L4",
+      "weight": 1.0,
+      "confidence_score": 1.0,
+      "source": "src_middleware",
+      "target": "src_middleware_public_paths"
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
       "source_file": "tsconfig.json",
       "source_location": "L2",
       "weight": 1.0,
+      "confidence_score": 1.0,
       "source": "users_dorrus_project_voiceagent_tsconfig_json",
-      "target": "tsconfig_compileroptions",
-      "confidence_score": 1.0
+      "target": "tsconfig_compileroptions"
     },
     {
       "relation": "contains",
@@ -11399,9 +14685,9 @@
       "source_file": "tsconfig.json",
       "source_location": "L38",
       "weight": 1.0,
+      "confidence_score": 1.0,
       "source": "users_dorrus_project_voiceagent_tsconfig_json",
-      "target": "tsconfig_exclude",
-      "confidence_score": 1.0
+      "target": "tsconfig_exclude"
     },
     {
       "relation": "contains",
@@ -11409,9 +14695,9 @@
       "source_file": "tsconfig.json",
       "source_location": "L31",
       "weight": 1.0,
+      "confidence_score": 1.0,
       "source": "users_dorrus_project_voiceagent_tsconfig_json",
-      "target": "tsconfig_include",
-      "confidence_score": 1.0
+      "target": "tsconfig_include"
     },
     {
       "relation": "contains",
@@ -11609,9 +14895,9 @@
       "source_file": "vercel.json",
       "source_location": "L3",
       "weight": 1.0,
+      "confidence_score": 1.0,
       "source": "vercel",
-      "target": "vercel_framework",
-      "confidence_score": 1.0
+      "target": "vercel_framework"
     },
     {
       "relation": "contains",
@@ -11619,9 +14905,9 @@
       "source_file": "vercel.json",
       "source_location": "L2",
       "weight": 1.0,
+      "confidence_score": 1.0,
       "source": "vercel",
-      "target": "vercel_schema",
-      "confidence_score": 1.0
+      "target": "vercel_schema"
     },
     {
       "relation": "contains",
@@ -11629,9 +14915,9 @@
       "source_file": "DECISIONS.md",
       "source_location": "L1",
       "weight": 1.0,
+      "confidence_score": 1.0,
       "source": "users_dorrus_project_voiceagent_decisions_md",
-      "target": "decisions_voiceagent_confirmed_product_decisions",
-      "confidence_score": 1.0
+      "target": "decisions_voiceagent_confirmed_product_decisions"
     },
     {
       "relation": "contains",
@@ -11709,9 +14995,9 @@
       "source_file": "README.md",
       "source_location": "L1",
       "weight": 1.0,
+      "confidence_score": 1.0,
       "source": "users_dorrus_project_voiceagent_readme_md",
-      "target": "readme_voiceagent",
-      "confidence_score": 1.0
+      "target": "readme_voiceagent"
     },
     {
       "relation": "contains",
@@ -11792,8 +15078,18 @@
       "confidence_score": 1.0,
       "source": "readme_voiceagent",
       "target": "readme_twilio_setup_optional_legacy"
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "src/app/api/twilio/reply/route.ts",
+      "source_location": "L18",
+      "weight": 1.0,
+      "confidence_score": 1.0,
+      "source": "reply_route",
+      "target": "reply_route_post"
     }
   ],
   "hyperedges": [],
-  "built_at_commit": "718dd682cd189b51a4955cb989a48d2818b484bf"
+  "built_at_commit": "262edb05c1375286d37dbcdda665eee37e7f7f46"
 }

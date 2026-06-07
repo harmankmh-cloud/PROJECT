@@ -82,9 +82,13 @@ export class FlowEngine {
     }
   }
 
-  private getNextNode(nodeId: string): string | undefined {
+  getNextNodeId(nodeId: string): string | undefined {
     const edge = this.edges.find((e) => e.source === nodeId);
     return edge?.target;
+  }
+
+  private getNextNode(nodeId: string): string | undefined {
+    return this.getNextNodeId(nodeId);
   }
 
   validate(): string[] {

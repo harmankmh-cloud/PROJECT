@@ -1,9 +1,7 @@
 import type { WebSocket } from "ws";
-import { LlmSession } from "./llm.js";
 import type { AgentConfig, InboundMessage, TextResponse } from "./types.js";
 
 export class CallSession {
-  private llm: LlmSession | null = null;
   private callSid: string | null = null;
   private from: string | null = null;
   private transcripts: Array<{ role: string; content: string }> = [];
@@ -29,16 +27,11 @@ export class CallSession {
         case "setup":
           this.callSid = msg.callSid;
           this.from = msg.from;
-          this.llm = new LlmSession(
-            this.config.systemPrompt,
-            this.config.knowledgeContext,
-            this.config.contactMemory
-          );
           console.log("Relay setup", { callSid: this.callSid, from: this.from });
           break;
 
         case "prompt":
-          if (!this.llm || !msg.voicePrompt?.trim()) return;
+          if (!msg.voicePrompt?.trim()) return;
           if (!msg.last) return;
           if (this.isSpeaking) return;
 
@@ -58,24 +51,21 @@ export class CallSession {
           this.transcripts.push({ role: "user", content: msg.voicePrompt });
           this.isSpeaking = true;
 
-          let streamedAny = false;
-          const { text, toolResult } = await this.llm.respondStream(
-            msg.voicePrompt,
-            (token) => {
-              streamedAny = true;
-              this.send({ type: "text", token, last: false });
-            }
-          );
+          const reply = await this.fetchReply(msg.voicePrompt);
+          const text = reply.text || "What can I help you with?";
 
-          if (!streamedAny && text) {
-            this.send({ type: "text", token: text, last: false });
+          const parts = text.match(/\S+\s*/g) || [text];
+          for (const part of parts) {
+            this.send({ type: "text", token: part, last: false });
           }
-
           this.send({ type: "text", token: "", last: true });
           this.transcripts.push({ role: "assistant", content: text });
 
-          if (toolResult?.action === "transfer" && this.config.escalationPhone) {
-            await this.notifyTransfer(toolResult);
+          if (reply.shouldTransfer && this.config.escalationPhone) {
+            await this.notifyTransfer({
+              action: "transfer",
+              handoffSummary: reply.transferSummary,
+            });
           }
 
           this.isSpeaking = false;
@@ -83,7 +73,6 @@ export class CallSession {
 
         case "interrupt":
           this.isSpeaking = false;
-          this.llm?.handleInterrupt(msg.utteranceUntilInterrupt);
           break;
 
         case "dtmf":
@@ -105,6 +94,44 @@ export class CallSession {
       });
       this.isSpeaking = false;
     }
+  }
+
+  private async fetchReply(userMessage: string) {
+    const apiUrl =
+      process.env.ORCHESTRATOR_APP_URL ||
+      process.env.NEXT_PUBLIC_APP_URL ||
+      "http://127.0.0.1:3002";
+    const apiKey = process.env.ORCHESTRATOR_API_KEY || "";
+
+    try {
+      const res = await fetch(`${apiUrl}/api/orchestrator/reply`, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          "x-orchestrator-key": apiKey,
+        },
+        body: JSON.stringify({
+          callSid: this.callSid,
+          orgId: this.config.orgId,
+          agentId: this.config.agentId,
+          userMessage,
+        }),
+        signal: AbortSignal.timeout(15000),
+      });
+
+      if (res.ok) {
+        return (await res.json()) as {
+          text: string;
+          shouldTransfer?: boolean;
+          transferSummary?: string;
+        };
+      }
+      console.warn("Reply API failed", { status: res.status });
+    } catch (err) {
+      console.error("Reply API error:", err);
+    }
+
+    return { text: "Sorry, I had a brief issue. Please try again.", shouldTransfer: false };
   }
 
   private async streamText(text: string) {

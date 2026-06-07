@@ -120,7 +120,18 @@ export async function PATCH(request: NextRequest) {
       }
     } else {
       const client = getTwilioClient();
-      const from = process.env.TWILIO_PHONE_NUMBER;
+      let from = process.env.TWILIO_PHONE_NUMBER;
+
+      const { data: orgNumbers } = await supabase
+        .from("va_phone_numbers")
+        .select("phone_number")
+        .eq("org_id", org.id)
+        .limit(1);
+
+      if (orgNumbers?.[0]?.phone_number) {
+        from = orgNumbers[0].phone_number;
+      }
+
       if (client && from) {
         for (const phone of eligible.slice(0, 10)) {
           await client.calls.create({
