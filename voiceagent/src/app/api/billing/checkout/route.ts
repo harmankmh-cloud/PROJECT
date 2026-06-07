@@ -3,9 +3,8 @@ import { createClient } from "@/lib/supabase/server";
 import { createAdminClient } from "@/lib/supabase/admin";
 import { getUserOrg } from "@/lib/auth";
 import { getPublicAppUrl } from "@/lib/public-url";
-import { getStripe, isStripeConfigured, planFromStripePriceId, stripePriceIds } from "@/lib/stripe";
-
-type PlanKey = "starter" | "pro" | "enterprise";
+import { getStripe, isStripeConfigured } from "@/lib/stripe";
+import { resolveStripePriceIds, type PlanKey } from "@/lib/stripe-prices";
 
 export async function POST(request: NextRequest) {
   if (!isStripeConfigured()) {
@@ -32,12 +31,14 @@ export async function POST(request: NextRequest) {
 
   const body = await request.json().catch(() => ({}));
   const plan = (body.plan || "starter") as PlanKey;
-  const prices = stripePriceIds();
+  const prices = await resolveStripePriceIds();
   const priceId = prices[plan];
 
   if (!priceId || !priceId.startsWith("price_")) {
     return NextResponse.json(
-      { error: `Missing STRIPE_PRICE_${plan.toUpperCase()}_MONTHLY (must be price_...)` },
+      {
+        error: `No Stripe price found for ${plan}. Create "VoiceAgent ${plan}" ($${plan === "starter" ? 99 : plan === "pro" ? 499 : 2000}/mo) in Stripe, or set STRIPE_PRICE_${plan.toUpperCase()}_MONTHLY.`,
+      },
       { status: 400 }
     );
   }
@@ -76,9 +77,6 @@ export async function POST(request: NextRequest) {
       },
     },
   });
-
-  // Validate mapping early so misconfigured env fails loudly in logs.
-  planFromStripePriceId(priceId);
 
   return NextResponse.json({ url: session.url });
 }

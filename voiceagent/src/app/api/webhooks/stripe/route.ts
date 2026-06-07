@@ -1,7 +1,8 @@
 import { NextRequest, NextResponse } from "next/server";
 import type Stripe from "stripe";
 import { createAdminClient } from "@/lib/supabase/admin";
-import { getStripe, planFromStripePriceId, reportVoiceMinutes } from "@/lib/stripe";
+import { getStripe, reportVoiceMinutes } from "@/lib/stripe";
+import { planFromResolvedPrices, resolveStripePriceIds } from "@/lib/stripe-prices";
 
 async function updateOrgPlan(
   admin: ReturnType<typeof createAdminClient>,
@@ -10,10 +11,11 @@ async function updateOrgPlan(
 ) {
   const priceId = subscription.items.data[0]?.price?.id;
   const metadataPlan = subscription.metadata?.plan;
+  const prices = await resolveStripePriceIds();
   const plan =
     metadataPlan === "enterprise" || metadataPlan === "pro" || metadataPlan === "starter"
       ? metadataPlan
-      : planFromStripePriceId(priceId);
+      : planFromResolvedPrices(priceId, prices);
 
   await admin
     .from("va_organizations")
