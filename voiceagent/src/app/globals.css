@@ -20,11 +20,35 @@ html {
   scroll-behavior: smooth;
 }
 
+@media (prefers-reduced-motion: reduce) {
+  html {
+    scroll-behavior: auto;
+  }
+
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
+}
+
 body {
   margin: 0;
   background: var(--color-cream);
   color: #0f172a;
   -webkit-font-smoothing: antialiased;
+}
+
+a:focus-visible,
+button:focus-visible,
+input:focus-visible,
+select:focus-visible,
+textarea:focus-visible,
+summary:focus-visible {
+  outline: 2px solid #14b8a6;
+  outline-offset: 2px;
 }
 
 input,
@@ -74,7 +98,7 @@ select {
   }
 
   .btn-gold {
-    @apply inline-flex items-center justify-center rounded-xl bg-gradient-to-r from-amber-400 via-gold-500 to-amber-400 px-5 py-2.5 text-sm font-semibold text-brand-950 shadow-[0_4px_20px_rgba(245,158,11,0.35)] transition hover:-translate-y-0.5 disabled:cursor-not-allowed disabled:opacity-60;
+    @apply inline-flex items-center justify-center rounded-xl bg-gradient-to-r from-amber-400 via-gold-500 to-amber-400 px-5 py-2.5 text-sm font-semibold text-brand-950 shadow-[0_4px_20px_rgba(245,158,11,0.35)] transition hover:-translate-y-0.5 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-amber-400/60 disabled:cursor-not-allowed disabled:opacity-60;
   }
 
   .btn-ghost {

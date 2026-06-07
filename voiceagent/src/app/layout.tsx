@@ -10,12 +10,17 @@ const jakarta = Plus_Jakarta_Sans({
 
 const siteUrl = `https://${BRAND.domain}`;
 const description =
-  "Enterprise AI phone agents for local businesses. Inbound support, appointment booking, warm transfer, and compliance built in.";
+  "AI phone agents for salons, clinics, and local service businesses. Answer calls 24/7, book appointments, sync CRM, and warm-transfer with compliance built in.";
 
 export const metadata: Metadata = {
   title: { default: `${BRAND.name} — ${BRAND.tagline}`, template: `%s · ${BRAND.name}` },
   description,
+  authors: [{ name: BRAND.name, url: siteUrl }],
   metadataBase: new URL(siteUrl),
+  alternates: {
+    canonical: "/",
+    languages: { "en-CA": siteUrl, "fr-CA": siteUrl },
+  },
   openGraph: {
     type: "website",
     locale: "en_CA",
@@ -23,11 +28,13 @@ export const metadata: Metadata = {
     siteName: BRAND.name,
     title: `${BRAND.name} — ${BRAND.tagline}`,
     description,
+    images: [{ url: "/opengraph-image", width: 1200, height: 630, alt: BRAND.name }],
   },
   twitter: {
     card: "summary_large_image",
     title: `${BRAND.name} — ${BRAND.tagline}`,
     description,
+    images: ["/opengraph-image"],
   },
 };
 

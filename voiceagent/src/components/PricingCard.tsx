@@ -22,10 +22,10 @@ export function PricingCard({ planKey }: { planKey: PlanKey }) {
     <div className="surface-card flex h-full flex-col p-6">
       <h3 className="text-lg font-bold text-brand-900">{plan.name}</h3>
       <p className="mt-2 text-3xl font-bold text-brand-900">
-        ${plan.monthlyPrice}
+        <span>{`$${plan.monthlyPrice}`}</span>
         <span className="text-sm font-normal text-slate-500">/mo</span>
       </p>
-      <p className="text-sm text-slate-500">+ ${plan.perMinute}/min voice usage</p>
+      <p className="text-sm text-slate-500">{`+ $${plan.perMinute}/min voice usage`}</p>
       <p className="mt-2 rounded-lg bg-slate-50 px-3 py-2 text-xs text-slate-600">
         Example: ~{EXAMPLE_MINUTES} min/mo ≈ <strong>${estimate}/mo</strong> all-in
       </p>

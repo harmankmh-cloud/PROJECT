@@ -34,20 +34,38 @@ export const metadata: Metadata = {
 };
 
 export default function HomePage() {
+  const siteUrl = `https://${BRAND.domain}`;
   const jsonLd = {
     "@context": "https://schema.org",
-    "@type": "SoftwareApplication",
-    name: BRAND.name,
-    applicationCategory: "BusinessApplication",
-    operatingSystem: "Web",
-    url: `https://${BRAND.domain}`,
-    description:
-      "AI phone agents for local businesses with inbound answering, booking, CRM sync, and compliance tooling.",
-    offers: {
-      "@type": "Offer",
-      price: "99",
-      priceCurrency: "USD",
-    },
+    "@graph": [
+      {
+        "@type": "Organization",
+        name: BRAND.name,
+        url: siteUrl,
+        logo: `${siteUrl}/icon`,
+        sameAs: ["https://www.linkedin.com/company/intellivohealth"],
+      },
+      {
+        "@type": "WebSite",
+        name: BRAND.name,
+        url: siteUrl,
+        description: BRAND.tagline,
+      },
+      {
+        "@type": "SoftwareApplication",
+        name: BRAND.name,
+        applicationCategory: "BusinessApplication",
+        operatingSystem: "Web",
+        url: siteUrl,
+        description:
+          "AI phone agents for local businesses with inbound answering, booking, CRM sync, and compliance tooling.",
+        offers: {
+          "@type": "Offer",
+          price: "99",
+          priceCurrency: "USD",
+        },
+      },
+    ],
   };
 
   return (
@@ -110,8 +128,10 @@ export default function HomePage() {
           </div>
         </section>
 
-        <section className="mx-auto max-w-6xl px-6 py-12">
-          <div className="grid gap-6 md:grid-cols-3">
+        <section id="features" className="mx-auto max-w-6xl px-6 py-12">
+          <p className="section-eyebrow text-center">Features</p>
+          <h2 className="font-display mt-2 text-center text-3xl text-brand-900">Everything you need on day one</h2>
+          <div className="mt-10 grid gap-6 md:grid-cols-3">
             {[
               {
                 title: "Inbound AI receptionist",
