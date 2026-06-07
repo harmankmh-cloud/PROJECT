@@ -29,6 +29,14 @@
   --color-surface-container-low: #f2f4f6;
   --color-surface-container-high: #e6e8ea;
   --color-glass-border: rgba(255, 255, 255, 0.2);
+  --color-secondary: #0051d5;
+  --color-secondary-fixed: #dbe1ff;
+  --color-on-secondary-fixed: #00174b;
+  --color-accent-purple: #8b5cf6;
+  --color-accent-yellow: #facc15;
+  --color-surface-container-lowest: #ffffff;
+  --color-on-surface-variant: #46464c;
+  --color-outline: #76767d;
   --spacing-section-gap: 120px;
   --spacing-container-max: 1280px;
 }
@@ -180,6 +188,11 @@ select {
     background: rgba(255, 255, 255, 0.7);
     backdrop-filter: blur(12px);
     border: 1px solid rgba(255, 255, 255, 0.3);
+    box-shadow: 0 12px 32px rgba(2, 6, 23, 0.05);
+  }
+
+  .dashboard-container {
+    @apply mx-auto max-w-[1280px] px-5 md:px-16;
   }
 
   .hero-mesh {
