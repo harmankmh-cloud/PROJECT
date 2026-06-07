@@ -184,11 +184,16 @@ select {
     @apply rounded-xl bg-amber-50 px-4 py-3 text-sm text-amber-900;
   }
 
-  .glass-card {
+  .glass-card,
+  .glass-panel {
     background: rgba(255, 255, 255, 0.7);
     backdrop-filter: blur(12px);
     border: 1px solid rgba(255, 255, 255, 0.3);
     box-shadow: 0 12px 32px rgba(2, 6, 23, 0.05);
+  }
+
+  .agent-field {
+    @apply w-full rounded-lg border-none bg-surface-container px-4 py-3 text-base outline-none transition-all focus:bg-white focus:ring-2 focus:ring-electric-blue;
   }
 
   .dashboard-container {

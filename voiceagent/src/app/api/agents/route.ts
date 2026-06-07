@@ -48,6 +48,7 @@ export async function POST(request: NextRequest) {
       language: body.language || "en-US",
       escalation_phone: body.escalation_phone,
       is_active: body.is_active ?? true,
+      knowledge_base_enabled: body.knowledge_base_enabled ?? true,
     })
     .select()
     .single();

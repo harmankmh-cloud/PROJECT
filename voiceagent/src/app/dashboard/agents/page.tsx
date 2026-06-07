@@ -1,22 +1,15 @@
 "use client";
 
+import Link from "next/link";
 import { useEffect, useState } from "react";
+import { MaterialIcon } from "@/components/MaterialIcon";
 import type { Agent } from "@/lib/types";
 import { apiFetch } from "@/lib/api-client";
 
 export default function AgentsPage() {
   const [agents, setAgents] = useState<Agent[]>([]);
-  const [form, setForm] = useState({
-    name: "",
-    system_prompt: "",
-    welcome_greeting: "",
-    escalation_phone: "",
-    voice: "Polly.Joanna",
-    language: "en-US",
-  });
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState("");
-  const [editingId, setEditingId] = useState<string | null>(null);
 
   useEffect(() => {
     let active = true;
@@ -31,144 +24,101 @@ export default function AgentsPage() {
     };
   }, []);
 
-  async function createAgent(e: React.FormEvent) {
-    e.preventDefault();
-    setError("");
-    const res = await apiFetch<{ agent: Agent }>("/api/agents", {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify(form),
-    });
-    if (res.ok) {
-      setAgents((prev) => [res.data.agent, ...prev]);
-      setForm({
-        name: "",
-        system_prompt: "",
-        welcome_greeting: "",
-        escalation_phone: "",
-        voice: "Polly.Joanna",
-        language: "en-US",
-      });
-    } else {
-      setError(res.error);
-    }
-  }
-
-  async function updateAgent(agent: Agent) {
-    setError("");
+  async function toggleActive(agent: Agent) {
     const res = await apiFetch<{ agent: Agent }>("/api/agents", {
       method: "PATCH",
       headers: { "Content-Type": "application/json" },
-      body: JSON.stringify(agent),
+      body: JSON.stringify({ id: agent.id, is_active: !agent.is_active }),
     });
     if (res.ok) {
       setAgents((prev) => prev.map((a) => (a.id === agent.id ? res.data.agent : a)));
-      setEditingId(null);
     } else {
       setError(res.error);
     }
   }
 
-  async function toggleActive(agent: Agent) {
-    await updateAgent({ ...agent, is_active: !agent.is_active });
-  }
-
   return (
-    <div>
-      <h1 className="text-2xl font-bold text-brand-900">Voice Agents</h1>
-      <p className="mt-1 text-slate-500">Configure AI agents that answer your phone line.</p>
-      {error && <p className="mt-4 text-sm text-red-600">{error}</p>}
-
-      <form onSubmit={createAgent} className="mt-8 surface-card space-y-4 p-6">
-        <h2 className="font-semibold">Create agent</h2>
-        <input className="input-field" placeholder="Agent name" value={form.name} onChange={(e) => setForm({ ...form, name: e.target.value })} required />
-        <textarea className="input-field min-h-24" placeholder="System prompt" value={form.system_prompt} onChange={(e) => setForm({ ...form, system_prompt: e.target.value })} />
-        <input className="input-field" placeholder="Welcome greeting" value={form.welcome_greeting} onChange={(e) => setForm({ ...form, welcome_greeting: e.target.value })} />
-        <input className="input-field" placeholder="Escalation phone (+1...)" value={form.escalation_phone} onChange={(e) => setForm({ ...form, escalation_phone: e.target.value })} />
-        <div className="grid gap-4 sm:grid-cols-2">
-          <input className="input-field" placeholder="Voice (e.g. Polly.Joanna)" value={form.voice} onChange={(e) => setForm({ ...form, voice: e.target.value })} />
-          <input className="input-field" placeholder="Language (e.g. en-US)" value={form.language} onChange={(e) => setForm({ ...form, language: e.target.value })} />
+    <div className="dashboard-container pb-8">
+      <header className="mb-8 flex items-start justify-between gap-4">
+        <div>
+          <h1 className="font-display text-3xl font-bold text-on-surface">Voice Agents</h1>
+          <p className="mt-2 text-on-primary-container">Configure AI agents that answer your phone line.</p>
         </div>
-        <button type="submit" className="btn-primary">Create agent</button>
-      </form>
+        <Link
+          href="/dashboard/agents/new"
+          className="flex shrink-0 items-center gap-2 rounded-xl bg-primary px-4 py-3 text-sm font-semibold text-on-primary shadow-lg transition-transform hover:scale-105 active:scale-95"
+        >
+          <MaterialIcon name="add" />
+          New agent
+        </Link>
+      </header>
 
-      <div className="mt-8 space-y-4">
-        {loading ? (
-          <p className="text-slate-400">Loading…</p>
-        ) : agents.length === 0 ? (
-          <p className="text-slate-400">No agents yet.</p>
-        ) : (
-          agents.map((agent) => (
-            <div key={agent.id} className="surface-card p-5">
-              {editingId === agent.id ? (
-                <AgentEditForm
-                  agent={agent}
-                  onSave={updateAgent}
-                  onCancel={() => setEditingId(null)}
-                />
-              ) : (
-                <>
-                  <div className="flex items-center justify-between gap-4">
-                    <h3 className="font-semibold">{agent.name}</h3>
-                    <div className="flex items-center gap-2">
-                      <span className={`rounded-full px-2 py-0.5 text-xs ${agent.is_active ? "bg-teal-100 text-teal-700" : "bg-slate-100 text-slate-500"}`}>
-                        {agent.is_active ? "Active" : "Inactive"}
-                      </span>
-                      <button type="button" onClick={() => toggleActive(agent)} className="btn-secondary text-xs">
-                        {agent.is_active ? "Deactivate" : "Activate"}
-                      </button>
-                      <button type="button" onClick={() => setEditingId(agent.id)} className="btn-secondary text-xs">
-                        Edit
-                      </button>
-                    </div>
-                  </div>
-                  <p className="mt-2 text-sm text-slate-600 line-clamp-2">{agent.system_prompt}</p>
-                  <p className="mt-2 text-xs text-slate-400">Greeting: {agent.welcome_greeting}</p>
-                  <p className="mt-1 text-xs text-slate-400">
-                    Voice: {agent.voice} · {agent.language}
+      {error && <p className="mb-4 text-sm text-red-600">{error}</p>}
+
+      {loading ? (
+        <p className="text-on-primary-container">Loading agents…</p>
+      ) : agents.length === 0 ? (
+        <div className="glass-panel rounded-xl p-10 text-center">
+          <MaterialIcon name="smart_toy" className="mb-4 text-5xl text-on-primary-container" />
+          <h2 className="text-xl font-bold text-on-surface">No agents yet</h2>
+          <p className="mt-2 text-sm text-on-primary-container">
+            Create your first receptionist agent to start answering calls.
+          </p>
+          <Link
+            href="/dashboard/agents/new"
+            className="mt-6 inline-flex items-center gap-2 rounded-xl bg-primary px-6 py-3 text-sm font-semibold text-on-primary"
+          >
+            <MaterialIcon name="add" />
+            Configure Agent
+          </Link>
+        </div>
+      ) : (
+        <div className="space-y-4">
+          {agents.map((agent) => (
+            <div
+              key={agent.id}
+              className="glass-panel flex flex-col gap-4 rounded-xl p-5 sm:flex-row sm:items-center sm:justify-between"
+            >
+              <div className="flex items-center gap-4">
+                <div className="flex h-12 w-12 items-center justify-center rounded-full bg-primary-container">
+                  <MaterialIcon name="support_agent" className="text-on-primary" />
+                </div>
+                <div>
+                  <h3 className="font-semibold text-on-surface">{agent.name}</h3>
+                  <p className="mt-1 line-clamp-1 text-sm text-slate-text">{agent.system_prompt || "No prompt set"}</p>
+                  <p className="mt-1 text-xs text-on-primary-container">
+                    {agent.voice} · {agent.language}
                   </p>
-                  {agent.escalation_phone && (
-                    <p className="mt-1 text-xs text-slate-400">Transfer: {agent.escalation_phone}</p>
-                  )}
-                </>
-              )}
+                </div>
+              </div>
+              <div className="flex items-center gap-2">
+                <span
+                  className={`rounded-full px-2 py-0.5 text-xs font-semibold ${
+                    agent.is_active
+                      ? "bg-on-tertiary-container/10 text-on-tertiary-container"
+                      : "bg-surface-container-high text-on-surface-variant"
+                  }`}
+                >
+                  {agent.is_active ? "Active" : "Inactive"}
+                </span>
+                <button
+                  type="button"
+                  onClick={() => toggleActive(agent)}
+                  className="rounded-lg border border-outline-variant/30 px-3 py-1.5 text-xs font-semibold text-slate-text hover:bg-surface-container-low"
+                >
+                  {agent.is_active ? "Deactivate" : "Activate"}
+                </button>
+                <Link
+                  href={`/dashboard/agents/${agent.id}`}
+                  className="rounded-lg bg-secondary px-4 py-1.5 text-xs font-semibold text-on-secondary"
+                >
+                  Configure
+                </Link>
+              </div>
             </div>
-          ))
-        )}
-      </div>
-    </div>
-  );
-}
-
-function AgentEditForm({
-  agent,
-  onSave,
-  onCancel,
-}: {
-  agent: Agent;
-  onSave: (a: Agent) => void;
-  onCancel: () => void;
-}) {
-  const [draft, setDraft] = useState(agent);
-
-  return (
-    <div className="space-y-3">
-      <input className="input-field" value={draft.name} onChange={(e) => setDraft({ ...draft, name: e.target.value })} />
-      <textarea className="input-field min-h-24" value={draft.system_prompt} onChange={(e) => setDraft({ ...draft, system_prompt: e.target.value })} />
-      <input className="input-field" value={draft.welcome_greeting} onChange={(e) => setDraft({ ...draft, welcome_greeting: e.target.value })} />
-      <input className="input-field" placeholder="Escalation phone" value={draft.escalation_phone || ""} onChange={(e) => setDraft({ ...draft, escalation_phone: e.target.value })} />
-      <div className="grid gap-3 sm:grid-cols-2">
-        <input className="input-field" placeholder="Voice" value={draft.voice} onChange={(e) => setDraft({ ...draft, voice: e.target.value })} />
-        <input className="input-field" placeholder="Language" value={draft.language} onChange={(e) => setDraft({ ...draft, language: e.target.value })} />
-      </div>
-      <label className="flex items-center gap-2 text-sm">
-        <input type="checkbox" checked={draft.knowledge_base_enabled} onChange={(e) => setDraft({ ...draft, knowledge_base_enabled: e.target.checked })} />
-        Knowledge base enabled
-      </label>
-      <div className="flex gap-2">
-        <button type="button" onClick={() => onSave(draft)} className="btn-primary text-sm">Save</button>
-        <button type="button" onClick={onCancel} className="btn-secondary text-sm">Cancel</button>
-      </div>
+          ))}
+        </div>
+      )}
     </div>
   );
 }

@@ -1,12 +1,15 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { Suspense, useEffect, useState } from "react";
+import { useSearchParams } from "next/navigation";
 import type { Agent } from "@/lib/types";
 import { apiFetch } from "@/lib/api-client";
 
 type Message = { role: "user" | "assistant"; content: string };
 
-export default function SandboxPage() {
+function SandboxContent() {
+  const searchParams = useSearchParams();
+  const preferredAgentId = searchParams.get("agent") || "";
   const [agents, setAgents] = useState<Agent[]>([]);
   const [agentId, setAgentId] = useState("");
   const [messages, setMessages] = useState<Message[]>([]);
@@ -19,10 +22,14 @@ export default function SandboxPage() {
       if (res.ok) {
         const list = res.data.agents || [];
         setAgents(list);
-        if (list[0]) setAgentId(list[0].id);
+        const preferred =
+          preferredAgentId && list.some((a) => a.id === preferredAgentId)
+            ? preferredAgentId
+            : list[0]?.id;
+        if (preferred) setAgentId(preferred);
       }
     });
-  }, []);
+  }, [preferredAgentId]);
 
   async function send(e: React.FormEvent) {
     e.preventDefault();
@@ -49,15 +56,15 @@ export default function SandboxPage() {
   }
 
   return (
-    <div className="mx-auto max-w-3xl space-y-6">
+    <div className="dashboard-container mx-auto max-w-3xl space-y-6 pb-8">
       <header>
-        <h1 className="font-display text-2xl text-brand-900">Agent sandbox</h1>
-        <p className="mt-1 text-slate-500">Test your agent in text before going live on the phone.</p>
+        <h1 className="font-display text-2xl font-bold text-on-surface">Agent sandbox</h1>
+        <p className="mt-1 text-on-primary-container">Test your agent in text before going live on the phone.</p>
       </header>
 
       <div className="flex flex-wrap gap-3">
         <select
-          className="input-field w-auto"
+          className="agent-field w-auto"
           value={agentId}
           onChange={(e) => {
             setAgentId(e.target.value);
@@ -70,22 +77,28 @@ export default function SandboxPage() {
             </option>
           ))}
         </select>
-        <button type="button" className="btn-ghost" onClick={() => setMessages([])}>
+        <button
+          type="button"
+          className="rounded-lg border border-outline-variant/30 px-4 py-2 text-sm font-semibold text-slate-text hover:bg-surface-container-low"
+          onClick={() => setMessages([])}
+        >
           Reset conversation
         </button>
       </div>
 
       {error && <p className="text-sm text-red-600">{error}</p>}
 
-      <div className="surface-card min-h-[24rem] space-y-3 overflow-y-auto p-5">
+      <div className="glass-panel min-h-[24rem] space-y-3 overflow-y-auto rounded-xl p-5">
         {messages.length === 0 ? (
-          <p className="text-sm text-slate-400">Send a message to simulate a caller.</p>
+          <p className="text-sm text-on-primary-container">Send a message to simulate a caller.</p>
         ) : (
           messages.map((m, i) => (
             <div
               key={i}
               className={`rounded-xl px-4 py-3 text-sm ${
-                m.role === "assistant" ? "bg-teal-50 text-teal-900" : "bg-slate-50 text-slate-800"
+                m.role === "assistant"
+                  ? "bg-electric-blue/10 text-on-surface"
+                  : "bg-surface-container-low text-slate-text"
               }`}
             >
               <p className="text-xs font-semibold uppercase opacity-60">{m.role}</p>
@@ -93,21 +106,33 @@ export default function SandboxPage() {
             </div>
           ))
         )}
-        {loading && <p className="text-sm text-slate-400">Agent is typing…</p>}
+        {loading && <p className="text-sm text-on-primary-container">Agent is typing…</p>}
       </div>
 
       <form onSubmit={send} className="flex gap-3">
         <input
-          className="input-field flex-1"
+          className="agent-field flex-1"
           placeholder="Type as if you're calling…"
           value={input}
           onChange={(e) => setInput(e.target.value)}
           disabled={loading || !agentId}
         />
-        <button type="submit" className="btn-primary" disabled={loading || !agentId}>
+        <button
+          type="submit"
+          className="rounded-xl bg-primary px-5 py-3 text-sm font-semibold text-on-primary disabled:opacity-50"
+          disabled={loading || !agentId}
+        >
           Send
         </button>
       </form>
     </div>
+  );
+}
+
+export default function SandboxPage() {
+  return (
+    <Suspense fallback={<div className="dashboard-container py-12 text-on-primary-container">Loading sandbox…</div>}>
+      <SandboxContent />
+    </Suspense>
   );
 }
