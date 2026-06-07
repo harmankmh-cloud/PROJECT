@@ -14,6 +14,11 @@ export default function ChannelsPage() {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState("");
   const [saving, setSaving] = useState<string | null>(null);
+  const [webhookUrl, setWebhookUrl] = useState("/api/omnichannel/inbound");
+
+  useEffect(() => {
+    setWebhookUrl(`${window.location.origin}/api/omnichannel/inbound`);
+  }, []);
 
   useEffect(() => {
     apiFetch<{ channels: Array<{ channel_type: string; is_active: boolean }> }>("/api/channels").then(
@@ -50,11 +55,6 @@ export default function ChannelsPage() {
       setError(res.error);
     }
   }
-
-  const webhookUrl =
-    typeof window !== "undefined"
-      ? `${window.location.origin}/api/omnichannel/inbound`
-      : "/api/omnichannel/inbound";
 
   return (
     <div>
