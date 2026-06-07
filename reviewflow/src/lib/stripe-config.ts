@@ -1,5 +1,5 @@
 import { SETUP_FEE_ENABLED } from "@/lib/plans";
-import { DEFAULT_LIVE_STRIPE_PRICE_MONTHLY } from "@/lib/stripe-defaults";
+import { DEFAULT_LIVE_STRIPE_PRICE_MONTHLY, defaultStripePriceMonthly } from "@/lib/stripe-defaults";
 
 export type StripeConfigStatus = {
   secretKey: boolean;
@@ -33,7 +33,7 @@ export function validateStripePriceEnv(name: string, value: string | undefined):
 export function getStripeConfigStatus(): StripeConfigStatus {
   const secretKey = !!process.env.STRIPE_SECRET_KEY;
   const setupRaw = process.env.STRIPE_PRICE_SETUP;
-  const monthlyRaw = process.env.STRIPE_PRICE_MONTHLY || DEFAULT_LIVE_STRIPE_PRICE_MONTHLY;
+  const monthlyRaw = process.env.STRIPE_PRICE_MONTHLY || defaultStripePriceMonthly();
   const setupPrice = !!setupRaw;
   const monthlyPrice = !!monthlyRaw;
   const setupPriceValid = isPriceId(setupRaw);

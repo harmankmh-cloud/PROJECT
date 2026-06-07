@@ -6,15 +6,28 @@ import { PLANS, type PlanKey } from "@/lib/plans";
 export type { PlanKey };
 
 /**
- * Live Stripe price IDs (created via Stripe MCP / scripts/stripe-setup.mjs).
- * Used when env vars are unset — lets checkout work after linking Stripe to the agent.
+ * Stripe price IDs by mode (created via Stripe MCP + scripts/stripe-setup.mjs).
+ * Used when env vars are unset — lets checkout work after linking Stripe.
  */
-export const DEFAULT_LIVE_STRIPE_PRICES: Record<PlanKey, string> = {
-  starter: "price_1Tfmk8DwgNgi4Q9Vq0L2V9jF",
-  growth: "price_1TfmkDDwgNgi4Q9VGyRNRset",
-  pro: "price_1Tfmk9DwgNgi4Q9V6Z4YF51C",
-  enterprise: "price_1Tfmk9DwgNgi4Q9V81XVvQ0n",
-};
+export const DEFAULT_STRIPE_PRICES = {
+  test: {
+    starter: "price_1TZ051L7y7NO9O2k7XP3QSvw",
+    growth: "price_1TZ05DL7y7NO9O2kr6QtbCcU",
+    pro: "price_1Tfmk9DwgNgi4Q9V6Z4YF51C",
+    enterprise: "price_1Tfmk9DwgNgi4Q9V81XVvQ0n",
+  },
+  live: {
+    starter: "price_1Tfmk8DwgNgi4Q9Vq0L2V9jF",
+    growth: "price_1TfmkDDwgNgi4Q9VGyRNRset",
+    pro: "price_1Tfmk9DwgNgi4Q9V6Z4YF51C",
+    enterprise: "price_1Tfmk9DwgNgi4Q9V81XVvQ0n",
+  },
+} as const;
+
+function defaultPricesForKey(): Record<PlanKey, string> {
+  const key = process.env.STRIPE_SECRET_KEY || "";
+  return key.startsWith("sk_live_") ? DEFAULT_STRIPE_PRICES.live : DEFAULT_STRIPE_PRICES.test;
+}
 
 const PLAN_HINTS: Record<PlanKey, { patterns: RegExp[]; amountCents: number }> = {
   starter: { patterns: [/starter/i, /voiceagent starter/i, /intellivo starter/i], amountCents: PLANS.starter.monthlyPrice * 100 },
@@ -125,9 +138,10 @@ export async function resolveStripePriceIds(): Promise<ResolvedStripePrices> {
     }
   }
 
+  const defaults = defaultPricesForKey();
   for (const plan of ALL_PLANS) {
-    if (!isValidPriceId(resolved[plan]) && isValidPriceId(DEFAULT_LIVE_STRIPE_PRICES[plan])) {
-      resolved[plan] = DEFAULT_LIVE_STRIPE_PRICES[plan];
+    if (!isValidPriceId(resolved[plan]) && isValidPriceId(defaults[plan])) {
+      resolved[plan] = defaults[plan];
     }
   }
 
