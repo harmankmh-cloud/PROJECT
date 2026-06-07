@@ -1,0 +1,7 @@
+{
+  "$schema": "https://openapi.vercel.sh/vercel.json",
+  "framework": "nextjs",
+  "installCommand": "cd voiceagent && npm install",
+  "buildCommand": "cd voiceagent && npm run build",
+  "devCommand": "cd voiceagent && npm run dev"
+}
