@@ -9,6 +9,28 @@
  *   SUPABASE_PROJECT_REF  — project ref from dashboard URL
  */
 
+import { readFileSync, existsSync } from "node:fs";
+import { dirname, join } from "node:path";
+import { fileURLToPath } from "node:url";
+
+const __dirname = dirname(fileURLToPath(import.meta.url));
+
+function loadDotEnv() {
+  for (const file of [
+    join(__dirname, "../.env"),
+    join(__dirname, "../../.env"),
+  ]) {
+    if (!existsSync(file)) continue;
+    for (const line of readFileSync(file, "utf8").split("\n")) {
+      const m = line.match(/^\s*([A-Za-z_][A-Za-z0-9_]*)\s*=\s*(.*)\s*$/);
+      if (!m || process.env[m[1]]) continue;
+      process.env[m[1]] = m[2].replace(/^['"]|['"]$/g, "");
+    }
+  }
+}
+
+loadDotEnv();
+
 const TEAM_ID = "team_oKVA7rxDj8Zu4wfRgJQNBlkK";
 const PROJECT = "voiceagent";
 const DOMAINS = ["greetq.com", "www.greetq.com"];
@@ -159,6 +181,13 @@ async function main() {
     }
   } else {
     steps.push("SKIP Supabase — set SUPABASE_ACCESS_TOKEN + SUPABASE_PROJECT_REF");
+  }
+
+  if (!process.env.VERCEL_TOKEN && process.env.CLOUD_AGENT_ALL_SECRET_NAMES) {
+    steps.push(
+      `NOTE: injected secrets this session: ${process.env.CLOUD_AGENT_ALL_SECRET_NAMES}. ` +
+        "If VERCEL_TOKEN is missing, add it under Cursor → Cloud Agents → Secrets and start a new agent run."
+    );
   }
 
   console.log("GreetQ provision results:\n");
