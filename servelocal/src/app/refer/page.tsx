@@ -3,6 +3,7 @@ import Link from "next/link";
 import { SiteFooter } from "@/components/SiteFooter";
 import { SiteHeader } from "@/components/SiteHeader";
 import { pageMetadata } from "@/lib/seo";
+import { FOUNDING_PRO } from "@/lib/tradie-program";
 
 export const metadata: Metadata = pageMetadata({
   title: "Refer a Friend — Trades & Homeowners",
@@ -31,7 +32,7 @@ export default function ReferPage() {
           <div className="surface-card p-6">
             <h2 className="font-semibold text-brand-950">Refer a tradie</h2>
             <p className="mt-2 text-sm text-slate-600">
-              Send them to our free listing page. Featured plans start at $49/mo — still cheaper than one Thumbtack lead.
+              Send them to our free listing — Founding Featured is {FOUNDING_PRO.featuredPrice} ({FOUNDING_PRO.duration}), still cheaper than one Thumbtack lead.
             </p>
             <Link href="/join" className="btn-gold mt-4 inline-flex px-6 py-2.5 text-sm">
               Share /join link

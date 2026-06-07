@@ -15,7 +15,7 @@ export function PricingCards() {
         >
           {plan.highlight && (
             <span className="absolute right-4 top-4 rounded-full bg-gold-500 px-3 py-1 text-[10px] font-bold uppercase text-brand-950">
-              Most popular
+              Founding Pro
             </span>
           )}
           <p className="section-eyebrow">{plan.name}</p>

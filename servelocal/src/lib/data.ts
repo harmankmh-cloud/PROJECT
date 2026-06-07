@@ -479,6 +479,93 @@ export async function createServiceRequest(input: {
   return { ok: true as const, id: data.id, matches: matches.slice(0, 6) };
 }
 
+function formatBudgetRange(min?: number | null, max?: number | null) {
+  if (min != null && max != null) return `$${min.toLocaleString()}–$${max.toLocaleString()}`;
+  if (min != null) return `From $${min.toLocaleString()}`;
+  if (max != null) return `Up to $${max.toLocaleString()}`;
+  return null;
+}
+
+export async function notifyProsForJobRequest(input: {
+  categorySlug: string;
+  citySlug: string;
+  customerName: string;
+  customerPhone: string;
+  description: string;
+  urgency?: string;
+  budgetMin?: number;
+  budgetMax?: number;
+}) {
+  const matches = await getApprovedProviders({
+    citySlug: input.citySlug,
+    categorySlug: input.categorySlug,
+    sort: "recommended",
+  });
+
+  const withEmail = matches.filter((p) => p.email?.trim());
+  // Featured/premium first, cap volume so homeowners aren't spammed by 50 calls
+  const ranked = [...withEmail].sort((a, b) => {
+    const tier = (p: ServiceProvider) => (p.listing_tier === "premium" ? 0 : p.listing_tier === "featured" ? 1 : 2);
+    return tier(a) - tier(b);
+  });
+  const notifyList = ranked.slice(0, 10);
+
+  const categories = await getServiceCategories();
+  const categoryName = categories.find((c) => c.slug === input.categorySlug)?.name || input.categorySlug;
+  const budgetLabel = formatBudgetRange(input.budgetMin, input.budgetMax);
+
+  const { sendTransactionalEmail } = await import("@/lib/email");
+  const { jobLeadForProEmail } = await import("@/lib/email-templates");
+
+  let sent = 0;
+  for (const pro of notifyList) {
+    const email = pro.email!.trim();
+    const isFeatured = pro.listing_tier === "featured" || pro.listing_tier === "premium" || pro.featured;
+    const { subject, html } = jobLeadForProEmail({
+      proName: pro.display_name,
+      categoryName,
+      citySlug: input.citySlug,
+      customerName: input.customerName,
+      customerPhone: input.customerPhone,
+      description: input.description,
+      urgency: input.urgency,
+      budgetLabel,
+      isFeatured,
+    });
+    const result = await sendTransactionalEmail({
+      to: email,
+      subject,
+      html,
+      template: "job_lead_pro",
+    });
+    if (result.ok) sent += 1;
+  }
+
+  return { sent, matched: withEmail.length };
+}
+
+export async function getJobLeadsForProvider(provider: ServiceProvider, limit = 10) {
+  const admin = createServiceClient() ?? createDbClient();
+  if (!admin) return [];
+
+  const since = new Date(Date.now() - 30 * 24 * 60 * 60 * 1000).toISOString();
+
+  try {
+    const { data } = await admin
+      .from("service_requests")
+      .select("*")
+      .eq("category_slug", provider.category_slug)
+      .eq("city_slug", provider.city_slug)
+      .gte("created_at", since)
+      .order("created_at", { ascending: false })
+      .limit(limit);
+
+    return (data || []) as ServiceRequest[];
+  } catch {
+    return [];
+  }
+}
+
 export async function getAdminProviders(status?: string) {
   const admin = createServiceClient();
   if (!admin) return [];
