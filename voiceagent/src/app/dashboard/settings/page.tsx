@@ -100,7 +100,7 @@ export default function SettingsPage() {
           <h2 className="font-semibold">Outbound webhooks</h2>
           <input
             className="input-field"
-            placeholder="https://your-app.com/webhooks/intellivo"
+            placeholder="https://your-app.com/webhooks/greetq"
             value={settings.webhook_url}
             onChange={(e) => setSettings({ ...settings, webhook_url: e.target.value })}
           />

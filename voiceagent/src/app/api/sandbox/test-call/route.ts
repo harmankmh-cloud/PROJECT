@@ -44,7 +44,7 @@ export async function POST(request: NextRequest) {
 
   const from = process.env.TELNYX_PHONE_NUMBER;
   const connectionId = process.env.TELNYX_CONNECTION_ID;
-  const webhookUrl = `${process.env.NEXT_PUBLIC_APP_URL || "https://intellivo.ca"}/api/telnyx/webhook`;
+  const webhookUrl = `${process.env.NEXT_PUBLIC_APP_URL || "https://greetq.com"}/api/telnyx/webhook`;
 
   if (!from || !connectionId) {
     return NextResponse.json(

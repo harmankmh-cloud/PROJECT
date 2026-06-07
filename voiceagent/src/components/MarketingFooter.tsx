@@ -42,9 +42,6 @@ export function MarketingFooter() {
             <p className="mt-4 text-sm text-on-surface-variant">
               {BRAND.productCategory}. Based in {BRAND.location.label}.
             </p>
-            <p className="mt-3 text-xs text-slate-text">
-              Not affiliated with intellivo.com (healthcare claims) or intellivo.ai.
-            </p>
             <ul className="mt-6 space-y-2 text-sm text-on-surface-variant">
               <li>
                 <a href={`mailto:${BRAND.contact.email}`} className="hover:text-primary">

@@ -3,7 +3,7 @@
 import Link from "next/link";
 import { useEffect, useState } from "react";
 
-const STORAGE_KEY = "intellivo-cookie-notice";
+const STORAGE_KEY = "greetq-cookie-notice";
 
 export function CookieNotice() {
   const [visible, setVisible] = useState(false);

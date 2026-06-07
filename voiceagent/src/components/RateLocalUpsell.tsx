@@ -9,7 +9,7 @@ export function RateLocalUpsell() {
       <div>
         <p className="text-sm font-semibold text-ghost-white">Also run RateLocal?</p>
         <p className="mt-1 text-sm text-on-surface-variant">
-          Collect Google reviews with QR codes — pairs well with Intellivo phone agents.
+          Collect Google reviews with QR codes — pairs well with GreetQ phone agents.
         </p>
       </div>
       <Link href={url} target="_blank" rel="noreferrer" className="btn-secondary text-sm">

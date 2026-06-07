@@ -87,7 +87,7 @@ export default function PricingPage() {
         <div className="mx-auto mt-10 max-w-xl rounded-2xl border border-gold-500/30 bg-gold-50/60 p-6 text-center">
           <p className="text-sm font-semibold text-brand-950">Bundle &amp; save: Reputation + Reception</p>
           <p className="mt-2 text-sm text-slate-600">
-            Add Intellivo (an AI phone agent that answers every call 24/7) and get both for{" "}
+            Add GreetQ (an AI phone agent that answers every call 24/7) and get both for{" "}
             <strong className="text-brand-950">$99/mo</strong> — save $19 vs buying separately. More reviews and
             never a missed call.
           </p>

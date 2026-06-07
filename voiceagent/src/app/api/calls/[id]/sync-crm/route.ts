@@ -34,7 +34,7 @@ export async function POST(
 
   const result = await logHubSpotCall(org.id, {
     phone: call.from_number || "",
-    summary: call.summary || "Voice call logged from Intellivo",
+    summary: call.summary || "Voice call logged from GreetQ",
     agentId: call.agent_id || undefined,
   });
 

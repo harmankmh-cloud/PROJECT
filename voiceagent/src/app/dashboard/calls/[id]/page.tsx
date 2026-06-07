@@ -231,7 +231,7 @@ export default function CallDetailPage() {
             ) : (
               transcripts.map((row) => {
                 const isAgent = row.role === "assistant";
-                const label = isAgent ? "Intellivo AI Agent" : row.role === "user" ? "Caller" : row.role;
+                const label = isAgent ? "GreetQ AI Agent" : row.role === "user" ? "Caller" : row.role;
                 return (
                   <div
                     key={row.id}

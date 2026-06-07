@@ -33,7 +33,7 @@ const pro = USE_CASES.find((u) => u.variant === "pro")!;
 export const metadata: Metadata = {
   title: "AI phone agents that never miss a call",
   description:
-    "Intellivo answers inbound calls, books appointments, syncs CRM, and warm-transfers to your team. Built for salons, clinics, and local service businesses.",
+    `${BRAND.name} answers inbound calls, books appointments, syncs CRM, and warm-transfers to your team. Built for salons, clinics, and local service businesses.`,
   alternates: { canonical: "/" },
   keywords: [
     "AI receptionist",
@@ -105,15 +105,11 @@ export default function HomePage() {
       <MarketingHeader />
 
       <main id="main-content" className="pt-20">
-        {/* Company identity — disambiguate from other "Intellivo" brands */}
         <section className="border-b border-glass-border-subtle bg-surface-container/50 py-3" aria-label="Company notice">
-          <div className="marketing-container flex flex-col gap-2 text-center text-xs text-on-surface-variant sm:flex-row sm:items-center sm:justify-between sm:text-left">
+          <div className="marketing-container text-center text-xs text-on-surface-variant sm:text-left">
             <p>
-              <span className="font-semibold text-ghost-white">{BRAND.legalName}</span> — voice AI for salons,
-              clinics, and local service businesses. Based in {BRAND.location.label}.
-            </p>
-            <p className="text-slate-text">
-              Independent product · Not affiliated with intellivo.com or intellivo.ai
+              <span className="font-semibold text-ghost-white">{BRAND.legalName}</span> — {BRAND.tagline}. Based in{" "}
+              {BRAND.location.label}.
             </p>
           </div>
         </section>
@@ -179,14 +175,14 @@ export default function HomePage() {
               <p className="section-eyebrow mb-3">Process</p>
               <h2 className="font-display text-3xl font-bold text-ghost-white">Go live in an afternoon</h2>
               <p className="mx-auto mt-4 max-w-2xl text-lg text-on-surface-variant">
-                Intellivo is a full voice AI platform — not just a chatbot wrapper. Configure agents, knowledge, flows,
+                {BRAND.name} is a full voice AI platform — not just a chatbot wrapper. Configure agents, knowledge, flows,
                 and telephony from one dashboard.
               </p>
             </div>
             <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-4">
               {[
                 { n: "01", icon: "smart_toy", title: "Create your agent", desc: "Set greeting, system prompt, and escalation number. Test in the sandbox first." },
-                { n: "02", icon: "settings_phone", title: "Connect your number", desc: "Point Telnyx or Twilio to Intellivo webhooks. Map the line to your agent." },
+                { n: "02", icon: "settings_phone", title: "Connect your number", desc: `Point Telnyx or Twilio to ${BRAND.name} webhooks. Map the line to your agent.` },
                 { n: "03", icon: "auto_stories", title: "Add knowledge & flows", desc: "Upload FAQs, hours, and services. Publish flows for booking and warm transfer." },
                 { n: "04", icon: "query_stats", title: "Go live & measure", desc: "Review transcripts, analytics, and quality scores. Tune from real caller intents." },
               ].map((step) => (
@@ -243,7 +239,7 @@ export default function HomePage() {
               <p className="section-eyebrow mb-3">Solutions</p>
               <h2 className="font-display text-3xl font-bold text-ghost-white">Built for operators, not engineers</h2>
               <p className="mx-auto mt-4 max-w-2xl text-lg text-on-surface-variant">
-                Intellivo handles routine calls so your staff focuses on in-person work.
+                {BRAND.name} handles routine calls so your staff focuses on in-person work.
               </p>
             </div>
             <div className="grid grid-cols-1 gap-6 md:grid-cols-3">

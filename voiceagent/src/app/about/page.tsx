@@ -7,7 +7,7 @@ import { BRAND } from "@/lib/brand";
 
 export const metadata: Metadata = {
   title: "About",
-  description: `Learn about ${BRAND.name} — a Vancouver-based voice AI platform for local businesses. Not affiliated with intellivo.com or intellivo.ai.`,
+  description: `Learn about ${BRAND.name} — a Vancouver-based voice AI platform for local businesses at ${BRAND.domain}.`,
   alternates: { canonical: "/about" },
 };
 
@@ -32,12 +32,11 @@ export default function AboutPage() {
           </p>
 
           <div className="rounded-2xl border border-glass-border-subtle bg-surface-container/60 p-6">
-            <h2 className="text-lg font-semibold text-ghost-white">A note on our name</h2>
+            <h2 className="text-lg font-semibold text-ghost-white">Why GreetQ?</h2>
             <p className="mt-3">
-              {BRAND.name} at <strong className="text-ghost-white">{BRAND.domain}</strong> is an independent
-              Canadian voice AI product. We are <strong className="text-ghost-white">not affiliated</strong> with
-              intellivo.com (U.S. healthcare subrogation) or intellivo.ai (chatbot software). If you reached us
-              looking for those companies, you may need a different site.
+              Every missed call is a caller who never got a greeting. {BRAND.name} makes sure your business answers
+              with a natural voice agent — on <strong className="text-ghost-white">{BRAND.domain}</strong> — so you
+              capture bookings and questions even when your team is busy.
             </p>
           </div>
 

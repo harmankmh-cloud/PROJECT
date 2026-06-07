@@ -11,7 +11,7 @@ const PLAN_KEYS: PlanKey[] = ["starter", "growth", "pro", "enterprise"];
 export const metadata: Metadata = {
   title: "Pricing",
   description:
-    "Intellivo pricing: Starter $79, Growth $199, Pro $399, and Enterprise AI phone agent plans. Flat monthly with minutes included — cheaper than a part-time receptionist.",
+    "GreetQ pricing: Starter $79, Growth $199, Pro $399, and Enterprise AI phone agent plans. Flat monthly with minutes included — cheaper than a part-time receptionist.",
   alternates: { canonical: "/pricing" },
 };
 
@@ -38,7 +38,7 @@ export default function PricingPage() {
             <div className="mx-auto mt-12 max-w-2xl rounded-2xl border border-primary/30 bg-primary/5 p-6 text-center">
               <p className="text-sm font-semibold text-ghost-white">Bundle &amp; save: Reputation + Reception</p>
               <p className="mt-2 text-sm text-slate-text">
-                Pair Intellivo Starter with{" "}
+                Pair GreetQ Starter with{" "}
                 <a href="https://ratelocal.ca" className="font-semibold text-electric-blue hover:underline">
                   RateLocal
                 </a>{" "}

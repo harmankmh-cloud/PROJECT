@@ -43,7 +43,7 @@ export const SETUP_STEPS = [
     step: "2",
     icon: "📞",
     title: "Connect your number",
-    text: "Point Telnyx or Twilio to Intellivo webhooks. Map the line to your agent in the dashboard.",
+    text: "Point Telnyx or Twilio to GreetQ webhooks. Map the line to your agent in the dashboard.",
   },
   {
     step: "3",
