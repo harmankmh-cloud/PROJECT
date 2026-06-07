@@ -76,8 +76,8 @@ export const LISTING_PLANS = [
     id: "featured" as const,
     name: "Featured Pro",
     priceLabel: "$49/mo",
-    setupLabel: "$99 setup",
-    monthlyLabel: "$49/month",
+    setupLabel: "No setup fee",
+    monthlyLabel: "$49/month · $490/yr (2 months free)",
     highlight: true,
     features: [
       "Homepage & category featured spots",
@@ -85,14 +85,15 @@ export const LISTING_PLANS = [
       "Priority in search results",
       "Response time & jobs completed stats",
       "Up to 3 portfolio photos",
+      "No per-lead fees — ever",
     ],
   },
   {
     id: "premium" as const,
     name: "Premium Elite",
     priceLabel: "$99/mo",
-    setupLabel: "$149 setup",
-    monthlyLabel: "$99/month",
+    setupLabel: "No setup fee",
+    monthlyLabel: "$99/month · $990/yr (2 months free)",
     highlight: false,
     features: [
       "Top placement in your category",
@@ -101,6 +102,7 @@ export const LISTING_PLANS = [
       "Unlimited portfolio photos",
       "Cost guide featured pro slot",
       "Monthly performance report",
+      "No per-lead fees — ever",
     ],
   },
 ] as const;
