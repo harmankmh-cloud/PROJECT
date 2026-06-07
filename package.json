@@ -1,0 +1,12 @@
+{
+  "name": "project-workspace",
+  "private": true,
+  "scripts": {
+    "stitch:setup": "bash scripts/stitch-setup.sh",
+    "stitch:doctor": "npx -y stitch-design-cli doctor --json",
+    "stitch:projects": "npx -y stitch-design-cli project list --json"
+  },
+  "devDependencies": {
+    "stitch-design-cli": "^0.1.3"
+  }
+}
