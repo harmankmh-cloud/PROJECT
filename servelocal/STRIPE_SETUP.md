@@ -33,8 +33,9 @@ When a pro pays, their listing tier updates automatically (`featured` or `premiu
 ## Billing portal
 
 Paid pros can cancel or update payment at **Manage billing** on `/dashboard/pro`.  
-Uses Stripe Customer Portal (same Stripe account). Enable at:  
-https://dashboard.stripe.com/settings/billing/portal
+The app auto-creates the Stripe Customer Portal configuration on first use (no dashboard step required).
+
+Optional manual settings: https://dashboard.stripe.com/settings/billing/portal
 
 ## Upgrade emails
 

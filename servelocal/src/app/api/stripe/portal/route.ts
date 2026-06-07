@@ -1,5 +1,6 @@
 import { NextResponse } from "next/server";
 import { getStripe, isStripeConfigured } from "@/lib/stripe";
+import { ensureBillingPortalConfiguration } from "@/lib/stripe-portal";
 import { createClient } from "@/lib/supabase/server";
 
 export async function POST() {
@@ -21,6 +22,8 @@ export async function POST() {
   if (!user?.email) return NextResponse.json({ error: "Sign in required" }, { status: 401 });
 
   try {
+    await ensureBillingPortalConfiguration(stripe);
+
     const customers = await stripe.customers.list({ email: user.email, limit: 1 });
     const customer = customers.data[0];
     if (!customer) {
