@@ -3,8 +3,9 @@ import { redirect } from "next/navigation";
 import { SiteFooter } from "@/components/SiteFooter";
 import { SiteHeader } from "@/components/SiteHeader";
 import { SignOutButton } from "@/components/SignOutButton";
+import { SavedSearchesList } from "@/components/SavedSearchesList";
 import { cityName } from "@/lib/constants";
-import { getServiceCategories, getUserServiceRequests } from "@/lib/data";
+import { getServiceCategories, getUserSavedSearches, getUserServiceRequests } from "@/lib/data";
 import { createClient } from "@/lib/supabase/server";
 import { isSupabaseConfigured } from "@/lib/supabase/config";
 
@@ -22,9 +23,10 @@ export default async function DashboardPage() {
 
   if (!user) redirect("/login");
 
-  const [requests, categories] = await Promise.all([
+  const [requests, categories, savedSearches] = await Promise.all([
     getUserServiceRequests(user.id, user.email ?? undefined),
     getServiceCategories(),
+    getUserSavedSearches(user.id),
   ]);
 
   const categoryName = (slug: string) => categories.find((c) => c.slug === slug)?.name || slug;
@@ -90,6 +92,12 @@ export default async function DashboardPage() {
               ))}
             </ul>
           )}
+        </section>
+
+        <section className="mt-10">
+          <h2 className="font-display text-xl text-brand-950">Saved searches</h2>
+          <p className="mt-1 text-sm text-slate-500">Email alerts when new pros match your criteria.</p>
+          <SavedSearchesList initial={savedSearches} />
         </section>
       </div>
       <SiteFooter />

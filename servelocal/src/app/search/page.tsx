@@ -6,6 +6,7 @@ import { SiteHeader } from "@/components/SiteHeader";
 import { ProviderCard } from "@/components/ProviderCard";
 import { SearchBarWithSuggest } from "@/components/SearchBarWithSuggest";
 import { SearchFiltersWithDefaults } from "@/components/SearchFilters";
+import { SaveSearchButton } from "@/components/SaveSearchButton";
 import { ProvidersMapSection } from "@/components/ProvidersMapSection";
 import { TRADE_CITIES } from "@/lib/constants";
 import { POPULAR_SEARCHES } from "@/lib/marketing-content";
@@ -110,6 +111,14 @@ export default async function SearchPage({
         <Suspense fallback={null}>
           <SearchFiltersWithDefaults />
         </Suspense>
+
+        {hasActiveSearch && (
+          <div className="mt-4">
+            <Suspense fallback={null}>
+              <SaveSearchButton />
+            </Suspense>
+          </div>
+        )}
 
         {!hasActiveSearch && (
           <>
