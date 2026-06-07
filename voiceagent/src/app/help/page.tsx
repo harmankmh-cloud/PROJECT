@@ -1,9 +1,16 @@
 import Link from "next/link";
+import type { Metadata } from "next";
 import { MarketingFooter } from "@/components/MarketingFooter";
 import { MarketingHeader } from "@/components/MarketingHeader";
 import { SkipToContent } from "@/components/SkipToContent";
 import { SupportForm } from "@/components/SupportForm";
 import { BRAND } from "@/lib/brand";
+
+export const metadata: Metadata = {
+  title: "Help & contact",
+  description: `Contact ${BRAND.name} for product questions, demos, Enterprise pricing, or support. Based in ${BRAND.location.label}.`,
+  alternates: { canonical: "/help" },
+};
 
 export default async function HelpPage({
   searchParams,

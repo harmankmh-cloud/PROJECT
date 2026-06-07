@@ -7,6 +7,7 @@ import { BRAND } from "@/lib/brand";
 
 export const metadata: Metadata = {
   title: "Privacy Policy",
+  description: `How ${BRAND.name} collects, uses, and protects personal information under PIPEDA and applicable Canadian privacy law.`,
   alternates: { canonical: "/privacy" },
 };
 
