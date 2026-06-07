@@ -20,14 +20,15 @@ Code defaults to **https://greetq.com** via `src/lib/brand.ts`. After merging th
 
 ## Cloudflare (DNS)
 
-If Cloudflare manages `greetq.com`:
+`greetq.com` and `www.greetq.com` are attached to the **voiceagent** Vercel project. Add these records in Cloudflare (DNS only / grey cloud):
 
-| Type  | Name | Content              | Proxy        |
-| ----- | ---- | -------------------- | ------------ |
-| CNAME | `@`  | `cname.vercel-dns.com` | DNS only (*) |
-| CNAME | `www`| `cname.vercel-dns.com` | DNS only (*) |
+| Type  | Name | Content |
+| ----- | ---- | ------- |
+| A     | `@`  | `216.150.1.1` |
+| A     | `@`  | `216.150.16.1` |
+| CNAME | `www`| `e6e937ce5d27f994.vercel-dns-017.com` |
 
-(*) Vercel recommends DNS-only (grey cloud) for apex, or use Cloudflare CNAME flattening per Vercel docs.
+`intellivo.ca` and `www.intellivo.ca` redirect to `greetq.com` on Vercel. Full DNS map: `docs/DNS.md`. Audit: `node scripts/dns-audit.mjs`.
 
 SSL/TLS mode: **Full (strict)**.
 
