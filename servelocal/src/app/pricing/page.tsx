@@ -2,13 +2,14 @@ import type { Metadata } from "next";
 import { SiteFooter } from "@/components/SiteFooter";
 import { SiteHeader } from "@/components/SiteHeader";
 import { PricingCards } from "@/components/PricingCards";
+import { FoundingProBanner, TradieBenefits } from "@/components/TradieBenefits";
 import { SERVE_LOCAL } from "@/lib/constants";
 import { pageMetadata } from "@/lib/seo";
 
 export const metadata: Metadata = pageMetadata({
-  title: "Pro Plans & Pricing — From $49/mo",
+  title: "Pro Plans — Founding Pro from $29/mo",
   description:
-    "ServeLocal listing plans for BC trades. No per-lead fees — one flat monthly rate. Compare Starter (free), Featured ($49/mo), and Premium ($99/mo).",
+    "ServeLocal plans for BC trades. Free listing, Founding Featured $29/mo with job alerts and top placement. No per-lead fees.",
   path: "/pricing",
 });
 
@@ -18,29 +19,16 @@ export default function PricingPage() {
       <SiteHeader compact />
       <div className="mx-auto max-w-6xl px-4 py-12 sm:px-8">
         <p className="section-eyebrow">{SERVE_LOCAL.name} for pros</p>
-        <h1 className="font-display mt-2 text-4xl text-brand-950">Plans that pay for themselves</h1>
+        <h1 className="font-display mt-2 text-4xl text-brand-950">Get clients, not lead bills</h1>
         <p className="mt-3 max-w-2xl text-lg text-slate-600">
-          Thumbtack and Angi charge <strong>$25–75 per lead</strong> — shared with 3–10 other pros. Ten leads can cost <strong>$500+/mo</strong> for jobs you might never win. ServeLocal is one flat monthly fee, your phone rings direct, and there are <strong>no per-lead fees</strong>.
+          Thumbtack charges <strong>$25–75 per shared lead</strong>. ServeLocal sends job alerts to your inbox and
+          puts your phone on your profile — <strong>one flat monthly fee</strong>, zero per-click charges.
         </p>
-        <div className="mt-6 grid gap-3 sm:grid-cols-3">
-          {[
-            ["Thumbtack", "$25–75 / lead", "shared with 4–5 pros"],
-            ["HomeStars", "$299–599/mo", "+ $10–100 per lead"],
-            ["ServeLocal", "$49/mo flat", "exclusive profile, $0 per lead"],
-          ].map(([name, price, note], i) => (
-            <div
-              key={name}
-              className={
-                i === 2
-                  ? "rounded-2xl border-2 border-teal-500 bg-teal-50 p-4"
-                  : "rounded-2xl border border-slate-200 bg-white p-4"
-              }
-            >
-              <p className="text-sm font-semibold text-brand-950">{name}</p>
-              <p className="font-display mt-1 text-xl text-brand-950">{price}</p>
-              <p className="mt-1 text-xs text-slate-500">{note}</p>
-            </div>
-          ))}
+        <div className="mt-8">
+          <FoundingProBanner />
+        </div>
+        <div className="mt-10">
+          <TradieBenefits />
         </div>
         <div className="mt-12">
           <PricingCards />
@@ -51,12 +39,12 @@ export default function PricingPage() {
             <li>✓ Phone & WhatsApp on your profile</li>
             <li>✓ Customer reviews (moderated)</li>
             <li>✓ Listed in city + category pages</li>
-            <li>✓ Contact click analytics</li>
+            <li>✓ Job alerts when homeowners post in your trade + city</li>
             <li>✓ BC-focused Fraser Valley & Metro coverage</li>
             <li>✓ No per-lead fees for customers</li>
           </ul>
           <p className="mt-6 text-xs text-slate-500">
-            No setup fees. Pay monthly or save with annual (2 months free). Plans billed after profile approval — contact us to activate Featured/Premium today.
+            Founding Pro rate for early listings. Pay via card after approval (Stripe) or contact us. Cancel anytime.
           </p>
         </div>
       </div>

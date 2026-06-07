@@ -100,9 +100,10 @@ export function JoinProviderForm({ categories }: { categories: ServiceCategory[]
         <p className="text-3xl">✓</p>
         <h2 className="font-display mt-3 text-xl text-brand-950">Application sent</h2>
         <p className="mt-2 text-sm text-slate-600">
-          We review listings within 1–2 business days.
+          We review listings within 1–2 business days. Once approved, you&apos;ll get email alerts when
+          homeowners post jobs in your city and trade.
           {plan && plan.id !== "free" && (
-            <> You selected {plan.name} — we will contact you about setup.</>
+            <> You selected {plan.name} — we&apos;ll send payment details after approval.</>
           )}
         </p>
       </div>

@@ -2,7 +2,7 @@ import { NextResponse } from "next/server";
 import { z } from "zod";
 import { TRADE_CITIES } from "@/lib/constants";
 import { normalizePhone, zodFieldError } from "@/lib/form-utils";
-import { createServiceRequest, getServiceCategories } from "@/lib/data";
+import { createServiceRequest, getServiceCategories, notifyProsForJobRequest } from "@/lib/data";
 import { createClient } from "@/lib/supabase/server";
 
 const citySlugs = TRADE_CITIES.map((c) => c.slug);
@@ -62,6 +62,17 @@ export async function POST(request: Request) {
       });
       await sendTransactionalEmail({ to: email, subject, html, template: "job_posted" });
     }
+
+    await notifyProsForJobRequest({
+      categorySlug: body.categorySlug,
+      citySlug: body.citySlug,
+      customerName: body.customerName,
+      customerPhone: body.customerPhone,
+      description: body.description,
+      urgency: body.urgency,
+      budgetMin: body.budgetMin,
+      budgetMax: body.budgetMax,
+    });
 
     return NextResponse.json({
       ok: true,

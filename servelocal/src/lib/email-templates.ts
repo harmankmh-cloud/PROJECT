@@ -50,6 +50,36 @@ export function proApprovedEmail(input: { displayName: string; slug: string; cit
   return { subject, html };
 }
 
+export function jobLeadForProEmail(input: {
+  proName: string;
+  categoryName: string;
+  citySlug: string;
+  customerName: string;
+  customerPhone: string;
+  description: string;
+  urgency?: string | null;
+  budgetLabel?: string | null;
+  isFeatured: boolean;
+}) {
+  const urgencyLine = input.urgency
+    ? `<p><strong>Urgency:</strong> ${input.urgency.replace(/_/g, " ")}</p>`
+    : "";
+  const budgetLine = input.budgetLabel ? `<p><strong>Budget:</strong> ${input.budgetLabel}</p>` : "";
+  const subject = `New ${input.categoryName} job in ${cityName(input.citySlug)} — ServeLocal`;
+  const html = layout(`
+<p>Hi ${input.proName},</p>
+<p>A homeowner just posted a job that matches your listing${input.isFeatured ? " <strong>(Featured — priority alert)</strong>" : ""}:</p>
+<p><strong>${input.categoryName}</strong> · ${cityName(input.citySlug)}</p>
+${urgencyLine}
+${budgetLine}
+<p><strong>${input.customerName}</strong><br/>Phone: <a href="tel:${input.customerPhone}">${input.customerPhone}</a></p>
+<p style="background:#f8fafc;padding:12px;border-radius:8px;font-size:14px">${input.description.slice(0, 500)}${input.description.length > 500 ? "…" : ""}</p>
+<p>Call or text them direct — the homeowner chose pros from ServeLocal, not a shared lead auction.</p>
+<p><a href="${appUrl}/dashboard/pro" style="display:inline-block;background:#0f766e;color:#fff;padding:12px 20px;border-radius:8px;text-decoration:none;font-weight:600">Pro dashboard</a></p>
+`);
+  return { subject, html };
+}
+
 export function savedSearchAlertEmail(input: {
   label: string;
   providerName: string;

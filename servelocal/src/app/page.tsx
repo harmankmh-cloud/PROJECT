@@ -251,17 +251,18 @@ export default async function HomePage() {
       <section className="hero-dark px-4 py-16 sm:px-8">
         <div className="hero-glow left-1/4 top-0 h-64 w-64 bg-teal-500/25" />
         <div className="relative mx-auto max-w-3xl text-center text-white">
-          <h2 className="font-display text-3xl font-bold tracking-tight">Are you a tradie? Get more leads</h2>
+          <p className="text-xs font-bold uppercase tracking-wider text-amber-300">Founding Pro — limited spots</p>
+          <h2 className="font-display mt-2 text-3xl font-bold tracking-tight">Trades: get job alerts, not lead bills</h2>
           <p className="mt-3 text-lg text-white/55">
-            Free listing or upgrade to Featured ($49/mo) and Premium ($99/mo) for top placement, verified
-            badges, and portfolio photos.
+            Free listing or Founding Featured at $29/mo — email alerts when homeowners post in your city, your phone
+            on your profile, no shared Thumbtack leads.
           </p>
           <div className="mt-8 flex flex-wrap justify-center gap-3">
-            <Link href="/join" className="btn-gold px-8 py-3">
-              Free listing
+            <Link href="/join?plan=featured" className="btn-gold px-8 py-3">
+              Claim founding spot
             </Link>
-            <Link href="/pricing" className="btn-outline-light px-8 py-3">
-              See plans
+            <Link href="/join" className="btn-outline-light px-8 py-3">
+              Free listing
             </Link>
           </div>
         </div>

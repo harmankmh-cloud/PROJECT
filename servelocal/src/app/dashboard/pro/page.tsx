@@ -4,8 +4,11 @@ import { SiteFooter } from "@/components/SiteFooter";
 import { SiteHeader } from "@/components/SiteHeader";
 import { SignOutButton } from "@/components/SignOutButton";
 import { StarRating } from "@/components/StarRating";
+import { getCategoryBySlug, getJobLeadsForProvider, getProviderReviewsForProvider, getProvidersForUser } from "@/lib/data";
 import { cityName, LISTING_PLANS } from "@/lib/constants";
-import { getCategoryBySlug, getProviderReviewsForProvider, getProvidersForUser } from "@/lib/data";
+import { ProJobLeadsList } from "@/components/ProJobLeadsList";
+import { UpgradeCheckoutButton } from "@/components/UpgradeCheckoutButton";
+import { FOUNDING_PRO } from "@/lib/tradie-program";
 import { createClient } from "@/lib/supabase/server";
 import { isSupabaseConfigured } from "@/lib/supabase/config";
 
@@ -49,7 +52,9 @@ export default async function ProDashboardPage() {
   const listing = listings[0];
   const category = await getCategoryBySlug(listing.category_slug);
   const reviews = await getProviderReviewsForProvider(listing.id);
+  const jobLeads = listing.status === "approved" ? await getJobLeadsForProvider(listing) : [];
   const plan = LISTING_PLANS.find((p) => p.id === listing.listing_tier);
+  const isPaid = listing.listing_tier === "featured" || listing.listing_tier === "premium";
 
   return (
     <main className="mesh-bg min-h-screen">
@@ -90,9 +95,33 @@ export default async function ProDashboardPage() {
             <p className="font-semibold text-brand-950">Upgrade plan</p>
             <p className="mt-1 text-sm text-slate-500">
               Current: {plan?.name || listing.listing_tier || "Starter"}
+              {!isPaid && ` · ${FOUNDING_PRO.featuredPrice} founding Featured available`}
             </p>
           </Link>
         </div>
+
+        {!isPaid && listing.status === "approved" && (
+          <div className="surface-card mt-6 border-2 border-amber-200 bg-amber-50/50 p-6">
+            <h2 className="font-semibold text-brand-950">Get more jobs — upgrade to Featured</h2>
+            <p className="mt-2 text-sm text-slate-600">
+              Featured pros get priority job alerts, top search placement, and the verified badge. Founding rate{" "}
+              {FOUNDING_PRO.featuredPrice} for {FOUNDING_PRO.duration}.
+            </p>
+            <div className="mt-4 max-w-xs">
+              <UpgradeCheckoutButton plan="featured" label={`Upgrade — ${FOUNDING_PRO.featuredPrice}`} />
+            </div>
+          </div>
+        )}
+
+        {listing.status === "approved" && (
+          <section className="mt-8">
+            <h2 className="font-display text-xl text-brand-950">Recent jobs in {cityName(listing.city_slug)}</h2>
+            <p className="mt-1 text-sm text-slate-500">
+              Homeowner requests matching your trade — call direct. You also receive email alerts for new posts.
+            </p>
+            <ProJobLeadsList leads={jobLeads} citySlug={listing.city_slug} />
+          </section>
+        )}
 
         <section className="surface-card mt-8 p-6">
           <h2 className="font-semibold text-brand-950">Listing performance</h2>
