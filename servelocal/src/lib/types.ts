@@ -89,3 +89,19 @@ export type SiteSuggestion = {
   status: "new" | "read" | "done";
   created_at: string;
 };
+
+export type SavedSearch = {
+  id: string;
+  user_id: string;
+  email: string;
+  label: string;
+  query: string | null;
+  city_slug: string | null;
+  category_slug: string | null;
+  licensed_only: boolean;
+  verified_only: boolean;
+  emergency_only: boolean;
+  alerts_enabled: boolean;
+  last_notified_at: string | null;
+  created_at: string;
+};

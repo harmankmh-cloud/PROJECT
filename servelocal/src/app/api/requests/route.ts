@@ -49,6 +49,20 @@ export async function POST(request: Request) {
       return NextResponse.json({ error: result.error }, { status: 500 });
     }
 
+    const email = body.customerEmail || user?.email;
+    if (email) {
+      const categoryName = categories.find((c) => c.slug === body.categorySlug)?.name || body.categorySlug;
+      const { jobPostedEmail } = await import("@/lib/email-templates");
+      const { sendTransactionalEmail } = await import("@/lib/email");
+      const { subject, html } = jobPostedEmail({
+        customerName: body.customerName,
+        categoryName,
+        citySlug: body.citySlug,
+        matchCount: result.matches?.length ?? 0,
+      });
+      await sendTransactionalEmail({ to: email, subject, html, template: "job_posted" });
+    }
+
     return NextResponse.json({
       ok: true,
       message: "Request posted — call matching pros below.",

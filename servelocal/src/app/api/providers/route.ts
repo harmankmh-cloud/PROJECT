@@ -61,6 +61,17 @@ export async function POST(request: Request) {
       return NextResponse.json({ error: result.error }, { status: 500 });
     }
 
+    const notifyEmail = body.email || user?.email;
+    if (notifyEmail) {
+      const { proApplicationEmail } = await import("@/lib/email-templates");
+      const { sendTransactionalEmail } = await import("@/lib/email");
+      const { subject, html } = proApplicationEmail({
+        displayName: body.displayName,
+        citySlug: body.citySlug,
+      });
+      await sendTransactionalEmail({ to: notifyEmail, subject, html, template: "pro_application" });
+    }
+
     return NextResponse.json({ ok: true, message: "Application received — we review within 1–2 days." });
   } catch (error) {
     if (error instanceof z.ZodError) {

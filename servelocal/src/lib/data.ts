@@ -8,6 +8,7 @@ import type {
   ServiceCategory,
   ServiceProvider,
   ServiceRequest,
+  SavedSearch,
   SiteSuggestion,
 } from "@/lib/types";
 
@@ -620,4 +621,144 @@ export async function updateSuggestionAdmin(id: string, status: "read" | "done")
 
   if (error) return { ok: false as const, error: error.message };
   return { ok: true as const };
+}
+
+export async function getProviderById(id: string) {
+  const admin = createServiceClient() ?? createDbClient();
+  if (!admin) return null;
+
+  const { data } = await admin.from("service_providers").select("*").eq("id", id).maybeSingle();
+  return data ? normalizeProvider(data as unknown as Record<string, unknown>) : null;
+}
+
+export async function getUserSavedSearches(userId: string) {
+  const admin = createDbClient();
+  if (!admin) return [];
+
+  try {
+    const { data } = await admin
+      .from("saved_searches")
+      .select("*")
+      .eq("user_id", userId)
+      .order("created_at", { ascending: false });
+
+    return (data || []) as SavedSearch[];
+  } catch {
+    return [];
+  }
+}
+
+export async function createSavedSearch(input: {
+  userId: string;
+  email: string;
+  label: string;
+  query?: string;
+  citySlug?: string;
+  categorySlug?: string;
+  licensedOnly?: boolean;
+  verifiedOnly?: boolean;
+  emergencyOnly?: boolean;
+}) {
+  const admin = createDbClient();
+  if (!admin) return { ok: false as const, error: "Server not configured" };
+
+  try {
+    const { data, error } = await admin
+      .from("saved_searches")
+      .insert({
+        user_id: input.userId,
+        email: input.email.trim(),
+        label: input.label.trim(),
+        query: input.query?.trim() || null,
+        city_slug: input.citySlug || null,
+        category_slug: input.categorySlug || null,
+        licensed_only: input.licensedOnly ?? false,
+        verified_only: input.verifiedOnly ?? false,
+        emergency_only: input.emergencyOnly ?? false,
+      })
+      .select("id")
+      .single();
+
+    if (error || !data) return { ok: false as const, error: error?.message || "Could not save" };
+    return { ok: true as const, id: data.id };
+  } catch {
+    return { ok: false as const, error: "Saved searches not available yet" };
+  }
+}
+
+export async function deleteSavedSearch(userId: string, searchId: string) {
+  const admin = createDbClient();
+  if (!admin) return { ok: false as const, error: "Server not configured" };
+
+  const { error } = await admin.from("saved_searches").delete().eq("id", searchId).eq("user_id", userId);
+  if (error) return { ok: false as const, error: error.message };
+  return { ok: true as const };
+}
+
+function savedSearchMatchesProvider(search: SavedSearch, provider: ServiceProvider) {
+  if (search.city_slug && search.city_slug !== provider.city_slug) return false;
+  if (search.category_slug && search.category_slug !== provider.category_slug) return false;
+  if (search.licensed_only && !provider.licensed) return false;
+  if (search.verified_only && !provider.verified) return false;
+  if (search.emergency_only && !provider.emergency_available) return false;
+  if (search.query?.trim()) {
+    const q = search.query.trim().toLowerCase();
+    const haystack = `${provider.display_name} ${provider.bio || ""} ${provider.category_slug} ${provider.city_slug}`.toLowerCase();
+    if (!haystack.includes(q)) return false;
+  }
+  return true;
+}
+
+export async function notifySavedSearchesForProvider(provider: ServiceProvider) {
+  if (provider.status !== "approved") return { notified: 0 };
+
+  const admin = createServiceClient();
+  if (!admin) return { notified: 0 };
+
+  let searches: SavedSearch[] = [];
+  try {
+    const { data } = await admin.from("saved_searches").select("*").eq("alerts_enabled", true);
+    searches = (data || []) as SavedSearch[];
+  } catch {
+    return { notified: 0 };
+  }
+
+  const { sendTransactionalEmail } = await import("@/lib/email");
+  const { savedSearchAlertEmail } = await import("@/lib/email-templates");
+  const categories = await getServiceCategories();
+  const categoryName = categories.find((c) => c.slug === provider.category_slug)?.name || provider.category_slug;
+
+  let notified = 0;
+  for (const search of searches) {
+    if (!savedSearchMatchesProvider(search, provider)) continue;
+
+    const since = search.last_notified_at ? new Date(search.last_notified_at).getTime() : 0;
+    const created = new Date(provider.created_at).getTime();
+    if (since && created <= since) continue;
+
+    const { subject, html } = savedSearchAlertEmail({
+      label: search.label,
+      providerName: provider.display_name,
+      categoryName,
+      citySlug: provider.city_slug,
+      providerSlug: provider.slug,
+    });
+
+    const result = await sendTransactionalEmail({
+      to: search.email,
+      subject,
+      html,
+      template: "saved_search_alert",
+    });
+
+    if (result.ok) {
+      notified += 1;
+      await admin
+        .from("saved_searches")
+        .update({ last_notified_at: new Date().toISOString() })
+        .eq("id", search.id);
+    }
+  }
+
+  return { notified };
 }
