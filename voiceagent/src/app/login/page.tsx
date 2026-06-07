@@ -1,14 +1,18 @@
 "use client";
 
 import Link from "next/link";
-import { useState } from "react";
+import { useSearchParams } from "next/navigation";
+import { Suspense, useState } from "react";
 import { createClient } from "@/lib/supabase/client";
 import { BRAND } from "@/lib/brand";
 
-export default function LoginPage() {
+function LoginForm() {
+  const searchParams = useSearchParams();
+  const urlError = searchParams.get("error");
+
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
-  const [error, setError] = useState("");
+  const [error, setError] = useState(urlError || "");
   const [loading, setLoading] = useState(false);
 
   async function handleSubmit(e: React.FormEvent) {
@@ -16,9 +20,9 @@ export default function LoginPage() {
     setLoading(true);
     setError("");
     const supabase = createClient();
-    const { error } = await supabase.auth.signInWithPassword({ email, password });
-    if (error) {
-      setError(error.message);
+    const { error: signInError } = await supabase.auth.signInWithPassword({ email, password });
+    if (signInError) {
+      setError(signInError.message);
       setLoading(false);
       return;
     }
@@ -36,6 +40,9 @@ export default function LoginPage() {
           {error && <p className="text-sm text-red-600">{error}</p>}
           <button type="submit" disabled={loading} className="btn-primary w-full">{loading ? "Signing in…" : "Sign in"}</button>
         </form>
+        <p className="mt-3 text-center text-sm">
+          <Link href="/forgot-password" className="text-teal-600 hover:underline">Forgot password?</Link>
+        </p>
         <p className="mt-4 text-center text-sm text-slate-500">
           No account? <Link href="/signup" className="text-teal-600 hover:underline">Sign up</Link>
         </p>
@@ -44,5 +51,13 @@ export default function LoginPage() {
         </p>
       </div>
     </div>
+  );
+}
+
+export default function LoginPage() {
+  return (
+    <Suspense fallback={<div className="flex min-h-screen items-center justify-center text-slate-400">Loading…</div>}>
+      <LoginForm />
+    </Suspense>
   );
 }

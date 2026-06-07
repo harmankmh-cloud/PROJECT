@@ -3,30 +3,62 @@
 import { useEffect, useState } from "react";
 import { FlowBuilder } from "@/components/FlowBuilder";
 import { DEFAULT_FLOW_EDGES, DEFAULT_FLOW_NODES } from "@/lib/flow-engine";
+import { apiFetch } from "@/lib/api-client";
+
+type Flow = {
+  id: string;
+  name: string;
+  is_published: boolean;
+  nodes?: typeof DEFAULT_FLOW_NODES;
+  edges?: typeof DEFAULT_FLOW_EDGES;
+};
 
 export default function FlowsPage() {
-  const [flows, setFlows] = useState<Array<{ id: string; name: string; is_published: boolean }>>([]);
+  const [flows, setFlows] = useState<Flow[]>([]);
+  const [flowName, setFlowName] = useState("Main Flow");
+  const [error, setError] = useState("");
+  const [saving, setSaving] = useState(false);
 
   useEffect(() => {
-    fetch("/api/flows").then((r) => r.json()).then((d) => setFlows(d.flows || []));
+    apiFetch<{ flows: Flow[] }>("/api/flows").then((res) => {
+      if (res.ok) setFlows(res.data.flows || []);
+      else setError(res.error);
+    });
   }, []);
 
   async function saveFlow(nodes: typeof DEFAULT_FLOW_NODES, edges: typeof DEFAULT_FLOW_EDGES) {
-    const res = await fetch("/api/flows", {
+    setSaving(true);
+    setError("");
+    const res = await apiFetch<{ flow: Flow }>("/api/flows", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ name: "Main Flow", nodes, edges, is_published: true }),
+      body: JSON.stringify({ name: flowName, nodes, edges, is_published: true }),
     });
-    const data = await res.json();
-    if (data.flow) setFlows((prev) => [data.flow, ...prev]);
+    setSaving(false);
+    if (res.ok) {
+      setFlows((prev) => [res.data.flow, ...prev.filter((f) => f.id !== res.data.flow.id)]);
+    } else {
+      setError(res.error);
+    }
   }
 
   return (
     <div>
       <h1 className="text-2xl font-bold text-brand-900">Flow Builder</h1>
       <p className="mt-1 text-slate-500">Design conversation flows with greet, ask, branch, tool, transfer, and end nodes.</p>
+      {error && <p className="mt-4 text-sm text-red-600">{error}</p>}
 
-      <div className="mt-8">
+      <div className="mt-6 flex items-center gap-3">
+        <input
+          className="input-field max-w-xs"
+          placeholder="Flow name"
+          value={flowName}
+          onChange={(e) => setFlowName(e.target.value)}
+        />
+        {saving && <span className="text-sm text-slate-400">Saving…</span>}
+      </div>
+
+      <div className="mt-4">
         <FlowBuilder onSave={saveFlow} />
       </div>
 

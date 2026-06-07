@@ -1,54 +1,144 @@
 "use client";
 
-import { useState } from "react";
+import { useEffect, useState } from "react";
+import { apiFetch } from "@/lib/api-client";
+
+type Settings = {
+  name: string;
+  transfer_phone: string;
+  data_region: string;
+  white_label: { brandName?: string; domain?: string };
+  hipaa_enabled: boolean;
+  recording_retention_days: number;
+};
 
 export default function SettingsPage() {
-  const [dataRegion, setDataRegion] = useState(
-    process.env.NEXT_PUBLIC_DEFAULT_DATA_REGION || "us"
-  );
-  const [whiteLabel, setWhiteLabel] = useState({ brandName: "", domain: "" });
-  const [transferPhone, setTransferPhone] = useState("");
-  const [hipaa, setHipaa] = useState(false);
+  const [settings, setSettings] = useState<Settings | null>(null);
+  const [loading, setLoading] = useState(true);
+  const [saving, setSaving] = useState(false);
+  const [message, setMessage] = useState("");
+  const [error, setError] = useState("");
+
+  useEffect(() => {
+    apiFetch<{ settings: Settings }>("/api/settings").then((res) => {
+      if (res.ok) setSettings(res.data.settings);
+      else setError(res.error);
+      setLoading(false);
+    });
+  }, []);
+
+  async function handleSave(e: React.FormEvent) {
+    e.preventDefault();
+    if (!settings) return;
+    setSaving(true);
+    setError("");
+    setMessage("");
+
+    const res = await apiFetch("/api/settings", {
+      method: "PATCH",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify(settings),
+    });
+
+    setSaving(false);
+    if (res.ok) {
+      setMessage("Settings saved.");
+    } else {
+      setError(res.error);
+    }
+  }
+
+  if (loading) return <p className="text-slate-400">Loading settings…</p>;
+  if (!settings) return <p className="text-red-600">{error || "Could not load settings."}</p>;
 
   return (
     <div>
       <h1 className="text-2xl font-bold text-brand-900">Settings</h1>
-      <p className="mt-1 text-slate-500">White-label, data residency, and organization defaults.</p>
+      <p className="mt-1 text-slate-500">Organization defaults and compliance options.</p>
 
-      <div className="mt-8 space-y-6">
+      {message && <p className="mt-4 text-sm text-teal-700">{message}</p>}
+      {error && <p className="mt-4 text-sm text-red-600">{error}</p>}
+
+      <form onSubmit={handleSave} className="mt-8 space-y-6">
         <div className="surface-card p-6 space-y-4">
           <h2 className="font-semibold">Organization</h2>
-          <input className="input-field" placeholder="Default transfer phone" value={transferPhone} onChange={(e) => setTransferPhone(e.target.value)} />
+          <input
+            className="input-field"
+            placeholder="Organization name"
+            value={settings.name}
+            onChange={(e) => setSettings({ ...settings, name: e.target.value })}
+          />
+          <input
+            className="input-field"
+            placeholder="Default transfer phone (+1...)"
+            value={settings.transfer_phone}
+            onChange={(e) => setSettings({ ...settings, transfer_phone: e.target.value })}
+          />
         </div>
 
         <div className="surface-card p-6 space-y-4">
-          <h2 className="font-semibold">Data Residency (EU)</h2>
-          <select className="input-field" value={dataRegion} onChange={(e) => setDataRegion(e.target.value)}>
+          <h2 className="font-semibold">Data Residency</h2>
+          <select
+            className="input-field"
+            value={settings.data_region}
+            onChange={(e) => setSettings({ ...settings, data_region: e.target.value })}
+          >
             <option value="us">United States</option>
             <option value="eu">European Union</option>
           </select>
-          <p className="text-xs text-slate-500">EU region routes storage and processing to EU infrastructure when enabled.</p>
         </div>
 
         <div className="surface-card p-6 space-y-4">
           <h2 className="font-semibold">White-label (Enterprise)</h2>
-          <input className="input-field" placeholder="Brand name" value={whiteLabel.brandName} onChange={(e) => setWhiteLabel({ ...whiteLabel, brandName: e.target.value })} />
-          <input className="input-field" placeholder="Custom domain" value={whiteLabel.domain} onChange={(e) => setWhiteLabel({ ...whiteLabel, domain: e.target.value })} />
+          <input
+            className="input-field"
+            placeholder="Brand name"
+            value={settings.white_label?.brandName || ""}
+            onChange={(e) =>
+              setSettings({
+                ...settings,
+                white_label: { ...settings.white_label, brandName: e.target.value },
+              })
+            }
+          />
+          <input
+            className="input-field"
+            placeholder="Custom domain"
+            value={settings.white_label?.domain || ""}
+            onChange={(e) =>
+              setSettings({
+                ...settings,
+                white_label: { ...settings.white_label, domain: e.target.value },
+              })
+            }
+          />
         </div>
 
-        <div className="surface-card p-6">
+        <div className="surface-card p-6 space-y-4">
           <label className="flex items-center gap-3">
-            <input type="checkbox" checked={hipaa} onChange={(e) => setHipaa(e.target.checked)} />
-            <span className="text-sm">Enable HIPAA mode (BAA required, 30-day retention default)</span>
+            <input
+              type="checkbox"
+              checked={settings.hipaa_enabled}
+              onChange={(e) => setSettings({ ...settings, hipaa_enabled: e.target.checked })}
+            />
+            <span className="text-sm">Enable HIPAA mode (BAA required)</span>
           </label>
+          <input
+            type="number"
+            className="input-field"
+            min={1}
+            placeholder="Recording retention (days)"
+            value={settings.recording_retention_days}
+            onChange={(e) =>
+              setSettings({ ...settings, recording_retention_days: Number(e.target.value) })
+            }
+          />
         </div>
 
-        <div className="surface-card p-6">
-          <h2 className="font-semibold">Enterprise SSO</h2>
-          <p className="mt-2 text-sm text-slate-600">Configure SAML_ENTRY_POINT, SAML_ISSUER, and SAML_CERT in environment.</p>
-          <a href="/api/auth/sso" className="btn-secondary mt-4 inline-block text-sm">Test SSO login</a>
-        </div>
-      </div>
+        <button type="submit" disabled={saving} className="btn-primary">
+          {saving ? "Saving…" : "Save settings"}
+        </button>
+      </form>
     </div>
   );
 }
