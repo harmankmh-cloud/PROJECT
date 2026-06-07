@@ -1,3 +1,5 @@
+import { EXTENDED_COST_GUIDES } from "@/lib/extended-catalog";
+
 export const COMPANY = {
   email: "hello@servelocal.ca",
   address: "Fraser Valley, British Columbia, Canada",
@@ -152,6 +154,31 @@ export const GUIDE_EXTENDED: Record<
     ],
   },
 };
+
+function genericGuide(name: string) {
+  return {
+    intro: `${name} pricing in BC varies by scope, access, and materials. Fraser Valley and Metro Vancouver rates differ slightly — always get 2–3 written quotes for projects over $500.`,
+    factors: ["Job size and complexity", "Materials supplied by pro vs homeowner", "Emergency or after-hours timing", "Permits or inspections if required"],
+    timeline: "Small jobs often same-week; larger projects need scheduling and may depend on weather.",
+    hiring: ["Confirm licence or certification where regulated", "Ask for proof of liability insurance", "Get scope and warranty in writing"],
+    faqs: [
+      { q: `How much does ${name.toLowerCase()} cost in BC?`, a: "See the typical ranges on this page — your quote depends on access, materials, and job size." },
+      { q: "Should I get multiple quotes?", a: "Yes for any project over a few hundred dollars. Compare written quotes, not phone estimates." },
+    ],
+  };
+}
+
+const EXTENDED_GUIDE_EXTENDED = Object.fromEntries(
+  Object.entries(EXTENDED_COST_GUIDES).map(([slug, _guide]) => {
+    const label = slug.replace(/-/g, " ");
+    const name = label.charAt(0).toUpperCase() + label.slice(1);
+    return [slug, genericGuide(name)];
+  })
+);
+
+export function getGuideExtended(slug: string) {
+  return GUIDE_EXTENDED[slug] || EXTENDED_GUIDE_EXTENDED[slug];
+}
 
 export function guidePricePreview(slug: string, guide?: { low: number; high: number; unit: string; commonJobs?: { range: string }[] }) {
   if (!guide) return null;

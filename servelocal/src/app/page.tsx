@@ -2,7 +2,9 @@ import type { Metadata } from "next";
 import Link from "next/link";
 import { SiteFooter } from "@/components/SiteFooter";
 import { SiteHeader } from "@/components/SiteHeader";
-import { SearchBar } from "@/components/SearchBar";
+import { SearchBarWithSuggest } from "@/components/SearchBarWithSuggest";
+import { EmergencyBanner } from "@/components/EmergencyBanner";
+import { NewsletterSignup } from "@/components/NewsletterSignup";
 import { ProviderCard } from "@/components/ProviderCard";
 import { HOW_IT_WORKS, TRADE_CITIES, TRUST_BADGES, SERVE_LOCAL } from "@/lib/constants";
 import { WHY_SERVELOCAL } from "@/lib/marketing-content";
@@ -50,6 +52,7 @@ export default async function HomePage() {
 
   return (
     <main className="mesh-bg min-h-screen">
+      <EmergencyBanner />
       <SiteHeader compact />
 
       <section className="hero-light px-4 pb-16 pt-12 sm:px-8 sm:pb-24 sm:pt-16">
@@ -69,7 +72,7 @@ export default async function HomePage() {
             middleman fees.
           </p>
           <div className="mx-auto mt-8 max-w-xl">
-            <SearchBar />
+            <SearchBarWithSuggest />
           </div>
           <div className="mt-8 flex flex-col justify-center gap-3 sm:flex-row">
             <Link href="/request" className="btn-gold px-8 py-3.5 text-base">
@@ -225,6 +228,23 @@ export default async function HomePage() {
               </div>
             ))}
           </div>
+        </div>
+        <div className="mt-12 flex flex-wrap justify-center gap-4 text-sm">
+          <Link href="/faq" className="font-semibold text-teal-600 hover:underline">
+            FAQ
+          </Link>
+          <Link href="/guides" className="font-semibold text-teal-600 hover:underline">
+            Cost guides
+          </Link>
+          <Link href="/blog" className="font-semibold text-teal-600 hover:underline">
+            Blog
+          </Link>
+        </div>
+      </section>
+
+      <section className="border-t border-slate-200/70 bg-slate-50 py-12">
+        <div className="mx-auto max-w-xl px-4 sm:px-8">
+          <NewsletterSignup />
         </div>
       </section>
 

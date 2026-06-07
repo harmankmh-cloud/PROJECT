@@ -5,7 +5,7 @@ import { SiteFooter } from "@/components/SiteFooter";
 import { SiteHeader } from "@/components/SiteHeader";
 import { ProviderCard } from "@/components/ProviderCard";
 import { COST_GUIDES, SERVE_LOCAL } from "@/lib/constants";
-import { GUIDE_EXTENDED } from "@/lib/marketing-content";
+import { getGuideExtended } from "@/lib/marketing-content";
 import { pageMetadata } from "@/lib/seo";
 import { getApprovedProviders, getCategoryBySlug } from "@/lib/data";
 
@@ -31,7 +31,7 @@ export default async function GuideCategoryPage({ params }: { params: Promise<{ 
   if (!cat) notFound();
 
   const guide = COST_GUIDES[category];
-  const extended = GUIDE_EXTENDED[category];
+  const extended = getGuideExtended(category);
   const pros = await getApprovedProviders({ categorySlug: category, sort: "rating" });
 
   const breadcrumbJsonLd = {
@@ -173,6 +173,18 @@ export default async function GuideCategoryPage({ params }: { params: Promise<{ 
             </div>
           </div>
         )}
+
+        <section className="hero-dark mt-12 rounded-3xl px-6 py-10 sm:px-10">
+          <div className="mx-auto max-w-2xl text-center text-white">
+            <h2 className="font-display text-2xl font-bold">Get 3 free quotes</h2>
+            <p className="mt-2 text-white/60">
+              Post your {cat.name.toLowerCase()} job — compare local pros and call direct. No lead fees.
+            </p>
+            <Link href={`/request?category=${category}`} className="btn-gold mt-6 inline-flex px-8 py-3">
+              Post your job
+            </Link>
+          </div>
+        </section>
       </div>
 
       <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(breadcrumbJsonLd) }} />

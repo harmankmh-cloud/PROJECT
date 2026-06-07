@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import Link from "next/link";
 import { notFound } from "next/navigation";
 import { ProviderCard } from "@/components/ProviderCard";
+import { ProvidersMapSection } from "@/components/ProvidersMapSection";
 import { SiteFooter } from "@/components/SiteFooter";
 import { SiteHeader } from "@/components/SiteHeader";
 import { TRADE_CITIES, SERVE_LOCAL } from "@/lib/constants";
@@ -83,15 +84,18 @@ export default async function CityPage({ params }: { params: Promise<{ city: str
             </div>
           </div>
         ) : (
-          <div className="mt-12">
-            <h2 className="font-semibold text-brand-950">Top pros in {cityMeta.name}</h2>
-            <div className="mt-4 grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
-              {providers.map((p) => {
-                const cat = categories.find((c) => c.slug === p.category_slug);
-                return <ProviderCard key={p.id} provider={p} categoryName={cat?.name} />;
-              })}
+          <>
+            <div className="mt-12">
+              <h2 className="font-semibold text-brand-950">Top pros in {cityMeta.name}</h2>
+              <div className="mt-4 grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
+                {providers.map((p) => {
+                  const cat = categories.find((c) => c.slug === p.category_slug);
+                  return <ProviderCard key={p.id} provider={p} categoryName={cat?.name} />;
+                })}
+              </div>
             </div>
-          </div>
+            <ProvidersMapSection citySlug={city} />
+          </>
         )}
 
         <div className="mt-12 flex flex-wrap gap-3">

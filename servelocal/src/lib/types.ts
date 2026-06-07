@@ -38,6 +38,7 @@ export type ServiceProvider = {
   avg_rating?: number;
   review_count?: number;
   requested_plan?: ListingTier | string | null;
+  owner_user_id?: string | null;
 };
 
 export type ServiceRequest = {
@@ -51,6 +52,9 @@ export type ServiceRequest = {
   status: string;
   created_at: string;
   user_id?: string | null;
+  urgency?: string | null;
+  budget_min?: number | null;
+  budget_max?: number | null;
 };
 
 export type ProviderReview = {

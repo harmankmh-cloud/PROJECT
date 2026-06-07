@@ -1,7 +1,8 @@
-import type { Metadata } from "next";
+import type { Metadata, Viewport } from "next";
 import { Plus_Jakarta_Sans } from "next/font/google";
 import { SERVE_LOCAL } from "@/lib/constants";
 import { SuggestionButton } from "@/components/SuggestionButton";
+import { GoogleAnalytics } from "@/components/GoogleAnalytics";
 import "./globals.css";
 
 const jakarta = Plus_Jakarta_Sans({
@@ -38,11 +39,12 @@ export const metadata: Metadata = {
   },
 };
 
-export const viewport = {
+export const viewport: Viewport = {
   width: "device-width",
   initialScale: 1,
   maximumScale: 5,
   userScalable: true,
+  themeColor: "#0f766e",
 };
 
 export default function RootLayout({
@@ -55,6 +57,7 @@ export default function RootLayout({
       <body className="min-h-full font-sans antialiased">
         {children}
         <SuggestionButton />
+        <GoogleAnalytics />
       </body>
     </html>
   );

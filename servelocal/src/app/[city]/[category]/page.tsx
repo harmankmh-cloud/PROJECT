@@ -4,9 +4,10 @@ import { notFound } from "next/navigation";
 import { Suspense } from "react";
 import { CategoryFilters } from "@/components/CategoryFilters";
 import { ProviderCard } from "@/components/ProviderCard";
+import { ProvidersMapSection } from "@/components/ProvidersMapSection";
 import { SiteFooter } from "@/components/SiteFooter";
 import { SiteHeader } from "@/components/SiteHeader";
-import { TRADE_CITIES, SERVE_LOCAL, cityName } from "@/lib/constants";
+import { TRADE_CITIES, SERVE_LOCAL, cityName, SERVICE_SUBCATEGORIES } from "@/lib/constants";
 import { pageMetadata } from "@/lib/seo";
 import { getApprovedProviders, getCategoryBySlug } from "@/lib/data";
 import type { ProviderSort } from "@/lib/types";
@@ -70,6 +71,20 @@ export default async function CategoryPage({
         <Suspense fallback={null}>
           <CategoryFilters />
         </Suspense>
+
+        {SERVICE_SUBCATEGORIES[category] && (
+          <div className="mt-4 flex flex-wrap gap-2">
+            {SERVICE_SUBCATEGORIES[category].map((sub) => (
+              <Link
+                key={sub.slug}
+                href={`/${city}/${category}?q=${encodeURIComponent(sub.label)}`}
+                className="chip-tag text-xs"
+              >
+                {sub.label}
+              </Link>
+            ))}
+          </div>
+        )}
 
         {providers.length === 0 ? (
           <div className="surface-card mt-10 p-8 text-center">

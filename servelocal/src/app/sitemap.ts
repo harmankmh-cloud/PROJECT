@@ -1,5 +1,6 @@
 import type { MetadataRoute } from "next";
 import { COST_GUIDES, TRADE_CITIES } from "@/lib/constants";
+import { BLOG_POSTS } from "@/lib/site-content";
 
 function getBaseUrl(): string {
   const envUrl = process.env.NEXT_PUBLIC_APP_URL?.trim();
@@ -15,13 +16,16 @@ export default function sitemap(): MetadataRoute.Sitemap {
 
   const staticPages: MetadataRoute.Sitemap = [
     "/",
-    "/signup",
-    "/login",
     "/request",
     "/join",
     "/pricing",
     "/guides",
     "/search",
+    "/about",
+    "/contact",
+    "/faq",
+    "/blog",
+    "/refer",
     "/privacy",
     "/terms",
   ].map((path) => ({
@@ -45,5 +49,12 @@ export default function sitemap(): MetadataRoute.Sitemap {
     priority: 0.7,
   }));
 
-  return [...staticPages, ...cityPages, ...guidePages];
+  const blogPages: MetadataRoute.Sitemap = BLOG_POSTS.map((post) => ({
+    url: `${baseUrl}/blog/${post.slug}`,
+    lastModified: new Date(post.date),
+    changeFrequency: "monthly",
+    priority: 0.6,
+  }));
+
+  return [...staticPages, ...cityPages, ...guidePages, ...blogPages];
 }

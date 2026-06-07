@@ -1,4 +1,7 @@
 import type { ServiceCategory } from "@/lib/types";
+import { EXTENDED_COST_GUIDES, EXTENDED_SERVICE_CATEGORIES, SERVICE_SUBCATEGORIES } from "@/lib/extended-catalog";
+
+export { SERVICE_SUBCATEGORIES };
 
 export const SERVE_LOCAL = {
   name: "ServeLocal",
@@ -33,6 +36,7 @@ export const DEFAULT_SERVICE_CATEGORIES: ServiceCategory[] = [
   { id: "default-roofer", slug: "roofer", name: "Roofer", icon: "🏠", sort_order: 6 },
   { id: "default-painter", slug: "painter", name: "Painter", icon: "🎨", sort_order: 7 },
   { id: "default-landscaper", slug: "landscaper", name: "Landscaping", icon: "🌿", sort_order: 8 },
+  ...EXTENDED_SERVICE_CATEGORIES,
 ];
 
 export function isValidCitySlug(slug: string | undefined): slug is CitySlug {
@@ -199,6 +203,7 @@ export const COST_GUIDES: Record<
       { name: "Patio install", range: "$3,000–$12,000" },
     ],
   },
+  ...EXTENDED_COST_GUIDES,
 };
 
 export const TRUST_BADGES = [
