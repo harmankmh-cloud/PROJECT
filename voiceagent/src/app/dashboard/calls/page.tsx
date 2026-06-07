@@ -42,6 +42,7 @@ export default function CallsPage() {
               <th className="px-5 py-3">Direction</th>
               <th className="px-5 py-3">From / Detail</th>
               <th className="px-5 py-3">Duration</th>
+              <th className="px-5 py-3">Score</th>
               <th className="px-5 py-3">Intent</th>
               <th className="px-5 py-3">Sentiment</th>
               <th className="px-5 py-3">Transferred</th>
@@ -50,7 +51,7 @@ export default function CallsPage() {
           </thead>
           <tbody>
             {calls.length === 0 && !loading ? (
-              <tr><td colSpan={7} className="px-5 py-8 text-center text-slate-400">No calls yet.</td></tr>
+              <tr><td colSpan={8} className="px-5 py-8 text-center text-slate-400">No calls yet.</td></tr>
             ) : (
               calls.map((call) => (
                 <tr key={call.id} className="border-t border-slate-100">
@@ -61,6 +62,7 @@ export default function CallsPage() {
                     </Link>
                   </td>
                   <td className="px-5 py-3">{call.duration_seconds}s</td>
+                  <td className="px-5 py-3">{call.score ?? "—"}</td>
                   <td className="px-5 py-3">{call.intent || "—"}</td>
                   <td className="px-5 py-3">{call.sentiment || "—"}</td>
                   <td className="px-5 py-3">{call.transferred ? "Yes" : "No"}</td>

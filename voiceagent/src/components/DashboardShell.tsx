@@ -12,12 +12,17 @@ const NAV = [
   { href: "/dashboard/phone-numbers", label: "Phone Numbers", icon: "☎" },
   { href: "/dashboard/knowledge", label: "Knowledge", icon: "📚" },
   { href: "/dashboard/calls", label: "Calls", icon: "📞" },
+  { href: "/dashboard/analytics", label: "Analytics", icon: "📊" },
+  { href: "/dashboard/sandbox", label: "Sandbox", icon: "🧪" },
   { href: "/dashboard/flows", label: "Flows", icon: "◇" },
   { href: "/dashboard/campaigns", label: "Campaigns", icon: "📣" },
   { href: "/dashboard/integrations", label: "Integrations", icon: "🔗" },
   { href: "/dashboard/compliance", label: "Compliance", icon: "🛡" },
   { href: "/dashboard/channels", label: "Channels", icon: "💬" },
   { href: "/dashboard/billing", label: "Billing", icon: "◈" },
+  { href: "/dashboard/team", label: "Team", icon: "👥" },
+  { href: "/dashboard/developer", label: "Developer", icon: "⌘" },
+  { href: "/dashboard/audit", label: "Audit", icon: "📋" },
   { href: "/dashboard/settings", label: "Settings", icon: "⚙" },
   { href: "/dashboard/help", label: "Help", icon: "?" },
 ];
@@ -25,10 +30,12 @@ const NAV = [
 export function DashboardShell({
   orgName,
   userEmail,
+  isPlatformAdmin,
   children,
 }: {
   orgName?: string;
   userEmail?: string;
+  isPlatformAdmin?: boolean;
   children: React.ReactNode;
 }) {
   const pathname = usePathname();
@@ -91,6 +98,17 @@ export function DashboardShell({
           View site
         </Link>
       </nav>
+
+      {isPlatformAdmin && (
+        <div className="border-t border-white/10 px-3 py-3">
+          <Link
+            href="/admin"
+            className="flex items-center gap-2 rounded-2xl bg-gradient-to-r from-teal-500/20 to-violet-500/15 px-3.5 py-2.5 text-sm font-semibold text-teal-300 transition hover:from-teal-500/30"
+          >
+            🛡 Platform panel →
+          </Link>
+        </div>
+      )}
 
       <div className="border-t border-white/10 p-3">
         <button

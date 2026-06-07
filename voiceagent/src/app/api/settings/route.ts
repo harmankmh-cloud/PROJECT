@@ -21,6 +21,9 @@ export async function GET() {
       white_label: org.white_label || {},
       hipaa_enabled: org.hipaa_enabled ?? false,
       recording_retention_days: org.recording_retention_days ?? 30,
+      business_hours: org.business_hours || {},
+      webhook_url: org.webhook_url || "",
+      webhook_secret: org.webhook_secret ? "••••••••" : "",
     },
   });
 }
@@ -45,6 +48,13 @@ export async function PATCH(request: NextRequest) {
   if (body.hipaa_enabled !== undefined) updates.hipaa_enabled = Boolean(body.hipaa_enabled);
   if (body.recording_retention_days !== undefined) {
     updates.recording_retention_days = Math.max(1, Number(body.recording_retention_days) || 30);
+  }
+  if (body.business_hours !== undefined) updates.business_hours = body.business_hours;
+  if (body.webhook_url !== undefined) {
+    updates.webhook_url = body.webhook_url ? String(body.webhook_url).trim() : null;
+  }
+  if (body.webhook_secret !== undefined && body.webhook_secret !== "••••••••") {
+    updates.webhook_secret = body.webhook_secret ? String(body.webhook_secret).trim() : null;
   }
 
   const { data, error } = await supabase

@@ -1,6 +1,8 @@
 "use client";
 
 import { useEffect, useState } from "react";
+import { BusinessHoursEditor } from "@/components/BusinessHoursEditor";
+import { DEFAULT_BUSINESS_HOURS, type BusinessHours } from "@/lib/business-hours";
 import { apiFetch } from "@/lib/api-client";
 
 type Settings = {
@@ -10,6 +12,9 @@ type Settings = {
   white_label: { brandName?: string; domain?: string };
   hipaa_enabled: boolean;
   recording_retention_days: number;
+  business_hours: BusinessHours;
+  webhook_url: string;
+  webhook_secret: string;
 };
 
 export default function SettingsPage() {
@@ -73,6 +78,38 @@ export default function SettingsPage() {
             placeholder="Default transfer phone (+1...)"
             value={settings.transfer_phone}
             onChange={(e) => setSettings({ ...settings, transfer_phone: e.target.value })}
+          />
+        </div>
+
+        <div className="surface-card p-6 space-y-4">
+          <h2 className="font-semibold">Business hours</h2>
+          <p className="text-sm text-slate-500">
+            Inbound calls outside these hours hear an after-hours message instead of your agent.
+          </p>
+          <BusinessHoursEditor
+            value={
+              Object.keys(settings.business_hours || {}).length
+                ? settings.business_hours
+                : DEFAULT_BUSINESS_HOURS
+            }
+            onChange={(business_hours) => setSettings({ ...settings, business_hours })}
+          />
+        </div>
+
+        <div className="surface-card p-6 space-y-4">
+          <h2 className="font-semibold">Outbound webhooks</h2>
+          <input
+            className="input-field"
+            placeholder="https://your-app.com/webhooks/intellivo"
+            value={settings.webhook_url}
+            onChange={(e) => setSettings({ ...settings, webhook_url: e.target.value })}
+          />
+          <input
+            className="input-field"
+            type="password"
+            placeholder="Webhook signing secret (optional)"
+            value={settings.webhook_secret}
+            onChange={(e) => setSettings({ ...settings, webhook_secret: e.target.value })}
           />
         </div>
 

@@ -45,6 +45,9 @@ export interface Call {
   sentiment: string | null;
   intent: string | null;
   summary: string | null;
+  score: number | null;
+  topics: string[] | null;
+  action_items: string[] | null;
   started_at: string | null;
   ended_at: string | null;
   created_at: string;

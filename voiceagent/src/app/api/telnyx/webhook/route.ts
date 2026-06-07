@@ -9,9 +9,13 @@ import {
   startTranscription,
   transferCall,
 } from "@/lib/telnyx";
-import { generateVoiceReply } from "@/lib/voice-conversation";
+import { loadKnowledgeContext } from "@/lib/knowledge-context";
+import { processVoiceTurn } from "@/lib/voice-flow-runtime";
 import { logHubSpotCall } from "@/lib/integrations/hubspot";
 import { analyzeCall } from "@/lib/intelligence";
+import { intelligenceToCallUpdate } from "@/lib/call-intelligence-persist";
+import { dispatchCallWebhook } from "@/lib/outbound-webhook";
+import { isWithinBusinessHours, type BusinessHours } from "@/lib/business-hours";
 
 export async function POST(request: NextRequest) {
   const rawBody = await request.text();
@@ -54,6 +58,26 @@ export async function POST(request: NextRequest) {
     }
 
     if (orgId && orgId !== "default") {
+      const { data: orgRow } = await admin
+        .from("va_organizations")
+        .select("business_hours, transfer_phone")
+        .eq("id", orgId)
+        .maybeSingle();
+
+      const withinHours = isWithinBusinessHours(
+        (orgRow?.business_hours as BusinessHours) || undefined
+      );
+
+      if (!withinHours) {
+        const afterHoursMsg =
+          "Thanks for calling. We're currently closed. Please call back during business hours or leave a message after the tone.";
+        await answerCall(callControlId, {
+          clientState: encodeClientState({ orgId, agentId: agentId || "default" }),
+        });
+        await speakOnCall(callControlId, afterHoursMsg);
+        return NextResponse.json({ ok: true, afterHours: true });
+      }
+
       await admin.from("va_calls").upsert(
         {
           org_id: orgId,
@@ -124,23 +148,19 @@ export async function POST(request: NextRequest) {
       .eq("call_id", call.id)
       .order("created_at", { ascending: true });
 
-    let knowledgeContext = "";
-    if (agent?.knowledge_base_enabled) {
-      const { data: docs } = await admin
-        .from("va_knowledge_docs")
-        .select("title, content")
-        .eq("org_id", call.org_id)
-        .limit(5);
-      if (docs?.length) {
-        knowledgeContext = docs.map((d) => `${d.title}: ${d.content}`).join("\n");
-      }
-    }
+    const knowledgeContext = agent?.knowledge_base_enabled
+      ? await loadKnowledgeContext(call.org_id, call.agent_id || agentId, text.trim())
+      : "";
 
-    const reply = await generateVoiceReply({
-      systemPrompt: agent?.system_prompt || "You are a helpful phone assistant.",
-      knowledgeContext,
-      history: (prior || []).slice(0, -1),
+    const reply = await processVoiceTurn({
+      callSid: callControlId,
+      orgId: call.org_id,
+      agentId: call.agent_id || agentId || "default",
       userMessage: text.trim(),
+      systemPrompt: agent?.system_prompt || "You are a helpful phone assistant.",
+      knowledgeContext: knowledgeContext || undefined,
+      callerPhone: call.from_number || from || undefined,
+      history: (prior || []).slice(0, -1),
     });
 
     await admin.from("va_call_transcripts").insert({
@@ -177,7 +197,7 @@ export async function POST(request: NextRequest) {
   if (eventType === "call.hangup" || eventType === "call.ended") {
     const { data: call } = await admin
       .from("va_calls")
-      .select("id, org_id, agent_id, from_number, transferred, duration_seconds")
+      .select("id, org_id, agent_id, from_number, transferred, duration_seconds, handoff_payload")
       .eq("twilio_call_sid", callControlId)
       .maybeSingle();
 
@@ -200,11 +220,18 @@ export async function POST(request: NextRequest) {
           cost_cents: minutes * 8,
           contained: !call.transferred,
           ended_at: new Date().toISOString(),
-          summary: analysis.summary,
-          sentiment: analysis.sentiment,
-          intent: analysis.intent,
+          ...intelligenceToCallUpdate(
+            analysis,
+            call.handoff_payload as Record<string, unknown> | null
+          ),
         })
         .eq("id", call.id);
+
+      await dispatchCallWebhook(call.org_id, {
+        event: "call.completed",
+        call: { id: call.id, from_number: call.from_number, transferred: call.transferred, duration },
+        analysis,
+      });
 
       await admin.from("va_usage_events").insert({
         org_id: call.org_id,

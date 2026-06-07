@@ -2,6 +2,8 @@ import { NextRequest, NextResponse } from "next/server";
 import { createAdminClient } from "@/lib/supabase/admin";
 import { verifyOrchestratorKey } from "@/lib/auth";
 import { analyzeCall } from "@/lib/intelligence";
+import { intelligenceToCallUpdate } from "@/lib/call-intelligence-persist";
+import { dispatchCallWebhook } from "@/lib/outbound-webhook";
 import { logHubSpotCall } from "@/lib/integrations/hubspot";
 
 export async function POST(request: NextRequest) {
@@ -45,14 +47,13 @@ export async function POST(request: NextRequest) {
 
   const analysis = await analyzeCall(transcripts || []);
 
-  await admin
-    .from("va_calls")
-    .update({
-      summary: analysis.summary,
-      sentiment: analysis.sentiment,
-      intent: analysis.intent,
-    })
-    .eq("id", call.id);
+  await admin.from("va_calls").update(intelligenceToCallUpdate(analysis)).eq("id", call.id);
+
+  await dispatchCallWebhook(call.org_id, {
+    event: "call.completed",
+    call: { id: call.id, from_number: call.from_number, transferred: call.transferred },
+    analysis,
+  });
 
   if (call.from_number) {
     await admin.from("va_contacts").upsert(

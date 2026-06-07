@@ -3,6 +3,7 @@ import { after } from "next/server";
 import { verifyOrchestratorKey } from "@/lib/auth";
 import { createAdminClient } from "@/lib/supabase/admin";
 import { appendTranscript, loadCallHistory } from "@/lib/twilio-voice-context";
+import { loadKnowledgeContext } from "@/lib/knowledge-context";
 import { processVoiceTurn } from "@/lib/voice-flow-runtime";
 
 export async function POST(request: NextRequest) {
@@ -28,22 +29,16 @@ export async function POST(request: NextRequest) {
     loadCallHistory(callSid),
   ]);
 
-  let knowledgeContext = "";
-  if (agent?.knowledge_base_enabled) {
-    const { data: docs } = await admin
-      .from("va_knowledge_docs")
-      .select("title, content")
-      .eq("org_id", orgId)
-      .limit(10);
+  const knowledgeContext =
+    agent?.knowledge_base_enabled
+      ? await loadKnowledgeContext(orgId, agentId, userMessage)
+      : "";
 
-    if (docs?.length) {
-      knowledgeContext = docs
-        .slice(0, 3)
-        .map((d) => `## ${d.title}\n${String(d.content).slice(0, 400)}`)
-        .join("\n\n")
-        .slice(0, 1500);
-    }
-  }
+  const { data: callRow } = await admin
+    .from("va_calls")
+    .select("from_number")
+    .eq("twilio_call_sid", callSid)
+    .maybeSingle();
 
   const reply = await processVoiceTurn({
     callSid,
@@ -53,6 +48,7 @@ export async function POST(request: NextRequest) {
     systemPrompt: agent?.system_prompt || "You are a helpful phone assistant.",
     knowledgeContext: knowledgeContext || undefined,
     escalationPhone: agent?.escalation_phone || org?.transfer_phone || undefined,
+    callerPhone: callRow?.from_number || undefined,
     history,
   });
 

@@ -1,5 +1,8 @@
 import "server-only";
 import { createAdminClient } from "@/lib/supabase/admin";
+import { extractBookingDetails } from "@/lib/booking-extract";
+import { bookAppointment } from "@/lib/integrations/google-calendar";
+import { loadKnowledgeContext } from "@/lib/knowledge-context";
 import { FlowEngine } from "@/lib/flow-engine";
 import type { FlowEdge, FlowNode } from "@/lib/types";
 import { generateVoiceReply } from "@/lib/voice-conversation";
@@ -145,6 +148,63 @@ function runUntilResponse(
   };
 }
 
+async function executeFlowTool(params: {
+  toolName: string;
+  orgId: string;
+  agentId: string;
+  userMessage: string;
+  systemPrompt: string;
+  knowledgeContext?: string;
+  history: Array<{ role: string; content: string }>;
+  callerPhone?: string;
+}): Promise<{ text: string; shouldTransfer: boolean; transferSummary?: string }> {
+  if (params.toolName === "book_appointment") {
+    const booking = await extractBookingDetails({
+      history: params.history,
+      userMessage: params.userMessage,
+      callerPhone: params.callerPhone,
+    });
+
+    if (!booking.ready || !booking.date || !booking.time) {
+      return {
+        text: booking.reply || "What day and time work for your appointment?",
+        shouldTransfer: false,
+      };
+    }
+
+    const result = await bookAppointment(params.orgId, {
+      customerName: booking.customerName || "Caller",
+      customerPhone: params.callerPhone,
+      date: booking.date,
+      time: booking.time,
+      notes: booking.notes,
+    });
+
+    if (!result.ok) {
+      return {
+        text: "I couldn't book that in the calendar yet. Want me to connect you with our team?",
+        shouldTransfer: false,
+      };
+    }
+
+    return {
+      text: `You're booked for ${booking.date} at ${booking.time}. Anything else I can help with?`,
+      shouldTransfer: false,
+    };
+  }
+
+  const knowledge =
+    params.knowledgeContext ||
+    (await loadKnowledgeContext(params.orgId, params.agentId, params.userMessage));
+
+  return generateVoiceReply({
+    systemPrompt: params.systemPrompt,
+    knowledgeContext: knowledge || undefined,
+    history: params.history,
+    userMessage: params.userMessage,
+  });
+}
+
 export async function processVoiceTurn(params: {
   callSid: string;
   orgId: string;
@@ -153,6 +213,7 @@ export async function processVoiceTurn(params: {
   systemPrompt: string;
   knowledgeContext?: string;
   escalationPhone?: string;
+  callerPhone?: string;
   history: Array<{ role: string; content: string }>;
 }): Promise<{ text: string; shouldTransfer: boolean; transferSummary?: string }> {
   const flow = await loadPublishedFlow(params.orgId, params.agentId);
@@ -196,11 +257,15 @@ export async function processVoiceTurn(params: {
   }
 
   if (result.action === "tool") {
-    const llmReply = await generateVoiceReply({
+    const llmReply = await executeFlowTool({
+      toolName: result.toolName || "lookup_knowledge",
+      orgId: params.orgId,
+      agentId: params.agentId,
+      userMessage: params.userMessage,
       systemPrompt: params.systemPrompt,
       knowledgeContext: params.knowledgeContext,
       history: params.history,
-      userMessage: params.userMessage,
+      callerPhone: params.callerPhone,
     });
 
     const nextId = result.nextNodeId || engine.getNextNodeId(nodeId) || nodeId;

@@ -75,6 +75,14 @@ export default function CallDetailPage() {
           <p className="font-semibold">{call.duration_seconds || 0}s</p>
         </div>
         <div className="surface-card p-4">
+          <p className="text-xs text-slate-500">Quality score</p>
+          <p className="font-semibold">{call.score ?? "—"}</p>
+        </div>
+        <div className="surface-card p-4">
+          <p className="text-xs text-slate-500">Sentiment</p>
+          <p className="font-semibold capitalize">{call.sentiment || "—"}</p>
+        </div>
+        <div className="surface-card p-4">
           <p className="text-xs text-slate-500">Intent</p>
           <p className="font-semibold">{call.intent || "—"}</p>
         </div>
@@ -83,6 +91,31 @@ export default function CallDetailPage() {
           <p className="font-semibold">{call.transferred ? "Yes" : "No"}</p>
         </div>
       </div>
+
+      {((call.topics && call.topics.length > 0) || (call.action_items && call.action_items.length > 0)) && (
+        <div className="grid gap-4 sm:grid-cols-2">
+          {call.topics && call.topics.length > 0 && (
+            <div className="surface-card p-5">
+              <h2 className="font-semibold text-brand-900">Topics</h2>
+              <ul className="mt-2 list-inside list-disc text-sm text-slate-600">
+                {call.topics.map((t) => (
+                  <li key={t}>{t}</li>
+                ))}
+              </ul>
+            </div>
+          )}
+          {call.action_items && call.action_items.length > 0 && (
+            <div className="surface-card p-5">
+              <h2 className="font-semibold text-brand-900">Action items</h2>
+              <ul className="mt-2 list-inside list-disc text-sm text-slate-600">
+                {call.action_items.map((t) => (
+                  <li key={t}>{t}</li>
+                ))}
+              </ul>
+            </div>
+          )}
+        </div>
+      )}
 
       {call.summary && (
         <div className="surface-card p-5">
