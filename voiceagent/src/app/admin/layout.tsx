@@ -1,6 +1,7 @@
 import Link from "next/link";
 import { redirect } from "next/navigation";
 import { BrandLogo } from "@/components/BrandLogo";
+import { SignOutButton } from "@/components/SignOutButton";
 import { isPlatformAdmin } from "@/lib/admin-auth";
 import { createClient } from "@/lib/supabase/server";
 
@@ -18,7 +19,7 @@ export default async function AdminLayout({ children }: { children: React.ReactN
       <header className="site-header">
         <div className="mx-auto flex max-w-6xl items-center justify-between px-6 py-4">
           <BrandLogo href="/admin" size="sm" />
-          <nav className="flex gap-4 text-sm">
+          <nav className="flex flex-wrap items-center gap-4 text-sm">
             <Link href="/admin" className="font-medium text-ghost-white hover:text-teal-600">
               Platform
             </Link>
@@ -31,6 +32,7 @@ export default async function AdminLayout({ children }: { children: React.ReactN
             <Link href="/dashboard" className="text-on-surface-variant hover:text-teal-600">
               Dashboard
             </Link>
+            <SignOutButton />
           </nav>
         </div>
       </header>
