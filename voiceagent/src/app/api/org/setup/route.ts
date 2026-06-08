@@ -1,6 +1,7 @@
 import { NextResponse } from "next/server";
 import { DEFAULT_AGENT_SYSTEM_PROMPT } from "@/lib/agent-guardrails";
 import { createClient } from "@/lib/supabase/server";
+import { notifyActivepiecesSignup } from "@/lib/activepieces";
 import { createAdminClient } from "@/lib/supabase/admin";
 
 export async function POST(request: Request) {
@@ -48,6 +49,13 @@ export async function POST(request: Request) {
     .single();
 
   if (error) return NextResponse.json({ error: error.message }, { status: 400 });
+
+  void notifyActivepiecesSignup({
+    orgId: org.id,
+    orgName: org.name,
+    ownerEmail: user.email,
+    plan: org.plan ?? "trial",
+  });
 
   await admin.from("va_agents").insert({
     org_id: org.id,

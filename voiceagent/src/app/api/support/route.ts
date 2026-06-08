@@ -3,6 +3,7 @@ import { z } from "zod";
 import { createClient } from "@/lib/supabase/server";
 import { createAdminClient } from "@/lib/supabase/admin";
 import { getUserOrg } from "@/lib/auth";
+import { notifyActivepiecesSupportLead } from "@/lib/activepieces";
 import { logAudit } from "@/lib/compliance/audit";
 
 const bodySchema = z.object({
@@ -36,6 +37,13 @@ export async function POST(request: Request) {
     } catch {
       // Table may not exist yet; fall through to audit when possible.
     }
+
+    void notifyActivepiecesSupportLead({
+      email: body.email.trim(),
+      orgName,
+      category: body.category,
+      message: body.message.trim(),
+    });
 
     if (org) {
       await logAudit({
