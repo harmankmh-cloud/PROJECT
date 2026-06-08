@@ -149,7 +149,7 @@ export function OutreachPanel({ adminEmail }: { adminEmail: string }) {
               onChange={(e) => setSequence(e.target.value as typeof sequence)}
             >
               <option value="initial">First email</option>
-              <option value="morning_call">Morning call hook (punchy)</option>
+              <option value="morning_call">Morning call hook (strategic)</option>
               <option value="followup_1">Follow-up (day 3)</option>
               <option value="followup_2">Follow-up (day 7)</option>
             </select>

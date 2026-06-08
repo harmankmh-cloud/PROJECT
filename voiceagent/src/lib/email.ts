@@ -1,7 +1,7 @@
 import { BRAND } from "@/lib/brand";
 
 const FROM =
-  process.env.EMAIL_FROM?.trim() || `Harman from ${BRAND.name} <${BRAND.contact.email}>`;
+  process.env.EMAIL_FROM?.trim() || `Harman · ${BRAND.name} <${BRAND.contact.email}>`;
 
 export type EmailResult = { ok: true; id?: string; provider?: string } | { ok: false; skipped?: boolean; error: string };
 
@@ -59,7 +59,7 @@ async function sendViaBrevo(input: EmailInput): Promise<EmailResult> {
       "Content-Type": "application/json",
     },
     body: JSON.stringify({
-      sender: { email: BRAND.contact.email, name: `Harman from ${BRAND.name}` },
+      sender: { email: BRAND.contact.email, name: `Harman · ${BRAND.name}` },
       to: [{ email: input.to }],
       replyTo: { email: input.replyTo || BRAND.contact.email },
       subject: input.subject,
