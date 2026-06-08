@@ -20,7 +20,9 @@ export function OutreachPanel({ adminEmail }: { adminEmail: string }) {
   const [vertical, setVertical] = useState<string>("dental");
   const [contactName, setContactName] = useState("");
   const [painNote, setPainNote] = useState("");
-  const [sequence, setSequence] = useState<"initial" | "followup_1" | "followup_2">("initial");
+  const [sequence, setSequence] = useState<
+    "initial" | "morning_call" | "followup_1" | "followup_2"
+  >("initial");
   const [subject, setSubject] = useState("");
   const [body, setBody] = useState("");
   const [loading, setLoading] = useState<"draft" | "preview" | "send" | null>(null);
@@ -147,6 +149,7 @@ export function OutreachPanel({ adminEmail }: { adminEmail: string }) {
               onChange={(e) => setSequence(e.target.value as typeof sequence)}
             >
               <option value="initial">First email</option>
+              <option value="morning_call">Morning call hook (punchy)</option>
               <option value="followup_1">Follow-up (day 3)</option>
               <option value="followup_2">Follow-up (day 7)</option>
             </select>

@@ -8,7 +8,7 @@ export type OutreachInput = {
   vertical: string;
   contactName?: string;
   painNote?: string;
-  sequence: "initial" | "followup_1" | "followup_2";
+  sequence: "initial" | "morning_call" | "followup_1" | "followup_2";
 };
 
 export type OutreachDraft = { subject: string; body: string };
@@ -33,6 +33,25 @@ function templateDraft(input: OutreachInput): OutreachDraft {
   const pain = input.painNote?.trim() || VERTICAL_PAIN[input.vertical.toLowerCase()] || "missed calls when you're busy or closed";
   const biz = input.businessName.trim();
   const city = input.city.trim();
+
+  if (input.sequence === "morning_call") {
+    return {
+      subject: `Tried ${biz} this morning — quick idea`,
+      body: `Hi ${who},
+
+I rang ${biz} around 9 this morning — line was busy, then voicemail. Totally normal for a ${input.vertical} shop in ${city}; you're with customers, not glued to the phone.
+
+That's actually why I emailed.
+
+${BRAND.name} is an AI phone agent we built in BC. It picks up when you can't: after hours, lunch rush, or when three lines ring at once. It books appointments, answers the usual questions, and warm-transfers to your team with a transcript — so you only jump in when it matters.
+
+${pain} — we hear that a lot from Fraser Valley businesses. No enterprise pitch; free sandbox at ${BRAND.domain}.
+
+Worth 15 minutes? Reply YES or grab a slot: ${BRAND.contact.email}
+
+Harman${emailFooter()}`,
+    };
+  }
 
   if (input.sequence === "followup_1") {
     return {
@@ -95,6 +114,9 @@ Structure (plain text, 160–220 words):
 6. CTA: low friction — free sandbox, reply YES, or 15-min demo (${BRAND.contact.email})
 
 Rules: Sound like a real founder emailing a local business owner — warm, direct, not corporate. No "hope this finds you well", no buzzword soup. Sign as Harman only (footer added separately).
+
+If sequence is "morning_call": open with trying their line earlier (busy/voicemail) — punchy, honest, not salesy. Subject should feel personal, not like a blast. Still 160–220 words.
+
 Return JSON only: {"subject":"...","body":"..."}. Body is plain text, no HTML.`,
       },
       {
