@@ -66,9 +66,15 @@ You are a team of 5 specialist agents. Be specific and actionable.`,
 const growthRoles: Record<GrowthRole, (ctx: RoleContext) => string> = {
   strategist: (ctx) =>
     `ROLE — STRATEGIST
-Build a full 30-day marketing plan for ${ctx.product ?? "Intellivio"}.
-Include: week-by-week actions, platforms, weekly goals, and what success looks like at day 30.
-Realistic for a solo founder with no ad budget.${ctx.extra ? `\n\nExtra context:\n${ctx.extra}` : ""}`,
+Build a 30-day marketing plan for ${ctx.product ?? "GreetQ"}.
+
+Structure (plain text, NO tables):
+• TL;DR (1 line)
+• WEEK 1 / WEEK 2 / WEEK 3 / WEEK 4 — each with: Focus, 3-5 bullet actions, Platforms, Weekly goal
+• DAY 30 SUCCESS — 3 bullet metrics
+• TOP 3 ACTIONS THIS WEEK — numbered
+
+Realistic for a solo founder, no ad budget.${ctx.extra ? `\n\nExtra context:\n${ctx.extra}` : ""}`,
 
   content: (ctx) =>
     `ROLE — CONTENT WRITER
@@ -78,8 +84,13 @@ Tone: real, local, relatable — not corporate.${ctx.extra ? `\n\nExtra context:
 
   researcher: (ctx) =>
     `ROLE — RESEARCHER
-Find 20 local businesses in Abbotsford/Chilliwack/Fraser Valley that would benefit from ${ctx.product ?? "Intellivio"}.
-Table columns: Business name | Type | Pain point | Where to find them | Opening line.${ctx.extra ? `\n\nExtra context:\n${ctx.extra}` : ""}`,
+Find 20 local businesses in Abbotsford/Chilliwack/Fraser Valley for ${ctx.product ?? "GreetQ"}.
+
+List each business as a short block (NO tables):
+Business name
+Type · Pain point · Where to find · Opening line
+
+Separate businesses with a blank line.${ctx.extra ? `\n\nExtra context:\n${ctx.extra}` : ""}`,
 
   outreach: (ctx) =>
     `ROLE — OUTREACH AGENT (Harvard-caliber B2B marketing voice)
@@ -128,9 +139,11 @@ Based on recent performance, return:
 const jobsRoles: Record<JobsRole, (ctx: RoleContext) => string> = {
   researcher: (ctx) =>
     `ROLE — JOB RESEARCHER
-Search strategy for active postings on Indeed Canada, WorkBC, LinkedIn, Craigslist Abbotsford/Fraser Valley.
-Target: community support, delivery, property management assistant, customer service, junior web dev, tech support.
-Output table: Job Title | Company | Location | Platform | How to apply | Why it fits.${ctx.extra ? `\n\nFocus:\n${ctx.extra}` : ""}`,
+Search strategy for postings on Indeed Canada, WorkBC, LinkedIn, Craigslist Fraser Valley.
+Target: community support, delivery, property management, customer service, junior web dev.
+
+List each job as a block (NO tables):
+Title · Company · Location · Platform · How to apply · Why it fits${ctx.extra ? `\n\nFocus:\n${ctx.extra}` : ""}`,
 
   resume: (ctx) =>
     `ROLE — RESUME EDITOR
@@ -147,8 +160,10 @@ Extract top 15 ATS keywords, list missing from resume, rewrite 3–5 weak bullet
 
   tracker: (ctx) =>
     `ROLE — APPLICATION TRACKER
-Maintain/update application table: Job Title | Company | Date Applied | Platform | Status | Follow-up Date | Notes.
-Remind on 5+ day no-response applications.${ctx.extra ? `\n\nUpdate:\n${ctx.extra}` : "\n\nNo applications logged yet — show empty table template and remind to report first application."}`,
+List each application as a block (NO tables):
+Job · Company · Applied · Platform · Status · Follow-up · Notes
+
+Flag any 5+ day no-response apps at the top.${ctx.extra ? `\n\nUpdate:\n${ctx.extra}` : "\n\nNo applications yet — show 3 blank entry templates."}`,
 };
 
 export type RoleContext = {
