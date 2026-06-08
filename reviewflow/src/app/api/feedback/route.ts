@@ -6,6 +6,8 @@ import { countReviewsThisMonth } from "@/lib/usage";
 import { createAnonClient } from "@/lib/supabase/public";
 import { createServiceClient } from "@/lib/supabase/admin";
 import { createClient } from "@/lib/supabase/server";
+import { notifyActivepiecesReview } from "@/lib/activepieces";
+import { getUserEmailById } from "@/lib/admin-users";
 import { resolvePlan } from "@/lib/business-plan";
 
 const bodySchema = z.object({
@@ -137,6 +139,19 @@ export async function POST(request: Request) {
     await supabase.from("analytics_events").insert({
       business_id: body.businessId,
       event_type: isPrivate ? "private_feedback" : "owner_notification",
+    });
+
+    const ownerEmail = await getUserEmailById(business.user_id);
+    void notifyActivepiecesReview({
+      businessId: body.businessId,
+      businessName: business.name,
+      starRating: body.starRating,
+      customerName: body.customerName,
+      customerNotes: body.customerNotes,
+      aiDraft: body.aiDraft,
+      isPrivate,
+      ownerEmail,
+      receivedAt: new Date().toISOString(),
     });
 
     return NextResponse.json({ ok: true });
