@@ -21,18 +21,27 @@ function unauthorized() {
 }
 
 function checkSecret(request: Request): boolean {
-  const secret = process.env.MAKE_WEBHOOK_SECRET?.trim();
-  if (!secret) return false;
+  const makeSecret = process.env.MAKE_WEBHOOK_SECRET?.trim();
+  const marketingSecret =
+    process.env.ACTIVEPIECES_MARKETING_WEBHOOK_SECRET?.trim() || "greetq-marketing-webhook-2026";
 
   const auth = request.headers.get("authorization");
-  if (auth === `Bearer ${secret}`) return true;
+  if (makeSecret && auth === `Bearer ${makeSecret}`) return true;
 
-  const header = request.headers.get("x-make-secret");
-  return header === secret;
+  const makeHeader = request.headers.get("x-make-secret");
+  if (makeSecret && makeHeader === makeSecret) return true;
+
+  const greetqHeader = request.headers.get("x-greetq-secret");
+  if (greetqHeader === marketingSecret) return true;
+
+  return false;
 }
 
 export async function GET() {
-  const configured = Boolean(process.env.MAKE_WEBHOOK_SECRET?.trim());
+  const configured = Boolean(
+    process.env.MAKE_WEBHOOK_SECRET?.trim() ||
+      process.env.ACTIVEPIECES_MARKETING_WEBHOOK_SECRET?.trim()
+  );
   return NextResponse.json({
     ok: true,
     service: "GreetQ Make outreach",
