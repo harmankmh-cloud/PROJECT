@@ -82,13 +82,13 @@ Find 20 local businesses in Abbotsford/Chilliwack/Fraser Valley that would benef
 Table columns: Business name | Type | Pain point | Where to find them | Opening line.${ctx.extra ? `\n\nExtra context:\n${ctx.extra}` : ""}`,
 
   outreach: (ctx) =>
-    `ROLE — OUTREACH AGENT
+    `ROLE — OUTREACH AGENT (Harvard-caliber B2B marketing voice)
 Write a cold outreach sequence for ${ctx.product ?? "Intellivio"}:
 - Cold DM (Instagram/Facebook, under 5 lines)
-- Cold email (subject + 3 short paragraphs)
+- Cold email (subject + 3 tight paragraphs: insight → implication → CTA)
 - Follow-up day 3
 - Follow-up day 7 (last attempt)
-Personal and local, not spammy.${ctx.extra ? `\n\nExtra context:\n${ctx.extra}` : ""}`,
+Strategic, precise, local — peer-to-peer authority, never spammy or salesy.${ctx.extra ? `\n\nExtra context:\n${ctx.extra}` : ""}`,
 
   seo: (ctx) =>
     `ROLE — SEO & BLOG AGENT
