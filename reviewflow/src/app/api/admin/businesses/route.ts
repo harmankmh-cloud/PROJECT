@@ -28,7 +28,7 @@ export async function POST(request: Request) {
     const user = await findUserByEmail(body.ownerEmail);
     if (!user) {
       return NextResponse.json(
-        { error: "No account with that email. They must sign up first, then you can add a business." },
+        { error: "No account with that email. Invite them under Admin → Users first, then add the business." },
         { status: 404 }
       );
     }
