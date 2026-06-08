@@ -10,7 +10,7 @@ const bodySchema = z.object({
   vertical: z.string().min(2).max(80),
   contact_name: z.string().max(80).optional(),
   pain_note: z.string().max(300).optional(),
-  sequence: z.enum(["initial", "followup_1", "followup_2"]).default("initial"),
+  sequence: z.enum(["initial", "morning_call", "followup_1", "followup_2"]).default("initial"),
   send: z.boolean().default(false),
   /** Send draft to your inbox instead of the lead (approval step in Make). */
   preview_to: z.string().email().optional(),
