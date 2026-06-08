@@ -33,7 +33,14 @@ export async function POST(request: Request) {
       if (result.error === "You already have a business set up.") {
         return NextResponse.json({ error: result.error }, { status: 400 });
       }
-      return NextResponse.json({ error: result.error }, { status: 500 });
+      const isValidation =
+        result.error.includes("Google") ||
+        result.error.includes("RateLocal") ||
+        result.error.includes("valid URL");
+      return NextResponse.json(
+        { error: result.error },
+        { status: isValidation ? 400 : 500 }
+      );
     }
 
     const { data: business } = await supabase
