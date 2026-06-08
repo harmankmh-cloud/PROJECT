@@ -63,7 +63,7 @@ export async function POST(request: Request) {
           subject: draft.subject,
           body: draft.body,
           hint: result.skipped
-            ? "Add RESEND_API_KEY and EMAIL_FROM in Vercel (greetq.com project), then redeploy."
+            ? "Add RESEND_API_KEY or BREVO_API_KEY (and EMAIL_FROM) in Vercel, then redeploy."
             : undefined,
         },
         { status: result.skipped ? 503 : 502 }
@@ -75,6 +75,8 @@ export async function POST(request: Request) {
       sent: true,
       preview: Boolean(body.preview_to),
       to: recipient,
+      email_id: result.id,
+      provider: result.provider,
       resend_id: result.id,
       subject: draft.subject,
       body: draft.body,
