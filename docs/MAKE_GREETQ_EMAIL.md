@@ -1,6 +1,24 @@
 # GreetQ email outreach via Make.com (2 modules)
 
-GreetQ writes the cold email (AI) and sends via Resend. **Make only moves data** — no OpenAI or Resend modules needed in Make.
+GreetQ writes the cold email (AI) and sends via **Resend or Brevo** (your choice). **Make / Activepieces only moves data** — no OpenAI or email modules needed there.
+
+## Email provider (pick one — both have free tiers)
+
+| Provider | Free tier | Best for |
+|----------|-----------|----------|
+| **Resend** | 3,000 emails/month, 1 domain | You already have an account — verify `greetq.com` once |
+| **Brevo** | ~300 emails/day | Extra headroom if you outgrow Resend |
+
+Set **only one** API key in Vercel. Optional: `EMAIL_PROVIDER=resend` or `EMAIL_PROVIDER=brevo` to force which one wins if both are set.
+
+**Zero-cost fallback:** use `"send": false` (or Activepieces `mode: "draft"`) and copy the AI draft into Gmail manually — no API key needed.
+
+### Brevo setup (alternative to Resend)
+
+1. Sign up at [brevo.com](https://www.brevo.com) (free).
+2. **SMTP & API** → create API key.
+3. **Senders** → add and verify `hello@greetq.com` (DNS records, same idea as Resend).
+4. In Vercel: `BREVO_API_KEY=...`, `EMAIL_PROVIDER=brevo`, remove or leave `RESEND_API_KEY` empty.
 
 ## One-time setup (10 min)
 
@@ -9,7 +27,8 @@ GreetQ writes the cold email (AI) and sends via Resend. **Make only moves data**
 | Variable | Value |
 |----------|--------|
 | `MAKE_WEBHOOK_SECRET` | Long random string (e.g. `openssl rand -hex 32`) |
-| `RESEND_API_KEY` | From [resend.com](https://resend.com) |
+| `RESEND_API_KEY` **or** `BREVO_API_KEY` | From [resend.com](https://resend.com) or [brevo.com](https://www.brevo.com) |
+| `EMAIL_PROVIDER` | Optional: `resend` or `brevo` |
 | `EMAIL_FROM` | `Harman from GreetQ <hello@greetq.com>` |
 | `OPENROUTER_API_KEY` | Optional — better copy; templates work without it |
 

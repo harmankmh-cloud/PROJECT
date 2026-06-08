@@ -8,7 +8,7 @@ Three AI teams (Business Growth, Personal Brand, Job Finder) run automatically v
 Activepieces (schedule or webhook)
     → POST https://greetq.com/api/ai/team-run
     → OpenRouter generates output
-    → Email delivered to your inbox (Resend)
+    → Email delivered to your inbox (Resend or Brevo)
 ```
 
 You do **not** paste master + role prompts manually anymore. Send `team` + `role` + optional `context`.
@@ -65,7 +65,8 @@ Same prompts as Perplexity; use when you want interactive editing in the IDE.
 
 ```bash
 OPENROUTER_API_KEY=          # required
-RESEND_API_KEY=              # required for email delivery
+RESEND_API_KEY=              # email — or use BREVO_API_KEY instead (free tier)
+# EMAIL_PROVIDER=resend      # optional: force resend | brevo
 AI_TEAM_WEBHOOK_SECRET=greetq-ai-team-2026  # optional override
 ```
 

@@ -101,6 +101,8 @@ export async function POST(request: Request) {
       sent: true,
       preview: Boolean(body.preview_to),
       to: recipient,
+      email_id: result.id,
+      provider: result.provider,
       resend_id: result.id,
       subject: draft.subject,
       body: draft.body,

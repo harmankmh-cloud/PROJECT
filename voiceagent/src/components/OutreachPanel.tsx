@@ -61,7 +61,9 @@ export function OutreachPanel({ adminEmail }: { adminEmail: string }) {
       } else if (action === "preview") {
         setMessage(`Preview sent to ${adminEmail}. Check your inbox.`);
       } else {
-        setMessage(`Sent to ${data.to}. Resend id: ${data.resend_id || "ok"}`);
+        setMessage(
+          `Sent to ${data.to}${data.provider ? ` via ${data.provider}` : ""}. Id: ${data.email_id || data.resend_id || "ok"}`
+        );
       }
     } catch (err) {
       setError(err instanceof Error ? err.message : "Something went wrong");
