@@ -48,7 +48,11 @@ export async function runAiTeam(input: TeamRunInput): Promise<TeamRunResult> {
   });
 
   if (!output) {
-    return { ok: false, error: "AI generation failed" };
+    return {
+      ok: false,
+      error:
+        "AI generation failed — OpenRouter returned no content (timeout or all models unavailable). Retry in a minute.",
+    };
   }
 
   const deliverTo = input.deliver_to?.trim() || FOUNDER.email;

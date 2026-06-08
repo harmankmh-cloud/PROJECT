@@ -2,6 +2,8 @@ import { NextResponse } from "next/server";
 import { z } from "zod";
 import { runAiTeam } from "@/lib/ai-teams/run";
 
+export const maxDuration = 60;
+
 const bodySchema = z.object({
   team: z.enum(["growth", "brand", "jobs"]),
   role: z.union([z.string(), z.number()]).transform(String),
