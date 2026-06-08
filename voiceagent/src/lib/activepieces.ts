@@ -1,3 +1,5 @@
+import type { CallIntelligence } from "./intelligence";
+
 type WebhookPayload = Record<string, unknown>;
 
 async function postActivepiecesWebhook(
@@ -66,7 +68,7 @@ export type CallCompletedPayload = {
   orgId: string;
   orgName: string;
   call: Record<string, unknown>;
-  analysis: Record<string, unknown>;
+  analysis: CallIntelligence;
 };
 
 export async function notifyActivepiecesCallCompleted(
