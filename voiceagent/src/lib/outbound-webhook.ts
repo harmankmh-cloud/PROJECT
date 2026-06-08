@@ -44,6 +44,6 @@ export async function dispatchCallWebhook(
     orgId,
     orgName: org?.name || "Unknown org",
     call: payload.call,
-    analysis: payload.analysis as Record<string, unknown>,
+    analysis: payload.analysis,
   });
 }
