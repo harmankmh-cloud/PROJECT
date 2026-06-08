@@ -1,10 +1,10 @@
 "use client";
 
 import Link from "next/link";
-import { usePathname, useRouter } from "next/navigation";
+import { usePathname } from "next/navigation";
 import { useState } from "react";
-import { createClient } from "@/lib/supabase/client";
 import { MaterialIcon } from "@/components/MaterialIcon";
+import { SignOutButton } from "@/components/SignOutButton";
 import { DashboardFooter } from "@/components/dashboard/DashboardFooter";
 import { BRAND } from "@/lib/brand";
 
@@ -81,23 +81,7 @@ export function DashboardShell({
   children: React.ReactNode;
 }) {
   const pathname = usePathname();
-  const router = useRouter();
   const [menuOpen, setMenuOpen] = useState(false);
-  const [loggingOut, setLoggingOut] = useState(false);
-
-  async function handleLogout() {
-    setLoggingOut(true);
-    try {
-      const supabase = createClient();
-      await supabase.auth.signOut();
-      router.push("/login");
-      router.refresh();
-    } catch {
-      router.push("/login");
-    } finally {
-      setLoggingOut(false);
-    }
-  }
 
   const isActive = (href: string) =>
     pathname === href || (href !== "/dashboard" && pathname.startsWith(href));
@@ -147,15 +131,10 @@ export function DashboardShell({
             <MaterialIcon name="open_in_new" className="text-[20px]" />
             View site
           </Link>
-          <button
-            type="button"
-            onClick={handleLogout}
-            disabled={loggingOut}
-            className="nav-item w-full text-left disabled:opacity-50"
-          >
-            <MaterialIcon name="logout" className="text-[20px]" />
-            {loggingOut ? "Signing out…" : "Sign out"}
-          </button>
+          <SignOutButton
+            showIcon
+            className="nav-item flex w-full items-center gap-3 text-left disabled:opacity-50"
+          />
         </div>
       </aside>
 
@@ -175,7 +154,7 @@ export function DashboardShell({
             <span className="font-display font-bold">{BRAND.name}</span>
           </Link>
         </div>
-        <div className="flex items-center gap-3">
+        <div className="flex items-center gap-2 sm:gap-3">
           <button
             type="button"
             className="flex h-9 w-9 items-center justify-center rounded-full bg-surface-container transition-colors hover:bg-surface-container-high"
@@ -183,6 +162,11 @@ export function DashboardShell({
           >
             <MaterialIcon name="notifications" className="text-on-surface-variant text-[20px]" />
           </button>
+          <SignOutButton className="hidden rounded-lg px-3 py-2 text-xs font-semibold text-on-surface-variant transition hover:bg-surface-container hover:text-ghost-white sm:inline-flex" />
+          <SignOutButton
+            label=""
+            className="flex h-9 w-9 items-center justify-center rounded-full bg-surface-container text-on-surface-variant transition hover:bg-surface-container-high sm:hidden"
+          />
           <Link
             href="/dashboard/settings"
             className="flex h-9 w-9 items-center justify-center overflow-hidden rounded-full border-2 border-primary/40 bg-surface-container text-xs font-bold"
@@ -223,14 +207,7 @@ export function DashboardShell({
               ))}
             </nav>
             <div className="border-t border-glass-border-subtle p-3">
-              <button
-                type="button"
-                onClick={handleLogout}
-                disabled={loggingOut}
-                className="nav-item w-full text-left disabled:opacity-50"
-              >
-                {loggingOut ? "Signing out…" : "Sign out"}
-              </button>
+              <SignOutButton className="nav-item w-full text-left disabled:opacity-50" />
             </div>
           </aside>
         </div>
