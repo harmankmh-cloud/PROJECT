@@ -1,5 +1,5 @@
 import type { User } from "@supabase/supabase-js";
-import { createServiceClient } from "@/lib/supabase/admin";
+import { createAdminClient } from "@/lib/supabase/admin";
 
 export type PlatformUserRow = {
   id: string;
@@ -10,9 +10,7 @@ export type PlatformUserRow = {
 };
 
 export async function findUserByEmail(email: string): Promise<User | null> {
-  const admin = createServiceClient();
-  if (!admin) return null;
-
+  const admin = createAdminClient();
   const normalized = email.trim().toLowerCase();
   let page = 1;
 
@@ -30,20 +28,10 @@ export async function findUserByEmail(email: string): Promise<User | null> {
   return null;
 }
 
-export async function getUserEmailById(userId: string): Promise<string | null> {
-  const admin = createServiceClient();
-  if (!admin) return null;
-
-  const { data, error } = await admin.auth.admin.getUserById(userId);
-  if (error || !data.user) return null;
-  return data.user.email ?? null;
-}
-
 export async function listPlatformUsers(maxPages = 10): Promise<PlatformUserRow[]> {
-  const admin = createServiceClient();
-  if (!admin) return [];
-
+  const admin = createAdminClient();
   const rows: PlatformUserRow[] = [];
+
   for (let page = 1; page <= maxPages; page += 1) {
     const { data, error } = await admin.auth.admin.listUsers({ page, perPage: 200 });
     if (error || !data.users.length) break;
@@ -69,9 +57,7 @@ export async function invitePlatformUser(
   email: string,
   redirectTo: string
 ): Promise<{ ok: true; userId: string } | { ok: false; error: string }> {
-  const admin = createServiceClient();
-  if (!admin) return { ok: false, error: "Server not configured (SUPABASE_SERVICE_ROLE_KEY)." };
-
+  const admin = createAdminClient();
   const normalized = email.trim().toLowerCase();
   const existing = await findUserByEmail(normalized);
   if (existing) {
