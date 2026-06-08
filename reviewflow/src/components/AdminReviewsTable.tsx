@@ -59,7 +59,7 @@ export function AdminReviewsTable({
                         : "bg-emerald-100 text-emerald-800"
                     }`}
                   >
-                    {row.is_private ? "Private" : "Google ready"}
+                    {row.is_private ? "Private (1–2★)" : "3★+ flow"}
                   </span>
                 </td>
                 <td className="max-w-xs truncate px-4 py-4 text-slate-600">

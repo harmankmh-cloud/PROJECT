@@ -108,6 +108,17 @@ export function AdminBusinessManagePanel({
 
   return (
     <div className="space-y-8">
+      {!googleReviewUrl.trim() && (
+        <div className="rounded-xl border-2 border-rose-300 bg-rose-50 px-5 py-4 text-sm text-rose-900">
+          <p className="font-semibold">Google review link missing — reviews will not post to Google</p>
+          <p className="mt-1 text-rose-800/90">
+            Customers can still leave private feedback on RateLocal, but nothing opens Google Maps until you
+            paste their Maps &quot;Write a review&quot; URL below (usually{" "}
+            <code className="text-xs">g.page/r/...</code>).
+          </p>
+        </div>
+      )}
+
       <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
         {[
           ["Reviews", reviewCount],

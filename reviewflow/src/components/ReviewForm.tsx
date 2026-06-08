@@ -279,8 +279,8 @@ export function ReviewForm({ business, prompts }: Props) {
 
               {isLowRating && (
                 <p className="alert-danger">
-                  The owner will see your feedback on their dashboard. You can still post on Google if
-                  you choose.
+                  1–2 star feedback stays private on the owner&apos;s dashboard (by design). Google is
+                  not opened automatically — the customer can still choose to post on Google afterward.
                 </p>
               )}
 
@@ -367,7 +367,7 @@ export function ReviewForm({ business, prompts }: Props) {
                       <p className="mt-1">Paste your review on Google in the tab that opened.</p>
                     )}
                     {isLowRating && (
-                      <p className="mt-1">The business owner received your feedback on their dashboard.</p>
+                      <p className="mt-1">Saved privately for the owner — use the button below if you still want Google.</p>
                     )}
                   </div>
                   {isLowRating && business.google_review_url && (
@@ -398,7 +398,7 @@ export function ReviewForm({ business, prompts }: Props) {
                     {submitting
                       ? "Saving…"
                       : isLowRating
-                        ? "Copy & notify owner"
+                        ? "Save private feedback & copy text"
                         : business.google_review_url
                           ? "Copy, notify owner & open Google"
                           : "Copy & notify owner"}

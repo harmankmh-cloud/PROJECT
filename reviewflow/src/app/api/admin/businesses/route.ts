@@ -2,6 +2,7 @@ import { NextResponse } from "next/server";
 import { z } from "zod";
 import { findUserByEmail } from "@/lib/admin-users";
 import { createBusinessForUser } from "@/lib/business-setup";
+import { validateGoogleReviewUrl } from "@/lib/google-review-url";
 import { requirePlatformAdminApi } from "@/lib/require-platform-admin";
 import { createServiceClient } from "@/lib/supabase/admin";
 
@@ -48,10 +49,19 @@ export async function POST(request: Request) {
       );
     }
 
+    let googleReviewUrl = body.googleReviewUrl?.trim() || "";
+    if (googleReviewUrl) {
+      const validated = validateGoogleReviewUrl(googleReviewUrl);
+      if (!validated.ok) {
+        return NextResponse.json({ error: validated.error }, { status: 400 });
+      }
+      googleReviewUrl = validated.value;
+    }
+
     const result = await createBusinessForUser(admin, user.id, {
       name: body.name.trim(),
       businessType: body.businessType.trim(),
-      googleReviewUrl: body.googleReviewUrl?.trim() || "",
+      googleReviewUrl,
       tone: body.tone || "friendly",
     });
 
