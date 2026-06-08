@@ -22,6 +22,9 @@ export default async function AdminLayout({ children }: { children: React.ReactN
             <Link href="/admin" className="font-medium text-ghost-white hover:text-teal-600">
               Platform
             </Link>
+            <Link href="/admin/outreach" className="text-on-surface-variant hover:text-teal-600">
+              Outreach
+            </Link>
             <Link href="/dashboard" className="text-on-surface-variant hover:text-teal-600">
               Dashboard
             </Link>
