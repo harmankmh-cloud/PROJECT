@@ -6,6 +6,7 @@ import { friendlyAuthError } from "@/lib/auth-errors";
 import { useRouter } from "next/navigation";
 import { IndustryPicker } from "@/components/IndustryPicker";
 import { TermsConsent } from "@/components/TermsConsent";
+import { validateGoogleReviewUrl } from "@/lib/google-review-url";
 
 async function createBusiness(
   name: string,
@@ -68,6 +69,15 @@ export function SignupWithBusinessForm() {
       setError("Add your business name and pick an industry.");
       setLoading(false);
       return;
+    }
+
+    if (googleReviewUrl.trim()) {
+      const validated = validateGoogleReviewUrl(googleReviewUrl);
+      if (!validated.ok) {
+        setError(validated.error);
+        setLoading(false);
+        return;
+      }
     }
 
     try {

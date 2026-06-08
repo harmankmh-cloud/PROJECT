@@ -4,6 +4,7 @@ import { getAppUrl } from "@/lib/app-url-server";
 import { validateCheckoutPrices } from "@/lib/stripe-prices";
 import { getStripe, isStripeConfigured, stripePriceIds } from "@/lib/stripe";
 import { SETUP_FEE_ENABLED } from "@/lib/plans";
+import { ensureBillingPortalConfiguration } from "@/lib/stripe-portal";
 
 export async function GET(request: Request) {
   return NextResponse.redirect(new URL("/dashboard/billing", request.url));
@@ -74,6 +75,8 @@ export async function POST() {
         return NextResponse.json({ error: priceCheck.errors.join(" ") }, { status: 400 });
       }
     }
+
+    await ensureBillingPortalConfiguration(stripe);
 
     const lineItems = [{ price: prices.monthly, quantity: 1 }];
     if (SETUP_FEE_ENABLED) {
