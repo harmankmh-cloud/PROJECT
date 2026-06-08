@@ -1,5 +1,6 @@
 import { chatCompletion, hasOpenRouter } from "@/lib/openrouter";
 import { sendEmail } from "@/lib/email";
+import { EMAIL_SYSTEM_PROMPT, formatTeamEmail } from "./email-format";
 import {
   buildTeamPrompt,
   FOUNDER,
@@ -38,8 +39,7 @@ export async function runAiTeam(input: TeamRunInput): Promise<TeamRunResult> {
     messages: [
       {
         role: "system",
-        content:
-          "You are a specialist on a marketing/career team for a solo founder in Abbotsford BC. Output is paste-ready. Use markdown tables where asked. No preamble.",
+        content: EMAIL_SYSTEM_PROMPT,
       },
       { role: "user", content: prompt },
     ],
@@ -59,12 +59,13 @@ export async function runAiTeam(input: TeamRunInput): Promise<TeamRunResult> {
   let emailed = false;
 
   if (deliverTo) {
-    const subject = `[${input.team}/${role}] ${input.product ?? "session"} — ${new Date().toLocaleDateString("en-CA")}`;
-    const result = await sendEmail({
-      to: deliverTo,
-      subject,
-      text: `${subject}\n\n${output}`,
+    const { subject, text } = formatTeamEmail({
+      team: input.team,
+      role,
+      product: input.product,
+      output,
     });
+    const result = await sendEmail({ to: deliverTo, subject, text });
     emailed = result.ok;
   }
 
