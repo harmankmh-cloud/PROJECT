@@ -2,6 +2,7 @@
 
 import { createContext, useCallback, useContext, useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
+import { validateGoogleReviewUrl } from "@/lib/google-review-url";
 import { BRAND } from "@/lib/brand";
 
 type GoogleSetupContextValue = {
@@ -60,11 +61,18 @@ export function GoogleSetupProvider({
     setLoading(true);
     setError("");
 
+    const validated = validateGoogleReviewUrl(googleReviewUrl);
+    if (!validated.ok) {
+      setError(validated.error);
+      setLoading(false);
+      return;
+    }
+
     try {
       const response = await fetch("/api/business/update", {
         method: "PATCH",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ googleReviewUrl: googleReviewUrl.trim() }),
+        body: JSON.stringify({ googleReviewUrl: validated.value }),
       });
       const data = await response.json();
       if (!response.ok) throw new Error(data.error || "Could not save Google link");
