@@ -1,5 +1,6 @@
 import { cityName } from "@/lib/constants";
 import { COMPANY } from "@/lib/marketing-content";
+import { FOUNDING_PRO } from "@/lib/tradie-program";
 
 const appUrl = process.env.NEXT_PUBLIC_APP_URL?.replace(/\/$/, "") || "https://www.servelocal.ca";
 
@@ -45,7 +46,7 @@ export function proApprovedEmail(input: { displayName: string; slug: string; cit
 <p>Hi ${input.displayName},</p>
 <p>Your listing is <strong>approved</strong> and visible to homeowners in ${cityName(input.citySlug)}.</p>
 <p><a href="${appUrl}/pro/${input.slug}" style="display:inline-block;background:#0f766e;color:#fff;padding:12px 20px;border-radius:8px;text-decoration:none;font-weight:600">View your profile</a></p>
-<p style="font-size:14px;color:#64748b">Upgrade to Featured ($49/mo) for top placement when you’re ready.</p>
+<p style="font-size:14px;color:#64748b">Upgrade to Featured (${FOUNDING_PRO.featuredPrice} founding rate) for top placement and job alerts when you&apos;re ready.</p>
 `);
   return { subject, html };
 }
@@ -92,6 +93,33 @@ export function savedSearchAlertEmail(input: {
 <p>A new pro matches your saved search <strong>${input.label}</strong>:</p>
 <p><strong>${input.providerName}</strong> · ${input.categoryName} · ${cityName(input.citySlug)}</p>
 <p><a href="${appUrl}/pro/${input.providerSlug}" style="display:inline-block;background:#0f766e;color:#fff;padding:12px 20px;border-radius:8px;text-decoration:none;font-weight:600">View profile & call direct</a></p>
+`);
+  return { subject, html };
+}
+
+export function proUpgradedEmail(input: { proName: string; plan: string; amountLabel: string }) {
+  const subject = "Your ServeLocal upgrade is active";
+  const html = layout(`
+<p>Hi ${input.proName},</p>
+<p>Payment received — your listing is now on the <strong>${input.plan}</strong> plan (${input.amountLabel}).</p>
+<p>You&apos;ll get priority job alerts, featured placement in search, and the verified badge on your profile.</p>
+<p><a href="${appUrl}/dashboard/pro" style="display:inline-block;background:#0f766e;color:#fff;padding:12px 20px;border-radius:8px;text-decoration:none;font-weight:600">Pro dashboard</a></p>
+<p style="font-size:14px;color:#64748b">Manage or cancel anytime from your dashboard billing link.</p>
+`);
+  return { subject, html };
+}
+
+export function adminProUpgradeEmail(input: {
+  proName: string;
+  plan: string;
+  amountLabel: string;
+  citySlug: string;
+  providerSlug: string;
+}) {
+  const subject = `New ${input.plan} subscription — ${input.proName}`;
+  const html = layout(`
+<p><strong>${input.proName}</strong> upgraded to <strong>${input.plan}</strong> (${input.amountLabel}).</p>
+<p>${cityName(input.citySlug)} · <a href="${appUrl}/pro/${input.providerSlug}">View profile</a> · <a href="${appUrl}/admin/listings">Admin listings</a></p>
 `);
   return { subject, html };
 }

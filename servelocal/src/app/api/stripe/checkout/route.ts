@@ -2,6 +2,7 @@ import { NextResponse } from "next/server";
 import { z } from "zod";
 import { getProvidersForUser } from "@/lib/data";
 import { getStripe, isStripeConfigured, stripePriceForPlan } from "@/lib/stripe";
+import { ensureBillingPortalConfiguration } from "@/lib/stripe-portal";
 import { createClient } from "@/lib/supabase/server";
 
 const bodySchema = z.object({
@@ -43,6 +44,8 @@ export async function POST(request: Request) {
     }
 
     const appUrl = process.env.NEXT_PUBLIC_APP_URL?.replace(/\/$/, "") || "https://www.servelocal.ca";
+
+    await ensureBillingPortalConfiguration(stripe);
 
     const session = await stripe.checkout.sessions.create({
       mode: "subscription",
