@@ -10,6 +10,12 @@ export function AuthMarketingPanel({ footer }: { footer: string }) {
     "TCPA-ready outbound campaigns",
   ];
 
+  const stats = [
+    { value: "24/7", label: "Coverage" },
+    { value: "<2s", label: "Avg. answer" },
+    { value: "99.9%", label: "Uptime SLA" },
+  ];
+
   return (
     <div className="sidebar-shell relative hidden w-[42%] max-w-md flex-col justify-between overflow-hidden p-10 2xl:max-w-xl 2xl:p-12 lg:flex">
       <div className="hero-glow -left-24 top-0 h-80 w-80 bg-teal-500/20" />
@@ -27,19 +33,31 @@ export function AuthMarketingPanel({ footer }: { footer: string }) {
           {BRAND.name} gives local businesses enterprise-grade phone agents — not a voicemail black hole.
         </p>
       </div>
-      <ul className="relative space-y-3">
-        {items.map((item) => (
-          <li
-            key={item}
-            className="flex items-center gap-3 rounded-xl border border-white/[0.06] bg-white/[0.04] px-4 py-3 text-sm text-white/85"
-          >
-            <span className="flex h-8 w-8 shrink-0 items-center justify-center rounded-lg bg-gradient-to-br from-teal-500/30 to-violet-500/25 text-sm text-teal-300">
-              ✓
-            </span>
-            {item}
-          </li>
-        ))}
-      </ul>
+      <div className="relative space-y-6">
+        <ul className="space-y-3">
+          {items.map((item) => (
+            <li
+              key={item}
+              className="flex items-center gap-3 rounded-xl border border-white/[0.06] bg-white/[0.04] px-4 py-3 text-sm text-white/85"
+            >
+              <span className="flex h-8 w-8 shrink-0 items-center justify-center rounded-lg bg-gradient-to-br from-teal-500/30 to-violet-500/25 text-sm text-teal-300">
+                ✓
+              </span>
+              {item}
+            </li>
+          ))}
+        </ul>
+        <dl className="grid grid-cols-3 gap-3 rounded-2xl border border-white/[0.06] bg-white/[0.03] p-4">
+          {stats.map((stat) => (
+            <div key={stat.label} className="text-center">
+              <dt className="font-display text-2xl font-bold text-white">{stat.value}</dt>
+              <dd className="mt-1 text-[11px] font-semibold uppercase tracking-wide text-white/45">
+                {stat.label}
+              </dd>
+            </div>
+          ))}
+        </dl>
+      </div>
       <div className="relative flex items-center justify-between gap-4 text-xs text-white/35">
         <p>{footer}</p>
         <Link href="/help" className="text-teal-400/80 hover:text-teal-300 hover:underline">
