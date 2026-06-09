@@ -2,7 +2,6 @@ import type { Metadata } from "next";
 import dynamic from "next/dynamic";
 import { FaqAccordion } from "@/components/FaqAccordion";
 import { HeroSection } from "@/components/marketing/HeroSection";
-import { HowItWorks } from "@/components/marketing/HowItWorks";
 import { MarketingFooterNew } from "@/components/marketing/MarketingFooterNew";
 import { MarketingNavbar } from "@/components/marketing/MarketingNavbar";
 import { TrustBadgeStrip } from "@/components/marketing/TrustBadgeStrip";
@@ -10,6 +9,10 @@ import { TrustMarquee } from "@/components/marketing/TrustMarquee";
 import { SkipToContent } from "@/components/SkipToContent";
 import { BRAND } from "@/lib/brand";
 import { FAQ_ITEMS } from "@/lib/marketing-content";
+
+const HowItWorks = dynamic(() =>
+  import("@/components/marketing/HowItWorks").then((m) => ({ default: m.HowItWorks }))
+);
 
 const BentoFeatures = dynamic(() =>
   import("@/components/marketing/BentoFeatures").then((m) => ({ default: m.BentoFeatures }))
@@ -77,14 +80,16 @@ export default function HomePage() {
         <TrustMarquee />
         <TrustBadgeStrip />
         <HowItWorks />
-        <BentoFeatures />
-        <IndustriesSection />
-        <PricingSection />
-        <RoiCalculator />
-        <DemoCtaSection />
-        <TestimonialsSection />
+        <div className="perf-below-fold">
+          <BentoFeatures />
+          <IndustriesSection />
+          <PricingSection />
+          <RoiCalculator />
+          <DemoCtaSection />
+          <TestimonialsSection />
+        </div>
 
-        <section className="border-t border-border py-20" id="faq">
+        <section className="perf-below-fold border-t border-border py-20" id="faq">
           <div className="mx-auto max-w-3xl px-5">
             <h2 className="font-display mb-10 text-center text-3xl text-text">
               Frequently asked questions

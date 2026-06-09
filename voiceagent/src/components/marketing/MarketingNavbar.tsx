@@ -38,8 +38,8 @@ export function MarketingNavbar() {
     <header
       className={`fixed top-0 z-50 w-full border-b transition ${
         scrolled
-          ? "border-border bg-bg/90 backdrop-blur-xl"
-          : "border-border/50 bg-bg/80 backdrop-blur-xl"
+          ? "border-border bg-bg/95 md:bg-bg/90 md:backdrop-blur-xl"
+          : "border-border/50 bg-bg/95 md:bg-bg/80 md:backdrop-blur-xl"
       }`}
     >
       <div className="marketing-container flex h-16 items-center justify-between">
@@ -83,7 +83,7 @@ export function MarketingNavbar() {
       </div>
 
       {open ? (
-        <div className="fixed inset-0 z-50 bg-bg/95 backdrop-blur-xl lg:hidden">
+        <div className="fixed inset-0 z-50 bg-bg/98 lg:hidden">
           <div className="flex items-center justify-between p-5">
             <span className="font-display text-lg text-text">{BRAND.name}</span>
             <button type="button" aria-label="Close menu" onClick={() => setOpen(false)}>
