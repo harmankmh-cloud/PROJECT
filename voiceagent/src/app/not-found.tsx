@@ -1,14 +1,14 @@
 import Link from "next/link";
-import { MarketingFooter } from "@/components/MarketingFooter";
-import { MarketingHeader } from "@/components/MarketingHeader";
+import { MarketingFooterNew } from "@/components/marketing/MarketingFooterNew";
+import { MarketingNavbar } from "@/components/marketing/MarketingNavbar";
 import { SkipToContent } from "@/components/SkipToContent";
 
 export default function NotFound() {
   return (
     <div className="dark-mesh-bg grid-pattern flex min-h-screen flex-col">
       <SkipToContent />
-      <MarketingHeader />
-      <main id="main-content" className="mx-auto flex max-w-lg flex-1 flex-col items-center justify-center px-6 py-20 text-center">
+      <MarketingNavbar />
+      <main id="main-content" className="mx-auto flex max-w-lg flex-1 flex-col items-center justify-center px-6 pb-20 pt-24 text-center">
         <p className="page-eyebrow">404</p>
         <h1 className="font-display mt-3 text-4xl text-ghost-white">Page not found</h1>
         <p className="mt-4 text-on-surface-variant">
@@ -23,7 +23,7 @@ export default function NotFound() {
           </Link>
         </div>
       </main>
-      <MarketingFooter />
+      <MarketingFooterNew />
     </div>
   );
 }

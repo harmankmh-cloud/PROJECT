@@ -6,34 +6,23 @@ import { Sparkles } from "lucide-react";
 import { useEffect, useState } from "react";
 import { Waveform } from "@/components/ui/Waveform";
 import { BRAND } from "@/lib/brand";
+import { TESTIMONIALS } from "@/lib/marketing-content";
 
-const TESTIMONIALS = [
-  {
-    quote: "GreetQ booked 4 appointments while I was asleep.",
-    author: "Dr. Patel",
-    business: "Abbotsford Dental",
-  },
-  {
-    quote: "We stopped missing evening calls within the first week.",
-    author: "Sarah M.",
-    business: "Pacific Dental Group",
-  },
-  {
-    quote: "Setup took an afternoon — sandbox, knowledge, then go live.",
-    author: "James K.",
-    business: "North Shore HVAC",
-  },
-] as const;
+const AUTH_TESTIMONIALS = TESTIMONIALS.map((t) => ({
+  quote: t.quote,
+  author: t.name,
+  business: t.company,
+}));
 
 export function AuthMarketingPanel({ footer }: { footer: string }) {
   const [index, setIndex] = useState(0);
 
   useEffect(() => {
-    const t = setInterval(() => setIndex((i) => (i + 1) % TESTIMONIALS.length), 5000);
+    const t = setInterval(() => setIndex((i) => (i + 1) % AUTH_TESTIMONIALS.length), 5000);
     return () => clearInterval(t);
   }, []);
 
-  const t = TESTIMONIALS[index];
+  const t = AUTH_TESTIMONIALS[index];
 
   return (
     <div className="relative hidden w-[45%] flex-col justify-between overflow-hidden bg-gradient-to-br from-indigo-950 via-bg to-bg p-10 lg:flex">

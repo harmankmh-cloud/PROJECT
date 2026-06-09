@@ -98,10 +98,13 @@ export function DashboardOverview({
       </Card>
 
       <div className="grid gap-6 lg:grid-cols-3">
-        <div className="lg:col-span-2">
+        <div className="lg:col-span-2" id="recent-calls">
           <div className="mb-4 flex items-center justify-between">
             <h2 className="font-display text-lg text-text">Recent calls</h2>
-            <Link href="/dashboard/calls" className="text-sm text-primary-glow hover:underline">
+            <Link
+              href={isDemo ? "/signup" : "/dashboard/calls"}
+              className="text-sm text-primary-glow hover:underline"
+            >
               View all
             </Link>
           </div>
@@ -148,7 +151,7 @@ export function DashboardOverview({
         </div>
 
         <div className="space-y-6">
-          <div>
+          <div id="appointments">
             <h2 className="mb-3 font-display text-lg text-text">Today&apos;s appointments</h2>
             <Card>
               {DEMO_APPOINTMENTS.map((a) => (
@@ -160,19 +163,22 @@ export function DashboardOverview({
                   <p className="text-sm text-accent">{a.day} {a.time}</p>
                 </div>
               ))}
-              <Link href="/dashboard/appointments" className="mt-3 block text-sm text-primary-glow hover:underline">
+              <Link
+                href={isDemo ? "/signup" : "/dashboard/appointments"}
+                className="mt-3 block text-sm text-primary-glow hover:underline"
+              >
                 View calendar
               </Link>
             </Card>
           </div>
 
-          <div>
+          <div id="messages">
             <h2 className="mb-3 font-display text-lg text-text">Messages</h2>
             <Card>
               {DEMO_MESSAGES.map((m) => (
                 <Link
                   key={m.id}
-                  href="/dashboard/messages"
+                  href={isDemo ? "/signup" : "/dashboard/messages"}
                   className="flex items-start gap-2 border-b border-border py-3 last:border-0"
                 >
                   {m.unread && <span className="mt-1.5 h-2 w-2 shrink-0 rounded-full bg-accent" />}

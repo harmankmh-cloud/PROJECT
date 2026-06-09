@@ -1,7 +1,7 @@
 import type { Metadata } from "next";
 import Link from "next/link";
-import { MarketingFooter } from "@/components/MarketingFooter";
-import { MarketingHeader } from "@/components/MarketingHeader";
+import { MarketingFooterNew } from "@/components/marketing/MarketingFooterNew";
+import { MarketingNavbar } from "@/components/marketing/MarketingNavbar";
 import { SkipToContent } from "@/components/SkipToContent";
 import { BRAND } from "@/lib/brand";
 
@@ -50,8 +50,8 @@ export default function SecurityPage() {
   return (
     <div className="dark-mesh-bg grid-pattern flex min-h-screen flex-col">
       <SkipToContent />
-      <MarketingHeader />
-      <main id="main-content" className="mx-auto max-w-3xl flex-1 px-6 py-16">
+      <MarketingNavbar />
+      <main id="main-content" className="mx-auto max-w-3xl flex-1 px-6 pb-16 pt-24">
         <h1 className="font-display text-3xl text-ghost-white">Security & compliance</h1>
         <p className="mt-3 text-sm text-on-surface-variant">
           How {BRAND.name} supports regulated and high-trust buyers in Canada and the United States. This page
@@ -81,7 +81,7 @@ export default function SecurityPage() {
           .
         </p>
       </main>
-      <MarketingFooter />
+      <MarketingFooterNew />
     </div>
   );
 }

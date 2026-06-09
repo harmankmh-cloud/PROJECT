@@ -68,6 +68,11 @@ html {
     animation-iteration-count: 1 !important;
     transition-duration: 0.01ms !important;
   }
+
+  [data-motion-root] {
+    opacity: 1 !important;
+    transform: none !important;
+  }
 }
 
 body {
@@ -290,6 +295,11 @@ select {
 
   .animate-marquee {
     animation: marquee 30s linear infinite;
+  }
+
+  .glow-border {
+    @apply border border-primary/30;
+    box-shadow: 0 0 24px rgba(99, 102, 241, 0.15);
   }
 
   .text-accent {

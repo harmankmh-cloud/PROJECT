@@ -6,18 +6,20 @@ const COLUMNS = [
     title: "Product",
     links: [
       { href: "/#features", label: "Features" },
-      { href: "/#pricing", label: "Pricing" },
+      { href: "/pricing", label: "Pricing" },
       { href: "/#demo", label: "Demo" },
       { href: "/signup", label: "Start free trial" },
+      { href: "/integrations", label: "Integrations" },
+      { href: "/blog", label: "Blog" },
     ],
   },
   {
     title: "Industries",
     links: [
-      { href: "/#industries", label: "Dental & medical" },
-      { href: "/#industries", label: "Home services" },
-      { href: "/#industries", label: "Professional services" },
-      { href: "/#industries", label: "Salons & spas" },
+      { href: "/dental", label: "Dental & medical" },
+      { href: "/hvac", label: "HVAC" },
+      { href: "/legal", label: "Legal" },
+      { href: "/contractors", label: "Contractors" },
     ],
   },
   {
@@ -64,12 +66,31 @@ export function MarketingFooterNew() {
         </div>
         <div className="mt-12 flex flex-col items-center justify-between gap-4 border-t border-border pt-8 text-sm text-muted md:flex-row">
           <p>© {new Date().getFullYear()} {BRAND.legalName}</p>
-          <div className="flex flex-wrap justify-center gap-4">
+          <div className="flex flex-wrap items-center justify-center gap-4">
+            <a
+              href="https://www.linkedin.com/company/greetq"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="hover:text-text"
+            >
+              LinkedIn
+            </a>
+            <a
+              href="https://x.com/greetq"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="hover:text-text"
+            >
+              X
+            </a>
             <Link href="/privacy" className="hover:text-text">
               Privacy
             </Link>
             <Link href="/terms" className="hover:text-text">
               Terms
+            </Link>
+            <Link href="/about" className="hover:text-text">
+              About
             </Link>
             <span>Made in BC, Canada</span>
           </div>

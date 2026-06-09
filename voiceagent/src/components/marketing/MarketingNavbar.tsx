@@ -8,9 +8,11 @@ import { BRAND } from "@/lib/brand";
 
 const NAV = [
   { href: "/#features", label: "Features" },
-  { href: "/#pricing", label: "Pricing" },
+  { href: "/pricing", label: "Pricing" },
   { href: "/#demo", label: "Demo" },
-  { href: "/#industries", label: "For Industries" },
+  { href: "/#industries", label: "Industries" },
+  { href: "/about", label: "About" },
+  { href: "/help", label: "Help" },
 ] as const;
 
 export function MarketingNavbar() {
@@ -26,7 +28,11 @@ export function MarketingNavbar() {
 
   return (
     <header
-      className={`fixed top-0 z-50 w-full transition ${scrolled ? "site-header-scrolled border-b border-border" : "border-b border-transparent bg-transparent"}`}
+      className={`fixed top-0 z-50 w-full border-b transition ${
+        scrolled
+          ? "border-border bg-bg/90 backdrop-blur-xl"
+          : "border-border/50 bg-bg/80 backdrop-blur-xl"
+      }`}
     >
       <div className="marketing-container flex h-16 items-center justify-between">
         <Link href="/" className="flex items-center gap-2.5 font-display text-lg text-text">
@@ -36,7 +42,7 @@ export function MarketingNavbar() {
           {BRAND.name}
         </Link>
 
-        <nav className="hidden items-center gap-8 lg:flex" aria-label="Main">
+        <nav className="hidden items-center gap-6 lg:flex" aria-label="Main">
           {NAV.map((item) => (
             <Link
               key={item.href}

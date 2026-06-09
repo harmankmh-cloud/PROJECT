@@ -9,6 +9,7 @@ export type LoginFormData = z.infer<typeof loginSchema>;
 
 export const signupSchema = z.object({
   businessName: z.string().optional(),
+  phone: z.string().min(10, "Enter a valid business phone number"),
   email: z.string().email("Enter a valid email address"),
   password: z.string().min(8, "Password must be at least 8 characters"),
   acceptedTerms: z.literal(true, { message: "You must accept the terms to continue" }),
