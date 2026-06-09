@@ -24,15 +24,40 @@ function parseArgs() {
   return args;
 }
 
+function parseCsvField(line, start) {
+  if (line[start] === '"') {
+    let i = start + 1;
+    let out = "";
+    while (i < line.length) {
+      if (line[i] === '"') {
+        if (line[i + 1] === '"') {
+          out += '"';
+          i += 2;
+        } else {
+          return { value: out, next: i + 1 };
+        }
+      } else {
+        out += line[i++];
+      }
+    }
+    return { value: out, next: line.length };
+  }
+  const end = line.indexOf(",", start);
+  if (end === -1) return { value: line.slice(start), next: line.length };
+  return { value: line.slice(start, end), next: end + 1 };
+}
+
 function parseCsv(text) {
   const lines = text.trim().split("\n");
-  const headers = lines[0].split(",");
+  const headers = lines[0].split(",").map((h) => h.trim());
   return lines.slice(1).map((line) => {
-    const cols = line.match(/("([^"]|"")*"|[^,]*)/g)?.map((c) => c.replace(/^"|"$/g, "").replace(/""/g, '"')) || [];
     const row = {};
-    headers.forEach((h, i) => {
-      row[h.trim()] = (cols[i] || "").trim();
-    });
+    let pos = 0;
+    for (let i = 0; i < headers.length; i++) {
+      const { value, next } = parseCsvField(line, pos);
+      row[headers[i]] = value.trim();
+      pos = next;
+    }
     return row;
   });
 }
