@@ -1,5 +1,6 @@
 import Link from "next/link";
 import { Globe, Share2 } from "lucide-react";
+import { LanguageToggle } from "@/components/ui/LanguageToggle";
 import { SERVE_LOCAL } from "@/lib/constants";
 
 const HOMEOWNER_LINKS = [
@@ -111,10 +112,7 @@ export function MarketingFooter() {
           © {new Date().getFullYear()} {SERVE_LOCAL.name}. Serving Canada — starting in BC.
         </p>
         <div className="flex flex-wrap items-center gap-4">
-          <div className="flex gap-1 rounded-full border border-border p-0.5 text-xs">
-            <span className="rounded-full bg-primary px-2.5 py-1 font-semibold text-white">EN</span>
-            <span className="rounded-full px-2.5 py-1 text-muted">FR</span>
-          </div>
+          <LanguageToggle />
           {LEGAL_LINKS.map((link) => (
             <Link key={link.href} href={link.href} className="text-xs text-muted hover:text-foreground">
               {link.label}

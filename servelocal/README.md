@@ -24,6 +24,8 @@ Open [http://localhost:3001](http://localhost:3001).
 4. Run `supabase/suggestions.sql` for the feedback button
 5. Run `supabase/guest-access.sql` for database permissions (public browse/post without login)
 6. Run `supabase/user-accounts.sql` so logged-in users can track job requests on `/dashboard`
+7. Run `supabase/bookings.sql` for escrow-style bookings
+8. Run `supabase/complete-features.sql` for messaging, saved pros, Q&A, review helpful votes, availability
 
 ## Email / auth (same as RateLocal — Resend SMTP)
 

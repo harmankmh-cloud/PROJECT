@@ -92,8 +92,8 @@ export default async function ProviderPage({ params }: { params: Promise<{ slug:
               avgRating={provider.avg_rating}
             />
             <ProCredentials provider={provider} />
-            <ProAvailability />
-            <ProQASection proName={provider.display_name} />
+            <ProAvailability providerId={provider.id} />
+            <ProQASection proName={provider.display_name} providerId={provider.id} />
             <SimilarProsCarousel
               providers={relatedPros}
               category={category}

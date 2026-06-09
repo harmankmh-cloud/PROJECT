@@ -8,6 +8,7 @@ import { cityName } from "@/lib/constants";
 import { getCategoryIcon } from "@/lib/category-icons";
 import { Avatar } from "@/components/ui/Avatar";
 import { Badge } from "@/components/ui/Badge";
+import { SaveProButton } from "@/components/pro/SaveProButton";
 import { ShimmerButton } from "@/components/ui/ShimmerButton";
 
 type Props = {
@@ -85,10 +86,11 @@ export function ProHero({ provider, category, cityCategoryHref }: Props) {
                 )}
               </div>
             </div>
-            <div className="hidden sm:block">
+            <div className="hidden flex-col gap-2 sm:flex">
               <ShimmerButton size="lg" onClick={() => document.getElementById("request-quote")?.scrollIntoView({ behavior: "smooth" })}>
                 Get a Quote
               </ShimmerButton>
+              <SaveProButton providerId={provider.id} />
             </div>
           </div>
         </div>

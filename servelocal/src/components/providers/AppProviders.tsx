@@ -2,6 +2,7 @@
 
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { useState } from "react";
+import { LocaleProvider } from "@/components/providers/LocaleProvider";
 import { ThemeProvider } from "@/components/providers/ThemeProvider";
 
 export function AppProviders({ children }: { children: React.ReactNode }) {
@@ -9,7 +10,9 @@ export function AppProviders({ children }: { children: React.ReactNode }) {
 
   return (
     <ThemeProvider>
-      <QueryClientProvider client={queryClient}>{children}</QueryClientProvider>
+      <LocaleProvider>
+        <QueryClientProvider client={queryClient}>{children}</QueryClientProvider>
+      </LocaleProvider>
     </ThemeProvider>
   );
 }

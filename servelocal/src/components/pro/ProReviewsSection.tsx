@@ -40,9 +40,31 @@ function RatingBreakdown({ reviews }: { reviews: ProviderReview[] }) {
   );
 }
 
+function getFingerprint() {
+  if (typeof window === "undefined") return "ssr";
+  let fp = localStorage.getItem("sl-fp");
+  if (!fp) {
+    fp = `fp-${Math.random().toString(36).slice(2)}`;
+    localStorage.setItem("sl-fp", fp);
+  }
+  return fp;
+}
+
 function ReviewCard({ review }: { review: ProviderReview }) {
   const [helpful, setHelpful] = useState(0);
   const [voted, setVoted] = useState(false);
+
+  async function voteHelpful() {
+    if (voted) return;
+    const res = await fetch(`/api/reviews/${review.id}/helpful`, {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ fingerprint: getFingerprint() }),
+    });
+    const data = await res.json();
+    setHelpful(data.count ?? helpful + 1);
+    setVoted(true);
+  }
 
   return (
     <li className="rounded-[14px] border border-border bg-surface p-5">
@@ -64,12 +86,7 @@ function ReviewCard({ review }: { review: ProviderReview }) {
           <p className="mt-2 text-sm leading-relaxed text-muted">{review.body}</p>
           <button
             type="button"
-            onClick={() => {
-              if (!voted) {
-                setHelpful((h) => h + 1);
-                setVoted(true);
-              }
-            }}
+            onClick={voteHelpful}
             disabled={voted}
             className="mt-3 inline-flex items-center gap-1.5 text-xs font-medium text-muted transition hover:text-primary disabled:opacity-60"
           >

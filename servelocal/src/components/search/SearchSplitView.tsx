@@ -3,8 +3,8 @@
 import { useState } from "react";
 import { List, Map } from "lucide-react";
 import type { ServiceProvider } from "@/lib/types";
+import { InteractiveMap } from "@/components/search/InteractiveMap";
 import { ProListingCard } from "@/components/search/ProListingCard";
-import { mapEmbedUrl } from "@/lib/city-coords";
 import { cityName } from "@/lib/constants";
 
 type Props = {
@@ -17,8 +17,6 @@ type Props = {
 export function SearchSplitView({ providers, categoryNames, citySlug, query }: Props) {
   const [view, setView] = useState<"split" | "list" | "map">("split");
   const [hoveredId, setHoveredId] = useState<string | null>(null);
-
-  const mapUrl = mapEmbedUrl(citySlug);
 
   return (
     <div>
@@ -88,32 +86,7 @@ export function SearchSplitView({ providers, categoryNames, citySlug, query }: P
 
         {(view === "split" || view === "map") && (
           <div className="sticky top-24 h-fit">
-            <div className="overflow-hidden rounded-[14px] border border-border shadow-sm">
-              <iframe
-                title="Map of local pros"
-                src={mapUrl}
-                className="h-[400px] w-full border-0 lg:h-[calc(100vh-200px)] lg:min-h-[500px]"
-                loading="lazy"
-                referrerPolicy="no-referrer-when-downgrade"
-              />
-            </div>
-            {providers.length > 0 && (
-              <div className="mt-3 flex flex-wrap gap-2">
-                {providers.slice(0, 6).map((p) => (
-                  <a
-                    key={p.id}
-                    href={`/pro/${p.slug}`}
-                    className={`rounded-full border px-3 py-1 text-xs font-medium transition ${
-                      hoveredId === p.id
-                        ? "border-primary bg-primary/10 text-primary"
-                        : "border-border text-muted hover:border-amber-400/50"
-                    }`}
-                  >
-                    ★ {p.avg_rating ?? "—"} · {p.min_callout_fee ?? "Quote"}
-                  </a>
-                ))}
-              </div>
-            )}
+            <InteractiveMap providers={providers} citySlug={citySlug} />
           </div>
         )}
       </div>

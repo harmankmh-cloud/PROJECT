@@ -52,7 +52,7 @@ export function BookingCheckout({ provider, bookingId }: Props) {
     setError("");
 
     try {
-      const res = await fetch("/api/bookings", {
+      const res = await fetch("/api/stripe/booking-checkout", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
@@ -67,6 +67,10 @@ export function BookingCheckout({ provider, bookingId }: Props) {
         }),
       });
       const data = await res.json();
+      if (data.url) {
+        window.location.href = data.url;
+        return;
+      }
       if (!res.ok) throw new Error(data.error || "Booking failed");
       setConfirmed(true);
     } catch (err) {

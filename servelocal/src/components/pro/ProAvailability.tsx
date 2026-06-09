@@ -1,49 +1,44 @@
-"use client";
-
+import { getAvailabilitySlots } from "@/lib/features-data";
 import { FadeUp } from "@/components/motion/FadeUp";
 
-const DAYS = ["Mon", "Tue", "Wed", "Thu", "Fri", "Sat", "Sun"];
-const SLOTS = ["9:00 AM", "11:00 AM", "2:00 PM", "4:00 PM"];
+type Props = {
+  providerId: string;
+};
 
-export function ProAvailability() {
+export async function ProAvailability({ providerId }: Props) {
+  const slots = await getAvailabilitySlots(providerId);
+  const byDay = new Map<string, typeof slots>();
+
+  for (const slot of slots) {
+    const day = new Date(slot.starts_at).toLocaleDateString("en-CA", { weekday: "short", month: "short", day: "numeric" });
+    if (!byDay.has(day)) byDay.set(day, []);
+    byDay.get(day)!.push(slot);
+  }
+
   return (
     <FadeUp>
       <section>
         <h2 className="font-display text-xl font-bold text-foreground">Availability</h2>
-        <p className="mt-1 text-sm text-muted">Open slots this week — request a time to confirm</p>
-        <div className="mt-4 overflow-x-auto rounded-[14px] border border-border">
-          <div className="min-w-[600px]">
-            <div className="grid grid-cols-8 border-b border-border bg-surface text-xs font-semibold text-muted">
-              <div className="p-3" />
-              {DAYS.map((d) => (
-                <div key={d} className="p-3 text-center">
-                  {d}
-                </div>
-              ))}
-            </div>
-            {SLOTS.map((slot) => (
-              <div key={slot} className="grid grid-cols-8 border-b border-border last:border-0">
-                <div className="p-3 text-xs text-muted">{slot}</div>
-                {DAYS.map((d, i) => {
-                  const available = (i + slot.length) % 3 !== 0;
-                  return (
-                    <div key={`${d}-${slot}`} className="border-l border-border p-2">
-                      {available ? (
-                        <button
-                          type="button"
-                          className="w-full rounded-lg bg-amber-400/10 py-2 text-xs font-medium text-primary transition hover:bg-amber-400/20"
-                        >
-                          Open
-                        </button>
-                      ) : (
-                        <div className="py-2 text-center text-xs text-muted/40">—</div>
-                      )}
-                    </div>
-                  );
-                })}
+        <p className="mt-1 text-sm text-muted">Open slots — request a time to confirm</p>
+        <div className="mt-4 grid gap-3 sm:grid-cols-2 lg:grid-cols-3">
+          {[...byDay.entries()].slice(0, 7).map(([day, daySlots]) => (
+            <div key={day} className="rounded-[14px] border border-border bg-surface p-4">
+              <p className="text-sm font-semibold text-foreground">{day}</p>
+              <div className="mt-2 flex flex-wrap gap-2">
+                {daySlots.map((slot) => (
+                  <span
+                    key={slot.id}
+                    className="rounded-lg bg-amber-400/10 px-2 py-1 text-xs font-medium text-primary"
+                  >
+                    {new Date(slot.starts_at).toLocaleTimeString("en-CA", {
+                      hour: "numeric",
+                      minute: "2-digit",
+                    })}
+                  </span>
+                ))}
               </div>
-            ))}
-          </div>
+            </div>
+          ))}
         </div>
       </section>
     </FadeUp>
