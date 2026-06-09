@@ -55,6 +55,62 @@ export const INDUSTRY_PAGES = {
     ],
     cta: "Get started free for your contracting business",
   },
+  "real-estate": {
+    slug: "real-estate",
+    title: "AI Receptionist for Real Estate",
+    headline: "Never miss a showing request",
+    description:
+      "GreetQ captures buyer and seller intent, schedules viewings, and routes callers to the right agent — 24/7.",
+    points: [
+      "Capture buyer intent and budget",
+      "Schedule property viewings",
+      "Route to listing agent",
+      "After-hours inquiry capture",
+    ],
+    cta: "Get started free for your brokerage",
+  },
+  restaurants: {
+    slug: "restaurants",
+    title: "AI Receptionist for Restaurants",
+    headline: "Handle reservations while you serve",
+    description:
+      "GreetQ books tables, answers hours and menu FAQs, and routes large parties — so your staff stays on the floor.",
+    points: [
+      "Table reservations during rush",
+      "Hours, location, and menu FAQs",
+      "Large party and catering routing",
+      "SMS summary to manager",
+    ],
+    cta: "Get started free for your restaurant",
+  },
+  salons: {
+    slug: "salons",
+    title: "AI Receptionist for Salons & Spas",
+    headline: "Book while stylists stay with clients",
+    description:
+      "GreetQ handles after-hours booking, service-specific scheduling, and cancellation requests without pulling staff off the chair.",
+    points: [
+      "After-hours appointment booking",
+      "Service-specific scheduling",
+      "Cancellation and reschedule handling",
+      "Google Calendar sync",
+    ],
+    cta: "Get started free for your salon",
+  },
+  "property-managers": {
+    slug: "property-managers",
+    title: "AI Receptionist for Property Managers",
+    headline: "Triage maintenance calls 24/7",
+    description:
+      "GreetQ distinguishes urgent maintenance from routine requests, captures tenant details, and escalates to on-call staff.",
+    points: [
+      "Urgent vs routine maintenance routing",
+      "Tenant message capture",
+      "On-call escalation",
+      "Audit trail for every call",
+    ],
+    cta: "Get started free for your portfolio",
+  },
 } as const;
 
 export type IndustrySlug = keyof typeof INDUSTRY_PAGES;

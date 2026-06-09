@@ -17,8 +17,14 @@ function parsePlan(plan?: string): PlanKey | null {
 export default async function SignupPage({
   searchParams,
 }: {
-  searchParams: Promise<{ plan?: string }>;
+  searchParams: Promise<{ plan?: string; email?: string; business?: string }>;
 }) {
   const params = await searchParams;
-  return <SignupForm initialPlan={parsePlan(params.plan)} />;
+  return (
+    <SignupForm
+      initialPlan={parsePlan(params.plan)}
+      initialEmail={params.email?.trim() ?? ""}
+      initialBusinessName={params.business?.trim() ?? ""}
+    />
+  );
 }

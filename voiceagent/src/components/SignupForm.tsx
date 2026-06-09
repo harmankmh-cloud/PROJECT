@@ -14,7 +14,15 @@ import { markOnboardingPending } from "@/lib/onboarding";
 import type { PlanKey } from "@/lib/plans";
 import { TRIAL_MARKETING } from "@/lib/trial";
 
-export function SignupForm({ initialPlan = null }: { initialPlan?: PlanKey | null }) {
+export function SignupForm({
+  initialPlan = null,
+  initialEmail = "",
+  initialBusinessName = "",
+}: {
+  initialPlan?: PlanKey | null;
+  initialEmail?: string;
+  initialBusinessName?: string;
+}) {
   const {
     register,
     handleSubmit,
@@ -24,7 +32,13 @@ export function SignupForm({ initialPlan = null }: { initialPlan?: PlanKey | nul
     setError: setFormError,
   } = useForm<SignupFormData>({
     resolver: zodResolver(signupSchema),
-    defaultValues: { businessName: "", phone: "", email: "", password: "", acceptedTerms: undefined },
+    defaultValues: {
+      businessName: initialBusinessName,
+      phone: "",
+      email: initialEmail,
+      password: "",
+      acceptedTerms: undefined,
+    },
   });
 
   async function onSubmit(data: SignupFormData) {

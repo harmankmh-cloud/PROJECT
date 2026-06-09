@@ -56,7 +56,7 @@ function RotatingTestimonials() {
 }
 
 export function AuthMarketingPanel({ footer }: { footer: string }) {
-  const first = TESTIMONIALS[0];
+  const first = AUTH_TESTIMONIALS[0];
 
   return (
     <div className="relative hidden w-[45%] flex-col justify-between overflow-hidden bg-gradient-to-br from-indigo-950 via-bg to-bg p-10 lg:flex">

@@ -10,8 +10,8 @@ type TierKey = "starter" | "growth" | "pro";
 
 const TIERS: { key: TierKey; label: string; popular?: boolean }[] = [
   { key: "starter", label: "Starter" },
-  { key: "growth", label: "Pro", popular: true },
-  { key: "pro", label: "Agency" },
+  { key: "growth", label: "Growth", popular: true },
+  { key: "pro", label: "Pro" },
 ];
 
 const FEATURE_MATRIX: Record<TierKey, { label: string; included: boolean }[]> = {

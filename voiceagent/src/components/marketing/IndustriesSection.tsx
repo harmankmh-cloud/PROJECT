@@ -1,17 +1,18 @@
 "use client";
 
+import Link from "next/link";
 import { useState } from "react";
 import { USE_CASES } from "@/lib/marketing-content";
 
 const CHIPS = [
-  "Dental Clinics",
-  "Law Firms",
-  "HVAC",
-  "Real Estate",
-  "Restaurants",
-  "Salons",
-  "Property Managers",
-  "Contractors",
+  { label: "Dental Clinics", href: "/dental" },
+  { label: "Law Firms", href: "/legal" },
+  { label: "HVAC", href: "/hvac" },
+  { label: "Real Estate", href: "/real-estate" },
+  { label: "Restaurants", href: "/restaurants" },
+  { label: "Salons", href: "/salons" },
+  { label: "Property Managers", href: "/property-managers" },
+  { label: "Contractors", href: "/contractors" },
 ] as const;
 
 const PAIN_POINTS: Record<string, { title: string; points: string[] }> = {
@@ -50,8 +51,9 @@ const PAIN_POINTS: Record<string, { title: string; points: string[] }> = {
 };
 
 export function IndustriesSection() {
-  const [selected, setSelected] = useState<string>(CHIPS[0]);
+  const [selected, setSelected] = useState<string>(CHIPS[0].label);
   const pain = PAIN_POINTS[selected];
+  const activeHref = CHIPS.find((c) => c.label === selected)?.href ?? "/dental";
 
   return (
     <section className="border-t border-border py-20 md:py-[80px]" id="industries">
@@ -63,18 +65,18 @@ export function IndustriesSection() {
 
         <div className="flex gap-2 overflow-x-auto pb-4 scrollbar-none">
           {CHIPS.map((chip) => (
-            <button
-              key={chip}
-              type="button"
-              onClick={() => setSelected(chip)}
+            <Link
+              key={chip.label}
+              href={chip.href}
+              onClick={() => setSelected(chip.label)}
               className={`shrink-0 rounded-full px-4 py-2 text-sm font-medium transition ${
-                selected === chip
+                selected === chip.label
                   ? "bg-primary text-white shadow-[0_0_24px_rgba(99,102,241,0.3)]"
                   : "border border-border bg-surface text-muted hover:text-text"
               }`}
             >
-              {chip}
-            </button>
+              {chip.label}
+            </Link>
           ))}
         </div>
 
@@ -88,8 +90,11 @@ export function IndustriesSection() {
               </li>
             ))}
           </ul>
+          <Link href={activeHref} className="mt-6 inline-block text-sm font-medium text-primary-glow hover:underline">
+            View {selected} page →
+          </Link>
           {USE_CASES[0] && (
-            <p className="mt-6 text-xs text-muted">
+            <p className="mt-4 text-xs text-muted">
               Example: {USE_CASES[0].outcomeAttribution}
             </p>
           )}
