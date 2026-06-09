@@ -1,0 +1,41 @@
+{
+  "greetq": {
+    "label": "GreetQ",
+    "city": "Abbotsford",
+    "sectors": [
+      "dental_medical",
+      "law",
+      "hvac_trades",
+      "property_mgmt",
+      "auto",
+      "salon_spa",
+      "restaurants",
+      "accounting",
+      "physio_chiro",
+      "real_estate"
+    ],
+    "per_sector": 40
+  },
+  "servelocal": {
+    "label": "ServeLocal",
+    "city": "Abbotsford",
+    "sectors": ["hvac_trades", "auto"],
+    "per_sector": 50,
+    "extra_queries": [
+      "handyman {city} BC",
+      "landscaper {city} BC",
+      "painter {city} BC",
+      "roofing {city} BC"
+    ]
+  },
+  "ratelocal": {
+    "label": "RateLocal",
+    "city": "Abbotsford",
+    "sectors": ["dental_medical", "salon_spa", "restaurants", "auto"],
+    "per_sector": 50,
+    "extra_queries": [
+      "local shop {city} BC google reviews",
+      "small business {city} BC"
+    ]
+  }
+}

@@ -16,6 +16,9 @@ import { scrapeEmail } from "./lib/scrape.mjs";
 
 const __dirname = dirname(fileURLToPath(import.meta.url));
 const SECTORS = JSON.parse(readFileSync(join(__dirname, "sectors.json"), "utf8"));
+const PRODUCTS = existsSync(join(__dirname, "products.json"))
+  ? JSON.parse(readFileSync(join(__dirname, "products.json"), "utf8"))
+  : {};
 const OUTPUT = join(__dirname, "output");
 const STATE_FILE = join(__dirname, "seen-domains.json");
 
@@ -29,10 +32,12 @@ function parseArgs() {
     perSector: 50,
     concurrency: 4,
     emailsOnly: false,
+    product: null,
   };
   for (let i = 2; i < process.argv.length; i++) {
     const x = process.argv[i];
-    if (x === "--sector") a.sector = process.argv[++i];
+    if (x === "--product") a.product = process.argv[++i];
+    else if (x === "--sector") a.sector = process.argv[++i];
     else if (x === "--city") a.city = process.argv[++i];
     else if (x === "--limit") a.limit = Number(process.argv[++i]) || 30;
     else if (x === "--per-sector") a.perSector = Number(process.argv[++i]) || 50;
@@ -93,10 +98,18 @@ async function main() {
   const args = parseArgs();
   mkdirSync(OUTPUT, { recursive: true });
 
+  if (args.product && PRODUCTS[args.product]) {
+    const p = PRODUCTS[args.product];
+    args.city = args.city || p.city;
+    args.allSectors = true;
+    args.perSector = p.per_sector || args.perSector;
+    args._product = p;
+  }
+
   const sectorKeys = args.sector
     ? [args.sector]
     : args.allSectors
-      ? Object.keys(SECTORS)
+      ? args._product?.sectors || Object.keys(SECTORS)
       : null;
 
   if (!sectorKeys?.length) {
