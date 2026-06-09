@@ -19,8 +19,8 @@ export default async function JobsPage() {
 
   return (
     <div>
-      <h1 className="font-display text-2xl font-black text-slate-900">My Jobs</h1>
-      <p className="mt-1 text-sm text-slate-500">Track job posts and pro interest.</p>
+      <h1 className="font-display text-2xl font-black text-foreground">My Jobs</h1>
+      <p className="mt-1 text-sm text-muted">Track active, upcoming, and completed jobs.</p>
 
       {requests.length === 0 ? (
         <div className="mt-8 rounded-2xl border border-slate-200 bg-white p-10 text-center">
@@ -32,7 +32,7 @@ export default async function JobsPage() {
       ) : (
         <ul className="mt-6 space-y-4">
           {requests.map((r) => (
-            <li key={r.id} className="rounded-2xl border border-slate-200 bg-white p-5 shadow-sm">
+            <li key={r.id} className="rounded-[14px] border border-border bg-surface p-5 shadow-sm">
               <div className="flex flex-wrap items-start justify-between gap-2">
                 <div>
                   <p className="font-semibold text-slate-900">{categoryName(r.category_slug)}</p>
