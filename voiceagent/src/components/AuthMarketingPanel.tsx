@@ -1,50 +1,74 @@
+"use client";
+
 import Link from "next/link";
-import { BrandLogo } from "@/components/BrandLogo";
+import { AnimatePresence, motion } from "framer-motion";
+import { Sparkles } from "lucide-react";
+import { useEffect, useState } from "react";
+import { Waveform } from "@/components/ui/Waveform";
 import { BRAND } from "@/lib/brand";
 
+const TESTIMONIALS = [
+  {
+    quote: "GreetQ booked 4 appointments while I was asleep.",
+    author: "Dr. Patel",
+    business: "Abbotsford Dental",
+  },
+  {
+    quote: "We stopped missing evening calls within the first week.",
+    author: "Sarah M.",
+    business: "Pacific Dental Group",
+  },
+  {
+    quote: "Setup took an afternoon — sandbox, knowledge, then go live.",
+    author: "James K.",
+    business: "North Shore HVAC",
+  },
+] as const;
+
 export function AuthMarketingPanel({ footer }: { footer: string }) {
-  const items = [
-    "24/7 AI receptionist on your line",
-    "Appointment booking + CRM updates",
-    "Warm transfer with full context",
-    "TCPA-ready outbound campaigns",
-  ];
+  const [index, setIndex] = useState(0);
+
+  useEffect(() => {
+    const t = setInterval(() => setIndex((i) => (i + 1) % TESTIMONIALS.length), 5000);
+    return () => clearInterval(t);
+  }, []);
+
+  const t = TESTIMONIALS[index];
 
   return (
-    <div className="sidebar-shell relative hidden w-[42%] max-w-md flex-col justify-between overflow-hidden p-10 2xl:max-w-xl 2xl:p-12 lg:flex">
-      <div className="hero-glow -left-24 top-0 h-80 w-80 bg-teal-500/20" />
-      <div className="hero-glow bottom-0 right-0 h-72 w-72 bg-violet-500/15" />
+    <div className="relative hidden w-[45%] flex-col justify-between overflow-hidden bg-gradient-to-br from-indigo-950 via-bg to-bg p-10 lg:flex">
+      <div className="hero-glow left-0 top-0 h-80 w-80 bg-primary/20" />
+      <div className="hero-glow bottom-0 right-0 h-72 w-72 bg-accent/10" />
+
       <div className="relative">
-        <BrandLogo href="/" light size="lg" />
-        <h2 className="font-display mt-10 text-4xl leading-tight text-white">
-          Never miss
-          <br />
-          <span className="bg-gradient-to-r from-teal-200 to-violet-300 bg-clip-text text-teal-200">
-            another call
-          </span>
-        </h2>
-        <p className="mt-4 max-w-sm text-sm leading-relaxed text-white/50">
-          {BRAND.name} gives local businesses enterprise-grade phone agents — not a voicemail black hole.
-        </p>
-      </div>
-      <ul className="relative space-y-3">
-        {items.map((item) => (
-          <li
-            key={item}
-            className="flex items-center gap-3 rounded-xl border border-white/[0.06] bg-white/[0.04] px-4 py-3 text-sm text-white/85"
-          >
-            <span className="flex h-8 w-8 shrink-0 items-center justify-center rounded-lg bg-gradient-to-br from-teal-500/30 to-violet-500/25 text-sm text-teal-300">
-              ✓
-            </span>
-            {item}
-          </li>
-        ))}
-      </ul>
-      <div className="relative flex items-center justify-between gap-4 text-xs text-white/35">
-        <p>{footer}</p>
-        <Link href="/help" className="text-teal-400/80 hover:text-teal-300 hover:underline">
-          Help →
+        <Link href="/" className="flex items-center gap-2 font-display text-xl text-text">
+          <Sparkles className="h-5 w-5 text-primary-glow" />
+          {BRAND.name}
         </Link>
+        <p className="mt-2 text-sm text-muted">AI receptionist for Canadian businesses</p>
+      </div>
+
+      <div className="relative min-h-[140px]">
+        <AnimatePresence mode="wait">
+          <motion.blockquote
+            key={index}
+            initial={{ opacity: 0, y: 12 }}
+            animate={{ opacity: 1, y: 0 }}
+            exit={{ opacity: 0, y: -12 }}
+            transition={{ duration: 0.35 }}
+            className="glass-card p-6"
+          >
+            <p className="text-lg text-text">&ldquo;{t.quote}&rdquo;</p>
+            <footer className="mt-4 text-sm text-muted">
+              — {t.author}, {t.business}
+            </footer>
+          </motion.blockquote>
+        </AnimatePresence>
+      </div>
+
+      <div className="relative">
+        <Waveform />
+        <p className="mt-4 text-xs text-muted">{footer}</p>
       </div>
     </div>
   );

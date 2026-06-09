@@ -1,60 +1,54 @@
 "use client";
 
 import Link from "next/link";
-import { useState } from "react";
+import { zodResolver } from "@hookform/resolvers/zod";
+import { useForm, Controller } from "react-hook-form";
 import { createClient } from "@/lib/supabase/client";
-import { AuthMarketingPanel } from "@/components/AuthMarketingPanel";
-import { BrandLogo } from "@/components/BrandLogo";
-import { MarketingFooter } from "@/components/MarketingFooter";
-import { SkipToContent } from "@/components/SkipToContent";
+import { signupSchema, type SignupFormData } from "@/lib/schemas/auth";
+import { AuthLayout } from "@/components/auth/AuthLayout";
+import { GoogleAuthButton } from "@/components/auth/GoogleAuthButton";
+import { Button } from "@/components/ui/Button";
+import { Input } from "@/components/ui/Input";
 import { BRAND } from "@/lib/brand";
 import type { PlanKey } from "@/lib/plans";
 
-export function SignupForm({
-  initialPlan = null,
-}: {
-  initialPlan?: PlanKey | null;
-}) {
-  const [businessName, setBusinessName] = useState("");
-  const [email, setEmail] = useState("");
-  const [password, setPassword] = useState("");
-  const [acceptedTerms, setAcceptedTerms] = useState(false);
-  const [error, setError] = useState("");
-  const [loading, setLoading] = useState(false);
+export function SignupForm({ initialPlan = null }: { initialPlan?: PlanKey | null }) {
+  const {
+    register,
+    handleSubmit,
+    control,
+    formState: { errors, isSubmitting },
+    setError: setFormError,
+  } = useForm<SignupFormData>({
+    resolver: zodResolver(signupSchema),
+    defaultValues: { businessName: "", email: "", password: "", acceptedTerms: undefined },
+  });
 
-  async function handleSubmit(e: React.FormEvent<HTMLFormElement>) {
-    e.preventDefault();
-    if (!acceptedTerms) {
-      setError("Please accept the Terms of Service and Privacy Policy to continue.");
-      return;
-    }
-    setLoading(true);
-    setError("");
+  async function onSubmit(data: SignupFormData) {
     const supabase = createClient();
     const { error: signUpError } = await supabase.auth.signUp({
-      email,
-      password,
+      email: data.email,
+      password: data.password,
       options: {
-        data: businessName.trim() ? { business_name: businessName.trim() } : undefined,
+        data: data.businessName?.trim() ? { business_name: data.businessName.trim() } : undefined,
       },
     });
     if (signUpError) {
-      setError(signUpError.message);
-      setLoading(false);
+      setFormError("root", { message: signUpError.message });
       return;
     }
     const setupRes = await fetch("/api/org/setup", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ businessName: businessName.trim() || undefined }),
+      body: JSON.stringify({ businessName: data.businessName?.trim() || undefined }),
     });
     if (!setupRes.ok) {
-      const data = await setupRes.json().catch(() => ({}));
-      setError(
-        (data as { error?: string }).error ||
-          "Account created but organization setup failed. Try signing in again."
-      );
-      setLoading(false);
+      const body = await setupRes.json().catch(() => ({}));
+      setFormError("root", {
+        message:
+          (body as { error?: string }).error ||
+          "Account created but organization setup failed. Try signing in again.",
+      });
       return;
     }
 
@@ -62,120 +56,95 @@ export function SignupForm({
       window.location.href = `/dashboard/billing?subscribe=${initialPlan}`;
       return;
     }
-    window.location.href = "/dashboard";
+    window.location.href = "/onboarding";
   }
 
   return (
-    <div className="dark-mesh-bg grid-pattern flex min-h-screen flex-col">
-      <SkipToContent />
-      <div className="flex flex-1">
-        <AuthMarketingPanel footer={`Start with ${BRAND.name}`} />
+    <AuthLayout panelFooter={`Start with ${BRAND.name}`}>
+      <div className="auth-card">
+        <h1 className="font-display text-3xl text-text">Create your account</h1>
+        <p className="mt-2 text-sm text-muted">
+          {initialPlan
+            ? `Set up your org, then continue to ${initialPlan} checkout.`
+            : "Get your AI receptionist running in minutes."}
+        </p>
 
-        <main id="main-content" className="flex flex-1 items-center justify-center px-4 py-12">
-          <div className="w-full max-w-md">
-            <div className="mb-8 lg:hidden">
-              <BrandLogo href="/" />
-            </div>
-            <div className="auth-card">
-              <p className="page-eyebrow">Get started</p>
-              <h1 className="font-display mt-2 text-3xl tracking-tight text-ghost-white">Create account</h1>
-              <p className="mt-2 text-sm text-on-surface-variant">
-                {initialPlan
-                  ? `We'll set up your org, then continue to ${initialPlan} checkout.`
-                  : "We'll set up your org and default agent."}
-              </p>
+        <form onSubmit={handleSubmit(onSubmit)} className="mt-8 space-y-4" noValidate>
+          <Input
+            label="Business name"
+            autoComplete="organization"
+            error={errors.businessName?.message}
+            {...register("businessName")}
+          />
+          <Input
+            label="Email"
+            type="email"
+            autoComplete="email"
+            error={errors.email?.message}
+            {...register("email")}
+          />
+          <Input
+            label="Password"
+            type="password"
+            autoComplete="new-password"
+            error={errors.password?.message}
+            {...register("password")}
+          />
+          <Controller
+            name="acceptedTerms"
+            control={control}
+            render={({ field }) => (
+              <label className="flex items-start gap-3 text-sm text-muted">
+                <input
+                  type="checkbox"
+                  checked={field.value === true}
+                  onChange={(e) => field.onChange(e.target.checked ? true : undefined)}
+                  className="mt-1 h-4 w-4 rounded border-border accent-primary"
+                />
+                <span>
+                  I agree to the{" "}
+                  <Link href="/terms" className="text-primary-glow hover:underline">
+                    Terms
+                  </Link>{" "}
+                  and{" "}
+                  <Link href="/privacy" className="text-primary-glow hover:underline">
+                    Privacy Policy
+                  </Link>
+                </span>
+              </label>
+            )}
+          />
+          {errors.acceptedTerms && (
+            <p className="text-sm text-danger">{errors.acceptedTerms.message}</p>
+          )}
+          {errors.root?.message && (
+            <p className="text-sm text-danger" role="alert">
+              {errors.root.message}
+            </p>
+          )}
+          <Button type="submit" className="w-full" loading={isSubmitting}>
+            Start Free Trial
+          </Button>
+        </form>
 
-              <form onSubmit={handleSubmit} className="mt-8 space-y-4" noValidate>
-                <div>
-                  <label htmlFor="signup-business" className="mb-1.5 block text-sm font-medium text-on-surface-variant">
-                    Business name
-                  </label>
-                  <input
-                    id="signup-business"
-                    name="businessName"
-                    type="text"
-                    autoComplete="organization"
-                    placeholder="Your business or clinic name"
-                    value={businessName}
-                    onChange={(e) => setBusinessName(e.target.value)}
-                    className="input-field"
-                  />
-                </div>
-                <div>
-                  <label htmlFor="signup-email" className="mb-1.5 block text-sm font-medium text-on-surface-variant">
-                    Work email
-                  </label>
-                  <input
-                    id="signup-email"
-                    name="email"
-                    type="email"
-                    autoComplete="email"
-                    placeholder="you@company.com"
-                    value={email}
-                    onChange={(e) => setEmail(e.target.value)}
-                    className="input-field"
-                    required
-                  />
-                </div>
-                <div>
-                  <label htmlFor="signup-password" className="mb-1.5 block text-sm font-medium text-on-surface-variant">
-                    Password
-                  </label>
-                  <input
-                    id="signup-password"
-                    name="password"
-                    type="password"
-                    autoComplete="new-password"
-                    placeholder="At least 8 characters"
-                    value={password}
-                    onChange={(e) => setPassword(e.target.value)}
-                    className="input-field"
-                    minLength={8}
-                    required
-                  />
-                </div>
-                <label className="flex items-start gap-3 text-sm text-on-surface-variant">
-                  <input
-                    type="checkbox"
-                    name="acceptTerms"
-                    checked={acceptedTerms}
-                    onChange={(e) => setAcceptedTerms(e.target.checked)}
-                    className="mt-1 h-4 w-4 rounded border-slate-300 text-teal-600 focus:ring-teal-500"
-                    required
-                  />
-                  <span>
-                    I agree to the{" "}
-                    <Link href="/terms" className="link-accent">
-                      Terms of Service
-                    </Link>{" "}
-                    and{" "}
-                    <Link href="/privacy" className="link-accent">
-                      Privacy Policy
-                    </Link>
-                    .
-                  </span>
-                </label>
-                {error && (
-                  <p className="text-sm text-error" role="alert">
-                    {error}
-                  </p>
-                )}
-                <button type="submit" disabled={loading} className="btn-gold w-full py-3">
-                  {loading ? "Creating…" : "Start free trial"}
-                </button>
-              </form>
-
-              <p className="mt-6 text-center text-sm text-on-surface-variant">
-                Already have an account?{" "}
-                <Link href="/login" className="link-accent">
-                  Sign in
-                </Link>
-              </p>
-            </div>
+        <div className="relative my-6">
+          <div className="absolute inset-0 flex items-center">
+            <div className="w-full border-t border-border" />
           </div>
-        </main>
+          <div className="relative flex justify-center text-xs">
+            <span className="bg-surface px-2 text-muted">or continue with</span>
+          </div>
+        </div>
+
+        <GoogleAuthButton mode="signup" />
+
+        <p className="mt-6 text-center text-sm text-muted">
+          Already have an account?{" "}
+          <Link href="/login" className="text-primary-glow hover:underline">
+            Sign in
+          </Link>
+        </p>
       </div>
-      <MarketingFooter />
-    </div>
+    </AuthLayout>
   );
 }
