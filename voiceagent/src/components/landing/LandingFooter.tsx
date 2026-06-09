@@ -2,7 +2,6 @@
 
 import Link from "next/link";
 import { Link2, Share2, X } from "lucide-react";
-import { motion } from "framer-motion";
 import { BRAND } from "@/lib/brand";
 import { LANDING_COPY } from "@/lib/copy/landing";
 
@@ -34,29 +33,23 @@ export function LandingFooter() {
           </div>
           <nav className="flex flex-wrap justify-center gap-x-6 gap-y-2" aria-label="Footer">
             {LINKS.map((link) => (
-              <Link
-                key={link.href}
-                href={link.href}
-                className="text-sm text-muted transition hover:text-text"
-              >
+              <Link key={link.href} href={link.href} className="link-subtle text-sm">
                 {link.label}
               </Link>
             ))}
           </nav>
           <div className="flex gap-3">
             {SOCIAL.map(({ href, icon: Icon, label }) => (
-              <motion.a
+              <a
                 key={label}
                 href={href}
                 target="_blank"
                 rel="noopener noreferrer"
                 aria-label={label}
-                className="flex h-10 w-10 items-center justify-center rounded-lg border border-border text-muted transition hover:border-violet-500/40 hover:text-text"
-                whileHover={{ y: -3, scale: 1.05 }}
-                whileTap={{ scale: 0.97 }}
+                className="flex h-10 w-10 items-center justify-center rounded-lg border border-border text-muted transition hover:-translate-y-0.5 hover:border-violet-500/40 hover:text-text"
               >
                 <Icon className="h-4 w-4" />
-              </motion.a>
+              </a>
             ))}
           </div>
         </div>

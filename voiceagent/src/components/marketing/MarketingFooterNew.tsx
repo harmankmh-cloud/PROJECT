@@ -6,7 +6,7 @@ const COLUMNS = [
   {
     title: "Product",
     links: [
-      { href: "/#features", label: "Features" },
+      { href: "/features", label: "Features" },
       { href: "/pricing", label: "Pricing" },
       { href: "/docs", label: "Developer docs" },
       { href: "/compare", label: "Compare" },
@@ -69,7 +69,7 @@ export function MarketingFooterNew() {
               <ul className="space-y-3 text-sm">
                 {col.links.map((link) => (
                   <li key={link.label}>
-                    <Link href={link.href} className="text-muted transition hover:text-text">
+                    <Link href={link.href} className="link-subtle">
                       {link.label}
                     </Link>
                   </li>
@@ -97,13 +97,13 @@ export function MarketingFooterNew() {
             >
               X
             </a>
-            <Link href="/privacy" className="hover:text-text">
+            <Link href="/privacy" className="link-subtle">
               Privacy
             </Link>
-            <Link href="/terms" className="hover:text-text">
+            <Link href="/terms" className="link-subtle">
               Terms
             </Link>
-            <Link href="/about" className="hover:text-text">
+            <Link href="/about" className="link-subtle">
               About
             </Link>
             <span>Made in BC, Canada</span>

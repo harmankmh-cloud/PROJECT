@@ -16,7 +16,8 @@
   --color-warning: #facc15;
   --color-danger: #f87171;
   --color-text: #fafafa;
-  --color-muted: #71717a;
+  /* WCAG AA on #0a0a0a / #141414 — was #71717a (~4.2:1, failed Lighthouse) */
+  --color-muted: #a1a1aa;
 
   /* Legacy aliases (dashboard compat) */
   --color-obsidian: #0a0a0a;
@@ -33,7 +34,7 @@
   --color-on-surface: #fafafa;
   --color-on-surface-variant: #a1a1aa;
   --color-ghost-white: #fafafa;
-  --color-slate-text: #71717a;
+  --color-slate-text: #a1a1aa;
   --color-electric-cyan: #14b8a6;
   --color-electric-blue: #a78bfa;
   --color-violet-500: #7c3aed;
@@ -257,6 +258,11 @@ select {
     @apply font-semibold text-primary-glow transition hover:text-accent;
   }
 
+  /** Muted links that remain distinguishable without relying on color alone (Lighthouse a11y). */
+  .link-subtle {
+    @apply text-muted underline decoration-muted/50 underline-offset-2 transition hover:text-text hover:decoration-text/60;
+  }
+
   .nav-item {
     @apply flex items-center gap-3 rounded-lg px-3.5 py-2.5 text-sm font-medium text-muted transition hover:bg-white/5 hover:text-text;
   }
@@ -392,6 +398,68 @@ select {
   .waveform-bar {
     height: 40%;
     animation: waveform-bar 1.2s ease-in-out infinite;
+  }
+
+  @keyframes hero-pulse {
+    0%,
+    100% {
+      transform: scale(1);
+      opacity: 0.5;
+    }
+    50% {
+      transform: scale(1.12);
+      opacity: 0.2;
+    }
+  }
+
+  .hero-pulse-ring {
+    animation: hero-pulse 2.5s ease-in-out infinite;
+  }
+
+  .hero-pulse-ring-delayed {
+    animation: hero-pulse 2.5s ease-in-out infinite;
+    animation-delay: 0.3s;
+  }
+
+  @keyframes hero-phone-enter {
+    from {
+      opacity: 0;
+      transform: translateY(24px);
+    }
+    to {
+      opacity: 1;
+      transform: translateY(0);
+    }
+  }
+
+  .hero-phone-enter {
+    animation: hero-phone-enter 0.6s ease-out 0.15s both;
+  }
+
+  @keyframes word-swap-in {
+    from {
+      opacity: 0;
+      transform: translateY(16px);
+    }
+    to {
+      opacity: 1;
+      transform: translateY(0);
+    }
+  }
+
+  .word-swap-in {
+    animation: word-swap-in 0.35s ease-out;
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .hero-pulse-ring,
+    .hero-pulse-ring-delayed,
+    .hero-phone-enter,
+    .word-swap-in,
+    .waveform-bar,
+    .animate-marquee {
+      animation: none !important;
+    }
   }
 
   .material-symbols-outlined {

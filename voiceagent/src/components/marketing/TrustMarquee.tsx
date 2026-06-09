@@ -48,7 +48,7 @@ export function TrustMarquee() {
                   {"abbr" in item ? item.abbr : ""}
                 </span>
               )}
-              <span className="text-sm font-medium text-muted/80">{item.name}</span>
+              <span className="text-sm font-medium text-muted">{item.name}</span>
             </div>
           ))}
         </div>
@@ -61,7 +61,7 @@ export function TrustMarquee() {
           {customerItems.map((name, i) => (
             <span
               key={`${name}-${i}`}
-              className="whitespace-nowrap text-sm font-medium text-muted/60"
+              className="whitespace-nowrap text-sm font-medium text-muted"
             >
               {name}
             </span>

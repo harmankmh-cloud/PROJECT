@@ -7,7 +7,7 @@ import { BRAND } from "@/lib/brand";
 import { TRIAL_MARKETING } from "@/lib/trial";
 
 const NAV = [
-  { href: "/#features", label: "Features" },
+  { href: "/features", label: "Features" },
   { href: "/pricing", label: "Pricing" },
   { href: "/docs", label: "Docs" },
   { href: "/compare", label: "Compare" },
