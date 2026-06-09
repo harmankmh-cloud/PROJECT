@@ -1,7 +1,8 @@
 import { redirect } from "next/navigation";
-import { createClient } from "@/lib/supabase/server";
-import { isPlatformAdmin } from "@/lib/admin-auth";
+import { DatadogInit } from "@/components/DatadogInit";
 import { DashboardShell } from "@/components/DashboardShell";
+import { isPlatformAdmin } from "@/lib/admin-auth";
+import { createClient } from "@/lib/supabase/server";
 
 export default async function DashboardLayout({
   children,
@@ -22,12 +23,15 @@ export default async function DashboardLayout({
     .maybeSingle();
 
   return (
-    <DashboardShell
-      businessName={business?.name}
-      reviewSlug={business?.slug}
-      isPlatformAdmin={isPlatformAdmin(user.email)}
-    >
-      {children}
-    </DashboardShell>
+    <>
+      <DatadogInit />
+      <DashboardShell
+        businessName={business?.name}
+        reviewSlug={business?.slug}
+        isPlatformAdmin={isPlatformAdmin(user.email)}
+      >
+        {children}
+      </DashboardShell>
+    </>
   );
 }

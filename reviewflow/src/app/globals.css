@@ -68,11 +68,11 @@ select {
   }
 
   .surface-card {
-    @apply rounded-[1.35rem] border border-slate-200/50 bg-white/90 shadow-[0_1px_0_rgba(255,255,255,0.8)_inset,0_20px_50px_-12px_rgba(15,23,42,0.12)] backdrop-blur-xl;
+    @apply rounded-2xl border border-slate-200/70 bg-white shadow-[0_1px_2px_rgba(12,18,34,0.04),0_8px_24px_-8px_rgba(12,18,34,0.08)];
   }
 
   .surface-card-hover {
-    @apply rounded-[1.35rem] border border-slate-200/50 bg-white/90 shadow-[0_1px_0_rgba(255,255,255,0.8)_inset,0_20px_50px_-12px_rgba(15,23,42,0.12)] backdrop-blur-xl transition duration-300 hover:-translate-y-1 hover:border-teal-400/35 hover:shadow-[0_28px_60px_-16px_rgba(15,23,42,0.18)];
+    @apply rounded-2xl border border-slate-200/70 bg-white shadow-[0_1px_2px_rgba(12,18,34,0.04),0_8px_24px_-8px_rgba(12,18,34,0.08)] transition duration-300 hover:-translate-y-0.5 hover:border-slate-300/80 hover:shadow-[0_4px_16px_-4px_rgba(12,18,34,0.1),0_16px_40px_-12px_rgba(12,18,34,0.1)];
   }
 
   .surface-dark {
@@ -120,7 +120,7 @@ select {
   }
 
   .section-eyebrow {
-    @apply text-xs font-bold uppercase tracking-[0.22em] text-teal-600;
+    @apply text-xs font-bold uppercase tracking-[0.22em] text-gold-600;
   }
 
   .page-eyebrow {
@@ -196,7 +196,10 @@ select {
   }
 
   .hero-dark {
-    @apply bg-gradient-to-br from-[#030508] via-brand-950 to-[#0f1a32];
+    @apply bg-brand-900;
+    background-image:
+      radial-gradient(ellipse 70% 50% at 15% 0%, rgba(217, 119, 6, 0.08) 0%, transparent 55%),
+      radial-gradient(ellipse 50% 40% at 85% 100%, rgba(255, 255, 255, 0.04) 0%, transparent 50%);
   }
 
   .nav-float {
@@ -204,8 +207,8 @@ select {
   }
 
   .phone-glow-ring {
-    background: radial-gradient(circle, rgba(20, 184, 166, 0.35) 0%, rgba(245, 158, 11, 0.15) 45%, transparent 70%);
-    animation: pulse-glow 4s ease-in-out infinite;
+    background: radial-gradient(circle, rgba(217, 119, 6, 0.12) 0%, rgba(12, 18, 34, 0.06) 50%, transparent 72%);
+    animation: pulse-glow 6s ease-in-out infinite;
   }
 
   .feature-dark-card {
@@ -228,12 +231,12 @@ select {
 @keyframes pulse-glow {
   0%,
   100% {
-    opacity: 0.7;
+    opacity: 0.5;
     transform: scale(1);
   }
   50% {
-    opacity: 1;
-    transform: scale(1.05);
+    opacity: 0.75;
+    transform: scale(1.02);
   }
 }
 

@@ -3,8 +3,8 @@
 @theme inline {
   --font-sans: var(--font-inter);
   --font-display: var(--font-jakarta);
-  --color-obsidian: #020617;
-  --color-brand-950: #020617;
+  --color-obsidian: #030712;
+  --color-brand-950: #030712;
   --color-brand-900: #0b1326;
   --color-brand-800: #131b2e;
   --color-surface: #0b1326;
@@ -99,27 +99,23 @@ select {
   }
 
   .dark-mesh-bg {
-    background-color: #020617;
+    background-color: #030712;
     background-image:
-      radial-gradient(ellipse 80% 50% at 20% -10%, rgba(20, 184, 166, 0.12) 0, transparent 55%),
-      radial-gradient(ellipse 60% 40% at 90% 5%, rgba(139, 92, 246, 0.1) 0, transparent 50%),
-      radial-gradient(ellipse 50% 30% at 50% 100%, rgba(79, 219, 200, 0.05) 0, transparent 50%);
+      radial-gradient(ellipse 70% 40% at 50% -10%, rgba(34, 211, 238, 0.06) 0, transparent 55%);
   }
 
   .grid-pattern {
     background-image:
-      linear-gradient(rgba(79, 219, 200, 0.015) 1px, transparent 1px),
-      linear-gradient(90deg, rgba(79, 219, 200, 0.015) 1px, transparent 1px);
+      linear-gradient(rgba(255, 255, 255, 0.02) 1px, transparent 1px),
+      linear-gradient(90deg, rgba(255, 255, 255, 0.02) 1px, transparent 1px);
     background-size: 64px 64px;
   }
 
   .mesh-bg,
   .hero-mesh {
-    background-color: #020617;
+    background-color: #030712;
     background-image:
-      radial-gradient(at 0% 0%, rgba(34, 211, 238, 0.08) 0px, transparent 50%),
-      radial-gradient(at 100% 0%, rgba(167, 139, 250, 0.08) 0px, transparent 50%),
-      radial-gradient(at 50% 100%, rgba(20, 184, 166, 0.05) 0px, transparent 50%);
+      radial-gradient(at 50% 0%, rgba(34, 211, 238, 0.05) 0px, transparent 50%);
   }
 
   .hero-glow {
@@ -127,11 +123,11 @@ select {
   }
 
   .surface-card {
-    @apply rounded-2xl border border-glass-border-subtle bg-surface-container/80 shadow-[0_0_15px_rgba(20,184,166,0.06)] backdrop-blur-xl;
+    @apply rounded-2xl border border-white/[0.08] bg-white/[0.03] backdrop-blur-[12px];
   }
 
   .surface-card-hover {
-    @apply rounded-2xl border border-glass-border-subtle bg-surface-container/80 shadow-[0_0_15px_rgba(20,184,166,0.06)] backdrop-blur-xl transition duration-300 hover:-translate-y-0.5 hover:border-primary/30 hover:shadow-[0_0_24px_rgba(79,219,200,0.12)];
+    @apply rounded-2xl border border-white/[0.08] bg-white/[0.03] backdrop-blur-[12px] transition duration-200 hover:border-white/[0.12] hover:bg-white/[0.05];
   }
 
   .auth-card {
@@ -139,11 +135,11 @@ select {
   }
 
   .btn-primary {
-    @apply inline-flex items-center justify-center rounded-xl bg-gradient-to-r from-violet-500 to-electric-cyan px-4 py-2.5 text-sm font-semibold text-ghost-white shadow-[0_0_20px_rgba(34,211,238,0.25)] transition hover:shadow-[0_0_28px_rgba(34,211,238,0.4)] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary/40 disabled:cursor-not-allowed disabled:opacity-60;
+    @apply inline-flex items-center justify-center rounded-lg bg-electric-cyan px-4 py-2.5 text-sm font-semibold text-black transition hover:bg-[#3ddff5] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-electric-cyan/40 disabled:cursor-not-allowed disabled:opacity-60;
   }
 
   .btn-secondary {
-    @apply inline-flex items-center justify-center rounded-xl border border-primary/40 bg-primary/10 px-4 py-2.5 text-sm font-semibold text-primary transition hover:bg-primary/20 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary/25 disabled:cursor-not-allowed disabled:opacity-60;
+    @apply inline-flex items-center justify-center rounded-lg border border-white/[0.12] bg-white/[0.04] px-4 py-2.5 text-sm font-medium text-ghost-white transition hover:border-white/[0.2] hover:bg-white/[0.06] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white/20 disabled:cursor-not-allowed disabled:opacity-60;
   }
 
   .btn-gold {
@@ -202,10 +198,9 @@ select {
 
   .glass-card,
   .glass-panel {
-    background: rgba(23, 31, 51, 0.7);
+    background: rgba(255, 255, 255, 0.03);
     backdrop-filter: blur(12px);
-    border: 1px solid rgba(79, 219, 200, 0.1);
-    box-shadow: 0 0 15px rgba(20, 184, 166, 0.06);
+    border: 1px solid rgba(255, 255, 255, 0.08);
   }
 
   .agent-field {
@@ -254,16 +249,8 @@ select {
   }
 
   .glow-border {
-    border: 1px solid transparent;
-    background:
-      linear-gradient(var(--color-surface-container), var(--color-surface-container)) padding-box,
-      linear-gradient(135deg, rgba(167, 139, 250, 0.4), rgba(34, 211, 238, 0.4)) border-box;
-  }
-
-  .material-symbols-outlined {
-    font-variation-settings: "FILL" 0, "wght" 400, "GRAD" 0, "opsz" 24;
-    display: inline-block;
-    vertical-align: middle;
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    background: rgba(255, 255, 255, 0.03);
   }
 
   .marketing-container {
@@ -271,6 +258,6 @@ select {
   }
 
   .pulse-dot {
-    @apply h-2 w-2 animate-pulse rounded-full bg-primary shadow-[0_0_8px_rgba(79,219,200,0.8)];
+    @apply h-2 w-2 animate-pulse rounded-full bg-electric-cyan;
   }
 }
