@@ -30,11 +30,12 @@ const FETCH_TIMEOUT_MS = 12_000;
 const DEFAULT_CITY = "Abbotsford";
 
 function parseArgs(argv) {
-  const args = { input: null, output: "leads.csv", url: null, name: "", vertical: "other", city: DEFAULT_CITY };
+  const args = { input: null, output: "leads.csv", url: null, name: "", vertical: "other", city: DEFAULT_CITY, emailsOnly: false };
   for (let i = 2; i < argv.length; i++) {
     const a = argv[i];
     if (a === "--input") args.input = argv[++i];
     else if (a === "--output") args.output = argv[++i];
+    else if (a === "--emails-only") args.emailsOnly = true;
     else if (a === "--url") args.url = argv[++i];
     else if (a === "--name") args.name = argv[++i];
     else if (a === "--vertical") args.vertical = argv[++i];
@@ -189,6 +190,7 @@ async function scrapeSite(website) {
 function parseInputLine(line) {
   const trimmed = line.trim();
   if (!trimmed || trimmed.startsWith("#")) return null;
+  if (trimmed.startsWith("//")) return null;
   const parts = trimmed.split("|").map((p) => p.trim());
   if (parts.length >= 2 && parts[1].includes(".")) {
     return {
@@ -282,7 +284,11 @@ async function main() {
   writeFileSync(outPath, toCsv(results), "utf8");
 
   const found = results.filter((r) => r.email).length;
-  console.log(`\nDone: ${found}/${results.length} emails found → ${outPath}`);
+  if (args.emailsOnly) {
+    for (const r of results.filter((x) => x.email)) console.log(r.email);
+  } else {
+    console.log(`\nDone: ${found}/${results.length} emails found → ${outPath}`);
+  }
 }
 
 main().catch((e) => {

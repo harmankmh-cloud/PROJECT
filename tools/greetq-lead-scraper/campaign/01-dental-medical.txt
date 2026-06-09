@@ -1,0 +1,3 @@
+# Dental & Medical — target 200 lines
+# Format: Business Name|https://website.com|dental|clinic|medical
+# Paste Google Maps exports below:

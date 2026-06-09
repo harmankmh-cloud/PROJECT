@@ -4,6 +4,8 @@
   "type": "module",
   "scripts": {
     "scrape": "node scrape.mjs",
-    "scrape:abbotsford": "node scrape.mjs --input abbotsford-no-email.txt --output leads.csv"
+    "scrape:abbotsford": "node scrape.mjs --input abbotsford-no-email.txt --output leads.csv",
+    "scrape:bulk": "node scrape-bulk.mjs",
+    "scrape:emails": "node scrape-bulk.mjs --emails-only"
   }
 }

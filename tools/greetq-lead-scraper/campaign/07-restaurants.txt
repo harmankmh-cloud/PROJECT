@@ -1,0 +1,2 @@
+# Restaurants (catering/reservations) — target 200 lines
+# Format: Business Name|https://website.com|restaurant
