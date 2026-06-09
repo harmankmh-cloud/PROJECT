@@ -641,6 +641,46 @@ export async function updateProviderAdmin(
   return { ok: true as const };
 }
 
+export async function updateProviderOwner(
+  providerId: string,
+  ownerUserId: string,
+  patch: Partial<
+    Pick<
+      ServiceProvider,
+      | "display_name"
+      | "phone"
+      | "bio"
+      | "years_experience"
+      | "license_number"
+      | "website"
+      | "business_hours"
+      | "min_callout_fee"
+      | "emergency_available"
+      | "whatsapp"
+    >
+  >
+) {
+  const admin = createServiceClient() ?? createDbClient();
+  if (!admin) return { ok: false as const, error: "Server not configured" };
+
+  const { data: listing } = await admin
+    .from("service_providers")
+    .select("id")
+    .eq("id", providerId)
+    .eq("owner_user_id", ownerUserId)
+    .maybeSingle();
+
+  if (!listing) return { ok: false as const, error: "Not authorized" };
+
+  const { error } = await admin
+    .from("service_providers")
+    .update({ ...patch, updated_at: new Date().toISOString() })
+    .eq("id", providerId);
+
+  if (error) return { ok: false as const, error: error.message };
+  return { ok: true as const };
+}
+
 export async function updateReviewAdmin(id: string, status: "approved" | "rejected") {
   const admin = createServiceClient();
   if (!admin) return { ok: false as const, error: "Server not configured" };

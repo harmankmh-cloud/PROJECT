@@ -5,8 +5,8 @@ import { Suspense } from "react";
 import { CategoryFilters } from "@/components/CategoryFilters";
 import { ProviderCard } from "@/components/ProviderCard";
 import { ProvidersMapSection } from "@/components/ProvidersMapSection";
-import { SiteFooter } from "@/components/SiteFooter";
-import { SiteHeader } from "@/components/SiteHeader";
+import { MarketingPageShell } from "@/components/layout/MarketingPageShell";
+import { ShimmerButton } from "@/components/ui/ShimmerButton";
 import { TRADE_CITIES, SERVE_LOCAL, cityName, SERVICE_SUBCATEGORIES } from "@/lib/constants";
 import { pageMetadata } from "@/lib/seo";
 import { getApprovedProviders, getCategoryBySlug } from "@/lib/data";
@@ -54,17 +54,16 @@ export default async function CategoryPage({
   });
 
   return (
-    <main className="mesh-bg min-h-screen">
-      <SiteHeader compact />
+    <MarketingPageShell>
       <div className="mx-auto max-w-6xl px-4 py-10 sm:px-8">
-        <Link href={`/${city}`} className="text-sm font-semibold text-teal-600 hover:underline">
+        <Link href={`/${city}`} className="text-sm font-semibold text-primary hover:underline">
           ← {cityName(city)}
         </Link>
-        <p className="section-eyebrow mt-4">{SERVE_LOCAL.name}</p>
-        <h1 className="font-display mt-2 text-3xl text-brand-950 sm:text-4xl">
+        <p className="font-label mt-4 text-primary">{SERVE_LOCAL.name}</p>
+        <h1 className="font-display mt-2 text-3xl font-black text-foreground sm:text-4xl">
           {cat.icon} {cat.name} in {cityName(city)}
         </h1>
-        <p className="mt-2 text-slate-600">
+        <p className="mt-2 text-muted">
           {providers.length} listing{providers.length === 1 ? "" : "s"} — verified badges, reviews & direct contact.
         </p>
 
@@ -87,11 +86,16 @@ export default async function CategoryPage({
         )}
 
         {providers.length === 0 ? (
-          <div className="surface-card mt-10 p-8 text-center">
-            <p className="font-medium text-brand-950">No listings match your filters.</p>
+          <div className="mt-10 rounded-[14px] border border-border bg-surface p-8 text-center">
+            <p className="font-medium text-foreground">No listings match your filters.</p>
             <div className="mt-6 flex flex-wrap justify-center gap-3">
-              <Link href="/join" className="btn-gold px-6 py-3">List my business</Link>
-              <Link href={`/request?city=${city}&category=${category}`} className="btn-ghost px-6 py-3">Post a job</Link>
+              <ShimmerButton href="/join">List my business</ShimmerButton>
+              <Link
+                href={`/request?city=${city}&category=${category}`}
+                className="inline-flex items-center justify-center rounded-full border border-border px-6 py-3 text-sm font-semibold text-foreground hover:border-amber-400/50"
+              >
+                Post a job
+              </Link>
             </div>
           </div>
         ) : (
@@ -102,11 +106,10 @@ export default async function CategoryPage({
           </div>
         )}
 
-        <p className="mt-10 text-center text-xs text-slate-500">
-          {SERVE_LOCAL.name} provides contacts only. Verify license & insurance before hiring.
+        <p className="mt-10 text-center text-xs text-muted">
+          {SERVE_LOCAL.name} provides contacts only. Verify license &amp; insurance before hiring.
         </p>
       </div>
-      <SiteFooter />
-    </main>
+    </MarketingPageShell>
   );
 }

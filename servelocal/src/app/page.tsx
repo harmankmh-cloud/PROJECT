@@ -7,8 +7,7 @@ import { HeroSection } from "@/components/landing/HeroSection";
 import { HowItWorks } from "@/components/landing/HowItWorks";
 import { StatsBar } from "@/components/landing/StatsBar";
 import { TestimonialsCarousel } from "@/components/landing/TestimonialsCarousel";
-import { MarketingFooter } from "@/components/marketing/MarketingFooter";
-import { MarketingNavbar } from "@/components/marketing/MarketingNavbar";
+import { MarketingPageShell } from "@/components/layout/MarketingPageShell";
 import { SERVE_LOCAL } from "@/lib/constants";
 import { getApprovedProviders, getServiceCategories } from "@/lib/data";
 import { pageMetadata } from "@/lib/seo";
@@ -57,8 +56,7 @@ export default async function HomePage() {
   };
 
   return (
-    <main className="min-h-screen bg-background text-foreground">
-      <MarketingNavbar />
+    <MarketingPageShell>
       <HeroSection />
       <CategoryGrid categories={categories} proCounts={proCounts} />
       <HowItWorks />
@@ -67,8 +65,7 @@ export default async function HomePage() {
       <CategorySpotlight />
       <TestimonialsCarousel />
       <ForProsSection />
-      <MarketingFooter />
       <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }} />
-    </main>
+    </MarketingPageShell>
   );
 }

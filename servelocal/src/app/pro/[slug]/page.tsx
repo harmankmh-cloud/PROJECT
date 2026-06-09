@@ -1,7 +1,6 @@
 import type { Metadata } from "next";
 import { notFound } from "next/navigation";
-import { MarketingFooter } from "@/components/marketing/MarketingFooter";
-import { MarketingNavbar } from "@/components/marketing/MarketingNavbar";
+import { MarketingPageShell } from "@/components/layout/MarketingPageShell";
 import { ProAbout } from "@/components/pro/ProAbout";
 import { ProAvailability } from "@/components/pro/ProAvailability";
 import { ProCredentials } from "@/components/pro/ProCredentials";
@@ -75,8 +74,7 @@ export default async function ProviderPage({ params }: { params: Promise<{ slug:
   };
 
   return (
-    <main className="min-h-screen bg-background text-foreground">
-      <MarketingNavbar />
+    <MarketingPageShell>
       <ProHero provider={provider} category={category} cityCategoryHref={cityCategoryHref} />
 
       <div className="mx-auto max-w-6xl px-4 py-10 sm:px-8">
@@ -119,8 +117,7 @@ export default async function ProviderPage({ params }: { params: Promise<{ slug:
         </div>
       </div>
 
-      <MarketingFooter />
       <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }} />
-    </main>
+    </MarketingPageShell>
   );
 }
