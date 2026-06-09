@@ -58,6 +58,11 @@ Dashboard → Authentication → URL Configuration:
 
 Update redirect URIs to use `greetq.com` host (see `voiceagent/.env.example`).
 
-## Email (optional)
+## Email
 
-Set up `hello@greetq.com`, `sales@greetq.com`, `support@greetq.com` in your mail provider and update `src/lib/brand.ts` if addresses differ.
+| Direction | Provider | Address |
+| --------- | -------- | ------- |
+| **Outbound** (cold outreach, notifications) | Brevo | `hello@greetq.com` |
+| **Inbound** (replies) | Cloudflare Email Routing → Gmail | `hello@`, `sales@`, `support@greetq.com` → `harmankmh@gmail.com` |
+
+See **`docs/GREETQ_INBOX.md`** and `scripts/greetq-email-routing.mjs`. Brand addresses are in `src/lib/brand.ts`.
