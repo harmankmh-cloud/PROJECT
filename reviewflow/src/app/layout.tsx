@@ -2,7 +2,6 @@ import type { Metadata } from "next";
 import localFont from "next/font/local";
 import { Inter, Plus_Jakarta_Sans } from "next/font/google";
 import { AppProviders } from "@/components/providers/AppProviders";
-import { ThemeScript } from "@/components/ui/ThemeToggle";
 import { Toaster } from "@/components/ui/Toast";
 import { BRAND } from "@/lib/brand";
 import "./globals.css";
@@ -35,11 +34,11 @@ const appUrl =
 export const metadata: Metadata = {
   metadataBase: new URL(appUrl),
   title: {
-    default: "Find. Trust. Support Local. | RateLocal",
+    default: "Get 5-Star Google Reviews with AI + QR Codes | RateLocal BC",
     template: `%s · ${BRAND.name}`,
   },
   description:
-    "RateLocal is Canada's review platform built for real customers and real businesses — discover, rate, and support local.",
+    "RateLocal helps BC shops collect Google reviews in under a minute — QR poster, AI-written drafts, and private feedback routing.",
   openGraph: {
     title: `${BRAND.name} — ${BRAND.tagline}`,
     description:
@@ -78,9 +77,6 @@ export default function RootLayout({
       lang="en-CA"
       className={`${jakarta.variable} ${satoshi.variable} ${inter.variable} h-full`}
     >
-      <head>
-        <ThemeScript />
-      </head>
       <body className="min-h-full font-sans antialiased">
         <AppProviders>
           {children}

@@ -1,28 +1,5 @@
 import { redirect } from "next/navigation";
-import { BusinessDashboardShell } from "@/components/dashboard/BusinessDashboardShell";
-import { createClient } from "@/lib/supabase/server";
 
-export default async function BusinessDashboardLayout({
-  children,
-}: {
-  children: React.ReactNode;
-}) {
-  const supabase = await createClient();
-  const {
-    data: { user },
-  } = await supabase.auth.getUser();
-
-  if (!user) redirect("/login");
-
-  const { data: business } = await supabase
-    .from("businesses")
-    .select("name")
-    .eq("user_id", user.id)
-    .maybeSingle();
-
-  return (
-    <BusinessDashboardShell businessName={business?.name}>
-      {children}
-    </BusinessDashboardShell>
-  );
+export default function BusinessDashboardLayout() {
+  redirect("/dashboard");
 }
