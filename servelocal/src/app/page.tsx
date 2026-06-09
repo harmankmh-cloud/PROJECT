@@ -1,23 +1,22 @@
 import type { Metadata } from "next";
-import { BcCitiesSection } from "@/components/marketing/BcCitiesSection";
-import { CategoryGrid } from "@/components/marketing/CategoryGrid";
-import { CostGuideSection } from "@/components/marketing/CostGuideSection";
-import { FeaturedProsCarousel } from "@/components/marketing/FeaturedProsCarousel";
-import { HeroSection } from "@/components/marketing/HeroSection";
-import { HowItWorksDual } from "@/components/marketing/HowItWorksDual";
-import { LandingCta } from "@/components/marketing/LandingCta";
+import { CategoryGrid } from "@/components/landing/CategoryGrid";
+import { CategorySpotlight } from "@/components/landing/CategorySpotlight";
+import { FeaturedProsCarousel } from "@/components/landing/FeaturedProsCarousel";
+import { ForProsSection } from "@/components/landing/ForProsSection";
+import { HeroSection } from "@/components/landing/HeroSection";
+import { HowItWorks } from "@/components/landing/HowItWorks";
+import { StatsBar } from "@/components/landing/StatsBar";
+import { TestimonialsCarousel } from "@/components/landing/TestimonialsCarousel";
 import { MarketingFooter } from "@/components/marketing/MarketingFooter";
 import { MarketingNavbar } from "@/components/marketing/MarketingNavbar";
-import { SocialProofMarquee } from "@/components/marketing/SocialProofMarquee";
-import { TrustBar } from "@/components/marketing/TrustBar";
 import { SERVE_LOCAL } from "@/lib/constants";
 import { getApprovedProviders, getServiceCategories } from "@/lib/data";
 import { pageMetadata } from "@/lib/seo";
 
 export const metadata: Metadata = pageMetadata({
-  title: "ServeLocal BC — Find Trusted Local Pros, Zero Middleman Fees",
+  title: "ServeLocal — Find Trusted Local Pros in Minutes",
   description:
-    "Post your job free. Get contacted by verified BC tradespeople in Abbotsford, Chilliwack, Surrey, and the Fraser Valley. No commission. Direct contact.",
+    "ServeLocal connects Canadian homeowners with vetted, reviewed contractors — fast booking, upfront pricing, zero stress. Serving Canada, starting in BC.",
   path: "/",
 });
 
@@ -41,8 +40,8 @@ export default async function HomePage() {
         name: SERVE_LOCAL.name,
         url: siteUrl,
         logo: `${siteUrl}/icon`,
-        areaServed: "British Columbia, Canada",
-        description: SERVE_LOCAL.tagline,
+        areaServed: "Canada",
+        description: "Canada's trusted home services marketplace",
       },
       {
         "@type": "WebSite",
@@ -58,17 +57,16 @@ export default async function HomePage() {
   };
 
   return (
-    <main className="min-h-screen bg-background text-text">
+    <main className="min-h-screen bg-background text-foreground">
       <MarketingNavbar />
       <HeroSection />
-      <TrustBar />
       <CategoryGrid categories={categories} proCounts={proCounts} />
-      <HowItWorksDual />
+      <HowItWorks />
       <FeaturedProsCarousel providers={featured} categories={categories} />
-      <BcCitiesSection />
-      <CostGuideSection />
-      <SocialProofMarquee />
-      <LandingCta />
+      <StatsBar />
+      <CategorySpotlight />
+      <TestimonialsCarousel />
+      <ForProsSection />
       <MarketingFooter />
       <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }} />
     </main>

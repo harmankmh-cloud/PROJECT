@@ -2,8 +2,10 @@
 
 import { useRouter } from "next/navigation";
 import { useState } from "react";
+import { MapPin } from "lucide-react";
 import { TRADE_CITIES } from "@/lib/constants";
 import { POPULAR_CATEGORIES } from "@/content/copy";
+import { ShimmerButton } from "@/components/ui/ShimmerButton";
 
 export function HeroSearchBar() {
   const router = useRouter();
@@ -23,34 +25,37 @@ export function HeroSearchBar() {
     <div className="w-full">
       <form
         onSubmit={handleSubmit}
-        className="flex flex-col gap-2 rounded-2xl bg-white p-2 shadow-2xl shadow-black/30 sm:flex-row sm:items-center"
+        className="flex flex-col gap-2 rounded-[14px] border border-border bg-background p-2 shadow-[0_8px_40px_-12px_rgba(245,158,11,0.25)] sm:flex-row sm:items-center"
       >
         <input
           value={query}
           onChange={(e) => setQuery(e.target.value)}
-          placeholder="What do you need done?"
-          className="flex-1 rounded-xl border-0 bg-transparent px-4 py-4 text-base text-slate-900 outline-none placeholder:text-slate-400"
-          aria-label="What do you need done?"
+          placeholder="What service do you need?"
+          className="input-focus-glow flex-1 rounded-xl border-0 bg-transparent px-4 py-4 text-base text-foreground outline-none placeholder:text-muted"
+          aria-label="What service do you need?"
         />
-        <div className="h-px bg-slate-200 sm:h-8 sm:w-px" />
-        <select
-          value={city}
-          onChange={(e) => setCity(e.target.value)}
-          className="cursor-pointer appearance-none rounded-xl bg-slate-50 px-4 py-4 text-sm font-medium text-slate-700 outline-none sm:min-w-[160px]"
-          aria-label="City in BC"
-        >
-          {TRADE_CITIES.map((c) => (
-            <option key={c.slug} value={c.slug}>
-              {c.name}
-            </option>
-          ))}
-        </select>
-        <button type="submit" className="btn-orange shrink-0 px-8 py-4 text-base font-bold">
-          Find Pros →
-        </button>
+        <div className="hidden h-8 w-px bg-border sm:block" />
+        <div className="relative flex items-center sm:min-w-[180px]">
+          <MapPin className="pointer-events-none absolute left-3 h-4 w-4 text-muted" />
+          <select
+            value={city}
+            onChange={(e) => setCity(e.target.value)}
+            className="input-focus-glow w-full cursor-pointer appearance-none rounded-xl bg-surface py-4 pl-9 pr-4 text-sm font-medium text-foreground outline-none"
+            aria-label="Location"
+          >
+            {TRADE_CITIES.map((c) => (
+              <option key={c.slug} value={c.slug}>
+                {c.name}, BC
+              </option>
+            ))}
+          </select>
+        </div>
+        <ShimmerButton type="submit" size="lg" className="shrink-0">
+          Find Pros
+        </ShimmerButton>
       </form>
 
-      <div className="mt-4 flex flex-wrap justify-center gap-2">
+      <div className="mt-4 flex flex-wrap justify-center gap-2 lg:justify-start">
         {POPULAR_CATEGORIES.map((cat) => (
           <button
             key={cat.slug}
@@ -59,7 +64,7 @@ export function HeroSearchBar() {
               setQuery(cat.label);
               router.push(`/search?q=${encodeURIComponent(cat.label)}&city=${city}`);
             }}
-            className="rounded-full border border-slate-700 bg-slate-800/60 px-3 py-1.5 text-xs font-medium text-slate-300 transition hover:border-primary/50 hover:text-primary"
+            className="rounded-full border border-border bg-surface px-3 py-1.5 text-xs font-medium text-muted transition hover:border-amber-400/50 hover:text-primary"
           >
             {cat.label}
           </button>
