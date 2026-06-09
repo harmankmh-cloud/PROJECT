@@ -291,8 +291,132 @@ select {
     clip: rect(0, 0, 0, 0);
   }
 
-  .green-underline {
+  .green-underline,
+  .coral-underline {
     @apply underline decoration-primary decoration-4 underline-offset-4;
+  }
+
+  /* Marketing landing: light B2B with coral + gold accents */
+  .marketing-page {
+    --color-primary: #f43f5e;
+    --color-primary-light: #fb7185;
+    --color-accent: #eab308;
+    --color-star: #eab308;
+    --color-success: #16a34a;
+    --color-success-bg: rgba(244, 63, 94, 0.08);
+    --color-warning-bg: rgba(234, 179, 8, 0.1);
+    font-family: var(--font-inter), system-ui, sans-serif;
+  }
+
+  .marketing-page .font-display {
+    font-family: var(--font-satoshi), system-ui, sans-serif;
+    font-weight: 700;
+    letter-spacing: -0.03em;
+  }
+
+  .marketing-page .mesh-bg {
+    background-color: #fffbfb;
+    background-image:
+      radial-gradient(ellipse 80% 55% at 15% -5%, rgba(244, 63, 94, 0.1) 0, transparent 55%),
+      radial-gradient(ellipse 55% 45% at 92% 8%, rgba(234, 179, 8, 0.08) 0, transparent 50%),
+      radial-gradient(ellipse 40% 30% at 50% 100%, rgba(244, 63, 94, 0.04) 0, transparent 60%);
+  }
+
+  .marketing-page .text-gradient {
+    background: linear-gradient(135deg, #f43f5e 0%, #e11d48 45%, #eab308 100%);
+    -webkit-background-clip: text;
+    background-clip: text;
+    color: transparent;
+  }
+
+  .marketing-page .card-surface,
+  .marketing-page .surface-card {
+    @apply rounded-2xl border border-border bg-white p-6 shadow-sm transition duration-300;
+  }
+
+  .marketing-page .card-glow:hover,
+  .marketing-page .card-surface:hover,
+  .marketing-page .surface-card-hover:hover {
+    transform: translateY(-2px);
+    box-shadow:
+      0 12px 32px rgba(244, 63, 94, 0.1),
+      0 4px 12px rgba(234, 179, 8, 0.06);
+    border-color: rgba(244, 63, 94, 0.2);
+  }
+
+  .marketing-page .btn-primary-pill {
+    box-shadow: 0 4px 16px rgba(244, 63, 94, 0.28);
+  }
+
+  .marketing-page .btn-primary-pill:hover {
+    box-shadow: 0 6px 22px rgba(244, 63, 94, 0.35);
+  }
+
+  .marketing-page .btn-ghost {
+    @apply rounded-full;
+  }
+
+  .marketing-page .site-header {
+    @apply border-transparent bg-white/70;
+  }
+
+  .marketing-page .site-header-scrolled {
+    @apply border-border/80 bg-white/90 shadow-sm;
+  }
+
+  .marketing-page .section-eyebrow {
+    @apply inline-flex items-center gap-2 rounded-full border border-primary/15 bg-primary/5 px-3 py-1 normal-case tracking-normal;
+    font-size: 0.8125rem;
+    font-weight: 600;
+    letter-spacing: 0;
+  }
+
+  .marketing-page .stat-chip {
+    @apply min-w-[140px] rounded-2xl border border-border/80 bg-white px-6 py-4 shadow-sm;
+  }
+
+  .marketing-page .footer-cta-strip {
+    background: linear-gradient(135deg, #f43f5e 0%, #e11d48 50%, #be123c 100%);
+  }
+
+  .marketing-page .pricing-popular {
+    background: linear-gradient(180deg, rgba(244, 63, 94, 0.04) 0%, #ffffff 40%);
+  }
+
+  .marketing-page .phone-glow-ring {
+    background: radial-gradient(circle, rgba(244, 63, 94, 0.14) 0%, transparent 72%);
+  }
+
+  .marketing-page .flow-demo-step {
+    animation-name: flow-step-pulse-marketing;
+  }
+
+  @keyframes flow-step-pulse-marketing {
+    0%,
+    100% {
+      border-color: rgba(229, 231, 235, 1);
+      background: #fffbfb;
+    }
+    15%,
+    35% {
+      border-color: rgba(244, 63, 94, 0.35);
+      background: rgba(244, 63, 94, 0.06);
+      transform: scale(1.02);
+    }
+  }
+
+  .marketing-page .trust-pill {
+    @apply inline-flex items-center gap-1.5 rounded-full border border-border/80 bg-white/80 px-3 py-1.5 text-xs font-medium text-muted shadow-sm;
+    -webkit-backdrop-filter: blur(8px);
+    backdrop-filter: blur(8px);
+  }
+
+  .marketing-page .nav-link {
+    @apply text-sm font-medium text-muted transition hover:text-text;
+  }
+
+  .marketing-page .step-badge {
+    @apply mx-auto flex h-14 w-14 items-center justify-center rounded-2xl border border-primary/15 bg-primary/5 text-primary shadow-sm;
   }
 
   /* Public pages: dark-first design system */

@@ -1,5 +1,6 @@
 "use client";
 
+import { ChevronDown } from "lucide-react";
 import { useState } from "react";
 
 export function FaqAccordion({ items }: { items: ReadonlyArray<{ q: string; a: string }> }) {
@@ -10,20 +11,26 @@ export function FaqAccordion({ items }: { items: ReadonlyArray<{ q: string; a: s
       {items.map((item, i) => {
         const isOpen = open === i;
         return (
-          <div key={item.q} className="surface-card overflow-hidden">
+          <div
+            key={item.q}
+            className={`surface-card overflow-hidden transition duration-200 ${
+              isOpen ? "border-primary/25 shadow-md shadow-primary/5" : ""
+            }`}
+          >
             <button
               type="button"
               className="flex w-full items-center justify-between gap-4 px-5 py-4 text-left"
               aria-expanded={isOpen}
               onClick={() => setOpen(isOpen ? null : i)}
             >
-              <span className="font-semibold text-brand-950">{item.q}</span>
-              <span className="text-slate-400" aria-hidden>
-                {isOpen ? "−" : "+"}
-              </span>
+              <span className="font-semibold text-text">{item.q}</span>
+              <ChevronDown
+                className={`h-5 w-5 shrink-0 text-muted transition duration-200 ${isOpen ? "rotate-180 text-primary" : ""}`}
+                aria-hidden
+              />
             </button>
             {isOpen && (
-              <div className="border-t border-slate-100 px-5 pb-4 pt-2 text-sm leading-relaxed text-slate-600">
+              <div className="border-t border-border/80 px-5 pb-5 pt-3 text-sm leading-relaxed text-muted">
                 {item.a}
               </div>
             )}

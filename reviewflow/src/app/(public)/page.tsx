@@ -52,7 +52,7 @@ export default function HomePage() {
   };
 
   return (
-    <main className="min-h-screen bg-white">
+    <main className="marketing-page min-h-screen bg-white">
       <MarketingNavbar />
       <HeroSection />
       <StatsBar />
@@ -62,9 +62,10 @@ export default function HomePage() {
       <IndustriesSection />
       <PricingSection />
 
-      <section className="border-t border-border py-20" id="faq">
+      <section className="border-t border-border/80 py-20 md:py-28" id="faq">
         <div className="marketing-container max-w-3xl">
-          <h2 className="font-display mb-10 text-center text-3xl text-text">
+          <p className="section-eyebrow mx-auto mb-4 w-fit">FAQ</p>
+          <h2 className="font-display mb-12 text-center text-3xl text-text md:text-4xl">
             Frequently asked questions
           </h2>
           <FaqAccordion items={FAQ_ITEMS} />

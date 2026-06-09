@@ -34,11 +34,11 @@ export function MarketingNavbar() {
 
         <nav className="hidden items-center gap-8 md:flex" aria-label="Main">
           {NAV.map((item) => (
-            <Link key={item.href} href={item.href} className="text-sm text-muted hover:text-text">
+            <Link key={item.href} href={item.href} className="nav-link">
               {item.label}
             </Link>
           ))}
-          <Link href="/login" className="text-sm text-muted hover:text-text">
+          <Link href="/login" className="nav-link">
             {MARKETING.nav.login}
           </Link>
         </nav>
