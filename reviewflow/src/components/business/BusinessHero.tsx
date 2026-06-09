@@ -94,7 +94,7 @@ export function BusinessHero({ business }: { business: PublicBusiness }) {
           </div>
 
           <Link
-            href={`/r/${business.slug}`}
+            href={`/review/new/${business.slug}`}
             className="btn-primary-pill shrink-0 px-8 py-3.5 text-center"
           >
             Write a Review

@@ -1,36 +1,45 @@
 import type { Metadata } from "next";
-import Link from "next/link";
+import { Suspense } from "react";
 import { LandingNavbar } from "@/components/landing/LandingNavbar";
 import { LandingFooter } from "@/components/landing/LandingFooter";
-import { getFeaturedBusinesses } from "@/lib/public-businesses";
-import { FeaturedBusinesses } from "@/components/landing/FeaturedBusinesses";
+import { SearchPageClient } from "@/components/search/SearchPageClient";
+import { searchBusinesses } from "@/lib/search-businesses";
+import { Skeleton } from "@/components/ui/Skeleton";
 
 export const metadata: Metadata = {
   title: "Search",
   description: "Search businesses, services, and locations across Canada.",
 };
 
-type Props = { searchParams: Promise<{ q?: string; city?: string; category?: string }> };
+type Props = { searchParams: Promise<Record<string, string | undefined>> };
 
 export default async function SearchPage({ searchParams }: Props) {
-  const { q, city, category } = await searchParams;
-  const featured = await getFeaturedBusinesses(city, 8);
+  const params = await searchParams;
+  const { businesses, total } = await searchBusinesses({
+    q: params.q,
+    city: params.city,
+    category: params.category,
+    openNow: params.openNow === "true",
+    minRating: params.minRating ? Number(params.minRating) : undefined,
+    hasPhotos: params.hasPhotos === "true",
+    sort: (params.sort as "match" | "rating" | "reviews" | "closest") ?? "match",
+    page: 1,
+    limit: 10,
+  });
 
   return (
     <main>
       <LandingNavbar />
-      <div className="marketing-container py-12">
-        <h1 className="font-display text-2xl font-bold text-text md:text-3xl">
-          {q ? `Results for "${q}"` : category ? category : "Search"}
-        </h1>
-        <p className="mt-2 text-muted">
-          {city ? `in ${city}` : "Canada"} — advanced filters and map view coming soon.
-        </p>
-        <Link href="/" className="mt-4 inline-block text-sm text-primary hover:underline">
-          ← Back to home
-        </Link>
-      </div>
-      <FeaturedBusinesses businesses={featured} />
+      <Suspense
+        fallback={
+          <div className="marketing-container space-y-4 py-8">
+            <Skeleton className="h-12 w-full" />
+            <Skeleton className="h-32 w-full" />
+          </div>
+        }
+      >
+        <SearchPageClient initialBusinesses={businesses} initialTotal={total} />
+      </Suspense>
       <LandingFooter />
     </main>
   );

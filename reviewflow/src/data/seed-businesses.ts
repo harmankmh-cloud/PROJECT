@@ -12,7 +12,7 @@ const HOURS = {
 
 export const SEED_BUSINESSES: PublicBusiness[] = [
   {
-    id: "seed-1",
+    id: "b1000001-0000-4000-8000-000000000001",
     slug: "main-street-bistro-abbotsford",
     name: "Main Street Bistro",
     business_type: "Restaurants",
@@ -46,7 +46,7 @@ export const SEED_BUSINESSES: PublicBusiness[] = [
     ],
   },
   {
-    id: "seed-2",
+    id: "b1000001-0000-4000-8000-000000000002",
     slug: "pacific-auto-care-vancouver",
     name: "Pacific Auto Care",
     business_type: "Auto",
@@ -78,7 +78,7 @@ export const SEED_BUSINESSES: PublicBusiness[] = [
     ],
   },
   {
-    id: "seed-3",
+    id: "b1000001-0000-4000-8000-000000000003",
     slug: "luxe-hair-studio-calgary",
     name: "Luxe Hair Studio",
     business_type: "Salons",
@@ -108,7 +108,7 @@ export const SEED_BUSINESSES: PublicBusiness[] = [
     ],
   },
   {
-    id: "seed-4",
+    id: "b1000001-0000-4000-8000-000000000004",
     slug: "maple-leaf-dental-toronto",
     name: "Maple Leaf Dental",
     business_type: "Health",
@@ -136,7 +136,7 @@ export const SEED_BUSINESSES: PublicBusiness[] = [
     gallery_photos: [],
   },
   {
-    id: "seed-5",
+    id: "b1000001-0000-4000-8000-000000000005",
     slug: "northern-lights-plumbing-edmonton",
     name: "Northern Lights Plumbing",
     business_type: "Services",
@@ -164,7 +164,7 @@ export const SEED_BUSINESSES: PublicBusiness[] = [
     gallery_photos: [],
   },
   {
-    id: "seed-6",
+    id: "b1000001-0000-4000-8000-000000000006",
     slug: "harbour-view-cafe-vancouver",
     name: "Harbour View Café",
     business_type: "Restaurants",
@@ -199,7 +199,7 @@ export const SEED_REVIEWS: Record<string, PublicReview[]> = {
   "main-street-bistro-abbotsford": [
     {
       id: "a1000001-0000-4000-8000-000000000001",
-      business_id: "seed-1",
+      business_id: "b1000001-0000-4000-8000-000000000001",
       author_name: "Sarah M.",
       author_avatar_url: null,
       star_rating: 5,
@@ -218,7 +218,7 @@ export const SEED_REVIEWS: Record<string, PublicReview[]> = {
     },
     {
       id: "a1000001-0000-4000-8000-000000000002",
-      business_id: "seed-1",
+      business_id: "b1000001-0000-4000-8000-000000000001",
       author_name: "James K.",
       author_avatar_url: null,
       star_rating: 4,
@@ -232,7 +232,7 @@ export const SEED_REVIEWS: Record<string, PublicReview[]> = {
     },
     {
       id: "a1000001-0000-4000-8000-000000000003",
-      business_id: "seed-1",
+      business_id: "b1000001-0000-4000-8000-000000000001",
       author_name: "Priya R.",
       author_avatar_url: null,
       star_rating: 5,
@@ -248,7 +248,7 @@ export const SEED_REVIEWS: Record<string, PublicReview[]> = {
   "pacific-auto-care-vancouver": [
     {
       id: "a1000001-0000-4000-8000-000000000004",
-      business_id: "seed-2",
+      business_id: "b1000001-0000-4000-8000-000000000002",
       author_name: "Mike T.",
       author_avatar_url: null,
       star_rating: 5,
@@ -267,7 +267,7 @@ export const SEED_REVIEWS: Record<string, PublicReview[]> = {
   "harbour-view-cafe-vancouver": [
     {
       id: "a1000001-0000-4000-8000-000000000005",
-      business_id: "seed-6",
+      business_id: "b1000001-0000-4000-8000-000000000006",
       author_name: "Emma L.",
       author_avatar_url: null,
       star_rating: 5,

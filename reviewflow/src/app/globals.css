@@ -382,6 +382,14 @@ select {
   .public-shell .coral-underline {
     @apply underline decoration-primary decoration-4 underline-offset-4;
   }
+
+  .scrollbar-hide {
+    -ms-overflow-style: none;
+    scrollbar-width: none;
+  }
+  .scrollbar-hide::-webkit-scrollbar {
+    display: none;
+  }
 }
 
 @keyframes pulse-glow {

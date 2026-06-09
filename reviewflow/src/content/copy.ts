@@ -4,8 +4,9 @@ export const LANDING = {
   nav: {
     links: [
       { label: "Discover", href: "/discover" },
+      { label: "Blog", href: "/blog" },
       { label: "Pricing", href: "/pricing" },
-      { label: "For Business", href: "/signup" },
+      { label: "For Business", href: "/claim-business" },
     ],
     login: "Login",
     cta: "List Your Business",

@@ -10,7 +10,7 @@ export function WriteReviewCTA({ slug, businessName }: { slug: string; businessN
         <p className="mx-auto mt-3 max-w-md text-muted">
           Help others discover {businessName}. Your honest review makes a difference.
         </p>
-        <Link href={`/r/${slug}`} className="btn-primary-pill mt-6 inline-block px-10 py-3.5">
+        <Link href={`/review/new/${slug}`} className="btn-primary-pill mt-6 inline-block px-10 py-3.5">
           Write a Review
         </Link>
       </div>

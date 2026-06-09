@@ -1,4 +1,4 @@
-import { AuthLayout } from "@/components/auth/AuthLayout";
+import { PublicAuthLayout } from "@/components/auth/PublicAuthLayout";
 import { LoginFormNew } from "@/components/auth/LoginFormNew";
 import { AUTH } from "@/content/copy";
 
@@ -11,8 +11,8 @@ export default async function LoginPage({
   const message = params.message ? decodeURIComponent(params.message) : "";
 
   return (
-    <AuthLayout title={AUTH.login.title} subtext={AUTH.login.subtext}>
+    <PublicAuthLayout title={AUTH.login.title} subtext={AUTH.login.subtext}>
       <LoginFormNew message={message} />
-    </AuthLayout>
+    </PublicAuthLayout>
   );
 }

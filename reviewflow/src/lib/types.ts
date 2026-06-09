@@ -70,11 +70,30 @@ export type SubRatings = {
   atmosphere?: number;
 };
 
+export type ReviewerTier = "newbie" | "contributor" | "expert" | "elite";
+
+export type UserProfile = {
+  id: string;
+  display_name: string;
+  avatar_url?: string | null;
+  city?: string | null;
+  tier: ReviewerTier;
+  review_count: number;
+  photo_count: number;
+  helpful_received: number;
+  helpful_given: number;
+  joined_at: string;
+};
+
 export type PublicBusiness = {
   id: string;
   slug: string;
   name: string;
   business_type: string;
+  top_review_snippet?: string;
+  distance_km?: number;
+  is_sponsored?: boolean;
+  responds_to_reviews?: boolean;
   description?: string | null;
   cover_photo_url?: string | null;
   logo_url?: string | null;
