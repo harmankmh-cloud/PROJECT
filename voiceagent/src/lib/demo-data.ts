@@ -1,0 +1,123 @@
+export const DEMO_CALLS = [
+  {
+    id: "1",
+    caller: "Sarah M.",
+    time: "2:34 PM",
+    duration: "3:12",
+    summary: "Asked about hours, booked cleaning for Thursday",
+    action: "Booked",
+    status: "answered" as const,
+  },
+  {
+    id: "2",
+    caller: "James K.",
+    time: "1:15 PM",
+    duration: "1:45",
+    summary: "Emergency HVAC repair — forwarded to on-call",
+    action: "Forwarded",
+    status: "forwarded" as const,
+  },
+  {
+    id: "3",
+    caller: "Unknown ···4821",
+    time: "11:02 AM",
+    duration: "0:52",
+    summary: "Pricing question — answered from knowledge base",
+    action: "Answered",
+    status: "answered" as const,
+  },
+  {
+    id: "4",
+    caller: "Maria L.",
+    time: "10:30 AM",
+    duration: "2:08",
+    summary: "Rescheduled appointment to Friday 3 PM",
+    action: "Booked",
+    status: "booked" as const,
+  },
+  {
+    id: "5",
+    caller: "David P.",
+    time: "9:45 AM",
+    duration: "4:21",
+    summary: "New patient intake — message sent to front desk",
+    action: "Answered",
+    status: "answered" as const,
+  },
+  {
+    id: "6",
+    caller: "Unknown ···9103",
+    time: "Yesterday",
+    duration: "0:00",
+    summary: "No answer — voicemail captured",
+    action: "Voicemail",
+    status: "voicemail" as const,
+  },
+  {
+    id: "7",
+    caller: "Lisa T.",
+    time: "Yesterday",
+    duration: "1:33",
+    summary: "Asked about parking and directions",
+    action: "Answered",
+    status: "answered" as const,
+  },
+  {
+    id: "8",
+    caller: "Robert H.",
+    time: "Yesterday",
+    duration: "2:55",
+    summary: "Insurance verification question",
+    action: "Forwarded",
+    status: "forwarded" as const,
+  },
+  {
+    id: "9",
+    caller: "Amy C.",
+    time: "2 days ago",
+    duration: "1:12",
+    summary: "Cancellation request processed",
+    action: "Booked",
+    status: "booked" as const,
+  },
+  {
+    id: "10",
+    caller: "Chris W.",
+    time: "2 days ago",
+    duration: "0:38",
+    summary: "After-hours call — hours provided",
+    action: "Answered",
+    status: "answered" as const,
+  },
+];
+
+export const DEMO_APPOINTMENTS = [
+  { id: "1", day: "Thu", time: "2:00 PM", name: "Sarah M.", service: "Dental cleaning" },
+  { id: "2", day: "Fri", time: "3:00 PM", name: "Maria L.", service: "Consultation" },
+  { id: "3", day: "Mon", time: "10:30 AM", name: "David P.", service: "New patient" },
+];
+
+export const DEMO_MESSAGES = [
+  {
+    id: "1",
+    from: "James K.",
+    preview: "Emergency HVAC — forwarded to on-call tech",
+    unread: true,
+    time: "1:15 PM",
+  },
+  {
+    id: "2",
+    from: "David P.",
+    preview: "New patient intake form completed",
+    unread: true,
+    time: "10:30 AM",
+  },
+];
+
+export const DEMO_STATS = {
+  callsToday: 12,
+  appointmentsBooked: 3,
+  missedCalls: 1,
+  avgDuration: "2:14",
+  callsTrend: 8,
+};

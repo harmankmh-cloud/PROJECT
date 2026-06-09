@@ -2,6 +2,8 @@ import { createServerClient } from "@supabase/ssr";
 import { NextResponse, type NextRequest } from "next/server";
 
 const PUBLIC_PATHS = ["/login", "/signup", "/forgot-password", "/reset-password"];
+const PUBLIC_ANY_USER = ["/demo"];
+const AUTH_PATHS = ["/onboarding"];
 
 export async function middleware(request: NextRequest) {
   let response = NextResponse.next({ request: { headers: request.headers } });
@@ -36,11 +38,21 @@ export async function middleware(request: NextRequest) {
 
   const pathname = request.nextUrl.pathname;
 
-  if ((pathname.startsWith("/dashboard") || pathname.startsWith("/admin")) && !user) {
+  if (
+    (pathname.startsWith("/dashboard") ||
+      pathname.startsWith("/admin") ||
+      AUTH_PATHS.some((p) => pathname.startsWith(p))) &&
+    !user
+  ) {
     return NextResponse.redirect(new URL("/login", request.url));
   }
 
-  if (PUBLIC_PATHS.includes(pathname) && user && pathname !== "/reset-password") {
+  if (
+    PUBLIC_PATHS.includes(pathname) &&
+    user &&
+    pathname !== "/reset-password" &&
+    !PUBLIC_ANY_USER.includes(pathname)
+  ) {
     const redirect = NextResponse.redirect(new URL("/dashboard", request.url));
     redirect.headers.set("Cache-Control", "no-store, no-cache, must-revalidate");
     return redirect;
@@ -55,5 +67,14 @@ export async function middleware(request: NextRequest) {
 }
 
 export const config = {
-  matcher: ["/dashboard/:path*", "/admin/:path*", "/login", "/signup", "/forgot-password", "/reset-password"],
+  matcher: [
+    "/dashboard/:path*",
+    "/admin/:path*",
+    "/onboarding",
+    "/demo",
+    "/login",
+    "/signup",
+    "/forgot-password",
+    "/reset-password",
+  ],
 };

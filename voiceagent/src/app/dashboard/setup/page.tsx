@@ -16,6 +16,10 @@ const KNOWLEDGE_PROMPTS = [
 
 export default function SetupWizardPage() {
   const router = useRouter();
+
+  useEffect(() => {
+    router.replace("/onboarding");
+  }, [router]);
   const [step, setStep] = useState(1);
   const [persona, setPersona] = useState<PersonaTemplate>("receptionist");
   const [agentId, setAgentId] = useState("");
