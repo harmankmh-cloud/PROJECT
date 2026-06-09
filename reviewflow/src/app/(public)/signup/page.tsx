@@ -1,11 +1,11 @@
-import { AuthLayout } from "@/components/auth/AuthLayout";
+import { PublicAuthLayout } from "@/components/auth/PublicAuthLayout";
 import { SignupFormNew } from "@/components/auth/SignupFormNew";
 import { AUTH } from "@/content/copy";
 
 export default function SignupPage() {
   return (
-    <AuthLayout title={AUTH.signup.title} subtext={AUTH.signup.subtext}>
+    <PublicAuthLayout title={AUTH.signup.title} subtext={AUTH.signup.subtext}>
       <SignupFormNew />
-    </AuthLayout>
+    </PublicAuthLayout>
   );
 }

@@ -1,5 +1,69 @@
 /** Centralized copy — marketing UI shows Pro at $49; Stripe still charges via STRIPE_PRICE_MONTHLY ($39 today). */
 
+export const LANDING = {
+  nav: {
+    links: [
+      { label: "Discover", href: "/discover" },
+      { label: "Blog", href: "/blog" },
+      { label: "Pricing", href: "/pricing" },
+      { label: "For Business", href: "/claim-business" },
+    ],
+    login: "Login",
+    cta: "List Your Business",
+  },
+  hero: {
+    headline: "Find. Trust.",
+    headlineAccent: "Support Local.",
+    subheading:
+      "RateLocal is Canada's review platform built for real customers and real businesses — not ads.",
+    searchPlaceholder: "Search businesses, services, or locations",
+    categories: ["Restaurants", "Salons", "Auto", "Health", "Services"],
+  },
+  stats: [
+    { value: 2000000, suffix: "+", label: "Reviews" },
+    { value: 150000, suffix: "+", label: "Businesses" },
+    { value: 98, suffix: "%", label: "Verified Users" },
+    { value: 4.8, suffix: "★", label: "Avg Platform Rating", isDecimal: true },
+  ],
+  why: [
+    {
+      title: "Real Reviews",
+      description: "Verified visits and authentic feedback from real Canadian customers.",
+      icon: "shield",
+    },
+    {
+      title: "AI Insights",
+      description: "Smart summaries and sentiment analysis help you decide faster.",
+      icon: "sparkles",
+    },
+    {
+      title: "Business Tools",
+      description: "Owners get reputation scores, analytics, and review response tools.",
+      icon: "briefcase",
+    },
+    {
+      title: "Canada-First",
+      description: "Built for Canadian cities, provinces, and local business culture.",
+      icon: "maple",
+    },
+  ],
+  categories: [
+    { name: "Restaurants", icon: "utensils", href: "/search?category=Restaurants" },
+    { name: "Salons", icon: "scissors", href: "/search?category=Salons" },
+    { name: "Auto", icon: "car", href: "/search?category=Auto" },
+    { name: "Health", icon: "heart", href: "/search?category=Health" },
+    { name: "Services", icon: "wrench", href: "/search?category=Services" },
+    { name: "Retail", icon: "shopping", href: "/search?category=Retail" },
+    { name: "Fitness", icon: "dumbbell", href: "/search?category=Fitness" },
+    { name: "Real Estate", icon: "home", href: "/search?category=Real%20Estate" },
+  ],
+  footer: {
+    tagline: "Canada's trusted local review platform.",
+    forBusiness: "Join 150,000+ businesses building trust on RateLocal",
+    madeIn: "Made in Canada 🍁",
+  },
+} as const;
+
 export const MARKETING = {
   nav: {
     howItWorks: "How It Works",
