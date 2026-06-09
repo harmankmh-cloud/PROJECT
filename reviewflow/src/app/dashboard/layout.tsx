@@ -18,9 +18,12 @@ export default async function DashboardLayout({
 
   const { data: business } = await supabase
     .from("businesses")
-    .select("name, slug")
+    .select("name, slug, plan")
     .eq("user_id", user.id)
     .maybeSingle();
+
+  const planLabel =
+    business?.plan === "active" ? "Pro" : business?.plan === "trial" ? "Free Trial" : "Free";
 
   return (
     <>
@@ -28,6 +31,7 @@ export default async function DashboardLayout({
       <DashboardShell
         businessName={business?.name}
         reviewSlug={business?.slug}
+        planLabel={planLabel}
         isPlatformAdmin={isPlatformAdmin(user.email)}
       >
         {children}

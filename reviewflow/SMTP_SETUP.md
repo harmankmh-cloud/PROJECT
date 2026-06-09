@@ -69,10 +69,14 @@ Supabase → **Authentication** → **URL Configuration** → **Redirect URLs** 
 
 ```
 https://ratelocal.ca/auth/callback
+https://ratelocal.ca/auth/callback?next=/onboarding
 https://ratelocal.ca/**
 https://project-amber-omega-94.vercel.app/auth/callback
 http://localhost:3000/auth/callback
+http://localhost:3000/auth/callback?next=/onboarding
 ```
+
+New signups via Google OAuth or email confirm land on `/onboarding` (4-step wizard) before the dashboard.
 
 ### Step 6 — Test
 

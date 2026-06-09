@@ -143,6 +143,7 @@ select {
   .glass-card,
   .glass-panel {
     background: rgba(255, 255, 255, 0.05);
+    -webkit-backdrop-filter: blur(12px);
     backdrop-filter: blur(12px);
     border: 1px solid rgba(255, 255, 255, 0.1);
     border-radius: 12px;
@@ -230,11 +231,25 @@ select {
   }
 
   .site-header-scrolled {
-    @apply border-border bg-bg/80 backdrop-blur-xl;
+    @apply border-border bg-bg/80;
+    -webkit-backdrop-filter: blur(24px);
+    backdrop-filter: blur(24px);
   }
 
   .nav-float {
-    @apply rounded-xl border border-white/10 bg-white/5 backdrop-blur-md;
+    @apply rounded-xl border border-white/10 bg-white/5;
+    -webkit-backdrop-filter: blur(12px);
+    backdrop-filter: blur(12px);
+  }
+
+  .backdrop-blur-xl {
+    -webkit-backdrop-filter: blur(24px);
+    backdrop-filter: blur(24px);
+  }
+
+  .backdrop-blur-md {
+    -webkit-backdrop-filter: blur(12px);
+    backdrop-filter: blur(12px);
   }
 
   .agent-field {

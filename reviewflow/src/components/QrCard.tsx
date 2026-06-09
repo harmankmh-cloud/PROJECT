@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useMemo, useState } from "react";
+import { useEffect, useState } from "react";
 import { copyToClipboard } from "@/lib/copy";
 import { isLocalBrowserOrigin, resolvePublicReviewUrl } from "@/lib/app-url";
 import { generateQrOnlyDataUrl, generateQrPosterDataUrl } from "@/lib/qr-poster";
@@ -25,8 +25,15 @@ export function QrCard({ url, slug, businessName }: Props) {
   const [error, setError] = useState("");
   const [loading, setLoading] = useState(true);
 
-  const reviewUrl = useMemo(() => resolvePublicReviewUrl(url, slug), [url, slug]);
-  const onLocalhost = isLocalBrowserOrigin();
+  const [mounted, setMounted] = useState(false);
+  const [reviewUrl, setReviewUrl] = useState(url);
+  const [onLocalhost, setOnLocalhost] = useState(false);
+
+  useEffect(() => {
+    setMounted(true);
+    setReviewUrl(resolvePublicReviewUrl(url, slug));
+    setOnLocalhost(isLocalBrowserOrigin());
+  }, [url, slug]);
 
   useEffect(() => {
     let cancelled = false;

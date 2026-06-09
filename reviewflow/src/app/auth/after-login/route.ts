@@ -18,5 +18,15 @@ export async function GET(request: Request) {
     return NextResponse.redirect(`${origin}/admin`);
   }
 
+  const { data: business } = await supabase
+    .from("businesses")
+    .select("id")
+    .eq("user_id", user.id)
+    .maybeSingle();
+
+  if (!business) {
+    return NextResponse.redirect(`${origin}/onboarding`);
+  }
+
   return NextResponse.redirect(`${origin}/dashboard`);
 }
