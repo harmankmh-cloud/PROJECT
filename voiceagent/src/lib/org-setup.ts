@@ -1,5 +1,6 @@
 import { DEFAULT_AGENT_SYSTEM_PROMPT } from "@/lib/agent-guardrails";
 import { notifyActivepiecesSignup } from "@/lib/activepieces";
+import { TRIAL_MINUTES_ON_SIGNUP } from "@/lib/trial";
 import { createAdminClient } from "@/lib/supabase/admin";
 import type { User } from "@supabase/supabase-js";
 
@@ -24,6 +25,8 @@ export async function ensureUserOrg(
       name: options?.businessName || user.email?.split("@")[0] || "My Organization",
       slug,
       owner_id: user.id,
+      plan: "trial",
+      trial_minutes_remaining: TRIAL_MINUTES_ON_SIGNUP,
       transfer_phone: options?.phone?.trim() || null,
     })
     .select()

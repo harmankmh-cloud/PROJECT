@@ -2,7 +2,10 @@
 
 import { useEffect, useState } from "react";
 import { apiFetch } from "@/lib/api-client";
+import Link from "next/link";
 import type { Agent } from "@/lib/types";
+import { fetchTrialStatus } from "@/lib/trial-client";
+import { TRIAL_MARKETING } from "@/lib/trial";
 
 export default function CampaignsPage() {
   const [campaigns, setCampaigns] = useState<Array<{ id: string; name: string; status: string; contact_list: unknown[] }>>([]);
@@ -12,6 +15,7 @@ export default function CampaignsPage() {
   const [agentId, setAgentId] = useState("");
   const [error, setError] = useState("");
   const [starting, setStarting] = useState<string | null>(null);
+  const [onTrial, setOnTrial] = useState(false);
 
   function reloadCampaigns() {
     return Promise.all([
@@ -31,6 +35,9 @@ export default function CampaignsPage() {
 
   useEffect(() => {
     let active = true;
+    fetchTrialStatus().then((status) => {
+      if (active && status) setOnTrial(status.onTrial && !status.subscribed);
+    });
     reloadCampaigns().then(() => {
       if (!active) return;
     });
@@ -77,6 +84,14 @@ export default function CampaignsPage() {
     <div>
       <h1 className="text-2xl font-bold text-ghost-white">Outbound Campaigns</h1>
       <p className="mt-1 text-on-surface-variant">TCPA-compliant outbound calling. Requires prior express written consent per contact.</p>
+      {onTrial && (
+        <p className="mt-3 text-sm text-amber-200">
+          Outbound campaigns use trial or plan minutes.{" "}
+          <Link href="/dashboard/billing" className="text-primary-glow hover:underline">
+            {TRIAL_MARKETING.goLiveCta}
+          </Link>
+        </p>
+      )}
       {error && <p className="mt-4 text-sm text-error">{error}</p>}
 
       <form onSubmit={createCampaign} className="mt-8 surface-card space-y-4 p-6">

@@ -98,7 +98,11 @@ export async function POST(request: NextRequest) {
 
     await admin
       .from("va_organizations")
-      .update({ plan: "starter", stripe_subscription_id: null })
+      .update({
+        plan: "trial",
+        stripe_subscription_id: null,
+        trial_minutes_remaining: 0,
+      })
       .eq("stripe_customer_id", customerId);
   }
 

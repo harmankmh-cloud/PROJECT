@@ -13,6 +13,7 @@ import { onboardingStep1Schema, type OnboardingStep1Data } from "@/lib/schemas/a
 import { apiFetch } from "@/lib/api-client";
 import { DEFAULT_BUSINESS_HOURS, type BusinessHours } from "@/lib/business-hours";
 import { markOnboardingComplete } from "@/lib/onboarding";
+import { SANDBOX_MAX_TEST_CALLS, TRIAL_MARKETING, TRIAL_MINUTES_ON_SIGNUP } from "@/lib/trial";
 
 const STEPS = ["Business info", "Hours", "FAQs", "Test call"] as const;
 
@@ -120,7 +121,10 @@ export default function OnboardingPage() {
         {showWelcome && (
           <div className="mt-6 rounded-xl border border-primary/30 bg-primary/10 p-4 text-sm text-text">
             <p className="font-semibold">Account created — let&apos;s set up your agent.</p>
-            <p className="mt-1 text-muted">This takes about 2 minutes. You can skip any step.</p>
+            <p className="mt-1 text-muted">
+              {TRIAL_MINUTES_ON_SIGNUP} trial minutes and {SANDBOX_MAX_TEST_CALLS} test calls included.
+              {` ${TRIAL_MARKETING.goLiveLong}`} This setup takes about 2 minutes.
+            </p>
           </div>
         )}
 

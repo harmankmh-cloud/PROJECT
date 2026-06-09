@@ -6,6 +6,7 @@ import { getTwilioClient } from "@/lib/twilio";
 import { dialOutbound, encodeClientState, isTelnyxConfigured } from "@/lib/telnyx";
 import { logAudit } from "@/lib/compliance/audit";
 import { denyUnlessCanOperate } from "@/lib/require-org-access";
+import { canMakeProductionCall, productionBlockReason } from "@/lib/trial";
 
 export async function GET() {
   const supabase = await createClient();
@@ -85,6 +86,10 @@ export async function PATCH(request: NextRequest) {
   const { id, action } = body;
 
   if (action === "start") {
+    if (!canMakeProductionCall(org)) {
+      return NextResponse.json({ error: productionBlockReason(org) }, { status: 402 });
+    }
+
     if (!isWithinCallingHours()) {
       return NextResponse.json({ error: "Outside TCPA calling hours (8am-9pm)" }, { status: 400 });
     }

@@ -4,6 +4,7 @@ import { createAdminClient } from "@/lib/supabase/admin";
 import { getUserOrg } from "@/lib/auth";
 import { denyUnlessCanOperate } from "@/lib/require-org-access";
 import { dialOutbound, encodeClientState, isTelnyxConfigured } from "@/lib/telnyx";
+import { canMakeSandboxTestCall, sandboxBlockReason, SANDBOX_MAX_SECONDS } from "@/lib/trial";
 
 export async function POST(request: NextRequest) {
   const supabase = await createClient();
@@ -41,6 +42,10 @@ export async function POST(request: NextRequest) {
     .maybeSingle();
 
   if (!agent) return NextResponse.json({ error: "Agent not found" }, { status: 404 });
+
+  if (!canMakeSandboxTestCall(org)) {
+    return NextResponse.json({ error: sandboxBlockReason(org) }, { status: 402 });
+  }
 
   const from = process.env.TELNYX_PHONE_NUMBER;
   const connectionId = process.env.TELNYX_CONNECTION_ID;
@@ -83,9 +88,16 @@ export async function POST(request: NextRequest) {
         to_number: e164,
         status: "initiated",
         is_sandbox: true,
-        handoff_payload: { sandboxMaxSeconds: 60, purpose: "agent_test" },
+        handoff_payload: { sandboxMaxSeconds: SANDBOX_MAX_SECONDS, purpose: "agent_test" },
         started_at: new Date().toISOString(),
       });
+
+      await admin
+        .from("va_organizations")
+        .update({
+          sandbox_test_calls_used: Number(org.sandbox_test_calls_used ?? 0) + 1,
+        })
+        .eq("id", org.id);
     }
 
     return NextResponse.json({

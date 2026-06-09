@@ -2,7 +2,10 @@
 
 import { useEffect, useState } from "react";
 import type { Agent } from "@/lib/types";
+import Link from "next/link";
 import { apiFetch } from "@/lib/api-client";
+import { fetchTrialStatus } from "@/lib/trial-client";
+import { TRIAL_MARKETING } from "@/lib/trial";
 
 type PhoneNumber = {
   id: string;
@@ -25,6 +28,13 @@ export default function PhoneNumbersPage() {
     Array<{ phone_number: string; region: string; monthly_cost_cents: number }>
   >([]);
   const [searching, setSearching] = useState(false);
+  const [needsSubscription, setNeedsSubscription] = useState(false);
+
+  useEffect(() => {
+    fetchTrialStatus().then((status) => {
+      if (status?.onTrial && !status.subscribed) setNeedsSubscription(true);
+    });
+  }, []);
 
   useEffect(() => {
     Promise.all([
@@ -130,6 +140,15 @@ export default function PhoneNumbersPage() {
       <p className="mt-1 text-on-surface-variant">
         Search Telnyx numbers or map an existing line. Inbound calls route by the number dialed.
       </p>
+
+      {needsSubscription && (
+        <div className="mt-4 rounded-xl border border-amber-500/30 bg-amber-500/10 px-4 py-3 text-sm text-amber-50">
+          Purchasing a number requires a payment method.{" "}
+          <Link href="/dashboard/billing" className="font-medium text-teal-300 underline">
+            {TRIAL_MARKETING.goLiveCta}
+          </Link>
+        </div>
+      )}
 
       {message && <p className="mt-4 text-sm text-primary">{message}</p>}
       {error && <p className="mt-4 text-sm text-error">{error}</p>}

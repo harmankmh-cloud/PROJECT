@@ -5,6 +5,7 @@ import { MarketingNavbar } from "@/components/marketing/MarketingNavbar";
 import { PricingCard } from "@/components/PricingCard";
 import { SkipToContent } from "@/components/SkipToContent";
 import type { PlanKey } from "@/lib/plans";
+import { TRIAL_MARKETING } from "@/lib/trial";
 
 const PLAN_KEYS: PlanKey[] = ["starter", "growth", "pro", "enterprise"];
 
@@ -27,7 +28,10 @@ export default function PricingPage() {
               <h1 className="font-display text-3xl font-bold text-ghost-white md:text-4xl">Simple, predictable pricing</h1>
               <p className="mx-auto mt-4 max-w-2xl text-lg text-on-surface-variant">
                 Flat monthly with voice minutes included — only pay more if you go over. Cheaper than a part-time
-                receptionist, with no per-caller penalties. Sandbox testing is always free.
+                receptionist, with no per-caller penalties.
+              </p>
+              <p className="mx-auto mt-3 max-w-xl text-sm text-muted">
+                {TRIAL_MARKETING.exploreLong} {TRIAL_MARKETING.goLiveLong}
               </p>
             </div>
             <div className="grid grid-cols-1 gap-6 md:grid-cols-2 lg:grid-cols-4">

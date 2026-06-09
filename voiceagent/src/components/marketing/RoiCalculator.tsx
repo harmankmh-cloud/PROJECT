@@ -2,6 +2,7 @@
 
 import Link from "next/link";
 import { useState } from "react";
+import { TRIAL_MARKETING } from "@/lib/trial";
 
 const RECEPTIONIST_MONTHLY = 2800;
 
@@ -63,7 +64,7 @@ export function RoiCalculator() {
             </p>
           </div>
           <Link href="/signup" className="btn-primary mt-6 block py-3 text-center">
-            Start free trial
+            {TRIAL_MARKETING.cta}
           </Link>
         </div>
       </div>

@@ -47,7 +47,7 @@ export default async function BlogPostPage({ params }: { params: Promise<{ slug:
             ))}
           </div>
           <Link href="/signup" className="btn-primary mt-10 inline-block px-8 py-3">
-            Start free trial
+            Get started free
           </Link>
         </article>
       </main>

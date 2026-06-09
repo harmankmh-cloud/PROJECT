@@ -3,13 +3,14 @@
 import Link from "next/link";
 import { ArrowRight, Check, Play } from "lucide-react";
 import { FadeInSection } from "@/components/ui/FadeInSection";
+import { TRIAL_MARKETING } from "@/lib/trial";
 import { LiveVoiceDemo } from "./LiveVoiceDemo";
 import { PhoneMockup } from "./PhoneMockup";
 
 const TRUST_BADGES = [
-  "No credit card required",
+  TRIAL_MARKETING.exploreShort,
   "Setup in 10 minutes",
-  "Cancel anytime",
+  TRIAL_MARKETING.goLiveShort,
 ] as const;
 
 export function HeroSection() {
@@ -41,7 +42,7 @@ export function HeroSection() {
           <FadeInSection onMount delay={0.3}>
             <div className="mt-10 flex flex-col items-center justify-center gap-3 sm:flex-row">
               <Link href="/signup" className="btn-primary inline-flex gap-2 px-8 py-3.5">
-                Start Free Trial
+                {TRIAL_MARKETING.cta}
                 <ArrowRight className="h-4 w-4" />
               </Link>
               <Link href="/#demo" className="btn-secondary inline-flex gap-2 px-8 py-3.5">

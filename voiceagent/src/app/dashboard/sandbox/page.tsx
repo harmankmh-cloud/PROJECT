@@ -3,7 +3,10 @@
 import { Suspense, useEffect, useState } from "react";
 import { useSearchParams } from "next/navigation";
 import type { Agent } from "@/lib/types";
+import Link from "next/link";
 import { apiFetch } from "@/lib/api-client";
+import { fetchTrialStatus } from "@/lib/trial-client";
+import { SANDBOX_MAX_TEST_CALLS, TRIAL_MARKETING } from "@/lib/trial";
 
 type Message = { role: "user" | "assistant"; content: string };
 
@@ -19,6 +22,18 @@ function SandboxContent() {
   const [testPhone, setTestPhone] = useState("");
   const [callMessage, setCallMessage] = useState("");
   const [calling, setCalling] = useState(false);
+  const [trialInfo, setTrialInfo] = useState<string>("");
+
+  useEffect(() => {
+    fetchTrialStatus().then((status) => {
+      if (!status) return;
+      if (status.onTrial) {
+        setTrialInfo(
+          `${status.trialMinutesRemaining} trial minutes left · ${status.sandboxTestCallsRemaining} of ${SANDBOX_MAX_TEST_CALLS} test calls left`
+        );
+      }
+    });
+  }, []);
 
   useEffect(() => {
     apiFetch<{ agents: Agent[] }>("/api/agents").then((res) => {
@@ -79,9 +94,19 @@ function SandboxContent() {
       <header>
         <h1 className="font-display text-2xl font-bold text-on-surface">Agent sandbox</h1>
         <p className="mt-1 text-on-primary-container">
-          Test in text or call your phone to hear the agent voice (1 min max).
+          Text chat is always free. Voice test calls are capped at 1 minute each.
         </p>
+        {trialInfo && <p className="mt-2 text-sm text-amber-200">{trialInfo}</p>}
       </header>
+
+      {trialInfo && (
+        <p className="text-sm text-muted">
+          Ready for production?{" "}
+          <Link href="/dashboard/billing" className="text-primary-glow hover:underline">
+            {TRIAL_MARKETING.goLiveCta}
+          </Link>
+        </p>
+      )}
 
       <form onSubmit={testCall} className="surface-card flex flex-col gap-3 p-5 sm:flex-row sm:items-end">
         <div className="flex-1">

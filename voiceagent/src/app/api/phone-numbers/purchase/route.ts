@@ -4,6 +4,7 @@ import { createAdminClient } from "@/lib/supabase/admin";
 import { getUserOrg } from "@/lib/auth";
 import { denyUnlessCanOperate } from "@/lib/require-org-access";
 import { purchasePhoneNumber } from "@/lib/telnyx-numbers";
+import { canPurchasePhoneNumber, phonePurchaseBlockReason } from "@/lib/trial";
 
 export async function POST(request: NextRequest) {
   const supabase = await createClient();
@@ -24,6 +25,10 @@ export async function POST(request: NextRequest) {
 
   if (!phoneNumber) {
     return NextResponse.json({ error: "phone_number required" }, { status: 400 });
+  }
+
+  if (!canPurchasePhoneNumber(org)) {
+    return NextResponse.json({ error: phonePurchaseBlockReason(org) }, { status: 402 });
   }
 
   try {
