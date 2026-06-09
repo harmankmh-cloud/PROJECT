@@ -49,10 +49,10 @@ export function CookieNotice() {
       className="fixed bottom-0 left-0 right-0 z-[60] border-t border-glass-border-subtle bg-surface-container/95 px-5 py-4 backdrop-blur-xl"
     >
       <div className="marketing-container flex flex-col items-start justify-between gap-4 sm:flex-row sm:items-center">
-        <p className="text-sm text-on-surface-variant">
+        <p className="text-sm text-text">
           We use essential cookies for sign-in. With your consent, we also use analytics to improve
           the product. See our{" "}
-          <Link href="/privacy" className="text-primary hover:underline">
+          <Link href="/privacy" className="link-subtle font-semibold text-text">
             Privacy Policy
           </Link>
           .
@@ -60,7 +60,7 @@ export function CookieNotice() {
         <div className="flex shrink-0 flex-wrap gap-2">
           <button
             type="button"
-            className="rounded-full border border-border px-4 py-2 text-xs text-muted transition hover:text-text"
+            className="rounded-full border border-border px-4 py-2 text-xs font-medium text-muted transition hover:bg-white/5 hover:text-text"
             onClick={() => save("essential")}
           >
             Reject non-essential

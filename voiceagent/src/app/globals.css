@@ -16,7 +16,8 @@
   --color-warning: #facc15;
   --color-danger: #f87171;
   --color-text: #fafafa;
-  --color-muted: #71717a;
+  /* WCAG AA on #0a0a0a / #141414 — was #71717a (~4.2:1, failed Lighthouse) */
+  --color-muted: #a1a1aa;
 
   /* Legacy aliases (dashboard compat) */
   --color-obsidian: #0a0a0a;
@@ -33,7 +34,7 @@
   --color-on-surface: #fafafa;
   --color-on-surface-variant: #a1a1aa;
   --color-ghost-white: #fafafa;
-  --color-slate-text: #71717a;
+  --color-slate-text: #a1a1aa;
   --color-electric-cyan: #14b8a6;
   --color-electric-blue: #a78bfa;
   --color-violet-500: #7c3aed;
@@ -255,6 +256,11 @@ select {
 
   .link-accent {
     @apply font-semibold text-primary-glow transition hover:text-accent;
+  }
+
+  /** Muted links that remain distinguishable without relying on color alone (Lighthouse a11y). */
+  .link-subtle {
+    @apply text-muted underline decoration-muted/50 underline-offset-2 transition hover:text-text hover:decoration-text/60;
   }
 
   .nav-item {

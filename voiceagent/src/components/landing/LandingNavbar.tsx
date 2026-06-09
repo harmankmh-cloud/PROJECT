@@ -8,7 +8,7 @@ import { TRIAL_MARKETING } from "@/lib/trial";
 import { GlowButton } from "@/components/ui/GlowButton";
 
 const NAV = [
-  { href: "/#features", label: "Features" },
+  { href: "/features", label: "Features" },
   { href: "/pricing", label: "Pricing" },
   { href: "/demo", label: "Demo" },
   { href: "/blog", label: "Blog" },

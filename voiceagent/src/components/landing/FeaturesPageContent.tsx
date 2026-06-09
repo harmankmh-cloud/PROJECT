@@ -75,7 +75,7 @@ export function FeaturesPageContent() {
                 <div className="flex-1">
                   <h2 className="font-display text-xl text-text">{f.title}</h2>
                   <p className="mt-2 text-muted">{f.desc}</p>
-                  <p className="mt-2 text-sm text-muted/80">{f.detail}</p>
+                  <p className="mt-2 text-sm text-muted">{f.detail}</p>
                   <Link
                     href="/signup"
                     className="mt-3 inline-block text-sm font-semibold text-violet-400 hover:text-violet-300"

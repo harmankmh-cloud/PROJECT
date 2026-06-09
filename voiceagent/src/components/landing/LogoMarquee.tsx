@@ -18,7 +18,7 @@ export function LogoMarquee() {
 
   return (
     <section className="border-y border-border bg-surface/40 py-8">
-      <p className="marketing-container mb-6 text-center text-sm text-muted">
+      <p className="marketing-container mb-6 text-center text-sm font-medium text-muted">
         {LANDING_COPY.marquee.label}
       </p>
       <div className="marquee-pause overflow-hidden">
@@ -40,7 +40,7 @@ export function LogoMarquee() {
                   {"abbr" in item ? item.abbr : ""}
                 </span>
               )}
-              <span className="text-sm font-medium text-muted/80">{item.name}</span>
+              <span className="text-sm font-medium text-muted">{item.name}</span>
             </div>
           ))}
         </div>
