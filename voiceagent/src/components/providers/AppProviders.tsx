@@ -3,8 +3,10 @@
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { MotionConfig } from "framer-motion";
 import { useState } from "react";
+import { MaterialSymbolsLoader } from "@/components/dashboard/MaterialSymbolsLoader";
 
-export function AppProviders({ children }: { children: React.ReactNode }) {
+/** Dashboard-only providers — keeps react-query and framer-motion off marketing pages. */
+export function DashboardProviders({ children }: { children: React.ReactNode }) {
   const [queryClient] = useState(
     () =>
       new QueryClient({
@@ -19,7 +21,10 @@ export function AppProviders({ children }: { children: React.ReactNode }) {
 
   return (
     <QueryClientProvider client={queryClient}>
-      <MotionConfig reducedMotion="user">{children}</MotionConfig>
+      <MotionConfig reducedMotion="user">
+        <MaterialSymbolsLoader />
+        {children}
+      </MotionConfig>
     </QueryClientProvider>
   );
 }

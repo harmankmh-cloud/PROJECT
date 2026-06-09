@@ -1,6 +1,7 @@
 import Link from "next/link";
 import { redirect } from "next/navigation";
 import { BrandLogo } from "@/components/BrandLogo";
+import { MaterialSymbolsLoader } from "@/components/dashboard/MaterialSymbolsLoader";
 import { SignOutButton } from "@/components/SignOutButton";
 import { isPlatformAdmin } from "@/lib/admin-auth";
 import { createClient } from "@/lib/supabase/server";
@@ -16,6 +17,7 @@ export default async function AdminLayout({ children }: { children: React.ReactN
 
   return (
     <div className="min-h-screen bg-cream">
+      <MaterialSymbolsLoader />
       <header className="site-header">
         <div className="mx-auto flex max-w-6xl items-center justify-between px-6 py-4">
           <BrandLogo href="/admin" size="sm" />
