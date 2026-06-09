@@ -12,7 +12,7 @@ discover URLs → scrape emails → import to Supabase → daily job sends 100 N
 
 | Step | Tool |
 |------|------|
-| 1. Find businesses | `node discover-overpass.mjs` or add to `seeds/fraser-valley-curated.txt` |
+| 1. Find businesses | `npm run discover` (Nominatim + Yellow Pages) or add to `seeds/fraser-valley-curated.txt` |
 | 2. Scrape emails | `node scrape-batch.mjs --input seeds/... --output leads-batch.csv` |
 | 3. Import pool | `node import-leads.mjs --input leads-batch.csv --mark-sent sent-yesterday.txt` |
 | 4. Daily send | Activepieces **11am weekdays** → `POST /api/make/outreach/daily` with `limit: 100` |

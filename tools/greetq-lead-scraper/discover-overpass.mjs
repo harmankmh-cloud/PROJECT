@@ -51,23 +51,36 @@ function parseArgs() {
   return args;
 }
 
+const OVERPASS_ENDPOINTS = [
+  "https://overpass-api.de/api/interpreter",
+  "https://overpass.private.coffee/api/interpreter",
+];
+
 async function overpassQuery(bbox) {
   const { south, west, north, east } = bbox;
-  const q = `
-[out:json][timeout:180];
-(
-  node["website"](${south},${west},${north},${east});
-  way["website"](${south},${west},${north},${east});
-  relation["website"](${south},${west},${north},${east});
-);
-out body;
-`;
-  const res = await fetch(`https://overpass-api.de/api/interpreter?data=${encodeURIComponent(q)}`, {
-    method: "GET",
-    headers: { Accept: "application/json" },
-  });
-  if (!res.ok) throw new Error(`Overpass ${res.status}`);
-  return res.json();
+  const q = `[out:json][timeout:180];(node["website"](${south},${west},${north},${east});way["website"](${south},${west},${north},${east}););out body;`;
+  let lastErr = "Overpass failed";
+  for (const endpoint of OVERPASS_ENDPOINTS) {
+    try {
+      const res = await fetch(endpoint, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/x-www-form-urlencoded",
+          Accept: "application/json",
+          "User-Agent": "greetq-lead-scraper/1.0",
+        },
+        body: `data=${encodeURIComponent(q)}`,
+      });
+      if (!res.ok) {
+        lastErr = `Overpass ${res.status} (${endpoint})`;
+        continue;
+      }
+      return res.json();
+    } catch (e) {
+      lastErr = e instanceof Error ? e.message : String(e);
+    }
+  }
+  throw new Error(lastErr);
 }
 
 function normalizeUrl(url) {
