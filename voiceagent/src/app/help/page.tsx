@@ -1,7 +1,7 @@
 import Link from "next/link";
 import type { Metadata } from "next";
-import { MarketingFooter } from "@/components/MarketingFooter";
-import { MarketingHeader } from "@/components/MarketingHeader";
+import { MarketingFooterNew } from "@/components/marketing/MarketingFooterNew";
+import { MarketingNavbar } from "@/components/marketing/MarketingNavbar";
 import { SkipToContent } from "@/components/SkipToContent";
 import { SupportForm } from "@/components/SupportForm";
 import { BRAND } from "@/lib/brand";
@@ -24,8 +24,8 @@ export default async function HelpPage({
   return (
     <div className="dark-mesh-bg grid-pattern flex min-h-screen flex-col">
       <SkipToContent />
-      <MarketingHeader />
-      <main id="main-content" className="mx-auto w-full max-w-2xl flex-1 space-y-8 px-4 py-12">
+      <MarketingNavbar />
+      <main id="main-content" className="mx-auto w-full max-w-2xl flex-1 space-y-8 px-4 pb-12 pt-24">
         <header>
           <h1 className="font-display text-3xl text-ghost-white">Help & contact</h1>
           <p className="mt-2 text-sm text-on-surface-variant">
@@ -64,7 +64,7 @@ export default async function HelpPage({
           </Link>
         </p>
       </main>
-      <MarketingFooter />
+      <MarketingFooterNew />
     </div>
   );
 }

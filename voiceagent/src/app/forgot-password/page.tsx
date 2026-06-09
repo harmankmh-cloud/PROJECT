@@ -42,7 +42,16 @@ export default function ForgotPasswordPage() {
         </p>
 
         {sent ? (
-          <p className="mt-6 text-sm text-success">Check your email for a password reset link.</p>
+          <div className="mt-8 space-y-4">
+            <h2 className="text-lg font-semibold text-text">Check your email</h2>
+            <p className="text-sm text-success">
+              We sent a password reset link. It may take a few minutes to arrive — check spam if you
+              don&apos;t see it.
+            </p>
+            <Button type="button" variant="outline" className="w-full" onClick={() => setSent(false)}>
+              Send another link
+            </Button>
+          </div>
         ) : (
           <form onSubmit={handleSubmit(onSubmit)} className="mt-8 space-y-4" noValidate>
             <Input

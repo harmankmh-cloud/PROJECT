@@ -2,7 +2,7 @@
 
 import Link from "next/link";
 import { useRouter } from "next/navigation";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { AnimatePresence, motion } from "framer-motion";
 import { useForm } from "react-hook-form";
@@ -12,6 +12,7 @@ import { Input } from "@/components/ui/Input";
 import { onboardingStep1Schema, type OnboardingStep1Data } from "@/lib/schemas/auth";
 import { apiFetch } from "@/lib/api-client";
 import { DEFAULT_BUSINESS_HOURS, type BusinessHours } from "@/lib/business-hours";
+import { markOnboardingComplete } from "@/lib/onboarding";
 
 const STEPS = ["Business info", "Hours", "FAQs", "Test call"] as const;
 
@@ -30,6 +31,7 @@ Where are you located?`;
 
 export default function OnboardingPage() {
   const router = useRouter();
+  const [showWelcome, setShowWelcome] = useState(false);
   const [step, setStep] = useState(0);
   const [faqs, setFaqs] = useState(FAQ_DEFAULTS);
   const [testPhone, setTestPhone] = useState("");
@@ -37,6 +39,12 @@ export default function OnboardingPage() {
   const [hours, setHours] = useState<BusinessHours>(DEFAULT_BUSINESS_HOURS);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
+
+  useEffect(() => {
+    if (typeof window !== "undefined" && window.location.search.includes("welcome=1")) {
+      setShowWelcome(true);
+    }
+  }, []);
 
   const form1 = useForm<OnboardingStep1Data>({
     resolver: zodResolver(onboardingStep1Schema),
@@ -51,7 +59,7 @@ export default function OnboardingPage() {
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({
         name: data.businessName,
-        default_transfer_phone: data.phone,
+        transfer_phone: data.phone,
       }),
     });
     setLoading(false);
@@ -81,9 +89,14 @@ export default function OnboardingPage() {
     setStep(3);
   }
 
+  async function finishOnboarding(destination = "/dashboard") {
+    await markOnboardingComplete();
+    router.push(destination);
+  }
+
   async function runTestCall() {
     if (!testPhone.trim()) {
-      router.push("/dashboard");
+      await finishOnboarding();
       return;
     }
     setLoading(true);
@@ -93,7 +106,7 @@ export default function OnboardingPage() {
       body: JSON.stringify({ agent_id: agentId, phone: testPhone }),
     });
     setLoading(false);
-    if (res.ok) router.push("/dashboard");
+    if (res.ok) await finishOnboarding();
     else setError(res.error);
   }
 
@@ -103,6 +116,13 @@ export default function OnboardingPage() {
         <Link href="/" className="font-display text-lg text-text">
           GreetQ
         </Link>
+
+        {showWelcome && (
+          <div className="mt-6 rounded-xl border border-primary/30 bg-primary/10 p-4 text-sm text-text">
+            <p className="font-semibold">Account created — let&apos;s set up your agent.</p>
+            <p className="mt-1 text-muted">This takes about 2 minutes. You can skip any step.</p>
+          </div>
+        )}
 
         <div className="mt-8 flex gap-2">
           {STEPS.map((label, i) => (
@@ -206,7 +226,7 @@ export default function OnboardingPage() {
                   />
                   {error && <p className="mt-2 text-sm text-danger">{error}</p>}
                   <div className="mt-6 flex gap-3">
-                    <Button variant="ghost" onClick={() => router.push("/dashboard")}>Skip to dashboard</Button>
+                    <Button variant="ghost" onClick={() => void finishOnboarding()}>Skip to dashboard</Button>
                     <Button className="flex-1" loading={loading} onClick={runTestCall}>Start test call</Button>
                   </div>
                 </>
