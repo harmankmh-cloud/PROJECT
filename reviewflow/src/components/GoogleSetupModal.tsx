@@ -48,10 +48,18 @@ export function GoogleSetupProvider({
 
   useEffect(() => {
     if (hasGoogleLink || !autoPrompt) return;
-    if (sessionStorage.getItem("ratelocal_google_prompt_seen") === "1") return;
+    try {
+      if (sessionStorage.getItem("ratelocal_google_prompt_seen") === "1") return;
+    } catch {
+      return;
+    }
     const timer = window.setTimeout(() => {
       setOpen(true);
-      sessionStorage.setItem("ratelocal_google_prompt_seen", "1");
+      try {
+        sessionStorage.setItem("ratelocal_google_prompt_seen", "1");
+      } catch {
+        /* private mode */
+      }
     }, 800);
     return () => window.clearTimeout(timer);
   }, [hasGoogleLink, autoPrompt]);

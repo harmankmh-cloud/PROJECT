@@ -1,17 +1,19 @@
 import type { Metadata } from "next";
-import { Instrument_Serif, Plus_Jakarta_Sans } from "next/font/google";
+import { Inter, Plus_Jakarta_Sans } from "next/font/google";
+import { AppProviders } from "@/components/providers/AppProviders";
+import { Toaster } from "@/components/ui/Toast";
 import { BRAND } from "@/lib/brand";
 import "./globals.css";
 
 const jakarta = Plus_Jakarta_Sans({
   variable: "--font-jakarta",
   subsets: ["latin"],
+  weight: ["600", "700", "800"],
 });
 
-const instrument = Instrument_Serif({
-  variable: "--font-instrument",
+const inter = Inter({
+  variable: "--font-inter",
   subsets: ["latin"],
-  weight: "400",
 });
 
 const appUrl =
@@ -24,7 +26,7 @@ export const metadata: Metadata = {
     template: `%s · ${BRAND.name}`,
   },
   description:
-    "RateLocal helps BC shops collect Google reviews in under a minute — QR poster, AI-written drafts, and private feedback routing. Built in Fraser Valley.",
+    "RateLocal helps BC shops collect Google reviews in under a minute — QR poster, AI-written drafts, and private feedback routing.",
   openGraph: {
     title: `${BRAND.name} — ${BRAND.tagline}`,
     description:
@@ -40,9 +42,7 @@ export const metadata: Metadata = {
     description:
       "QR-powered review collection for local businesses. Route unhappy customers privately, help happy ones post on Google in seconds.",
   },
-  alternates: {
-    canonical: appUrl,
-  },
+  alternates: { canonical: appUrl },
   ...(process.env.GOOGLE_SITE_VERIFICATION
     ? { verification: { google: process.env.GOOGLE_SITE_VERIFICATION } }
     : {}),
@@ -61,8 +61,13 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="en-CA" className={`${jakarta.variable} ${instrument.variable} h-full`}>
-      <body className="min-h-full font-sans antialiased">{children}</body>
+    <html lang="en-CA" className={`${jakarta.variable} ${inter.variable} h-full`}>
+      <body className="min-h-full font-sans antialiased">
+        <AppProviders>
+          {children}
+          <Toaster />
+        </AppProviders>
+      </body>
     </html>
   );
 }
