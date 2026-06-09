@@ -18,6 +18,10 @@ export const TRADE_CITIES = [
   { slug: "delta", name: "Delta", region: "Metro Vancouver" },
   { slug: "burnaby", name: "Burnaby", region: "Metro Vancouver" },
   { slug: "vancouver", name: "Vancouver", region: "Metro Vancouver" },
+  { slug: "richmond", name: "Richmond", region: "Metro Vancouver" },
+  { slug: "coquitlam", name: "Coquitlam", region: "Metro Vancouver" },
+  { slug: "maple-ridge", name: "Maple Ridge", region: "Fraser Valley" },
+  { slug: "kelowna", name: "Kelowna", region: "Okanagan" },
 ] as const;
 
 export type CitySlug = (typeof TRADE_CITIES)[number]["slug"];
@@ -79,9 +83,9 @@ export const LISTING_PLANS = [
   {
     id: "featured" as const,
     name: "Featured Pro",
-    priceLabel: "$29/mo",
-    setupLabel: "Founding Pro rate",
-    monthlyLabel: "$29/mo founding (then $49) · cancel anytime",
+    priceLabel: "$49/mo",
+    setupLabel: "Featured Pro",
+    monthlyLabel: "$49/mo · cancel anytime",
     highlight: true,
     features: [
       "Job alerts when homeowners post in your trade + city",

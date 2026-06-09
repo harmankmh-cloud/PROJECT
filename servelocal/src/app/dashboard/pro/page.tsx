@@ -1,177 +1,89 @@
 import Link from "next/link";
-import { Suspense } from "react";
 import { redirect } from "next/navigation";
-import { SiteFooter } from "@/components/SiteFooter";
-import { SiteHeader } from "@/components/SiteHeader";
-import { SignOutButton } from "@/components/SignOutButton";
-import { StarRating } from "@/components/StarRating";
-import { getCategoryBySlug, getJobLeadsForProvider, getProviderReviewsForProvider, getProvidersForUser } from "@/lib/data";
-import { cityName, LISTING_PLANS } from "@/lib/constants";
-import { ProJobLeadsList } from "@/components/ProJobLeadsList";
+import { ProJobLeadsFeed } from "@/components/dashboard/ProJobLeadsFeed";
 import { UpgradeCheckoutButton } from "@/components/UpgradeCheckoutButton";
-import { ManageBillingButton } from "@/components/ManageBillingButton";
 import { UpgradeSuccessBanner } from "@/components/UpgradeSuccessBanner";
+import { cityName, LISTING_PLANS } from "@/lib/constants";
+import { getJobLeadsForProvider, getProvidersForUser } from "@/lib/data";
 import { FOUNDING_PRO } from "@/lib/tradie-program";
 import { createClient } from "@/lib/supabase/server";
-import { isSupabaseConfigured } from "@/lib/supabase/config";
+import { Suspense } from "react";
 
-export default async function ProDashboardPage() {
-  if (!isSupabaseConfigured()) redirect("/login");
-
+export default async function ProOverviewPage() {
   const supabase = await createClient();
-  if (!supabase) redirect("/login");
-
   const {
     data: { user },
-  } = await supabase.auth.getUser();
+  } = supabase ? await supabase.auth.getUser() : { data: { user: null } };
   if (!user) redirect("/login");
 
   const listings = await getProvidersForUser(user.id, user.email ?? undefined);
-
   if (listings.length === 0) {
     return (
-      <main className="mesh-bg min-h-screen">
-        <SiteHeader compact />
-        <div className="mx-auto max-w-lg px-4 py-10 sm:px-8 text-center">
-          <p className="page-eyebrow">Pro dashboard</p>
-          <h1 className="font-display mt-2 text-3xl text-brand-950">No listing linked yet</h1>
-          <p className="mt-3 text-slate-600">
-            Apply to get listed — we&apos;ll link your profile to this account when approved.
-          </p>
-          <Link href="/join" className="btn-gold mt-6 inline-flex px-8 py-3">
-            Get listed
-          </Link>
-          <p className="mt-4">
-            <Link href="/dashboard" className="text-sm text-teal-600 hover:underline">
-              ← Homeowner dashboard
-            </Link>
-          </p>
-        </div>
-        <SiteFooter />
-      </main>
+      <div className="mx-auto max-w-lg py-10 text-center">
+        <h1 className="font-display text-2xl font-black text-slate-900">No listing linked yet</h1>
+        <p className="mt-3 text-slate-600">Complete onboarding to get your profile reviewed.</p>
+        <Link href="/onboarding" className="btn-orange mt-6 inline-flex px-8 py-3">
+          Finish setup
+        </Link>
+      </div>
     );
   }
 
   const listing = listings[0];
-  const category = await getCategoryBySlug(listing.category_slug);
-  const reviews = await getProviderReviewsForProvider(listing.id);
   const jobLeads = listing.status === "approved" ? await getJobLeadsForProvider(listing) : [];
   const plan = LISTING_PLANS.find((p) => p.id === listing.listing_tier);
   const isPaid = listing.listing_tier === "featured" || listing.listing_tier === "premium";
 
+  const stats = [
+    { label: "Profile views", value: listing.contact_clicks },
+    { label: "Job leads", value: jobLeads.length },
+    { label: "Reviews", value: listing.review_count ?? 0 },
+    { label: "Avg rating", value: listing.avg_rating || "—" },
+  ];
+
   return (
-    <main className="mesh-bg min-h-screen">
-      <SiteHeader compact />
-      <div className="mx-auto max-w-3xl px-4 py-10 sm:px-8">
-        <div className="flex flex-wrap items-start justify-between gap-4">
-          <div>
-            <p className="page-eyebrow">Pro dashboard</p>
-            <h1 className="font-display mt-1 text-3xl text-brand-950">{listing.display_name}</h1>
-            <p className="mt-1 text-sm text-slate-500">
-              {category?.name} · {cityName(listing.city_slug)} · {listing.status}
-            </p>
+    <div>
+      <Suspense fallback={null}>
+        <UpgradeSuccessBanner />
+      </Suspense>
+
+      <h1 className="font-display text-2xl font-black text-slate-900">{listing.display_name}</h1>
+      <p className="mt-1 text-sm text-slate-500">
+        {cityName(listing.city_slug)} · {listing.status} · {plan?.name ?? "Starter"}
+      </p>
+
+      <div className="mt-6 grid gap-3 sm:grid-cols-2 lg:grid-cols-4">
+        {stats.map((s) => (
+          <div key={s.label} className="rounded-xl border border-slate-200 bg-white p-4 text-center">
+            <p className="font-display text-2xl font-bold text-slate-900">{s.value}</p>
+            <p className="text-xs text-slate-500">{s.label}</p>
           </div>
-          <SignOutButton />
-        </div>
-
-        <Suspense fallback={null}>
-          <UpgradeSuccessBanner />
-        </Suspense>
-
-        <div className="mt-8 grid gap-3 sm:grid-cols-3">
-          <div className="stat-hero">
-            <p className="font-display text-2xl font-bold text-brand-950">{listing.contact_clicks}</p>
-            <p className="text-xs text-slate-500">Contact clicks</p>
-          </div>
-          <div className="stat-hero">
-            <p className="font-display text-2xl font-bold text-brand-950">{listing.review_count || 0}</p>
-            <p className="text-xs text-slate-500">Reviews</p>
-          </div>
-          <div className="stat-hero">
-            <p className="font-display text-2xl font-bold text-brand-950">{listing.avg_rating || "—"}</p>
-            <p className="text-xs text-slate-500">Avg rating</p>
-          </div>
-        </div>
-
-        <div className="mt-8 grid gap-4 sm:grid-cols-2">
-          <Link href={`/pro/${listing.slug}`} className="surface-card-hover p-5" target="_blank">
-            <p className="font-semibold text-brand-950">View public profile ↗</p>
-            <p className="mt-1 text-sm text-slate-500">See what homeowners see</p>
-          </Link>
-          <Link href="/pricing" className="surface-card-hover p-5">
-            <p className="font-semibold text-brand-950">Upgrade plan</p>
-            <p className="mt-1 text-sm text-slate-500">
-              Current: {plan?.name || listing.listing_tier || "Starter"}
-              {!isPaid && ` · ${FOUNDING_PRO.featuredPrice} founding Featured available`}
-            </p>
-          </Link>
-        </div>
-
-        {!isPaid && listing.status === "approved" && (
-          <div className="surface-card mt-6 border-2 border-amber-200 bg-amber-50/50 p-6">
-            <h2 className="font-semibold text-brand-950">Get more jobs — upgrade to Featured</h2>
-            <p className="mt-2 text-sm text-slate-600">
-              Featured pros get priority job alerts, top search placement, and the verified badge. Founding rate{" "}
-              {FOUNDING_PRO.featuredPrice} for {FOUNDING_PRO.duration}.
-            </p>
-            <div className="mt-4 max-w-xs">
-              <UpgradeCheckoutButton plan="featured" label={`Upgrade — ${FOUNDING_PRO.featuredPrice}`} />
-            </div>
-          </div>
-        )}
-
-        {listing.status === "approved" && (
-          <section className="mt-8">
-            <h2 className="font-display text-xl text-brand-950">Recent jobs in {cityName(listing.city_slug)}</h2>
-            <p className="mt-1 text-sm text-slate-500">
-              Homeowner requests matching your trade — call direct. You also receive email alerts for new posts.
-            </p>
-            <ProJobLeadsList leads={jobLeads} citySlug={listing.city_slug} />
-          </section>
-        )}
-
-        <section className="surface-card mt-8 p-6">
-          <h2 className="font-semibold text-brand-950">Listing performance</h2>
-          <ul className="mt-4 space-y-2 text-sm text-slate-600">
-            <li>Plan: {plan?.monthlyLabel || "Free"}</li>
-            <li>Verified: {listing.verified ? "Yes" : "Pending review"}</li>
-            <li>Insurance badge: {listing.insurance_verified ? "Yes" : "Not yet"}</li>
-            {listing.response_time && <li>Response time: {listing.response_time}</li>}
-            {listing.emergency_available && <li>24/7 emergency: Enabled</li>}
-          </ul>
-          {isPaid && (
-            <div className="mt-4 max-w-xs">
-              <ManageBillingButton />
-            </div>
-          )}
-          <p className="mt-4 text-xs text-slate-500">
-            Profile edits go through admin for now — contact us for updates.
-          </p>
-        </section>
-
-        {reviews.length > 0 && (
-          <section className="mt-8">
-            <h2 className="font-display text-xl text-brand-950">Recent reviews</h2>
-            <ul className="mt-4 space-y-3">
-              {reviews.slice(0, 5).map((r) => (
-                <li key={r.id} className="surface-card p-4">
-                  <StarRating rating={r.rating} />
-                  <p className="mt-2 font-medium text-brand-950">{r.reviewer_name}</p>
-                  <p className="mt-1 text-sm text-slate-600">{r.body}</p>
-                  <p className="mt-2 text-xs text-slate-400 capitalize">{r.status}</p>
-                </li>
-              ))}
-            </ul>
-          </section>
-        )}
-
-        <p className="mt-8">
-          <Link href="/dashboard" className="text-sm font-semibold text-teal-600 hover:underline">
-            ← Homeowner dashboard
-          </Link>
-        </p>
+        ))}
       </div>
-      <SiteFooter />
-    </main>
+
+      {!isPaid && listing.status === "approved" && (
+        <div className="mt-6 rounded-2xl border border-primary/30 bg-orange-50 p-6">
+          <h2 className="font-semibold text-slate-900">Upgrade for full job lead access</h2>
+          <p className="mt-2 text-sm text-slate-600">
+            Featured plan unlocks homeowner contact info and priority placement — {FOUNDING_PRO.featuredPrice} founding rate.
+          </p>
+          <div className="mt-4 max-w-xs">
+            <UpgradeCheckoutButton plan="featured" label="Upgrade to Featured" />
+          </div>
+        </div>
+      )}
+
+      <section className="mt-10">
+        <div className="flex items-center justify-between">
+          <h2 className="font-display text-lg font-bold text-slate-900">Latest job leads</h2>
+          <Link href="/dashboard/pro/leads" className="text-sm font-semibold text-primary">
+            View all →
+          </Link>
+        </div>
+        <div className="mt-4">
+          <ProJobLeadsFeed leads={jobLeads.slice(0, 3)} tier={listing.listing_tier ?? "free"} />
+        </div>
+      </section>
+    </div>
   );
 }
