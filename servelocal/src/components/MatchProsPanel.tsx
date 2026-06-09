@@ -6,11 +6,19 @@ export function MatchProsPanel({ providers, city, category }: { providers: Servi
   if (providers.length === 0) {
     return (
       <div className="surface-card mt-8 p-6 text-center">
-        <p className="font-semibold text-brand-950">No matching pros listed yet</p>
-        <p className="mt-2 text-sm text-slate-600">We saved your request — check back soon or browse other categories.</p>
-        <Link href={`/${city}`} className="btn-gold mt-4 inline-flex px-6 py-3">
-          Browse {city}
-        </Link>
+        <p className="font-semibold text-brand-950">No matching pros listed yet in this area</p>
+        <p className="mt-2 text-sm text-slate-600">
+          We saved your request. We&apos;re actively recruiting trades — list free or lock in Founding Pro at
+          $29/mo.
+        </p>
+        <div className="mt-5 flex flex-wrap items-center justify-center gap-3">
+          <Link href={`/${city}`} className="btn-ghost inline-flex px-6 py-3">
+            Browse {city}
+          </Link>
+          <Link href="/join" className="btn-gold inline-flex px-6 py-3">
+            Are you a pro? Get listed free →
+          </Link>
+        </div>
       </div>
     );
   }

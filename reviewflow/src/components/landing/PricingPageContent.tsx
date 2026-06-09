@@ -5,6 +5,12 @@ import { useState } from "react";
 import { Check } from "lucide-react";
 import { FadeInSection } from "@/components/ui/FadeInSection";
 import { StaggerChildren, StaggerItem } from "@/components/ui/StaggerChildren";
+import {
+  proDisplayPrice,
+  RATELOCAL_CHECKOUT_NOTE,
+  RATELOCAL_PRO_ANNUAL_PER_MONTH,
+} from "@/lib/pricing-display";
+import { PRICING as BILLING } from "@/lib/plans";
 
 const TIERS = [
   {
@@ -19,9 +25,9 @@ const TIERS = [
   },
   {
     name: "Pro",
-    monthly: 49,
-    annual: 39,
-    description: "Grow your reputation",
+    monthly: BILLING.monthlyUsd,
+    annual: RATELOCAL_PRO_ANNUAL_PER_MONTH,
+    description: "Grow your reputation — matches Stripe checkout",
     features: [
       "AI review response suggestions",
       "Review request campaigns (500/mo)",
@@ -82,7 +88,14 @@ export function PricingPageContent() {
       </FadeInSection>
 
       <StaggerChildren className="mt-12 grid gap-6 lg:grid-cols-3">
-        {TIERS.map((tier) => (
+        {TIERS.map((tier) => {
+          const price =
+            tier.name === "Pro"
+              ? proDisplayPrice(annual)
+              : annual
+                ? tier.annual
+                : tier.monthly;
+          return (
           <StaggerItem key={tier.name}>
             <div
               className={`card-glow relative flex h-full flex-col p-6 ${
@@ -97,8 +110,10 @@ export function PricingPageContent() {
               <h2 className="font-display text-xl font-bold text-text">{tier.name}</h2>
               <p className="mt-1 text-sm text-muted">{tier.description}</p>
               <p className="mt-4 font-display text-4xl font-bold text-text">
-                ${annual ? tier.annual : tier.monthly}
-                <span className="text-lg font-normal text-muted">/mo</span>
+                ${price}
+                <span className="text-lg font-normal text-muted">
+                  {tier.name === "Pro" && annual ? "/mo equiv." : "/mo"}
+                </span>
               </p>
               <ul className="mt-6 flex-1 space-y-2">
                 {tier.features.map((f) => (
@@ -113,8 +128,10 @@ export function PricingPageContent() {
               </Link>
             </div>
           </StaggerItem>
-        ))}
+          );
+        })}
       </StaggerChildren>
+      <p className="mt-8 text-center text-xs text-muted">{RATELOCAL_CHECKOUT_NOTE}</p>
     </div>
   );
 }

@@ -121,9 +121,18 @@ export function PricingSection() {
         </div>
 
         <p className="mt-8 text-center text-sm text-muted">
+          A part-time BC receptionist runs $2,500–3,500/mo. Starter is ${PLANS.starter.monthlyPrice}/mo with{" "}
+          {PLANS.starter.includedMinutes} included minutes — never miss a call. Usage-based APIs often cost more
+          once you factor in per-minute fees.
+        </p>
+        <p className="mt-3 text-center text-sm text-muted">
           Enterprise plans available —{" "}
           <Link href="/help?intent=enterprise" className="text-primary-glow hover:underline">
             contact sales
+          </Link>
+          {" · "}
+          <Link href="/compare" className="text-primary-glow hover:underline">
+            compare vs Retell &amp; hiring
           </Link>
         </p>
       </div>

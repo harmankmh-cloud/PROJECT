@@ -83,9 +83,10 @@ export const LISTING_PLANS = [
   {
     id: "featured" as const,
     name: "Featured Pro",
-    priceLabel: "$49/mo",
-    setupLabel: "Featured Pro",
-    monthlyLabel: "$49/mo · cancel anytime",
+    priceLabel: "$29/mo",
+    strikePrice: "$49/mo",
+    setupLabel: "Founding Pro",
+    monthlyLabel: "First 6 months · then $49/mo · cancel anytime",
     highlight: true,
     features: [
       "Job alerts when homeowners post in your trade + city",
@@ -100,8 +101,9 @@ export const LISTING_PLANS = [
     id: "premium" as const,
     name: "Premium Elite",
     priceLabel: "$99/mo",
-    setupLabel: "No setup fee",
-    monthlyLabel: "$99/month · $990/yr (2 months free)",
+    setupLabel: "Waitlist",
+    monthlyLabel: "Join waitlist — we're onboarding Featured pros first",
+    waitlistOnly: true,
     highlight: false,
     features: [
       "Top placement in your category",
