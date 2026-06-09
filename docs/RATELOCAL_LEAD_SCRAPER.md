@@ -10,7 +10,7 @@ discover URLs → scrape emails → import to Supabase → daily job sends 100 N
 
 | Step | Tool |
 |------|------|
-| 1. Find businesses | `cd tools/ratelocal-lead-scraper && npm run discover` (shared Fraser Valley discovery) |
+| 1. Find businesses | `cd tools/ratelocal-lead-scraper && npm run discover` |
 | 2. Scrape emails | `npm run scrape:batch` |
 | 3. Import pool | `RATELOCAL_URL=https://ratelocal.ca npm run import` |
 | 4. Daily send | Activepieces → `POST https://ratelocal.ca/api/make/outreach/daily` with `limit: 100` |
@@ -51,4 +51,4 @@ Body: { "limit": 100, "sequence": "initial", "delay_ms": 45000 }
 | Message | AI phone / missed calls | Google reviews / claim listing |
 | CTA | greetq.com sandbox | ratelocal.ca/claim-business |
 
-Discovery + scrape scripts are **shared** under `tools/greetq-lead-scraper/`; import targets each app's API.
+Scraper lives in `tools/ratelocal-lead-scraper/` (same scripts as GreetQ); import posts to RateLocal's API only.
