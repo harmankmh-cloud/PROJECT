@@ -1,16 +1,28 @@
 import type { Metadata } from "next";
-import { FinalCtaBanner } from "@/components/landing/FinalCtaBanner";
-import { FeaturesBento } from "@/components/landing/FeaturesBento";
+import dynamic from "next/dynamic";
 import { LandingFooter } from "@/components/landing/LandingFooter";
 import { LandingHero } from "@/components/landing/LandingHero";
-import { LandingHowItWorks } from "@/components/landing/LandingHowItWorks";
 import { LandingNavbar } from "@/components/landing/LandingNavbar";
-import { LandingTestimonials } from "@/components/landing/LandingTestimonials";
 import { LogoMarquee } from "@/components/landing/LogoMarquee";
-import { PricingTeaser } from "@/components/landing/PricingTeaser";
-import { StatsBar } from "@/components/landing/StatsBar";
 import { SkipToContent } from "@/components/SkipToContent";
 import { BRAND } from "@/lib/brand";
+
+const FeaturesBento = dynamic(
+  () => import("@/components/landing/FeaturesBento").then((m) => ({ default: m.FeaturesBento }))
+);
+const LandingHowItWorks = dynamic(
+  () => import("@/components/landing/LandingHowItWorks").then((m) => ({ default: m.LandingHowItWorks }))
+);
+const StatsBar = dynamic(() => import("@/components/landing/StatsBar").then((m) => ({ default: m.StatsBar })));
+const LandingTestimonials = dynamic(
+  () => import("@/components/landing/LandingTestimonials").then((m) => ({ default: m.LandingTestimonials }))
+);
+const PricingTeaser = dynamic(
+  () => import("@/components/landing/PricingTeaser").then((m) => ({ default: m.PricingTeaser }))
+);
+const FinalCtaBanner = dynamic(
+  () => import("@/components/landing/FinalCtaBanner").then((m) => ({ default: m.FinalCtaBanner }))
+);
 
 export const metadata: Metadata = {
   title: "Your AI Receptionist. Always On.",
@@ -49,12 +61,24 @@ export default function HomePage() {
       <main id="main-content">
         <LandingHero />
         <LogoMarquee />
-        <FeaturesBento />
-        <LandingHowItWorks />
-        <StatsBar />
-        <LandingTestimonials />
-        <PricingTeaser />
-        <FinalCtaBanner />
+        <div className="perf-below-fold">
+          <FeaturesBento />
+        </div>
+        <div className="perf-below-fold">
+          <LandingHowItWorks />
+        </div>
+        <div className="perf-below-fold">
+          <StatsBar />
+        </div>
+        <div className="perf-below-fold">
+          <LandingTestimonials />
+        </div>
+        <div className="perf-below-fold">
+          <PricingTeaser />
+        </div>
+        <div className="perf-below-fold">
+          <FinalCtaBanner />
+        </div>
       </main>
       <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }} />
       <LandingFooter />

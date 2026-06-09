@@ -36,7 +36,7 @@ export function LandingNavbar() {
   return (
     <header
       className={`fixed top-0 z-50 w-full border-b transition-colors ${
-        scrolled ? "border-border/80 bg-bg/95 md:backdrop-blur-xl" : "border-transparent bg-transparent"
+        scrolled ? "border-border/80 bg-bg md:bg-bg/95 md:backdrop-blur-xl" : "border-transparent bg-transparent"
       }`}
     >
       <div className="marketing-container flex h-16 items-center justify-between">
