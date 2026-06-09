@@ -30,7 +30,17 @@ Rotate **10 emails per sector** every morning. Same sectors as your priority lis
 
 **Send time:** 11:00 AM Vancouver (matches your Activepieces flow). Space ~45–60 sec apart = ~100 in ~75 min.
 
-## Scrape workflow (when you paste URLs)
+## Auto-discover (recommended — no URL pasting)
+
+```bash
+cd tools/greetq-lead-agent
+npm run campaign    # finds businesses + scrapes emails for all 10 sectors
+npm run emails      # emails only
+```
+
+See **`docs/GREETQ_LEAD_AGENT.md`**. Run across Abbotsford → Chilliwack → Langley → Surrey to fill 1,000 emails.
+
+## Manual scrape (only if you already have URLs)
 
 ### 1. Drop URLs into category files
 

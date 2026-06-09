@@ -1,0 +1,4 @@
+seen-domains.json
+output/*.csv
+output/*.txt
+!output/.gitignore

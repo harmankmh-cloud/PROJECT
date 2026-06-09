@@ -1,0 +1,89 @@
+{
+  "dental_medical": {
+    "label": "Dental & Medical Clinics",
+    "vertical": "dental",
+    "queries": [
+      "dental clinic {city} BC",
+      "dentist {city} British Columbia",
+      "medical clinic {city} BC",
+      "family doctor {city} BC",
+      "walk in clinic {city} BC"
+    ],
+    "overpass": ["amenity=dentist", "healthcare=dentist", "amenity=clinic", "healthcare=clinic"]
+  },
+  "law": {
+    "label": "Law Firms",
+    "vertical": "legal",
+    "queries": ["law firm {city} BC", "lawyer {city} British Columbia", "attorney {city} BC"],
+    "overpass": ["office=lawyer"]
+  },
+  "hvac_trades": {
+    "label": "HVAC / Plumbers / Electricians",
+    "vertical": "home_services",
+    "queries": [
+      "HVAC {city} BC",
+      "plumber {city} BC",
+      "electrician {city} BC",
+      "heating cooling {city} BC"
+    ],
+    "overpass": ["craft=plumber", "craft=electrician", "craft=hvac"]
+  },
+  "property_mgmt": {
+    "label": "Property Management",
+    "vertical": "property_mgmt",
+    "queries": [
+      "property management {city} BC",
+      "strata management {city} BC",
+      "rental management {city} BC"
+    ],
+    "overpass": []
+  },
+  "auto": {
+    "label": "Auto Repair & Dealerships",
+    "vertical": "auto",
+    "queries": ["auto repair {city} BC", "car dealership {city} BC", "mechanic {city} BC"],
+    "overpass": ["shop=car_repair", "shop=car"]
+  },
+  "salon_spa": {
+    "label": "Salons & Spas",
+    "vertical": "salon",
+    "queries": ["hair salon {city} BC", "spa {city} BC", "nail salon {city} BC"],
+    "overpass": ["shop=hairdresser", "shop=beauty", "leisure=spa"]
+  },
+  "restaurants": {
+    "label": "Restaurants",
+    "vertical": "restaurant",
+    "queries": [
+      "restaurant {city} BC catering",
+      "restaurant reservations {city} BC",
+      "fine dining {city} BC"
+    ],
+    "overpass": ["amenity=restaurant"]
+  },
+  "accounting": {
+    "label": "Accountants & Financial Advisors",
+    "vertical": "accounting",
+    "queries": ["accountant {city} BC", "CPA {city} BC", "financial advisor {city} BC"],
+    "overpass": ["office=accountant"]
+  },
+  "physio_chiro": {
+    "label": "Physio & Chiro",
+    "vertical": "physio",
+    "queries": [
+      "physiotherapy {city} BC",
+      "chiropractor {city} BC",
+      "massage therapy clinic {city} BC"
+    ],
+    "overpass": ["healthcare=physiotherapist", "healthcare=chiropractor"]
+  },
+  "real_estate": {
+    "label": "Real Estate",
+    "vertical": "real_estate",
+    "queries": [
+      "real estate brokerage {city} BC",
+      "realtor office {city} BC",
+      "real estate agent {city} BC"
+    ],
+    "overpass": ["office=estate_agent"]
+  }
+}

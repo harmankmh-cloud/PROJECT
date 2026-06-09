@@ -1,0 +1,11 @@
+{
+  "name": "greetq-lead-agent",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "run": "node run.mjs",
+    "campaign": "node run.mjs --campaign --city Abbotsford",
+    "emails": "node run.mjs --campaign --city Abbotsford --emails-only",
+    "sector": "node run.mjs --sector dental_medical --city Abbotsford --limit 20 --emails-only"
+  }
+}
