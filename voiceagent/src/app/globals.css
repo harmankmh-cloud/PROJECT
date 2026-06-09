@@ -269,7 +269,15 @@ select {
   }
 
   .gradient-text {
-    @apply bg-gradient-to-r from-indigo-400 to-cyan-400 bg-clip-text text-transparent;
+    color: var(--color-accent);
+  }
+
+  @supports ((-webkit-background-clip: text) or (background-clip: text)) {
+    .gradient-text {
+      @apply bg-gradient-to-r from-indigo-400 to-cyan-400 bg-clip-text;
+      -webkit-text-fill-color: transparent;
+      color: transparent;
+    }
   }
 
   .blink-cursor::after {
