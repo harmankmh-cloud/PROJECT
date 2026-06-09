@@ -11,7 +11,7 @@ export const INDUSTRY_PAGES = {
       "Google Calendar sync",
       "Warm transfer to on-call staff",
     ],
-    cta: "Start free trial for your clinic",
+    cta: "Get started free for your clinic",
   },
   hvac: {
     slug: "hvac",
@@ -25,7 +25,7 @@ export const INDUSTRY_PAGES = {
       "SMS summary to dispatch",
       "24/7 emergency triage",
     ],
-    cta: "Start free trial for your HVAC business",
+    cta: "Get started free for your HVAC business",
   },
   legal: {
     slug: "legal",
@@ -39,7 +39,7 @@ export const INDUSTRY_PAGES = {
       "Compliance records and audit trail",
       "HubSpot call logging",
     ],
-    cta: "Start free trial for your firm",
+    cta: "Get started free for your firm",
   },
   contractors: {
     slug: "contractors",
@@ -53,7 +53,7 @@ export const INDUSTRY_PAGES = {
       "Direct line to owner escalation",
       "After-hours lead capture",
     ],
-    cta: "Start free trial for your contracting business",
+    cta: "Get started free for your contracting business",
   },
 } as const;
 

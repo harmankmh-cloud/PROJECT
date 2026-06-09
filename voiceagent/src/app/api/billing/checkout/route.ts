@@ -5,6 +5,7 @@ import { getUserOrg } from "@/lib/auth";
 import { getPublicAppUrl } from "@/lib/public-url";
 import { getStripe, isStripeConfigured } from "@/lib/stripe";
 import { resolveStripePriceIds, type PlanKey } from "@/lib/stripe-prices";
+import { STRIPE_TRIAL_DAYS } from "@/lib/trial";
 
 export async function POST(request: NextRequest) {
   if (!isStripeConfigured()) {
@@ -63,6 +64,7 @@ export async function POST(request: NextRequest) {
     mode: "subscription",
     customer: customerId,
     client_reference_id: org.id,
+    payment_method_collection: "always",
     line_items: [{ price: priceId, quantity: 1 }],
     success_url: `${appUrl}/dashboard/billing?success=1`,
     cancel_url: `${appUrl}/dashboard/billing?canceled=1`,
@@ -71,6 +73,7 @@ export async function POST(request: NextRequest) {
       plan,
     },
     subscription_data: {
+      trial_period_days: STRIPE_TRIAL_DAYS,
       metadata: {
         org_id: org.id,
         plan,

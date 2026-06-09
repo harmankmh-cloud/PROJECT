@@ -63,7 +63,7 @@ export function RoiCalculator() {
             </p>
           </div>
           <Link href="/signup" className="btn-primary mt-6 block py-3 text-center">
-            Start free trial
+            Get started free
           </Link>
         </div>
       </div>

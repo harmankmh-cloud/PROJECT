@@ -22,7 +22,7 @@ export function PricingCard({ planKey, highlighted = false }: { planKey: PlanKey
           : "border border-primary/40 bg-primary/10 text-primary hover:bg-primary/20"
       }`}
     >
-      Start free trial
+      Get started free
     </Link>
   );
 

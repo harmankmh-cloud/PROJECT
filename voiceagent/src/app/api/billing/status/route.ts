@@ -42,6 +42,8 @@ export async function GET() {
           plan: org.plan,
           stripeCustomerId: Boolean(org.stripe_customer_id),
           stripeSubscriptionId: Boolean(org.stripe_subscription_id),
+          trialMinutesRemaining: org.trial_minutes_remaining ?? 0,
+          sandboxTestCallsUsed: org.sandbox_test_calls_used ?? 0,
         }
       : null,
     ready:

@@ -3,9 +3,9 @@ import { Check } from "lucide-react";
 const BADGES = [
   "PIPEDA-aware",
   "Made in BC",
-  "Setup in 10 minutes",
-  "No credit card required",
-  "14-day free trial",
+  "30 free minutes included",
+  "No card to explore",
+  "14-day trial to go live",
 ] as const;
 
 export function TrustBadgeStrip() {

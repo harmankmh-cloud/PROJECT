@@ -5,7 +5,7 @@ import type { PlanKey } from "@/lib/plans";
 
 export const metadata: Metadata = {
   title: "Create account",
-  description: `Start your ${BRAND.name} free trial. Set up AI phone agents for inbound calls, booking, and warm transfer.`,
+  description: `Create your ${BRAND.name} account — 30 free minutes and sandbox testing, no card required. Go live with a 14-day trial when you're ready.`,
   alternates: { canonical: "/signup" },
 };
 

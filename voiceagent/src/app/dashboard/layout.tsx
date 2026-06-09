@@ -3,6 +3,7 @@ import { createClient } from "@/lib/supabase/server";
 import { getUserOrg } from "@/lib/auth";
 import { isPlatformAdmin } from "@/lib/admin-auth";
 import { DashboardShell } from "@/components/DashboardShell";
+import { TrialStatusBanner } from "@/components/dashboard/TrialStatusBanner";
 import { PageTransition } from "@/components/ui/PageTransition";
 
 export const dynamic = "force-dynamic";
@@ -23,6 +24,7 @@ export default async function DashboardLayout({ children }: { children: React.Re
       userEmail={user.email}
       isPlatformAdmin={isPlatformAdmin(user.email)}
     >
+      <TrialStatusBanner />
       <PageTransition>{children}</PageTransition>
     </DashboardShell>
   );

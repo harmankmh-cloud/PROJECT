@@ -77,7 +77,7 @@ export default function AboutPage() {
             </Link>{" "}
             or{" "}
             <Link href="/signup" className="text-primary hover:underline">
-              start a free trial
+              get started free
             </Link>
             .
           </p>

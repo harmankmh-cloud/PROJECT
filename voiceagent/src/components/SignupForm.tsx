@@ -163,7 +163,7 @@ export function SignupForm({ initialPlan = null }: { initialPlan?: PlanKey | nul
             </p>
           )}
           <Button type="submit" className="w-full" loading={isSubmitting}>
-            Start Free Trial
+            Get started free
           </Button>
         </form>
 

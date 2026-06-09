@@ -7,9 +7,9 @@ import { LiveVoiceDemo } from "./LiveVoiceDemo";
 import { PhoneMockup } from "./PhoneMockup";
 
 const TRUST_BADGES = [
-  "No credit card required",
+  "30 free minutes — no card",
   "Setup in 10 minutes",
-  "Cancel anytime",
+  "14-day trial to go live",
 ] as const;
 
 export function HeroSection() {
@@ -41,7 +41,7 @@ export function HeroSection() {
           <FadeInSection onMount delay={0.3}>
             <div className="mt-10 flex flex-col items-center justify-center gap-3 sm:flex-row">
               <Link href="/signup" className="btn-primary inline-flex gap-2 px-8 py-3.5">
-                Start Free Trial
+                Get started free
                 <ArrowRight className="h-4 w-4" />
               </Link>
               <Link href="/#demo" className="btn-secondary inline-flex gap-2 px-8 py-3.5">

@@ -211,7 +211,7 @@ export const FAQ_ITEMS = [
   },
   {
     q: "Can we try before buying a number?",
-    a: "Yes. Use the Agent Sandbox in your dashboard to simulate conversations in text, or place a short test call to your mobile before routing production traffic. No credit card required to explore.",
+    a: "Yes. Sign up free with 30 trial minutes and unlimited text sandbox — no card required. Place up to three one-minute test calls to your mobile. When you're ready for a live number, start a 14-day Stripe trial (card required).",
   },
   {
     q: "What is your cancellation policy?",
@@ -231,6 +231,6 @@ export const FAQ_ITEMS = [
   },
   {
     q: "Do you offer a demo?",
-    a: "Start a free trial to explore the product, or book a demo for an Enterprise walkthrough with compliance and integration review.",
+    a: "Create a free account to explore the sandbox and trial minutes, try the live voice demo on our homepage, or book a demo for an Enterprise walkthrough with compliance and integration review.",
   },
 ] as const;

@@ -18,6 +18,12 @@ import { analyzeCall } from "@/lib/intelligence";
 import { intelligenceToCallUpdate } from "@/lib/call-intelligence-persist";
 import { dispatchCallWebhook } from "@/lib/outbound-webhook";
 import { isWithinBusinessHours, type BusinessHours } from "@/lib/business-hours";
+import {
+  canMakeProductionCall,
+  deductTrialMinutes,
+  productionBlockReason,
+  type TrialOrg,
+} from "@/lib/trial";
 
 export async function POST(request: NextRequest) {
   const rawBody = await request.text();
@@ -88,13 +94,30 @@ export async function POST(request: NextRequest) {
     if (orgId && orgId !== "default") {
       const { data: orgRow } = await admin
         .from("va_organizations")
-        .select("business_hours, transfer_phone")
+        .select(
+          "business_hours, transfer_phone, plan, stripe_subscription_id, trial_minutes_remaining"
+        )
         .eq("id", orgId)
         .maybeSingle();
 
+      const orgTrial = (orgRow || {}) as TrialOrg;
       const withinHours = isWithinBusinessHours(
         (orgRow?.business_hours as BusinessHours) || undefined
       );
+
+      if (!isSandbox && !canMakeProductionCall(orgTrial)) {
+        const blockedMsg =
+          productionBlockReason(orgTrial) ||
+          "This line is not active. Please visit greetq.com to subscribe.";
+        await answerCall(callControlId, {
+          clientState: encodeClientState({ orgId, agentId: agentId || "default" }),
+        });
+        await speakOnCall(callControlId, blockedMsg, {
+          voice: speakOpts.telnyx_voice,
+          language: speakOpts.language,
+        });
+        return NextResponse.json({ ok: true, blocked: "trial_exhausted" });
+      }
 
       if (isInbound && !withinHours && !isSandbox) {
         const afterHoursMsg =
@@ -322,6 +345,17 @@ export async function POST(request: NextRequest) {
         event_type: "voice_minute",
         quantity: minutes,
       });
+
+      if (!call.is_sandbox) {
+        const { data: orgRow } = await admin
+          .from("va_organizations")
+          .select("plan, stripe_subscription_id, trial_minutes_remaining")
+          .eq("id", call.org_id)
+          .maybeSingle();
+        if (orgRow) {
+          await deductTrialMinutes(admin, call.org_id, orgRow as TrialOrg, minutes);
+        }
+      }
 
       if (!call.transferred && call.from_number) {
         await logHubSpotCall(call.org_id, {

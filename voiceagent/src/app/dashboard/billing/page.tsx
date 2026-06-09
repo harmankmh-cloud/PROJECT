@@ -6,6 +6,13 @@ import { SubscribeButton } from "@/components/SubscribeButton";
 import { ManageSubscriptionButton } from "@/components/ManageSubscriptionButton";
 import { BillingAutoSubscribe } from "@/components/BillingAutoSubscribe";
 import type { PlanKey } from "@/lib/plans";
+import {
+  hasActiveSubscription,
+  isTrialPlan,
+  STRIPE_TRIAL_DAYS,
+  trialMinutesRemaining,
+  TRIAL_MINUTES_ON_SIGNUP,
+} from "@/lib/trial";
 
 export default async function BillingPage({
   searchParams,
@@ -34,13 +41,33 @@ export default async function BillingPage({
     : { data: [] };
 
   const totalMinutes = usage?.reduce((s, e) => s + Number(e.quantity), 0) || 0;
-  const plan = org?.plan || "starter";
-  const planInfo = PLANS[plan as keyof typeof PLANS] || PLANS.starter;
+  const plan = org?.plan || "trial";
+  const onTrial = org ? isTrialPlan(org) : false;
+  const subscribed = org ? hasActiveSubscription(org) : false;
+  const planInfo =
+    plan === "trial" || !(plan in PLANS)
+      ? null
+      : PLANS[plan as keyof typeof PLANS];
+  const minutesLeft = org ? trialMinutesRemaining(org) : 0;
 
   return (
     <div>
       <h1 className="text-2xl font-bold text-ghost-white">Billing</h1>
-      <p className="mt-1 text-on-surface-variant">Usage-based voice minutes + subscription.</p>
+      <p className="mt-1 text-on-surface-variant">
+        {onTrial
+          ? `Explore free with ${TRIAL_MINUTES_ON_SIGNUP} trial minutes. Go live with a ${STRIPE_TRIAL_DAYS}-day Stripe trial — card required.`
+          : "Usage-based voice minutes + subscription."}
+      </p>
+
+      {onTrial && (
+        <div className="mt-4 rounded-xl border border-amber-500/30 bg-amber-500/10 px-4 py-3 text-sm text-amber-50">
+          <p className="font-medium text-ghost-white">Trial credits</p>
+          <p className="mt-1">
+            {minutesLeft} of {TRIAL_MINUTES_ON_SIGNUP} production minutes remaining. Sandbox text
+            chat and up to 3 one-minute test calls stay free — no card required.
+          </p>
+        </div>
+      )}
 
       {params.success && (
         <p className="mt-4 rounded-lg bg-teal-50 px-4 py-3 text-sm text-teal-800">
@@ -62,21 +89,38 @@ export default async function BillingPage({
       <div className="mt-8 grid gap-4 sm:grid-cols-3">
         <div className="surface-card p-5">
           <p className="text-sm text-on-surface-variant">Current plan</p>
-          <p className="text-2xl font-bold capitalize">{planInfo.name}</p>
+          <p className="text-2xl font-bold capitalize">
+            {onTrial ? "Free explore" : planInfo?.name ?? plan}
+          </p>
+          {subscribed && (
+            <p className="mt-1 text-xs text-teal-400">{STRIPE_TRIAL_DAYS}-day trial may apply on new subscriptions</p>
+          )}
         </div>
         <div className="surface-card p-5">
-          <p className="text-sm text-on-surface-variant">Minutes this period</p>
+          <p className="text-sm text-on-surface-variant">
+            {onTrial ? "Trial minutes used" : "Minutes this period"}
+          </p>
           <p className="text-2xl font-bold">
-            {totalMinutes}
+            {onTrial ? TRIAL_MINUTES_ON_SIGNUP - minutesLeft : totalMinutes}
             <span className="ml-1 text-sm font-normal text-on-surface-variant">
-              / {planInfo.includedMinutes.toLocaleString()} incl.
+              {onTrial
+                ? `/ ${TRIAL_MINUTES_ON_SIGNUP} trial`
+                : planInfo
+                  ? `/ ${planInfo.includedMinutes.toLocaleString()} incl.`
+                  : ""}
             </span>
           </p>
         </div>
         <div className="surface-card p-5">
-          <p className="text-sm text-on-surface-variant">Est. overage</p>
+          <p className="text-sm text-on-surface-variant">
+            {onTrial ? "Trial minutes left" : "Est. overage"}
+          </p>
           <p className="text-2xl font-bold">
-            ${(Math.max(0, totalMinutes - planInfo.includedMinutes) * planInfo.perMinute).toFixed(2)}
+            {onTrial
+              ? minutesLeft
+              : planInfo
+                ? `$${(Math.max(0, totalMinutes - planInfo.includedMinutes) * planInfo.perMinute).toFixed(2)}`
+                : "—"}
           </p>
         </div>
       </div>
