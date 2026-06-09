@@ -4,6 +4,7 @@ import Link from "next/link";
 import { AnimatePresence, motion } from "framer-motion";
 import { Sparkles } from "lucide-react";
 import { useEffect, useState } from "react";
+import { ClientOnly } from "@/components/ui/ClientOnly";
 import { Waveform } from "@/components/ui/Waveform";
 import { BRAND } from "@/lib/brand";
 
@@ -25,7 +26,18 @@ const TESTIMONIALS = [
   },
 ] as const;
 
-export function AuthMarketingPanel({ footer }: { footer: string }) {
+function TestimonialCard({ quote, author, business }: { quote: string; author: string; business: string }) {
+  return (
+    <blockquote className="glass-card p-6">
+      <p className="text-lg text-text">&ldquo;{quote}&rdquo;</p>
+      <footer className="mt-4 text-sm text-muted">
+        — {author}, {business}
+      </footer>
+    </blockquote>
+  );
+}
+
+function RotatingTestimonials() {
   const [index, setIndex] = useState(0);
 
   useEffect(() => {
@@ -34,6 +46,28 @@ export function AuthMarketingPanel({ footer }: { footer: string }) {
   }, []);
 
   const t = TESTIMONIALS[index];
+
+  return (
+    <AnimatePresence mode="wait">
+      <motion.blockquote
+        key={index}
+        initial={{ opacity: 0, y: 12 }}
+        animate={{ opacity: 1, y: 0 }}
+        exit={{ opacity: 0, y: -12 }}
+        transition={{ duration: 0.35 }}
+        className="glass-card p-6"
+      >
+        <p className="text-lg text-text">&ldquo;{t.quote}&rdquo;</p>
+        <footer className="mt-4 text-sm text-muted">
+          — {t.author}, {t.business}
+        </footer>
+      </motion.blockquote>
+    </AnimatePresence>
+  );
+}
+
+export function AuthMarketingPanel({ footer }: { footer: string }) {
+  const first = TESTIMONIALS[0];
 
   return (
     <div className="relative hidden w-[45%] flex-col justify-between overflow-hidden bg-gradient-to-br from-indigo-950 via-bg to-bg p-10 lg:flex">
@@ -49,21 +83,11 @@ export function AuthMarketingPanel({ footer }: { footer: string }) {
       </div>
 
       <div className="relative min-h-[140px]">
-        <AnimatePresence mode="wait">
-          <motion.blockquote
-            key={index}
-            initial={{ opacity: 0, y: 12 }}
-            animate={{ opacity: 1, y: 0 }}
-            exit={{ opacity: 0, y: -12 }}
-            transition={{ duration: 0.35 }}
-            className="glass-card p-6"
-          >
-            <p className="text-lg text-text">&ldquo;{t.quote}&rdquo;</p>
-            <footer className="mt-4 text-sm text-muted">
-              — {t.author}, {t.business}
-            </footer>
-          </motion.blockquote>
-        </AnimatePresence>
+        <ClientOnly
+          fallback={<TestimonialCard quote={first.quote} author={first.author} business={first.business} />}
+        >
+          <RotatingTestimonials />
+        </ClientOnly>
       </div>
 
       <div className="relative">

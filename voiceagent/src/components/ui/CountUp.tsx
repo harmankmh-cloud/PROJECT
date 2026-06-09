@@ -13,9 +13,17 @@ export function CountUp({
   suffix?: string;
   className?: string;
 }) {
-  const [display, setDisplay] = useState(0);
+  const [display, setDisplay] = useState(value);
+  const [mounted, setMounted] = useState(false);
 
   useEffect(() => {
+    setMounted(true);
+  }, []);
+
+  useEffect(() => {
+    if (!mounted) return;
+
+    setDisplay(0);
     const start = performance.now();
     let frame: number;
 
@@ -28,7 +36,7 @@ export function CountUp({
 
     frame = requestAnimationFrame(tick);
     return () => cancelAnimationFrame(frame);
-  }, [value, duration]);
+  }, [value, duration, mounted]);
 
   return (
     <span className={className}>

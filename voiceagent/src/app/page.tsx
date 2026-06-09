@@ -10,7 +10,6 @@ import { MarketingNavbar } from "@/components/marketing/MarketingNavbar";
 import { PricingSection } from "@/components/marketing/PricingSection";
 import { TrustMarquee } from "@/components/marketing/TrustMarquee";
 import { SkipToContent } from "@/components/SkipToContent";
-import { PageTransition } from "@/components/ui/PageTransition";
 import { BRAND } from "@/lib/brand";
 import { FAQ_ITEMS } from "@/lib/marketing-content";
 
@@ -45,7 +44,6 @@ export default function HomePage() {
   };
 
   return (
-    <PageTransition>
       <div className="aurora-bg flex min-h-screen flex-col overflow-x-hidden">
         <SkipToContent />
         <MarketingNavbar />
@@ -72,6 +70,5 @@ export default function HomePage() {
         <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }} />
         <MarketingFooterNew />
       </div>
-    </PageTransition>
   );
 }
