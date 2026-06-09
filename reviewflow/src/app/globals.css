@@ -2,15 +2,16 @@
 
 @theme inline {
   --font-sans: var(--font-inter);
-  --font-display: var(--font-jakarta);
+  --font-display: var(--font-satoshi);
 
-  /* Spec palette */
+  /* Default palette (dashboard / legacy) */
   --color-bg: #ffffff;
   --color-surface: #f9fafb;
   --color-border: #e5e7eb;
   --color-primary: #16a34a;
   --color-primary-light: #22c55e;
   --color-accent: #f59e0b;
+  --color-star: #eab308;
   --color-text: #111827;
   --color-muted: #6b7280;
   --color-success: #16a34a;
@@ -291,6 +292,94 @@ select {
   }
 
   .green-underline {
+    @apply underline decoration-primary decoration-4 underline-offset-4;
+  }
+
+  /* Public pages: dark-first design system */
+  .public-shell {
+    --color-bg: #0a0a0b;
+    --color-surface: #141416;
+    --color-border: #27272a;
+    --color-primary: #f43f5e;
+    --color-primary-light: #fb7185;
+    --color-accent: #eab308;
+    --color-star: #eab308;
+    --color-text: #fafafa;
+    --color-muted: #a1a1aa;
+    --color-success: #22c55e;
+    --color-success-bg: rgba(34, 197, 94, 0.12);
+    --color-warning: #eab308;
+    --color-warning-bg: rgba(234, 179, 8, 0.12);
+    --color-danger: #f43f5e;
+    --color-danger-bg: rgba(244, 63, 94, 0.12);
+    background: var(--color-bg);
+    color: var(--color-text);
+    min-height: 100vh;
+  }
+
+  .public-shell[data-theme="light"] {
+    --color-bg: #ffffff;
+    --color-surface: #f9fafb;
+    --color-border: #e5e7eb;
+    --color-text: #111827;
+    --color-muted: #6b7280;
+    --color-success-bg: #dcfce7;
+    --color-warning-bg: #fef3c7;
+    --color-danger-bg: #fee2e2;
+  }
+
+  .public-shell .font-display {
+    font-family: var(--font-satoshi), system-ui, sans-serif;
+  }
+
+  .public-shell .mesh-bg {
+    background-color: var(--color-bg);
+    background-image:
+      radial-gradient(ellipse 80% 50% at 20% -10%, rgba(244, 63, 94, 0.12) 0, transparent 55%),
+      radial-gradient(ellipse 60% 40% at 90% 5%, rgba(234, 179, 8, 0.08) 0, transparent 50%);
+  }
+
+  .public-shell .text-gradient {
+    background: linear-gradient(to right, #f43f5e, #eab308);
+    -webkit-background-clip: text;
+    background-clip: text;
+    color: transparent;
+  }
+
+  .public-shell .card-glow {
+    @apply rounded-xl border border-border bg-surface transition duration-300;
+  }
+
+  .public-shell .card-glow:hover {
+    transform: translateY(-2px);
+    box-shadow:
+      0 8px 30px rgba(244, 63, 94, 0.12),
+      0 4px 12px rgba(234, 179, 8, 0.08);
+  }
+
+  .public-shell .btn-primary-pill {
+    @apply inline-flex items-center justify-center rounded-full bg-primary px-6 py-2.5 text-sm font-semibold text-white transition hover:bg-primary-light hover:shadow-lg;
+    box-shadow: 0 4px 14px rgba(244, 63, 94, 0.25);
+  }
+
+  .public-shell .btn-ghost {
+    @apply inline-flex items-center justify-center rounded-xl border border-border bg-surface px-5 py-2.5 text-sm font-medium text-text transition hover:border-primary/40 hover:bg-bg;
+  }
+
+  .public-shell .card-surface,
+  .public-shell .surface-card {
+    @apply rounded-xl border border-border bg-surface p-6 shadow-sm;
+  }
+
+  .public-shell .site-header {
+    @apply sticky top-0 z-40 border-b border-border/60 bg-bg/80 backdrop-blur-xl;
+  }
+
+  .public-shell .input-field {
+    @apply w-full rounded-xl border border-border bg-surface px-4 py-3.5 text-sm text-text outline-none transition placeholder:text-muted focus:border-primary focus:ring-2 focus:ring-primary/20;
+  }
+
+  .public-shell .coral-underline {
     @apply underline decoration-primary decoration-4 underline-offset-4;
   }
 }
