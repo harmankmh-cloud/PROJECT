@@ -77,7 +77,9 @@ function NavItem({
       href={href}
       onClick={onClick}
       className={`flex items-center gap-3 rounded-lg px-3 py-2.5 text-sm font-medium transition ${
-        active ? "nav-item-active" : "nav-item"
+        active
+          ? "nav-item-active bg-violet-500/10 text-text shadow-[inset_3px_0_0_var(--color-primary)]"
+          : "nav-item hover:bg-white/5"
       }`}
     >
       <Icon className="h-4 w-4 shrink-0" />

@@ -7,7 +7,7 @@ import { useForm } from "react-hook-form";
 import { createClient } from "@/lib/supabase/client";
 import { forgotPasswordSchema, type ForgotPasswordFormData } from "@/lib/schemas/auth";
 import { AuthLayout } from "@/components/auth/AuthLayout";
-import { Button } from "@/components/ui/Button";
+import { GlowButton } from "@/components/ui/GlowButton";
 import { Input } from "@/components/ui/Input";
 import { BRAND } from "@/lib/brand";
 
@@ -48,9 +48,9 @@ export default function ForgotPasswordPage() {
               We sent a password reset link. It may take a few minutes to arrive — check spam if you
               don&apos;t see it.
             </p>
-            <Button type="button" variant="outline" className="w-full" onClick={() => setSent(false)}>
+            <GlowButton type="button" variant="outline" className="w-full" onClick={() => setSent(false)}>
               Send another link
-            </Button>
+            </GlowButton>
           </div>
         ) : (
           <form onSubmit={handleSubmit(onSubmit)} className="mt-8 space-y-4" noValidate>
@@ -66,9 +66,9 @@ export default function ForgotPasswordPage() {
                 {errors.root.message}
               </p>
             )}
-            <Button type="submit" className="w-full" loading={isSubmitting}>
-              Send reset link
-            </Button>
+            <GlowButton type="submit" className="w-full" disabled={isSubmitting}>
+              {isSubmitting ? "Sending…" : "Send reset link"}
+            </GlowButton>
           </form>
         )}
 

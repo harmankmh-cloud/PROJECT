@@ -9,8 +9,9 @@ import {
   TrendingUp,
 } from "lucide-react";
 import { Badge } from "@/components/ui/Badge";
-import { Card } from "@/components/ui/Card";
+import { GlowCard } from "@/components/ui/GlowCard";
 import { CountUp } from "@/components/ui/CountUp";
+import { MotionItem, MotionSection } from "@/components/ui/MotionSection";
 import { Skeleton } from "@/components/ui/Skeleton";
 import { useCalls } from "@/hooks/useCalls";
 import { useDashboardStats } from "@/hooks/useDashboardStats";
@@ -53,7 +54,7 @@ export function DashboardOverview({
         </h1>
       </div>
 
-      <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
+      <MotionSection className="grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
         {[
           { label: "Calls Answered Today", value: stats?.callsToday ?? 0, icon: Phone, trend: true },
           { label: "Appointments Booked", value: stats?.appointmentsBooked ?? 0, icon: Calendar },
@@ -65,26 +66,28 @@ export function DashboardOverview({
           },
           { label: "Avg Call Duration", value: stats?.avgDuration ?? "0:00", icon: Clock, text: true },
         ].map((card) => (
-          <Card key={card.label} className="transition hover:shadow-[0_0_24px_rgba(99,102,241,0.15)]">
-            {loading ? (
-              <Skeleton className="h-20 w-full" />
-            ) : (
-              <>
-                <div className="flex items-center justify-between">
-                  <card.icon className={`h-5 w-5 ${card.danger ? "text-danger" : "text-primary-glow"}`} />
-                  {card.trend && <TrendingUp className="h-4 w-4 text-success" />}
-                </div>
-                <p className={`mt-3 font-display text-3xl ${card.danger ? "text-danger" : "text-text"}`}>
-                  {card.text ? card.value : <CountUp value={card.value as number} />}
-                </p>
-                <p className="mt-1 text-sm text-muted">{card.label}</p>
-              </>
-            )}
-          </Card>
+          <MotionItem key={card.label}>
+            <GlowCard className="p-5 shadow-[0_0_20px_rgba(124,58,237,0.08)] hover:shadow-[0_0_28px_rgba(124,58,237,0.18)]">
+              {loading ? (
+                <Skeleton className="h-20 w-full" />
+              ) : (
+                <>
+                  <div className="flex items-center justify-between">
+                    <card.icon className={`h-5 w-5 ${card.danger ? "text-danger" : "text-[var(--color-primary)]"}`} />
+                    {card.trend && <TrendingUp className="h-4 w-4 text-success" />}
+                  </div>
+                  <p className={`mt-3 font-display text-3xl ${card.danger ? "text-danger" : "text-text"}`}>
+                    {card.text ? card.value : <CountUp value={card.value as number} />}
+                  </p>
+                  <p className="mt-1 text-sm text-muted">{card.label}</p>
+                </>
+              )}
+            </GlowCard>
+          </MotionItem>
         ))}
-      </div>
+      </MotionSection>
 
-      <Card className="flex flex-wrap items-center justify-between gap-4">
+      <GlowCard className="flex flex-wrap items-center justify-between gap-4 p-5">
         <div className="flex items-center gap-3">
           <span className="pulse-dot" />
           <div>
@@ -95,7 +98,7 @@ export function DashboardOverview({
         <button type="button" className="btn-secondary text-sm">
           Pause GreetQ
         </button>
-      </Card>
+      </GlowCard>
 
       <div className="grid gap-6 lg:grid-cols-3">
         <div className="lg:col-span-2" id="recent-calls">
@@ -111,9 +114,9 @@ export function DashboardOverview({
           {loading ? (
             <Skeleton className="h-48 w-full" />
           ) : calls.length === 0 && !isDemo ? (
-            <Card className="text-center">
+            <GlowCard className="text-center">
               <p className="text-muted">No calls yet — your number is active</p>
-            </Card>
+            </GlowCard>
           ) : (
             <div className="overflow-x-auto rounded-xl border border-border">
               <table className="w-full text-left text-sm">
@@ -133,7 +136,7 @@ export function DashboardOverview({
                       ]
                     : calls
                   ).map((call) => (
-                    <tr key={call.id} className="border-b border-border transition hover:border-l-2 hover:border-l-primary">
+                    <tr key={call.id} className="border-b border-border transition hover:border-l-2 hover:border-l-[var(--color-primary)]">
                       <td className="px-4 py-3 text-text">{call.from_number || "Unknown"}</td>
                       <td className="px-4 py-3 text-muted">{formatDuration(call.duration_seconds || 0)}</td>
                       <td className="max-w-xs truncate px-4 py-3 text-muted">{call.summary || "—"}</td>
@@ -153,7 +156,7 @@ export function DashboardOverview({
         <div className="space-y-6">
           <div id="appointments">
             <h2 className="mb-3 font-display text-lg text-text">Today&apos;s appointments</h2>
-            <Card>
+            <GlowCard className="p-5">
               {DEMO_APPOINTMENTS.map((a) => (
                 <div key={a.id} className="flex items-center justify-between border-b border-border py-3 last:border-0">
                   <div>
@@ -169,12 +172,12 @@ export function DashboardOverview({
               >
                 View calendar
               </Link>
-            </Card>
+            </GlowCard>
           </div>
 
           <div id="messages">
             <h2 className="mb-3 font-display text-lg text-text">Messages</h2>
-            <Card>
+            <GlowCard className="p-5">
               {DEMO_MESSAGES.map((m) => (
                 <Link
                   key={m.id}
@@ -188,7 +191,7 @@ export function DashboardOverview({
                   </div>
                 </Link>
               ))}
-            </Card>
+            </GlowCard>
           </div>
         </div>
       </div>

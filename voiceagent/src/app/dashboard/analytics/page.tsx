@@ -3,6 +3,7 @@
 import { useEffect, useState } from "react";
 import { StatCard } from "@/components/StatCard";
 import { TrendChart } from "@/components/TrendChart";
+import { MotionItem, MotionSection } from "@/components/ui/MotionSection";
 import { apiFetch } from "@/lib/api-client";
 
 type Analytics = {
@@ -49,23 +50,31 @@ export default function AnalyticsPage() {
   }, [days, agentId]);
 
   if (loading && !analytics) {
-    return <p className="text-slate-text">Loading analytics…</p>;
+    return <p className="text-muted">Loading analytics…</p>;
   }
 
   return (
-    <div className="mx-auto max-w-6xl space-y-8">
+    <div className="dashboard-container space-y-8 py-8">
       <header className="flex flex-wrap items-end justify-between gap-4">
         <div>
-          <h1 className="font-display text-2xl text-ghost-white">Analytics</h1>
-          <p className="mt-1 text-on-surface-variant">Call volume, quality scores, and sentiment trends.</p>
+          <h1 className="font-display text-2xl text-text md:text-3xl">Analytics</h1>
+          <p className="mt-1 text-sm text-muted">Call volume, quality scores, and sentiment trends.</p>
         </div>
         <div className="flex flex-wrap gap-3">
-          <select className="input-field w-auto py-2" value={days} onChange={(e) => setDays(Number(e.target.value))}>
+          <select
+            className="rounded-lg border border-border bg-surface px-3 py-2 text-sm text-text focus:border-[var(--color-accent)] focus:outline-none focus:ring-2 focus:ring-teal-500/40"
+            value={days}
+            onChange={(e) => setDays(Number(e.target.value))}
+          >
             <option value={7}>Last 7 days</option>
             <option value={30}>Last 30 days</option>
             <option value={90}>Last 90 days</option>
           </select>
-          <select className="input-field w-auto py-2" value={agentId} onChange={(e) => setAgentId(e.target.value)}>
+          <select
+            className="rounded-lg border border-border bg-surface px-3 py-2 text-sm text-text focus:border-[var(--color-accent)] focus:outline-none focus:ring-2 focus:ring-teal-500/40"
+            value={agentId}
+            onChange={(e) => setAgentId(e.target.value)}
+          >
             <option value="">All agents</option>
             {agents.map((a) => (
               <option key={a.id} value={a.id}>
@@ -80,33 +89,38 @@ export default function AnalyticsPage() {
 
       {analytics && (
         <>
-          <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-5">
-            <StatCard label="Calls" value={analytics.total} />
-            <StatCard label="Avg quality score" value={analytics.avgScore ?? "—"} hint="0–100 AI score" />
-            <StatCard label="Containment" value={`${analytics.containmentRate}%`} />
-            <StatCard label="Transfers" value={`${analytics.transferRate}%`} />
-            <StatCard label="Minutes" value={analytics.totalMinutes} />
-          </div>
+          <MotionSection className="grid gap-4 sm:grid-cols-2 lg:grid-cols-5">
+            <MotionItem><StatCard label="Calls" value={analytics.total} /></MotionItem>
+            <MotionItem><StatCard label="Avg quality score" value={analytics.avgScore ?? "—"} hint="0–100 AI score" /></MotionItem>
+            <MotionItem><StatCard label="Containment" value={`${analytics.containmentRate}%`} /></MotionItem>
+            <MotionItem><StatCard label="Transfers" value={`${analytics.transferRate}%`} /></MotionItem>
+            <MotionItem><StatCard label="Minutes" value={analytics.totalMinutes} /></MotionItem>
+          </MotionSection>
 
-          <div className="grid gap-6 lg:grid-cols-2">
-            <div className="surface-card p-6">
-              <TrendChart data={analytics.volumeTrend} valueKey="calls" label="Call volume" />
-            </div>
-            <div className="surface-card p-6">
-              <TrendChart
-                data={analytics.volumeTrend.map((d) => ({
-                  date: d.date,
-                  avgScore: d.avgScore ?? 0,
-                }))}
-                valueKey="avgScore"
-                label="Quality score trend"
-              />
-            </div>
-          </div>
+          <MotionSection className="grid gap-6 lg:grid-cols-2">
+            <MotionItem>
+              <div className="card-glow-hover rounded-xl border border-border bg-surface p-6">
+                <TrendChart data={analytics.volumeTrend} valueKey="calls" label="Call volume" />
+              </div>
+            </MotionItem>
+            <MotionItem>
+              <div className="card-glow-hover rounded-xl border border-border bg-surface p-6">
+                <TrendChart
+                  data={analytics.volumeTrend.map((d) => ({
+                    date: d.date,
+                    avgScore: d.avgScore ?? 0,
+                  }))}
+                  valueKey="avgScore"
+                  label="Quality score trend"
+                />
+              </div>
+            </MotionItem>
+          </MotionSection>
 
-          <div className="grid gap-6 lg:grid-cols-2">
-            <div className="surface-card p-6">
-              <h2 className="font-semibold text-ghost-white">Sentiment breakdown</h2>
+          <MotionSection className="grid gap-6 lg:grid-cols-2">
+            <MotionItem>
+            <div className="card-glow-hover rounded-xl border border-border bg-surface p-6">
+              <h2 className="font-semibold text-text">Sentiment breakdown</h2>
               <div className="mt-4 space-y-3">
                 {(["positive", "neutral", "negative"] as const).map((key) => {
                   const count = analytics.sentimentCounts[key];
@@ -115,11 +129,11 @@ export default function AnalyticsPage() {
                     <div key={key}>
                       <div className="mb-1 flex justify-between text-sm capitalize">
                         <span>{key}</span>
-                        <span className="text-on-surface-variant">
+                        <span className="text-muted">
                           {count} ({pct}%)
                         </span>
                       </div>
-                      <div className="h-2 overflow-hidden rounded-full bg-slate-100">
+                      <div className="h-2 overflow-hidden rounded-full bg-[var(--color-bg-elevated)]">
                         <div
                           className={`h-full rounded-full ${
                             key === "positive"
@@ -136,23 +150,26 @@ export default function AnalyticsPage() {
                 })}
               </div>
             </div>
+            </MotionItem>
 
-            <div className="surface-card p-6">
-              <h2 className="font-semibold text-ghost-white">Top caller intents</h2>
+            <MotionItem>
+            <div className="card-glow-hover rounded-xl border border-border bg-surface p-6">
+              <h2 className="font-semibold text-text">Top caller intents</h2>
               <ul className="mt-4 space-y-2">
                 {analytics.topIntents.length === 0 ? (
-                  <li className="text-sm text-slate-text">No intents recorded yet.</li>
+                  <li className="text-sm text-muted">No intents recorded yet.</li>
                 ) : (
                   analytics.topIntents.map((row) => (
                     <li key={row.intent} className="flex justify-between text-sm">
-                      <span className="truncate pr-4">{row.intent}</span>
-                      <span className="font-medium text-on-surface-variant">{row.count}</span>
+                      <span className="truncate pr-4 text-text">{row.intent}</span>
+                      <span className="font-medium text-muted">{row.count}</span>
                     </li>
                   ))
                 )}
               </ul>
             </div>
-          </div>
+            </MotionItem>
+          </MotionSection>
         </>
       )}
     </div>

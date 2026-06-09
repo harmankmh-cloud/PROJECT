@@ -1,15 +1,11 @@
 import type { Metadata, Viewport } from "next";
-import { Inter, Plus_Jakarta_Sans } from "next/font/google";
+import { Inter } from "next/font/google";
+import { GeistSans } from "geist/font/sans";
+import { GeistMono } from "geist/font/mono";
 import { DeferredSiteWidgets } from "@/components/DeferredSiteWidgets";
+import { MarketingProviders } from "@/components/providers/MarketingProviders";
 import { BRAND } from "@/lib/brand";
 import "./globals.css";
-
-const jakarta = Plus_Jakarta_Sans({
-  variable: "--font-jakarta",
-  subsets: ["latin"],
-  weight: ["700", "800"],
-  display: "swap",
-});
 
 const inter = Inter({
   variable: "--font-inter",
@@ -56,15 +52,20 @@ export const viewport: Viewport = {
   initialScale: 1,
   maximumScale: 5,
   userScalable: true,
-  themeColor: "#09090b",
+  themeColor: "#0a0a0a",
 };
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (
-    <html lang="en" className={`${jakarta.variable} ${inter.variable} scroll-smooth`}>
+    <html
+      lang="en"
+      className={`${GeistSans.variable} ${inter.variable} ${GeistMono.variable} scroll-smooth`}
+    >
       <body className="min-h-full bg-bg font-sans text-text antialiased">
-        {children}
-        <DeferredSiteWidgets />
+        <MarketingProviders>
+          {children}
+          <DeferredSiteWidgets />
+        </MarketingProviders>
       </body>
     </html>
   );
