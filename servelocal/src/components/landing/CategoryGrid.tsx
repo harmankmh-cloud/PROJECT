@@ -69,7 +69,7 @@ export function CategoryGrid({ categories, proCounts = {}, defaultCity = "surrey
             return (
               <StaggerItem key={cat.slug}>
                 <Link
-                  href={`/${defaultCity}/${cat.slug}`}
+                  href={`/services/${cat.slug}?city=${defaultCity}`}
                   className={cn(
                     "card-glow group flex flex-col items-center gap-3 rounded-[14px] border border-border bg-surface p-6 text-center shadow-sm transition duration-300 hover:-translate-y-1"
                   )}
