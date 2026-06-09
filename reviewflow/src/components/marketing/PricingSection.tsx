@@ -4,6 +4,13 @@ import Link from "next/link";
 import { Check, X } from "lucide-react";
 import { FadeInSection } from "@/components/ui/FadeInSection";
 import { MARKETING } from "@/content/copy";
+import {
+  proAnnualFootnote,
+  proDisplayPrice,
+  proPriceSuffix,
+  RATELOCAL_CHECKOUT_NOTE,
+  RATELOCAL_COMPETITORS,
+} from "@/lib/pricing-display";
 import { useUiStore } from "@/stores/ui";
 
 export function PricingSection() {
@@ -17,6 +24,10 @@ export function PricingSection() {
           <h2 className="font-display text-3xl text-text md:text-4xl lg:text-[2.75rem]">
             Simple, honest pricing
           </h2>
+          <p className="mx-auto mt-3 max-w-xl text-sm text-muted">
+            Pro is less than half NiceJob (${RATELOCAL_COMPETITORS.niceJob}/mo) and a fraction of Podium
+            (${RATELOCAL_COMPETITORS.podium}+/mo) — same goal: more Google reviews.
+          </p>
           <div className="mt-8 inline-flex items-center gap-1 rounded-full border border-border bg-white p-1 shadow-sm">
             <button
               type="button"
@@ -43,7 +54,10 @@ export function PricingSection() {
         </FadeInSection>
         <div className="grid gap-6 md:grid-cols-3">
           {MARKETING.pricing.tiers.map((tier, i) => {
-            const price = pricingAnnual ? tier.annual : tier.monthly;
+            const price =
+              tier.key === "pro" ? proDisplayPrice(pricingAnnual) : pricingAnnual ? tier.annual : tier.monthly;
+            const suffix = proPriceSuffix(pricingAnnual, tier.key);
+            const annualFootnote = proAnnualFootnote(pricingAnnual, tier.key);
             return (
               <FadeInSection key={tier.key} delay={i * 0.1}>
                 <div
@@ -60,8 +74,14 @@ export function PricingSection() {
                   <p className="mt-1 text-sm text-muted">{tier.description}</p>
                   <p className="mt-5 font-display text-4xl tracking-tight text-text">
                     ${price}
-                    {price > 0 && <span className="text-base font-normal text-muted">/mo</span>}
+                    {price > 0 && <span className="text-base font-normal text-muted">{suffix}</span>}
                   </p>
+                  {annualFootnote && (
+                    <p className="mt-1 text-xs text-muted">{annualFootnote}</p>
+                  )}
+                  {"stripeNote" in tier && tier.stripeNote && !pricingAnnual && (
+                    <p className="mt-2 text-xs font-medium text-primary">{tier.stripeNote}</p>
+                  )}
                   <ul className="mt-6 flex-1 space-y-2.5 text-sm">
                     {tier.features.map((f) => (
                       <li key={f} className="flex items-start gap-2.5 text-text">
@@ -89,6 +109,7 @@ export function PricingSection() {
             );
           })}
         </div>
+        <p className="mt-6 text-center text-xs text-muted">{RATELOCAL_CHECKOUT_NOTE}</p>
       </div>
     </section>
   );

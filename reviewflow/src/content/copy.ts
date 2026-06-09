@@ -1,4 +1,4 @@
-/** Centralized copy — marketing UI shows Pro at $49; Stripe still charges via STRIPE_PRICE_MONTHLY ($39 today). */
+/** Centralized copy — Pro matches Stripe checkout ($39/mo via STRIPE_PRICE_MONTHLY). */
 
 export const LANDING = {
   nav: {
@@ -165,9 +165,9 @@ export const MARKETING = {
       {
         key: "pro",
         name: "Pro",
-        monthly: 49,
-        annual: 39,
-        description: "Everything you need to grow reviews",
+        monthly: 39,
+        annual: 33,
+        description: "Everything you need to grow reviews — billed $39/mo at checkout",
         features: [
           "Unlimited review requests",
           "AI prompt generator",
@@ -179,7 +179,7 @@ export const MARKETING = {
         missing: ["Multi-location"],
         cta: "Start Pro Trial",
         popular: true,
-        stripeNote: "Checkout uses existing Stripe monthly price",
+        stripeNote: "Stripe checkout: $39/mo · no setup fee · annual $390/yr coming soon",
       },
       {
         key: "agency",

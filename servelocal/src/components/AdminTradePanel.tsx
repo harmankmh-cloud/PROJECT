@@ -210,7 +210,7 @@ export function AdminTradePanel({
                     className="input-field w-auto py-2 text-xs"
                   >
                     <option value="free">Free</option>
-                    <option value="featured">Featured $49</option>
+                    <option value="featured">Featured $29 founding</option>
                     <option value="premium">Premium $99</option>
                   </select>
                 </div>
