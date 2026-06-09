@@ -56,7 +56,7 @@ export const viewport: Viewport = {
   initialScale: 1,
   maximumScale: 5,
   userScalable: true,
-  themeColor: "#0f172a",
+  themeColor: "#ffffff",
 };
 
 export default function RootLayout({
@@ -65,8 +65,12 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="en-CA" className={`${jakarta.variable} ${inter.variable} ${geistMono.variable} h-full`}>
-      <body className="min-h-full font-sans antialiased">
+    <html
+      lang="en-CA"
+      className={`${jakarta.variable} ${inter.variable} ${geistMono.variable} h-full`}
+      suppressHydrationWarning
+    >
+      <body className="min-h-full bg-background font-sans text-foreground antialiased">
         <AppProviders>
           {children}
           <SuggestionButton />
