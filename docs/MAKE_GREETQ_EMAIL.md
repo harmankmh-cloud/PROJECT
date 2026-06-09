@@ -113,3 +113,21 @@ Run the same HTTP call with `"sequence": "followup_1"` or `"followup_2"` on a sc
 ## Verticals that work well
 
 `dental`, `hvac`, `plumbing`, `salon`, `spa`, `clinic`, `legal`, `home_services`
+
+## Inbound replies (hello@greetq.com)
+
+Cold emails send **from** `hello@greetq.com` via Brevo. When a lead hits **Reply**, mail goes to your GreetQ inbox.
+
+| Piece | Setup |
+| ----- | ----- |
+| **Receive** | Cloudflare Email Routing on `greetq.com` |
+| **Read** | Gmail `harmankmh@gmail.com` (forwarded) |
+| **Send** | Brevo API (`BREVO_API_KEY` on Vercel) |
+
+Full details: **`docs/GREETQ_INBOX.md`**
+
+Re-provision routing:
+
+```bash
+cd voiceagent && node scripts/greetq-email-routing.mjs --status
+```

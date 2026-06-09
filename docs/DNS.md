@@ -43,6 +43,12 @@ SSL/TLS mode: **Full (strict)**.
 | ----- | ---- | ------- | ------ |
 | A     | `@`  | `76.76.21.21` | OK |
 | CNAME | `www`| `cname.vercel-dns.com` | OK |
+| MX    | `@`  | `route1.mx.cloudflare.net` (24), `route2.mx.cloudflare.net` (67), `route3.mx.cloudflare.net` (34) | OK — Cloudflare Email Routing |
+| TXT   | `@`  | `v=spf1 include:_spf.mx.cloudflare.net include:spf.brevo.com ~all` | OK — inbound + Brevo outbound |
+| TXT   | `@`  | `brevo-code:…` | OK — Brevo sender verify |
+| TXT   | `cf2024-1._domainkey` | Cloudflare DKIM | OK — Email Routing |
+
+**Inbox:** `hello@greetq.com`, `sales@greetq.com`, `support@greetq.com` → `harmankmh@gmail.com`. See `docs/GREETQ_INBOX.md`.
 
 ### intellivo.ca (legacy → GreetQ)
 
