@@ -1,36 +1,17 @@
 "use client";
 
-import { motion } from "framer-motion";
-import { useEffect, useState } from "react";
-
+/**
+ * Marketing sections must be visible without JS (Comet, crawlers, slow hydration).
+ * Framer Motion opacity animations caused blank pages — this is a plain wrapper.
+ */
 export function FadeInSection({
   children,
   className = "",
-  delay = 0,
 }: {
   children: React.ReactNode;
   className?: string;
   delay?: number;
+  onMount?: boolean;
 }) {
-  const [mounted, setMounted] = useState(false);
-
-  useEffect(() => {
-    setMounted(true);
-  }, []);
-
-  if (!mounted) {
-    return <div className={className}>{children}</div>;
-  }
-
-  return (
-    <motion.div
-      className={className}
-      initial={{ opacity: 0, y: 20 }}
-      whileInView={{ opacity: 1, y: 0 }}
-      viewport={{ once: true, margin: "-60px" }}
-      transition={{ duration: 0.4, ease: "easeOut", delay }}
-    >
-      {children}
-    </motion.div>
-  );
+  return <div className={className}>{children}</div>;
 }

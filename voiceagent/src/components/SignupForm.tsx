@@ -6,10 +6,11 @@ import { useForm, Controller } from "react-hook-form";
 import { createClient } from "@/lib/supabase/client";
 import { signupSchema, type SignupFormData } from "@/lib/schemas/auth";
 import { AuthLayout } from "@/components/auth/AuthLayout";
-import { GoogleAuthButton } from "@/components/auth/GoogleAuthButton";
+import { GoogleAuthButton, isGoogleAuthEnabled } from "@/components/auth/GoogleAuthButton";
 import { Button } from "@/components/ui/Button";
 import { Input } from "@/components/ui/Input";
 import { BRAND } from "@/lib/brand";
+import { markOnboardingPending } from "@/lib/onboarding";
 import type { PlanKey } from "@/lib/plans";
 
 export function SignupForm({ initialPlan = null }: { initialPlan?: PlanKey | null }) {
@@ -17,11 +18,12 @@ export function SignupForm({ initialPlan = null }: { initialPlan?: PlanKey | nul
     register,
     handleSubmit,
     control,
+    watch,
     formState: { errors, isSubmitting },
     setError: setFormError,
   } = useForm<SignupFormData>({
     resolver: zodResolver(signupSchema),
-    defaultValues: { businessName: "", email: "", password: "", acceptedTerms: undefined },
+    defaultValues: { businessName: "", phone: "", email: "", password: "", acceptedTerms: undefined },
   });
 
   async function onSubmit(data: SignupFormData) {
@@ -40,7 +42,10 @@ export function SignupForm({ initialPlan = null }: { initialPlan?: PlanKey | nul
     const setupRes = await fetch("/api/org/setup", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ businessName: data.businessName?.trim() || undefined }),
+      body: JSON.stringify({
+        businessName: data.businessName?.trim() || undefined,
+        phone: data.phone.trim(),
+      }),
     });
     if (!setupRes.ok) {
       const body = await setupRes.json().catch(() => ({}));
@@ -52,12 +57,22 @@ export function SignupForm({ initialPlan = null }: { initialPlan?: PlanKey | nul
       return;
     }
 
+    await markOnboardingPending();
+
     if (initialPlan && initialPlan !== "enterprise") {
       window.location.href = `/dashboard/billing?subscribe=${initialPlan}`;
       return;
     }
-    window.location.href = "/onboarding";
+    window.location.href = "/onboarding?welcome=1";
   }
+
+  const password = watch("password") || "";
+  const passwordStrength = [
+    password.length >= 8,
+    /[A-Z]/.test(password),
+    /[0-9]/.test(password),
+  ].filter(Boolean).length;
+  const termsAccepted = watch("acceptedTerms") === true;
 
   return (
     <AuthLayout panelFooter={`Start with ${BRAND.name}`}>
@@ -77,19 +92,44 @@ export function SignupForm({ initialPlan = null }: { initialPlan?: PlanKey | nul
             {...register("businessName")}
           />
           <Input
+            label="Business phone"
+            type="tel"
+            autoComplete="tel"
+            placeholder="(604) 555-0100"
+            error={errors.phone?.message}
+            {...register("phone")}
+          />
+          <Input
             label="Email"
             type="email"
             autoComplete="email"
             error={errors.email?.message}
             {...register("email")}
           />
-          <Input
-            label="Password"
-            type="password"
-            autoComplete="new-password"
-            error={errors.password?.message}
-            {...register("password")}
-          />
+          <div>
+            <Input
+              label="Password"
+              type="password"
+              autoComplete="new-password"
+              error={errors.password?.message}
+              {...register("password")}
+            />
+            {password.length > 0 && (
+              <div className="mt-2 flex gap-1">
+                {[1, 2, 3].map((level) => (
+                  <div
+                    key={level}
+                    className={`h-1 flex-1 rounded-full ${
+                      passwordStrength >= level ? "bg-success" : "bg-border"
+                    }`}
+                  />
+                ))}
+              </div>
+            )}
+            <p className="mt-1 text-xs text-muted">
+              Use 8+ characters with uppercase and a number for a strong password.
+            </p>
+          </div>
           <Controller
             name="acceptedTerms"
             control={control}
@@ -127,16 +167,19 @@ export function SignupForm({ initialPlan = null }: { initialPlan?: PlanKey | nul
           </Button>
         </form>
 
-        <div className="relative my-6">
-          <div className="absolute inset-0 flex items-center">
-            <div className="w-full border-t border-border" />
-          </div>
-          <div className="relative flex justify-center text-xs">
-            <span className="bg-surface px-2 text-muted">or continue with</span>
-          </div>
-        </div>
-
-        <GoogleAuthButton mode="signup" />
+        {isGoogleAuthEnabled && (
+          <>
+            <div className="relative my-6">
+              <div className="absolute inset-0 flex items-center">
+                <div className="w-full border-t border-border" />
+              </div>
+              <div className="relative flex justify-center text-xs">
+                <span className="bg-surface px-2 text-muted">or continue with</span>
+              </div>
+            </div>
+            <GoogleAuthButton mode="signup" termsAccepted={termsAccepted} />
+          </>
+        )}
 
         <p className="mt-6 text-center text-sm text-muted">
           Already have an account?{" "}

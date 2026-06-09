@@ -8,6 +8,9 @@ import { IndustriesSection } from "@/components/marketing/IndustriesSection";
 import { MarketingFooterNew } from "@/components/marketing/MarketingFooterNew";
 import { MarketingNavbar } from "@/components/marketing/MarketingNavbar";
 import { PricingSection } from "@/components/marketing/PricingSection";
+import { RoiCalculator } from "@/components/marketing/RoiCalculator";
+import { TestimonialsSection } from "@/components/marketing/TestimonialsSection";
+import { TrustBadgeStrip } from "@/components/marketing/TrustBadgeStrip";
 import { TrustMarquee } from "@/components/marketing/TrustMarquee";
 import { SkipToContent } from "@/components/SkipToContent";
 import { BRAND } from "@/lib/brand";
@@ -51,11 +54,14 @@ export default function HomePage() {
         <main id="main-content">
           <HeroSection />
           <TrustMarquee />
+          <TrustBadgeStrip />
           <HowItWorks />
           <BentoFeatures />
           <IndustriesSection />
           <PricingSection />
+          <RoiCalculator />
           <DemoCtaSection />
+          <TestimonialsSection />
 
           <section className="border-t border-border py-20" id="faq">
             <div className="mx-auto max-w-3xl px-5">

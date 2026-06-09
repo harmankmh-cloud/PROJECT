@@ -31,12 +31,12 @@ import { useUiStore } from "@/stores/ui";
 import { BRAND } from "@/lib/brand";
 
 const PRIMARY_NAV = [
-  { href: "/dashboard", label: "Dashboard", icon: LayoutDashboard },
-  { href: "/dashboard/calls", label: "Call Logs", icon: PhoneCall },
-  { href: "/dashboard/appointments", label: "Appointments", icon: Calendar },
-  { href: "/dashboard/messages", label: "Messages", icon: MessageSquare },
-  { href: "/dashboard/settings", label: "Settings", icon: Settings },
-  { href: "/dashboard/billing", label: "Billing", icon: CreditCard },
+  { href: "/dashboard", label: "Dashboard", icon: LayoutDashboard, demoHref: "/demo" },
+  { href: "/dashboard/calls", label: "Call Logs", icon: PhoneCall, demoHref: "/demo#recent-calls" },
+  { href: "/dashboard/appointments", label: "Appointments", icon: Calendar, demoHref: "/demo#appointments" },
+  { href: "/dashboard/messages", label: "Messages", icon: MessageSquare, demoHref: "/demo#messages" },
+  { href: "/dashboard/settings", label: "Settings", icon: Settings, demoHref: "/signup" },
+  { href: "/dashboard/billing", label: "Billing", icon: CreditCard, demoHref: "/signup?plan=growth" },
 ] as const;
 
 const MORE_NAV = [
@@ -119,7 +119,14 @@ export function DashboardShell({
 
       <nav className="flex-1 space-y-0.5 overflow-y-auto p-3">
         {PRIMARY_NAV.map((item) => (
-          <NavItem key={item.href} {...item} active={isActive(item.href)} onClick={() => setMenuOpen(false)} />
+          <NavItem
+            key={item.href}
+            href={isDemo ? item.demoHref : item.href}
+            label={item.label}
+            icon={item.icon}
+            active={!isDemo && isActive(item.href)}
+            onClick={() => setMenuOpen(false)}
+          />
         ))}
 
         <button
@@ -147,7 +154,10 @@ export function DashboardShell({
         <div className="rounded-lg border border-primary/20 bg-primary/10 p-3">
           <p className="text-xs font-semibold text-text">Upgrade to Pro</p>
           <p className="mt-1 text-[10px] text-muted">900 min + calendar sync</p>
-          <Link href="/dashboard/billing" className="mt-2 block text-xs font-medium text-primary-glow hover:underline">
+          <Link
+            href={isDemo ? "/signup?plan=pro" : "/dashboard/billing"}
+            className="mt-2 block text-xs font-medium text-primary-glow hover:underline"
+          >
             View plans →
           </Link>
         </div>

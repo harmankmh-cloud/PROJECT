@@ -1,7 +1,7 @@
 import type { Metadata } from "next";
 import Link from "next/link";
-import { MarketingFooter } from "@/components/MarketingFooter";
-import { MarketingHeader } from "@/components/MarketingHeader";
+import { MarketingFooterNew } from "@/components/marketing/MarketingFooterNew";
+import { MarketingNavbar } from "@/components/marketing/MarketingNavbar";
 import { PricingCard } from "@/components/PricingCard";
 import { SkipToContent } from "@/components/SkipToContent";
 import type { PlanKey } from "@/lib/plans";
@@ -19,13 +19,13 @@ export default function PricingPage() {
   return (
     <div className="dark-mesh-bg grid-pattern flex min-h-screen flex-col">
       <SkipToContent />
-      <MarketingHeader />
-      <main id="main-content" className="flex-1 pt-20">
-        <section className="py-[120px]">
+      <MarketingNavbar />
+      <main id="main-content" className="flex-1 pt-24">
+        <section className="py-16 md:py-24">
           <div className="marketing-container">
             <div className="mb-16 text-center">
               <h1 className="font-display text-3xl font-bold text-ghost-white md:text-4xl">Simple, predictable pricing</h1>
-              <p className="mx-auto mt-4 max-w-2xl text-lg text-slate-text">
+              <p className="mx-auto mt-4 max-w-2xl text-lg text-on-surface-variant">
                 Flat monthly with voice minutes included — only pay more if you go over. Cheaper than a part-time
                 receptionist, with no per-caller penalties. Sandbox testing is always free.
               </p>
@@ -37,7 +37,7 @@ export default function PricingPage() {
             </div>
             <div className="mx-auto mt-12 max-w-2xl rounded-2xl border border-primary/30 bg-primary/5 p-6 text-center">
               <p className="text-sm font-semibold text-ghost-white">Bundle &amp; save: Reputation + Reception</p>
-              <p className="mt-2 text-sm text-slate-text">
+              <p className="mt-2 text-sm text-on-surface-variant">
                 Pair GreetQ Starter with{" "}
                 <a href="https://ratelocal.ca" className="font-semibold text-electric-blue hover:underline">
                   RateLocal
@@ -46,7 +46,7 @@ export default function PricingPage() {
                 separately. Never miss a call and win more 5-star reviews. Ask sales to apply the bundle.
               </p>
             </div>
-            <p className="mt-10 text-center text-sm text-slate-text">
+            <p className="mt-10 text-center text-sm text-on-surface-variant">
               Questions about Enterprise or HIPAA?{" "}
               <Link href="/help?intent=enterprise" className="font-semibold text-electric-blue hover:underline">
                 Contact sales
@@ -59,7 +59,7 @@ export default function PricingPage() {
           </div>
         </section>
       </main>
-      <MarketingFooter />
+      <MarketingFooterNew />
     </div>
   );
 }

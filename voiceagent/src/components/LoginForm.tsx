@@ -6,7 +6,7 @@ import { useForm } from "react-hook-form";
 import { createClient } from "@/lib/supabase/client";
 import { loginSchema, type LoginFormData } from "@/lib/schemas/auth";
 import { AuthLayout } from "@/components/auth/AuthLayout";
-import { GoogleAuthButton } from "@/components/auth/GoogleAuthButton";
+import { GoogleAuthButton, isGoogleAuthEnabled } from "@/components/auth/GoogleAuthButton";
 import { Button } from "@/components/ui/Button";
 import { Input } from "@/components/ui/Input";
 
@@ -72,19 +72,22 @@ export function LoginForm({ initialError = "" }: { initialError?: string }) {
           </Button>
         </form>
 
-        <div className="relative my-6">
-          <div className="absolute inset-0 flex items-center">
-            <div className="w-full border-t border-border" />
-          </div>
-          <div className="relative flex justify-center text-xs">
-            <span className="bg-surface px-2 text-muted">or continue with</span>
-          </div>
-        </div>
-
-        <GoogleAuthButton mode="login" />
+        {isGoogleAuthEnabled && (
+          <>
+            <div className="relative my-6">
+              <div className="absolute inset-0 flex items-center">
+                <div className="w-full border-t border-border" />
+              </div>
+              <div className="relative flex justify-center text-xs">
+                <span className="bg-surface px-2 text-muted">or continue with</span>
+              </div>
+            </div>
+            <GoogleAuthButton mode="login" />
+          </>
+        )}
 
         <p className="mt-4 text-center text-sm">
-          <Link href="/forgot-password" className="text-primary-glow hover:underline">
+          <Link href="/forgot-password" className="font-medium text-accent hover:underline">
             Forgot password?
           </Link>
         </p>

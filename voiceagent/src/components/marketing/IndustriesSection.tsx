@@ -1,8 +1,6 @@
 "use client";
 
-import { motion, AnimatePresence } from "framer-motion";
 import { useState } from "react";
-import { ClientOnly } from "@/components/ui/ClientOnly";
 import { USE_CASES } from "@/lib/marketing-content";
 
 const CHIPS = [
@@ -80,47 +78,22 @@ export function IndustriesSection() {
           ))}
         </div>
 
-        <ClientOnly
-          fallback={
-            <div className="glass-card mt-6 p-8">
-              <h3 className="font-display text-2xl text-text">{pain.title}</h3>
-              <ul className="mt-4 space-y-2">
-                {pain.points.map((p) => (
-                  <li key={p} className="flex items-center gap-2 text-sm text-muted">
-                    <span className="h-1.5 w-1.5 rounded-full bg-accent" />
-                    {p}
-                  </li>
-                ))}
-              </ul>
-            </div>
-          }
-        >
-          <AnimatePresence mode="wait">
-            <motion.div
-              key={selected}
-              initial={{ opacity: 0, y: 12 }}
-              animate={{ opacity: 1, y: 0 }}
-              exit={{ opacity: 0, y: -12 }}
-              transition={{ duration: 0.25 }}
-              className="glass-card mt-6 p-8"
-            >
-              <h3 className="font-display text-2xl text-text">{pain.title}</h3>
-              <ul className="mt-4 space-y-2">
-                {pain.points.map((p) => (
-                  <li key={p} className="flex items-center gap-2 text-sm text-muted">
-                    <span className="h-1.5 w-1.5 rounded-full bg-accent" />
-                    {p}
-                  </li>
-                ))}
-              </ul>
-              {USE_CASES[0] && (
-                <p className="mt-6 text-xs text-muted">
-                  Example: {USE_CASES[0].outcomeAttribution}
-                </p>
-              )}
-            </motion.div>
-          </AnimatePresence>
-        </ClientOnly>
+        <div key={selected} className="glass-card mt-6 p-8">
+          <h3 className="font-display text-2xl text-text">{pain.title}</h3>
+          <ul className="mt-4 space-y-2">
+            {pain.points.map((p) => (
+              <li key={p} className="flex items-center gap-2 text-sm text-muted">
+                <span className="h-1.5 w-1.5 rounded-full bg-accent" />
+                {p}
+              </li>
+            ))}
+          </ul>
+          {USE_CASES[0] && (
+            <p className="mt-6 text-xs text-muted">
+              Example: {USE_CASES[0].outcomeAttribution}
+            </p>
+          )}
+        </div>
       </div>
     </section>
   );

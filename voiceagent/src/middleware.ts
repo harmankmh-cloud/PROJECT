@@ -48,6 +48,14 @@ export async function middleware(request: NextRequest) {
   }
 
   if (
+    user &&
+    pathname.startsWith("/dashboard") &&
+    user.user_metadata?.onboarding_completed === false
+  ) {
+    return NextResponse.redirect(new URL("/onboarding", request.url));
+  }
+
+  if (
     PUBLIC_PATHS.includes(pathname) &&
     user &&
     pathname !== "/reset-password" &&
