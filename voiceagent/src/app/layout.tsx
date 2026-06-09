@@ -1,21 +1,21 @@
-import type { Metadata } from "next";
+import type { Metadata, Viewport } from "next";
 import { Inter, Plus_Jakarta_Sans } from "next/font/google";
-import { GeistMono } from "geist/font/mono";
-import { CookieNotice } from "@/components/CookieNotice";
-import { LiveChatWidget } from "@/components/LiveChatWidget";
-import { AppProviders } from "@/components/providers/AppProviders";
+import { DeferredSiteWidgets } from "@/components/DeferredSiteWidgets";
 import { BRAND } from "@/lib/brand";
 import "./globals.css";
 
 const jakarta = Plus_Jakarta_Sans({
   variable: "--font-jakarta",
   subsets: ["latin"],
-  weight: ["400", "500", "600", "700", "800"],
+  weight: ["700", "800"],
+  display: "swap",
 });
 
 const inter = Inter({
   variable: "--font-inter",
   subsets: ["latin"],
+  weight: ["400", "500", "600"],
+  display: "swap",
 });
 
 const siteUrl = `https://${BRAND.domain}`;
@@ -51,24 +51,20 @@ export const metadata: Metadata = {
   },
 };
 
+export const viewport: Viewport = {
+  width: "device-width",
+  initialScale: 1,
+  maximumScale: 5,
+  userScalable: true,
+  themeColor: "#09090b",
+};
+
 export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (
-    <html
-      lang="en"
-      className={`${jakarta.variable} ${inter.variable} ${GeistMono.variable} scroll-smooth`}
-    >
-      <head>
-        <link
-          rel="stylesheet"
-          href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@24,400,0,0&display=swap"
-        />
-      </head>
+    <html lang="en" className={`${jakarta.variable} ${inter.variable} scroll-smooth`}>
       <body className="min-h-full bg-bg font-sans text-text antialiased">
-        <AppProviders>
-          {children}
-          <LiveChatWidget />
-          <CookieNotice />
-        </AppProviders>
+        {children}
+        <DeferredSiteWidgets />
       </body>
     </html>
   );

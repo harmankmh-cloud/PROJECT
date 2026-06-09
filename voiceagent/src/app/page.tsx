@@ -1,30 +1,46 @@
 import type { Metadata } from "next";
+import dynamic from "next/dynamic";
 import { FaqAccordion } from "@/components/FaqAccordion";
-import { BentoFeatures } from "@/components/marketing/BentoFeatures";
-import { DemoCtaSection } from "@/components/marketing/DemoCtaSection";
 import { HeroSection } from "@/components/marketing/HeroSection";
-import { CoverageMap } from "@/components/marketing/CoverageMap";
-import { FlowBuilderPreview } from "@/components/marketing/FlowBuilderPreview";
 import { HowItWorks } from "@/components/marketing/HowItWorks";
-import { IndustriesSection } from "@/components/marketing/IndustriesSection";
 import { MarketingFooterNew } from "@/components/marketing/MarketingFooterNew";
 import { MarketingNavbar } from "@/components/marketing/MarketingNavbar";
-import { PricingSection } from "@/components/marketing/PricingSection";
-import { RoiCalculator } from "@/components/marketing/RoiCalculator";
-import { TestimonialsSection } from "@/components/marketing/TestimonialsSection";
-import { ComplianceBadgeStrip } from "@/components/marketing/ComplianceBadgeStrip";
 import { TrustBadgeStrip } from "@/components/marketing/TrustBadgeStrip";
 import { TrustMarquee } from "@/components/marketing/TrustMarquee";
-import { TrustStatsRow } from "@/components/marketing/TrustStatsRow";
-import { LegalStrip } from "@/components/LegalStrip";
 import { SkipToContent } from "@/components/SkipToContent";
 import { BRAND } from "@/lib/brand";
 import { FAQ_ITEMS } from "@/lib/marketing-content";
 
+const BentoFeatures = dynamic(() =>
+  import("@/components/marketing/BentoFeatures").then((m) => ({ default: m.BentoFeatures }))
+);
+
+const IndustriesSection = dynamic(() =>
+  import("@/components/marketing/IndustriesSection").then((m) => ({ default: m.IndustriesSection }))
+);
+
+const PricingSection = dynamic(() =>
+  import("@/components/marketing/PricingSection").then((m) => ({ default: m.PricingSection }))
+);
+
+const RoiCalculator = dynamic(() =>
+  import("@/components/marketing/RoiCalculator").then((m) => ({ default: m.RoiCalculator }))
+);
+
+const DemoCtaSection = dynamic(() =>
+  import("@/components/marketing/DemoCtaSection").then((m) => ({ default: m.DemoCtaSection }))
+);
+
+const TestimonialsSection = dynamic(() =>
+  import("@/components/marketing/TestimonialsSection").then((m) => ({
+    default: m.TestimonialsSection,
+  }))
+);
+
 export const metadata: Metadata = {
   title: "Your Business Never Misses a Call. Ever.",
   description:
-    "GreetQ answers calls 24/7 for Canadian businesses. Start free with 30 trial minutes — no card. Go live with a 14-day trial when you're ready.",
+    "GreetQ answers calls 24/7, books appointments, and handles FAQs for Canadian small businesses.",
   alternates: { canonical: "/" },
 };
 
@@ -52,39 +68,34 @@ export default function HomePage() {
   };
 
   return (
-      <div className="aurora-bg flex min-h-screen flex-col overflow-x-hidden">
-        <SkipToContent />
-        <MarketingNavbar />
+    <div className="aurora-bg flex min-h-screen flex-col overflow-x-hidden">
+      <SkipToContent />
+      <MarketingNavbar />
 
-        <main id="main-content">
-          <HeroSection />
-          <TrustMarquee />
-          <ComplianceBadgeStrip />
-          <TrustBadgeStrip />
-          <TrustStatsRow />
-          <HowItWorks />
-          <FlowBuilderPreview />
-          <BentoFeatures />
-          <IndustriesSection />
-          <CoverageMap />
-          <PricingSection />
-          <RoiCalculator />
-          <DemoCtaSection />
-          <TestimonialsSection />
+      <main id="main-content">
+        <HeroSection />
+        <TrustMarquee />
+        <TrustBadgeStrip />
+        <HowItWorks />
+        <BentoFeatures />
+        <IndustriesSection />
+        <PricingSection />
+        <RoiCalculator />
+        <DemoCtaSection />
+        <TestimonialsSection />
 
-          <section className="border-t border-border py-20" id="faq">
-            <div className="mx-auto max-w-3xl px-5">
-              <h2 className="font-display mb-10 text-center text-3xl text-text">
-                Frequently asked questions
-              </h2>
-              <FaqAccordion items={FAQ_ITEMS} />
-            </div>
-          </section>
-        </main>
+        <section className="border-t border-border py-20" id="faq">
+          <div className="mx-auto max-w-3xl px-5">
+            <h2 className="font-display mb-10 text-center text-3xl text-text">
+              Frequently asked questions
+            </h2>
+            <FaqAccordion items={FAQ_ITEMS} />
+          </div>
+        </section>
+      </main>
 
-        <LegalStrip />
-        <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }} />
-        <MarketingFooterNew />
-      </div>
+      <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }} />
+      <MarketingFooterNew />
+    </div>
   );
 }

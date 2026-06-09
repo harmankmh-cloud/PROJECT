@@ -1,8 +1,6 @@
 "use client";
 
-import { motion } from "framer-motion";
 import { Loader2 } from "lucide-react";
-import { useEffect, useState } from "react";
 
 type Variant = "primary" | "ghost" | "outline" | "secondary";
 
@@ -38,12 +36,6 @@ export function Button({
   type = "button",
   onClick,
 }: ButtonProps) {
-  const [mounted, setMounted] = useState(false);
-
-  useEffect(() => {
-    setMounted(true);
-  }, []);
-
   const classNames = `${baseClass} ${variants[variant]} ${className}`;
   const content = loading ? (
     <>
@@ -54,30 +46,14 @@ export function Button({
     children
   );
 
-  if (!mounted) {
-    return (
-      <button
-        type={type}
-        className={classNames}
-        disabled={disabled || loading}
-        onClick={onClick}
-      >
-        {content}
-      </button>
-    );
-  }
-
   return (
-    <motion.button
+    <button
       type={type}
       className={classNames}
       disabled={disabled || loading}
-      whileHover={{ scale: 1.02 }}
-      whileTap={{ scale: 0.97 }}
-      transition={{ duration: 0.15 }}
       onClick={onClick}
     >
       {content}
-    </motion.button>
+    </button>
   );
 }

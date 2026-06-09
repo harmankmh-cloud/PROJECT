@@ -1,7 +1,6 @@
 "use client";
 
 import Link from "next/link";
-import { AnimatePresence, motion } from "framer-motion";
 import { Menu, Sparkles, X } from "lucide-react";
 import { useEffect, useState } from "react";
 import { BRAND } from "@/lib/brand";
@@ -27,6 +26,13 @@ export function MarketingNavbar() {
     window.addEventListener("scroll", onScroll, { passive: true });
     return () => window.removeEventListener("scroll", onScroll);
   }, []);
+
+  useEffect(() => {
+    document.body.style.overflow = open ? "hidden" : "";
+    return () => {
+      document.body.style.overflow = "";
+    };
+  }, [open]);
 
   return (
     <header
@@ -69,60 +75,43 @@ export function MarketingNavbar() {
           type="button"
           className="rounded-lg border border-border p-2 text-muted lg:hidden"
           aria-label="Open menu"
+          aria-expanded={open}
           onClick={() => setOpen(true)}
         >
           <Menu className="h-5 w-5" />
         </button>
       </div>
 
-      <AnimatePresence>
-        {open && (
-          <motion.div
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            exit={{ opacity: 0 }}
-            className="fixed inset-0 z-50 bg-bg/95 backdrop-blur-xl lg:hidden"
-          >
-            <div className="flex items-center justify-between p-5">
-              <span className="font-display text-lg text-text">{BRAND.name}</span>
-              <button type="button" aria-label="Close menu" onClick={() => setOpen(false)}>
-                <X className="h-6 w-6 text-text" />
-              </button>
-            </div>
-            <nav className="flex flex-col gap-2 px-5 pt-8">
-              {NAV.map((item, i) => (
-                <motion.div
-                  key={item.href}
-                  initial={{ opacity: 0, x: -20 }}
-                  animate={{ opacity: 1, x: 0 }}
-                  transition={{ delay: i * 0.08 }}
-                >
-                  <Link
-                    href={item.href}
-                    className="block py-3 text-lg text-text"
-                    onClick={() => setOpen(false)}
-                  >
-                    {item.label}
-                  </Link>
-                </motion.div>
-              ))}
-              <motion.div
-                initial={{ opacity: 0, x: -20 }}
-                animate={{ opacity: 1, x: 0 }}
-                transition={{ delay: NAV.length * 0.08 }}
-                className="mt-6 flex flex-col gap-3"
+      {open ? (
+        <div className="fixed inset-0 z-50 bg-bg/95 backdrop-blur-xl lg:hidden">
+          <div className="flex items-center justify-between p-5">
+            <span className="font-display text-lg text-text">{BRAND.name}</span>
+            <button type="button" aria-label="Close menu" onClick={() => setOpen(false)}>
+              <X className="h-6 w-6 text-text" />
+            </button>
+          </div>
+          <nav className="flex flex-col gap-2 px-5 pt-8" aria-label="Mobile">
+            {NAV.map((item) => (
+              <Link
+                key={item.href}
+                href={item.href}
+                className="block py-3 text-lg text-text"
+                onClick={() => setOpen(false)}
               >
-                <Link href="/login" className="btn-ghost py-3 text-center" onClick={() => setOpen(false)}>
-                  Sign In
-                </Link>
-                <Link href="/signup" className="btn-primary py-3 text-center" onClick={() => setOpen(false)}>
-                  {TRIAL_MARKETING.cta}
-                </Link>
-              </motion.div>
-            </nav>
-          </motion.div>
-        )}
-      </AnimatePresence>
+                {item.label}
+              </Link>
+            ))}
+            <div className="mt-6 flex flex-col gap-3">
+              <Link href="/login" className="btn-ghost py-3 text-center" onClick={() => setOpen(false)}>
+                Sign In
+              </Link>
+              <Link href="/signup" className="btn-primary py-3 text-center" onClick={() => setOpen(false)}>
+                {TRIAL_MARKETING.cta}
+              </Link>
+            </div>
+          </nav>
+        </div>
+      ) : null}
     </header>
   );
 }

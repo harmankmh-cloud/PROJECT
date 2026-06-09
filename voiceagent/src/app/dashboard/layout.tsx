@@ -1,10 +1,12 @@
+import { GeistMono } from "geist/font/mono";
 import { redirect } from "next/navigation";
-import { createClient } from "@/lib/supabase/server";
-import { getUserOrg } from "@/lib/auth";
-import { isPlatformAdmin } from "@/lib/admin-auth";
 import { DashboardShell } from "@/components/DashboardShell";
 import { TrialStatusBanner } from "@/components/dashboard/TrialStatusBanner";
+import { DashboardProviders } from "@/components/providers/AppProviders";
 import { PageTransition } from "@/components/ui/PageTransition";
+import { isPlatformAdmin } from "@/lib/admin-auth";
+import { getUserOrg } from "@/lib/auth";
+import { createClient } from "@/lib/supabase/server";
 
 export const dynamic = "force-dynamic";
 
@@ -19,13 +21,17 @@ export default async function DashboardLayout({ children }: { children: React.Re
   const org = await getUserOrg(user.id);
 
   return (
-    <DashboardShell
-      orgName={org?.name}
-      userEmail={user.email}
-      isPlatformAdmin={isPlatformAdmin(user.email)}
-    >
-      <TrialStatusBanner />
-      <PageTransition>{children}</PageTransition>
-    </DashboardShell>
+    <div className={GeistMono.variable}>
+      <DashboardProviders>
+        <DashboardShell
+          orgName={org?.name}
+          userEmail={user.email}
+          isPlatformAdmin={isPlatformAdmin(user.email)}
+        >
+          <TrialStatusBanner />
+          <PageTransition>{children}</PageTransition>
+        </DashboardShell>
+      </DashboardProviders>
+    </div>
   );
 }
