@@ -11,6 +11,17 @@ export const STRIPE_TRIAL_DAYS = 14;
 export const SANDBOX_MAX_TEST_CALLS = 3;
 export const SANDBOX_MAX_SECONDS = 60;
 
+/** Shared marketing copy — keep site and product aligned. */
+export const TRIAL_MARKETING = {
+  exploreShort: "30 free minutes — no card",
+  exploreLong:
+    "Explore free with 30 trial minutes and unlimited text sandbox — no card required.",
+  goLiveShort: "14-day trial to go live",
+  goLiveLong: `Go live with a ${STRIPE_TRIAL_DAYS}-day Stripe trial — card required.`,
+  cta: "Get started free",
+  goLiveCta: "Go live — 14-day trial",
+} as const;
+
 export type TrialOrg = {
   plan?: string | null;
   stripe_subscription_id?: string | null;

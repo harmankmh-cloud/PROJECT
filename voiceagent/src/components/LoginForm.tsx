@@ -9,6 +9,7 @@ import { AuthLayout } from "@/components/auth/AuthLayout";
 import { GoogleAuthButton, isGoogleAuthEnabled } from "@/components/auth/GoogleAuthButton";
 import { Button } from "@/components/ui/Button";
 import { Input } from "@/components/ui/Input";
+import { TRIAL_MARKETING } from "@/lib/trial";
 
 export function LoginForm({ initialError = "" }: { initialError?: string }) {
   const {
@@ -42,7 +43,7 @@ export function LoginForm({ initialError = "" }: { initialError?: string }) {
   }
 
   return (
-    <AuthLayout panelFooter="Sign in to your command center">
+    <AuthLayout panelFooter={TRIAL_MARKETING.exploreLong}>
       <div className="auth-card">
         <h1 className="font-display text-3xl text-text">Welcome back</h1>
         <p className="mt-2 text-sm text-muted">Sign in to manage your AI receptionist.</p>
@@ -94,7 +95,7 @@ export function LoginForm({ initialError = "" }: { initialError?: string }) {
         <p className="mt-4 text-center text-sm text-muted">
           New to GreetQ?{" "}
           <Link href="/signup" className="text-primary-glow hover:underline">
-            Start free →
+            {TRIAL_MARKETING.cta} →
           </Link>
         </p>
       </div>

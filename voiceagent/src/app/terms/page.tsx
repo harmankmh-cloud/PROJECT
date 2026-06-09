@@ -48,6 +48,16 @@ export default function TermsPage() {
           </section>
 
           <section>
+            <h2 className="text-lg font-semibold text-ghost-white">Free explore &amp; trial</h2>
+            <p>
+              New accounts receive trial voice minutes and access to the text sandbox without a payment
+              method. Sandbox voice test calls are capped. Production inbound lines, purchased numbers,
+              and outbound campaigns require an active subscription or remaining trial minutes. Going live
+              starts a 14-day Stripe subscription trial with a payment method on file.
+            </p>
+          </section>
+
+          <section>
             <h2 className="text-lg font-semibold text-ghost-white">Billing</h2>
             <p>
               Paid plans are a flat monthly subscription that includes a block of voice minutes, plus

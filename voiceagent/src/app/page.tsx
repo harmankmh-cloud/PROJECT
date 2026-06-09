@@ -19,7 +19,7 @@ import { FAQ_ITEMS } from "@/lib/marketing-content";
 export const metadata: Metadata = {
   title: "Your Business Never Misses a Call. Ever.",
   description:
-    "GreetQ answers calls 24/7, books appointments, and handles FAQs for Canadian small businesses.",
+    "GreetQ answers calls 24/7 for Canadian businesses. Start free with 30 trial minutes — no card. Go live with a 14-day trial when you're ready.",
   alternates: { canonical: "/" },
 };
 

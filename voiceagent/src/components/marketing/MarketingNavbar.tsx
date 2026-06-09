@@ -5,6 +5,7 @@ import { AnimatePresence, motion } from "framer-motion";
 import { Menu, Sparkles, X } from "lucide-react";
 import { useEffect, useState } from "react";
 import { BRAND } from "@/lib/brand";
+import { TRIAL_MARKETING } from "@/lib/trial";
 
 const NAV = [
   { href: "/#features", label: "Features" },
@@ -59,7 +60,7 @@ export function MarketingNavbar() {
             Sign In
           </Link>
           <Link href="/signup" className="btn-primary px-5 py-2.5 text-sm">
-            Get started free
+            {TRIAL_MARKETING.cta}
           </Link>
         </div>
 
@@ -114,7 +115,7 @@ export function MarketingNavbar() {
                   Sign In
                 </Link>
                 <Link href="/signup" className="btn-primary py-3 text-center" onClick={() => setOpen(false)}>
-                  Get started free
+                  {TRIAL_MARKETING.cta}
                 </Link>
               </motion.div>
             </nav>

@@ -1,6 +1,7 @@
 import Link from "next/link";
 import { MaterialIcon } from "@/components/MaterialIcon";
 import { estimatedMonthly, PLANS, type PlanKey } from "@/lib/plans";
+import { TRIAL_MARKETING } from "@/lib/trial";
 
 const EXAMPLE_MINUTES = 500;
 
@@ -22,7 +23,7 @@ export function PricingCard({ planKey, highlighted = false }: { planKey: PlanKey
           : "border border-primary/40 bg-primary/10 text-primary hover:bg-primary/20"
       }`}
     >
-      Get started free
+      {TRIAL_MARKETING.cta}
     </Link>
   );
 

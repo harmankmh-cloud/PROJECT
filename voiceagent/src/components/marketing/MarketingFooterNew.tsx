@@ -1,5 +1,6 @@
 import Link from "next/link";
 import { BRAND } from "@/lib/brand";
+import { TRIAL_MARKETING } from "@/lib/trial";
 
 const COLUMNS = [
   {
@@ -8,7 +9,7 @@ const COLUMNS = [
       { href: "/#features", label: "Features" },
       { href: "/pricing", label: "Pricing" },
       { href: "/#demo", label: "Demo" },
-      { href: "/signup", label: "Get started free" },
+      { href: "/signup", label: TRIAL_MARKETING.cta },
       { href: "/integrations", label: "Integrations" },
       { href: "/blog", label: "Blog" },
     ],

@@ -1,11 +1,12 @@
 import { Check } from "lucide-react";
+import { TRIAL_MARKETING } from "@/lib/trial";
 
 const BADGES = [
   "PIPEDA-aware",
   "Made in BC",
-  "30 free minutes included",
+  TRIAL_MARKETING.exploreShort,
   "No card to explore",
-  "14-day trial to go live",
+  TRIAL_MARKETING.goLiveShort,
 ] as const;
 
 export function TrustBadgeStrip() {

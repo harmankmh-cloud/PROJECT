@@ -191,7 +191,7 @@ export const TESTIMONIALS = [
 export const FAQ_ITEMS = [
   {
     q: "How fast can we go live?",
-    a: "Most teams launch in one day: create an agent, add knowledge, connect a phone number, and test in the sandbox. Complex flows or Enterprise compliance may take longer.",
+    a: "Explore immediately with 30 free minutes and the text sandbox — no card. Most teams connect a live number the same day they subscribe (14-day Stripe trial, card required). Complex flows or Enterprise compliance may take longer.",
   },
   {
     q: "How do you handle Canadian privacy law?",

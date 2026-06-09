@@ -12,6 +12,7 @@ import { Input } from "@/components/ui/Input";
 import { BRAND } from "@/lib/brand";
 import { markOnboardingPending } from "@/lib/onboarding";
 import type { PlanKey } from "@/lib/plans";
+import { TRIAL_MARKETING } from "@/lib/trial";
 
 export function SignupForm({ initialPlan = null }: { initialPlan?: PlanKey | null }) {
   const {
@@ -75,13 +76,13 @@ export function SignupForm({ initialPlan = null }: { initialPlan?: PlanKey | nul
   const termsAccepted = watch("acceptedTerms") === true;
 
   return (
-    <AuthLayout panelFooter={`Start with ${BRAND.name}`}>
+    <AuthLayout panelFooter={TRIAL_MARKETING.exploreLong}>
       <div className="auth-card">
         <h1 className="font-display text-3xl text-text">Create your account</h1>
         <p className="mt-2 text-sm text-muted">
           {initialPlan
-            ? `Set up your org, then continue to ${initialPlan} checkout.`
-            : "Get your AI receptionist running in minutes."}
+            ? `Set up your org, then continue to ${initialPlan} checkout (${TRIAL_MARKETING.goLiveShort}).`
+            : `${TRIAL_MARKETING.exploreLong} ${TRIAL_MARKETING.goLiveLong}`}
         </p>
 
         <form onSubmit={handleSubmit(onSubmit)} className="mt-8 space-y-4" noValidate>
@@ -163,7 +164,7 @@ export function SignupForm({ initialPlan = null }: { initialPlan?: PlanKey | nul
             </p>
           )}
           <Button type="submit" className="w-full" loading={isSubmitting}>
-            Get started free
+            {TRIAL_MARKETING.cta}
           </Button>
         </form>
 

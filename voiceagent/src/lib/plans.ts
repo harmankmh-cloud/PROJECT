@@ -24,7 +24,7 @@ export const PLANS = {
     includedMinutes: 300,
     perMinute: 0.25,
     concurrentCalls: 5,
-    features: ["1 agent", "300 minutes included", "Inbound calls", "Call logs", "Basic analytics", "Sandbox testing"],
+    features: ["1 agent", "300 minutes included", "Inbound calls", "Call logs", "Basic analytics", "Free sandbox explore"],
   },
   growth: {
     name: "Growth",

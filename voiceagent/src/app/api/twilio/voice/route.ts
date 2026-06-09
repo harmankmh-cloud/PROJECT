@@ -6,6 +6,8 @@ import {
   twimlResponse,
   isSimpleTwilioVoiceMode,
 } from "@/lib/twilio";
+import { createAdminClient } from "@/lib/supabase/admin";
+import { canMakeProductionCall, productionBlockReason, type TrialOrg } from "@/lib/trial";
 import { ensureCallRecord, resolveVoiceContext } from "@/lib/twilio-voice-context";
 import { getFlowWelcomeGreeting } from "@/lib/voice-flow-runtime";
 import { getPublicAppUrl } from "@/lib/public-url";
@@ -25,6 +27,28 @@ export async function POST(request: NextRequest) {
     const lookupNumber = direction.toLowerCase().startsWith("outbound") ? from : to;
 
     const ctx = await resolveVoiceContext(lookupNumber);
+
+    if (ctx.orgId && ctx.orgId !== "default") {
+      try {
+        const admin = createAdminClient();
+        const { data: orgRow } = await admin
+          .from("va_organizations")
+          .select("plan, stripe_subscription_id, trial_minutes_remaining")
+          .eq("id", ctx.orgId)
+          .maybeSingle();
+        if (orgRow && !canMakeProductionCall(orgRow as TrialOrg)) {
+          return twimlResponse(
+            buildErrorTwiml(
+              productionBlockReason(orgRow as TrialOrg) ||
+                "This line is not active. Please visit greetq.com to subscribe."
+            )
+          );
+        }
+      } catch {
+        // Fall through if admin client unavailable in dev
+      }
+    }
+
     const welcomeGreeting = await getFlowWelcomeGreeting(
       ctx.orgId,
       ctx.agentId,

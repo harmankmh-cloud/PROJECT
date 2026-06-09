@@ -5,6 +5,7 @@ import { MarketingNavbar } from "@/components/marketing/MarketingNavbar";
 import { PricingCard } from "@/components/PricingCard";
 import { SkipToContent } from "@/components/SkipToContent";
 import type { PlanKey } from "@/lib/plans";
+import { TRIAL_MARKETING } from "@/lib/trial";
 
 const PLAN_KEYS: PlanKey[] = ["starter", "growth", "pro", "enterprise"];
 
@@ -30,8 +31,7 @@ export default function PricingPage() {
                 receptionist, with no per-caller penalties.
               </p>
               <p className="mx-auto mt-3 max-w-xl text-sm text-muted">
-                Explore free with 30 trial minutes and sandbox testing — no card required. Go live with a{" "}
-                <strong className="text-on-surface-variant">14-day trial</strong> when you add a payment method.
+                {TRIAL_MARKETING.exploreLong} {TRIAL_MARKETING.goLiveLong}
               </p>
             </div>
             <div className="grid grid-cols-1 gap-6 md:grid-cols-2 lg:grid-cols-4">

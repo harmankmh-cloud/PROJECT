@@ -35,7 +35,7 @@ export function LiveVoiceDemo() {
     <div className="glass-card mx-auto mt-8 max-w-md p-6">
       <h3 className="font-display text-lg text-text">Talk to GreetQ now</h3>
       <p className="mt-2 text-sm text-muted">
-        Enter your mobile number for a free 1-minute demo call. No signup required.
+        Public demo — one free 1-minute call, no signup. Create an account for 30 trial minutes in your dashboard.
       </p>
       <form onSubmit={handleCall} className="mt-4 space-y-3">
         <Input
