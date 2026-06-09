@@ -4,6 +4,7 @@ import Link from "next/link";
 import { ArrowRight, Check, Play } from "lucide-react";
 import { FadeInSection } from "@/components/ui/FadeInSection";
 import { TRIAL_MARKETING } from "@/lib/trial";
+import { HeroLeadCapture } from "./HeroLeadCapture";
 import { LiveVoiceDemo } from "./LiveVoiceDemo";
 import { PhoneMockup } from "./PhoneMockup";
 
@@ -66,6 +67,10 @@ export function HeroSection() {
 
         <FadeInSection onMount delay={0.5} className="mt-16">
           <PhoneMockup />
+        </FadeInSection>
+
+        <FadeInSection onMount delay={0.55}>
+          <HeroLeadCapture />
         </FadeInSection>
 
         <FadeInSection onMount delay={0.6}>

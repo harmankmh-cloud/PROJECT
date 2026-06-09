@@ -82,3 +82,19 @@ export async function notifyActivepiecesCallCompleted(
     timestamp: new Date().toISOString(),
   });
 }
+
+export type MarketingLeadPayload = {
+  email: string;
+  businessName?: string | null;
+  source?: string;
+};
+
+export async function notifyActivepiecesMarketingLead(payload: MarketingLeadPayload): Promise<void> {
+  const secret =
+    process.env.ACTIVEPIECES_MARKETING_WEBHOOK_SECRET?.trim() || "greetq-marketing-webhook-2026";
+
+  await postActivepiecesWebhook(process.env.ACTIVEPIECES_MARKETING_WEBHOOK_URL, secret, {
+    ...payload,
+    receivedAt: new Date().toISOString(),
+  });
+}

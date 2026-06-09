@@ -8,10 +8,13 @@ const COLUMNS = [
     links: [
       { href: "/#features", label: "Features" },
       { href: "/pricing", label: "Pricing" },
+      { href: "/docs", label: "Developer docs" },
+      { href: "/compare", label: "Compare" },
       { href: "/#demo", label: "Demo" },
       { href: "/signup", label: TRIAL_MARKETING.cta },
       { href: "/integrations", label: "Integrations" },
       { href: "/blog", label: "Blog" },
+      { href: "/status", label: "System status" },
     ],
   },
   {
@@ -21,6 +24,22 @@ const COLUMNS = [
       { href: "/hvac", label: "HVAC" },
       { href: "/legal", label: "Legal" },
       { href: "/contractors", label: "Contractors" },
+      { href: "/real-estate", label: "Real estate" },
+      { href: "/restaurants", label: "Restaurants" },
+      { href: "/salons", label: "Salons" },
+      { href: "/property-managers", label: "Property managers" },
+    ],
+  },
+  {
+    title: "Company",
+    links: [
+      { href: "/about", label: "About" },
+      { href: "/testimonials", label: "Testimonials" },
+      { href: "/case-studies", label: "Case studies" },
+      { href: "/community", label: "Community" },
+      { href: "/press", label: "Press" },
+      { href: "/careers", label: "Careers" },
+      { href: "/languages", label: "Languages" },
     ],
   },
   {
@@ -29,14 +48,8 @@ const COLUMNS = [
       { href: "/privacy", label: "Privacy Policy" },
       { href: "/terms", label: "Terms of Service" },
       { href: "/security", label: "Security" },
-    ],
-  },
-  {
-    title: "Contact",
-    links: [
       { href: "/help", label: "Help center" },
       { href: `mailto:${BRAND.contact.email}`, label: BRAND.contact.email },
-      { href: "/help?intent=demo", label: "Book a demo" },
     ],
   },
 ] as const;

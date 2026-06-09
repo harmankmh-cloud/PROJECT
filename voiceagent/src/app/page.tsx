@@ -3,6 +3,8 @@ import { FaqAccordion } from "@/components/FaqAccordion";
 import { BentoFeatures } from "@/components/marketing/BentoFeatures";
 import { DemoCtaSection } from "@/components/marketing/DemoCtaSection";
 import { HeroSection } from "@/components/marketing/HeroSection";
+import { CoverageMap } from "@/components/marketing/CoverageMap";
+import { FlowBuilderPreview } from "@/components/marketing/FlowBuilderPreview";
 import { HowItWorks } from "@/components/marketing/HowItWorks";
 import { IndustriesSection } from "@/components/marketing/IndustriesSection";
 import { MarketingFooterNew } from "@/components/marketing/MarketingFooterNew";
@@ -10,8 +12,11 @@ import { MarketingNavbar } from "@/components/marketing/MarketingNavbar";
 import { PricingSection } from "@/components/marketing/PricingSection";
 import { RoiCalculator } from "@/components/marketing/RoiCalculator";
 import { TestimonialsSection } from "@/components/marketing/TestimonialsSection";
+import { ComplianceBadgeStrip } from "@/components/marketing/ComplianceBadgeStrip";
 import { TrustBadgeStrip } from "@/components/marketing/TrustBadgeStrip";
 import { TrustMarquee } from "@/components/marketing/TrustMarquee";
+import { TrustStatsRow } from "@/components/marketing/TrustStatsRow";
+import { LegalStrip } from "@/components/LegalStrip";
 import { SkipToContent } from "@/components/SkipToContent";
 import { BRAND } from "@/lib/brand";
 import { FAQ_ITEMS } from "@/lib/marketing-content";
@@ -54,10 +59,14 @@ export default function HomePage() {
         <main id="main-content">
           <HeroSection />
           <TrustMarquee />
+          <ComplianceBadgeStrip />
           <TrustBadgeStrip />
+          <TrustStatsRow />
           <HowItWorks />
+          <FlowBuilderPreview />
           <BentoFeatures />
           <IndustriesSection />
+          <CoverageMap />
           <PricingSection />
           <RoiCalculator />
           <DemoCtaSection />
@@ -73,6 +82,7 @@ export default function HomePage() {
           </section>
         </main>
 
+        <LegalStrip />
         <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }} />
         <MarketingFooterNew />
       </div>

@@ -10,9 +10,10 @@ import { TRIAL_MARKETING } from "@/lib/trial";
 const NAV = [
   { href: "/#features", label: "Features" },
   { href: "/pricing", label: "Pricing" },
+  { href: "/docs", label: "Docs" },
+  { href: "/compare", label: "Compare" },
   { href: "/#demo", label: "Demo" },
-  { href: "/#industries", label: "Industries" },
-  { href: "/about", label: "About" },
+  { href: "/testimonials", label: "Testimonials" },
   { href: "/help", label: "Help" },
 ] as const;
 

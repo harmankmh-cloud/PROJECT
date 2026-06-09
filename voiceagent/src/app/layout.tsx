@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import { Inter, Plus_Jakarta_Sans } from "next/font/google";
 import { GeistMono } from "geist/font/mono";
 import { CookieNotice } from "@/components/CookieNotice";
+import { LiveChatWidget } from "@/components/LiveChatWidget";
 import { AppProviders } from "@/components/providers/AppProviders";
 import { BRAND } from "@/lib/brand";
 import "./globals.css";
@@ -65,6 +66,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
       <body className="min-h-full bg-bg font-sans text-text antialiased">
         <AppProviders>
           {children}
+          <LiveChatWidget />
           <CookieNotice />
         </AppProviders>
       </body>
