@@ -1,6 +1,6 @@
 import { AuthMarketingPanel } from "@/components/AuthMarketingPanel";
 import { BrandLogo } from "@/components/BrandLogo";
-import { MarketingFooterNew } from "@/components/marketing/MarketingFooterNew";
+import { LandingFooter } from "@/components/landing/LandingFooter";
 import { SkipToContent } from "@/components/SkipToContent";
 
 export function AuthLayout({
@@ -24,7 +24,7 @@ export function AuthLayout({
           </div>
         </main>
       </div>
-      <MarketingFooterNew />
+      <LandingFooter />
     </div>
   );
 }

@@ -7,7 +7,7 @@ import { createClient } from "@/lib/supabase/client";
 import { signupSchema, type SignupFormData } from "@/lib/schemas/auth";
 import { AuthLayout } from "@/components/auth/AuthLayout";
 import { GoogleAuthButton, isGoogleAuthEnabled } from "@/components/auth/GoogleAuthButton";
-import { Button } from "@/components/ui/Button";
+import { GlowButton } from "@/components/ui/GlowButton";
 import { Input } from "@/components/ui/Input";
 import { BRAND } from "@/lib/brand";
 import { markOnboardingPending } from "@/lib/onboarding";
@@ -94,6 +94,7 @@ export function SignupForm({
       <div className="auth-card">
         <h1 className="font-display text-3xl text-text">Create your account</h1>
         <p className="mt-2 text-sm text-muted">
+          Join 500+ businesses who never miss a call.{" "}
           {initialPlan
             ? `Set up your org, then continue to ${initialPlan} checkout (${TRIAL_MARKETING.goLiveShort}).`
             : `${TRIAL_MARKETING.exploreLong} ${TRIAL_MARKETING.goLiveLong}`}
@@ -177,9 +178,9 @@ export function SignupForm({
               {errors.root.message}
             </p>
           )}
-          <Button type="submit" className="w-full" loading={isSubmitting}>
+          <GlowButton type="submit" className="w-full justify-center" loading={isSubmitting}>
             {TRIAL_MARKETING.cta}
-          </Button>
+          </GlowButton>
         </form>
 
         {isGoogleAuthEnabled && (
