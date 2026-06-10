@@ -112,6 +112,11 @@ ${SIGN_OFF}${emailFooter()}`,
 }
 
 export async function generateOutreachEmail(input: OutreachInput): Promise<OutreachDraft> {
+  // Templates only — predictable standard cold-email copy (AI was drifting off-product).
+  if (process.env.OUTREACH_USE_AI !== "true") {
+    return templateDraft(input);
+  }
+
   const ai = await chatCompletion({
     jsonMode: true,
     max_tokens: 800,
