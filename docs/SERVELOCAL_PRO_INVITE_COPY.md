@@ -6,6 +6,25 @@
 
 Track invites in Activepieces table **ServeLocal Pro Invites** (`to_contact` → `invited` → `signed_up`).
 
+## Activepieces webhook (manual pro invite)
+
+Flow: **ServeLocal - Pro invite (manual webhook)** (`OeQLmAINM0OmaW1HrCt8s`) — copy the webhook URL from the trigger in Activepieces.
+
+```bash
+curl -X POST "$ACTIVEPIECES_SERVLOCAL_PRO_WEBHOOK_URL" \
+  -H "Content-Type: application/json" \
+  -H "X-ServeLocal-Secret: servelocal-pro-invite-2026" \
+  -d '{
+    "first_name": "Alex",
+    "company": "Valley Plumbing",
+    "trade": "plumbing",
+    "city": "Abbotsford",
+    "email": "alex@example.com"
+  }'
+```
+
+Returns formatted `subject`, `text`, and `to` — send via Gmail/Resend or paste manually. **Not** a bulk 100/day engine.
+
 ---
 
 ## Cold email (personal)
