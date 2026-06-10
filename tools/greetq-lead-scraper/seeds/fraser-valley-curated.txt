@@ -1,0 +1,24 @@
+# Fraser Valley seed list — expand toward 1000 via discover + manual adds
+# Format: Business|URL|vertical|City
+AMC Insurance Abbotsford|https://amcinsurance.ca|insurance|Abbotsford
+Smile Care Dental Center|https://abbysmilecare.com|dental|Abbotsford
+Clayburn Dental|https://clayburndental.com|dental|Abbotsford
+Linley Welwood LLP|https://linleywelwood.com|legal|Abbotsford
+ECM Strata Management|https://ecmstrata.com|property_mgmt|Abbotsford
+Campbell Strata Management|https://campbellstrata.com|property_mgmt|Abbotsford
+Sidhu & Associates Property Mgmt|https://abbotsfordpropertymgmt.ca|property_mgmt|Abbotsford
+Cannon Medical Clinic|https://cannonmedicalclinic.com|clinic|Abbotsford
+Central Valley Insurance|https://cvinsurance.ca|insurance|Abbotsford
+Reliance Home Comfort|https://reliancehomecomfort.com|home_services|Abbotsford
+Fraser Valley Insurance|https://fvins.ca|insurance|Abbotsford
+Westland Insurance|https://westlandinsurance.ca|insurance|Abbotsford
+HUB International|https://hubinternational.com|insurance|Abbotsford
+West Coast Dental|https://westcoastdental.com|dental|Abbotsford
+Lifetime Dental|https://lifetimedental.ca|dental|Abbotsford
+Valley Medical|https://valleymedical.ca|clinic|Abbotsford
+Morgan Creek Dental|https://morgancreekdental.com|dental|Surrey
+Langley Dental|https://langleydental.com|dental|Langley
+Murrayville Plumbing|https://murrayvilleplumbing.com|home_services|Langley
+GVA Plumbing|https://gvaplumbing.ca|home_services|Surrey
+Chilliwack Dental|https://chilliwackdental.com|dental|Chilliwack
+Mission Insurance|https://missioninsurance.ca|insurance|Mission

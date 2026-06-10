@@ -2,6 +2,7 @@ import { NextResponse } from "next/server";
 import { z } from "zod";
 import { sendEmail } from "@/lib/email";
 import { generateOutreachEmail } from "@/lib/outreach-email";
+import { checkOutreachSecret, outreachUnauthorized } from "@/lib/outreach-auth";
 
 const bodySchema = z.object({
   business_name: z.string().min(2).max(120),
@@ -15,27 +16,6 @@ const bodySchema = z.object({
   /** Send draft to your inbox instead of the lead (approval step in Make). */
   preview_to: z.string().email().optional(),
 });
-
-function unauthorized() {
-  return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
-}
-
-function checkSecret(request: Request): boolean {
-  const makeSecret = process.env.MAKE_WEBHOOK_SECRET?.trim();
-  const marketingSecret =
-    process.env.ACTIVEPIECES_MARKETING_WEBHOOK_SECRET?.trim() || "greetq-marketing-webhook-2026";
-
-  const auth = request.headers.get("authorization");
-  if (makeSecret && auth === `Bearer ${makeSecret}`) return true;
-
-  const makeHeader = request.headers.get("x-make-secret");
-  if (makeSecret && makeHeader === makeSecret) return true;
-
-  const greetqHeader = request.headers.get("x-greetq-secret");
-  if (greetqHeader === marketingSecret) return true;
-
-  return false;
-}
 
 export async function GET() {
   const configured = Boolean(
@@ -52,8 +32,8 @@ export async function GET() {
 }
 
 export async function POST(request: Request) {
-  if (!checkSecret(request)) {
-    return unauthorized();
+  if (!checkOutreachSecret(request)) {
+    return outreachUnauthorized();
   }
 
   try {
