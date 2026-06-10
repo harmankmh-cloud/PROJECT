@@ -12,19 +12,21 @@ export type OutreachInput = {
 
 export type OutreachDraft = { subject: string; body: string };
 
+const SIGN_OFF = `Best,\nHarman\nFounder, ${BRAND.name}`;
+
 const VERTICAL_PAIN: Record<string, string> = {
-  dental: "patients comparing Google ratings before they book — under 4.5 stars and you lose the call",
-  clinic: "new patients shortlisting clinics by star count and recent review volume",
-  restaurant: "diners checking reviews before reserving — stale or thin profiles cost covers",
-  salon: "clients choosing between salons on Maps; the one with 80+ recent 5-stars wins",
-  spa: "high-intent bookings driven by trust signals on Google, not just Instagram",
-  legal: "prospects treating review depth as a proxy for responsiveness and credibility",
-  home_services: "homeowners filtering contractors by rating and review recency before requesting quotes",
-  insurance: "renewal-season shoppers comparing agencies on Google before they phone",
-  property_mgmt: "owners and tenants researching management firms by public reputation",
-  auto: "drivers trusting shops with visible, recent customer stories on Maps",
-  retail: "foot traffic influenced by local search stars and review freshness",
-  other: "buyers defaulting to whoever looks most trusted on Google Maps",
+  dental: "patients checking Google ratings before they book — weaker profiles lose the appointment",
+  clinic: "new patients picking clinics with more recent reviews on Maps",
+  restaurant: "diners reading reviews before they reserve a table",
+  salon: "clients choosing the salon with more 5-star reviews nearby",
+  spa: "bookings driven by Google trust signals, not just social",
+  legal: "prospects judging responsiveness by your public reviews",
+  home_services: "homeowners filtering contractors by star rating before they call",
+  insurance: "shoppers comparing agencies on Google during renewal season",
+  property_mgmt: "owners researching managers by online reputation",
+  auto: "drivers trusting shops with recent customer reviews",
+  retail: "local shoppers influenced by review count and freshness",
+  other: "customers picking whoever looks most trusted on Google Maps",
 };
 
 export function generateOutreachEmail(input: OutreachInput): OutreachDraft {
@@ -39,64 +41,70 @@ export function generateOutreachEmail(input: OutreachInput): OutreachDraft {
 
   if (input.sequence === "morning_call") {
     return {
-      subject: `${biz} — quick note on your Google reviews`,
+      subject: `Google reviews — ${biz}`,
       body: `Hi ${who},
 
-I was comparing ${input.vertical} businesses in ${city} on Google Maps and landed on ${biz}. Strong operation — but your public review story looks thinner than nearby competitors who are winning the "who do I trust?" moment.
+I was looking at ${biz} on Google Maps in ${city}. Good business — but your review count looks lighter than nearby ${input.vertical} competitors.
 
-That gap shows up as ${pain}.
+That matters because ${pain}.
 
-${BRAND.name} helps BC shops turn happy customers into real Google reviews — AI prompts, QR/SMS flow, policy-safe (customers write their own words). Pro is $39/mo; you can claim your listing and try the flow free: ${trialUrl}
+${BRAND.name} helps you collect real Google reviews with a simple customer link and follow-up prompts. Customers write their own review — no incentives, Google-policy safe.
 
-If useful, reply YES and I'll send a 5-minute setup link.
+Claim your listing free: ${trialUrl}
 
-Harman${emailFooter()}`,
+Reply YES if you'd like a quick setup walkthrough.
+
+${SIGN_OFF}${emailFooter()}`,
     };
   }
 
   if (input.sequence === "followup_1") {
     return {
-      subject: `Re: ${biz} — Google review momentum`,
+      subject: `Re: ${biz}`,
       body: `Hi ${who},
 
-One follow-up. In ${city}, ${pain}. The fix is usually not "ask harder" — it's a system that asks at the right moment with wording customers actually use.
+Quick follow-up on my last note.
 
-${BRAND.name} does that: private low-star feedback, public 4–5★ paths to Google, owner dashboard. Claim free at ${trialUrl}.
+In ${city}, ${pain}. ${BRAND.name} makes it easy to ask at the right moment — private feedback for low stars, happy customers guided to Google.
 
-Worth a look? Reply YES.
+Free to claim your page: ${trialUrl}
 
-Harman${emailFooter()}`,
+Reply YES if you want help getting started.
+
+${SIGN_OFF}${emailFooter()}`,
     };
   }
 
   if (input.sequence === "followup_2") {
     return {
-      subject: `Closing the loop — ${BRAND.name}`,
+      subject: `Last note — ${biz}`,
       body: `Hi ${who},
 
-Last note from me. If Google review volume is a growth lever for ${biz}, ${BRAND.name} may be worth 10 minutes.
+Last email from me on this.
 
-BC-built, Google-policy compliant, $39/mo Pro. Claim your page: ${trialUrl} — or reply YES for help.
+If more Google reviews would help ${biz} win local searches, ${BRAND.name} is worth a look. Pro is $39/mo; you can claim free first: ${trialUrl}
 
-Harman${emailFooter()}`,
+Reply YES anytime if you want help.
+
+${SIGN_OFF}${emailFooter()}`,
     };
   }
 
   return {
-    subject: `${biz} — more Google reviews without the awkward ask`,
+    subject: `Google reviews for ${biz}?`,
     body: `Hi ${who},
 
-I run ${BRAND.name} (${BRAND.domain}) — we help Fraser Valley businesses collect more authentic Google reviews.
+I run ${BRAND.name} — we help Fraser Valley businesses get more authentic Google reviews.
 
-For ${biz}, the pattern in ${input.vertical} is familiar: ${pain}. Most owners mean to ask — but front desk is busy and the moment passes.
+For ${biz}, the usual issue in ${input.vertical} is ${pain}. Most owners want to ask — but the front desk is busy and the moment passes.
 
-${BRAND.name} fixes that with a simple customer link, smart AI prompts, and a dashboard so you see what's working. No fake reviews, no incentives — customers post themselves.
+${BRAND.name} sends customers a simple link with smart prompts. They post their own review. You get a dashboard to track what's working.
 
 Claim your business free: ${trialUrl}
-Pro ($39/mo) adds analytics, QR posters, and response tools when you're ready.
+Pro ($39/mo) adds analytics and QR tools when you're ready.
 
-Reply YES if you want a quick walkthrough.
+Reply YES for a 5-minute walkthrough.
 
-Harman${emailFooter()}`,
+${SIGN_OFF}${emailFooter()}`,
   };
 }
