@@ -1,5 +1,8 @@
 import { NextResponse } from "next/server";
 import { z } from "zod";
+
+/** Keep each invocation under Vercel's limit; Activepieces loops batches of 10. */
+export const maxDuration = 60;
 import { sendEmail } from "@/lib/email";
 import { generateOutreachEmail } from "@/lib/outreach-email";
 import { checkOutreachSecret, outreachUnauthorized } from "@/lib/outreach-auth";
@@ -9,7 +12,7 @@ const bodySchema = z.object({
   /** Max emails this run (hard cap 100/day). */
   limit: z.number().int().min(1).max(100).default(100),
   sequence: z.enum(["initial", "morning_call", "followup_1", "followup_2"]).default("morning_call"),
-  delay_ms: z.number().int().min(0).max(120_000).default(45_000),
+  delay_ms: z.number().int().min(0).max(10_000).default(2_000),
   city: z.string().max(80).optional(),
   preview_to: z.string().email().optional(),
 });
