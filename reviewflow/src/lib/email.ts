@@ -94,5 +94,5 @@ export async function sendEmail(input: EmailInput): Promise<EmailResult> {
 }
 
 export function emailFooter(): string {
-  return `\n\n—\n${BRAND.legalName} · ${BRAND.location.label}\n${BRAND.contact.email} · ${BRAND.domain}\nReply STOP to opt out of future emails.`;
+  return `\n\n—\n${BRAND.name} · ${BRAND.domain}\nReply STOP to unsubscribe.`;
 }
