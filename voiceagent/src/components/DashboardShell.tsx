@@ -46,6 +46,7 @@ const PRIMARY_NAV = [
 ] as const;
 
 const MORE_NAV = [
+  { href: "/dashboard/live", label: "Live calls", icon: Radio },
   { href: "/dashboard/setup", label: "Setup wizard", icon: Rocket },
   { href: "/dashboard/agents", label: "Agents", icon: Sparkles },
   { href: "/dashboard/phone-numbers", label: "Phone Numbers", icon: Phone },

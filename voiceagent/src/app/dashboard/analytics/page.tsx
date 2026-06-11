@@ -5,6 +5,7 @@ import { StatCard } from "@/components/StatCard";
 import { TrendChart } from "@/components/TrendChart";
 import { MotionItem, MotionSection } from "@/components/ui/MotionSection";
 import { apiFetch } from "@/lib/api-client";
+import { INDUSTRY_BENCHMARKS } from "@/lib/industry-benchmarks";
 
 type Analytics = {
   total: number;
@@ -168,6 +169,58 @@ export default function AnalyticsPage() {
                 )}
               </ul>
             </div>
+            </MotionItem>
+          </MotionSection>
+
+          <MotionSection>
+            <MotionItem>
+              <div className="card-glow-hover rounded-xl border border-border bg-surface p-6">
+                <h2 className="font-semibold text-text">Industry benchmarks</h2>
+                <p className="mt-1 text-xs text-muted">
+                  Reference ranges for small-business AI receptionist programs — not customer-specific.
+                </p>
+                <div className="mt-5 grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
+                  {Object.values(INDUSTRY_BENCHMARKS).map((bench) => {
+                    let yours: number | null = null;
+                    if (bench.yoursKey === "containment") yours = analytics.containmentRate;
+                    if (bench.yoursKey === "quality") yours = analytics.avgScore;
+                    if (bench.yoursKey === "missed") yours = analytics.transferRate;
+                    if (bench.yoursKey === "answerRate") {
+                      yours = analytics.total
+                        ? Math.max(0, 100 - analytics.transferRate)
+                        : null;
+                    }
+                    const lowerIsBetter = "lowerIsBetter" in bench && bench.lowerIsBetter;
+                    const delta =
+                      yours != null
+                        ? lowerIsBetter
+                          ? bench.typical - yours
+                          : yours - bench.typical
+                        : null;
+                    const ahead = delta != null && delta >= 0;
+
+                    return (
+                      <div key={bench.label} className="rounded-lg border border-border/80 bg-bg/40 p-4">
+                        <p className="text-xs text-muted">{bench.label}</p>
+                        <p className="mt-2 font-display text-2xl text-text">
+                          {yours != null ? `${yours}${bench.unit}` : "—"}
+                        </p>
+                        <p className="mt-1 text-xs text-muted">
+                          Typical: {bench.typical}
+                          {bench.unit}
+                        </p>
+                        {delta != null && analytics.total > 0 ? (
+                          <p className={`mt-2 text-xs ${ahead ? "text-emerald-400" : "text-amber-400"}`}>
+                            {ahead ? "At or above" : "Below"} typical
+                          </p>
+                        ) : (
+                          <p className="mt-2 text-xs text-muted">Need more calls</p>
+                        )}
+                      </div>
+                    );
+                  })}
+                </div>
+              </div>
             </MotionItem>
           </MotionSection>
         </>

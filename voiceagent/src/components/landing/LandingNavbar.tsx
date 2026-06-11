@@ -24,6 +24,7 @@ import { useEffect, useRef, useState } from "react";
 import { BRAND } from "@/lib/brand";
 import { TRIAL_MARKETING } from "@/lib/trial";
 import { GlowButton } from "@/components/ui/GlowButton";
+import { LanguageSwitcher } from "@/components/landing/LanguageSwitcher";
 
 type MenuItem = { href: string; label: string; desc: string; icon: React.ReactNode };
 
@@ -35,6 +36,7 @@ const PRODUCT_MENU: MenuItem[] = [
   { href: "/status", label: "Status", desc: "Live uptime and incident history", icon: <Activity className="h-4 w-4" /> },
   { href: "/compare", label: "Compare", desc: "GreetQ vs the alternatives", icon: <BookOpen className="h-4 w-4" /> },
   { href: "/changelog", label: "Changelog", desc: "Product updates and release notes", icon: <Activity className="h-4 w-4" /> },
+  { href: "/resources/buyers-guide", label: "Buyer's guide", desc: "Evaluate AI receptionists — free checklist", icon: <BookOpen className="h-4 w-4" /> },
 ];
 
 const INDUSTRIES_MENU: MenuItem[] = [
@@ -52,7 +54,6 @@ const TOP_LINKS = [
   { href: "/pricing", label: "Pricing" },
   { href: "/demo", label: "Demo" },
   { href: "/blog", label: "Blog" },
-  { href: "/fr", label: "FR" },
 ] as const;
 
 function DesktopDropdown({
@@ -203,6 +204,7 @@ export function LandingNavbar() {
         </nav>
 
         <div className="hidden items-center gap-3 lg:flex">
+          <LanguageSwitcher />
           <Link href="/login" className="text-sm text-muted transition hover:text-text">
             Sign in
           </Link>
@@ -242,6 +244,7 @@ export function LandingNavbar() {
               </Link>
             ))}
             <div className="mt-6 flex flex-col gap-3">
+              <LanguageSwitcher />
               <Link
                 href="/login"
                 className="rounded-lg border border-border py-3 text-center text-text"

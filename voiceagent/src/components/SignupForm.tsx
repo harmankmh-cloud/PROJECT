@@ -93,7 +93,6 @@ export function SignupForm({
       <div className="auth-card">
         <h1 className="font-display text-3xl text-text">Create your account</h1>
         <p className="mt-2 text-sm text-muted">
-          Join 500+ businesses who never miss a call.{" "}
           {initialPlan
             ? `Set up your org, then continue to ${initialPlan} checkout (${TRIAL_MARKETING.goLiveShort}).`
             : `${TRIAL_MARKETING.exploreLong} ${TRIAL_MARKETING.goLiveLong}`}

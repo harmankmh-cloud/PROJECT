@@ -5,6 +5,7 @@ import { useEffect, useRef, useState } from "react";
 import { Phone } from "lucide-react";
 import { GlowButton } from "@/components/ui/GlowButton";
 import { Input } from "@/components/ui/Input";
+import { SampleCallPlayer } from "@/components/landing/SampleCallPlayer";
 
 const INDUSTRIES = [
   { id: "salon", label: "Salon", greeting: "Hi! Thanks for calling Glow Studio. How can I help you book today?" },
@@ -159,6 +160,16 @@ export function DemoSalesPage() {
           ) : null}
         </div>
       </div>
+
+      <section id="sample-call" className="mt-16 border-t border-border pt-16">
+        <h2 className="font-display text-2xl text-text">Hear a full sample call</h2>
+        <p className="mt-2 max-w-2xl text-sm text-muted">
+          A realistic dental booking — transcript, timing, and tone. No signup required.
+        </p>
+        <div className="mt-8">
+          <SampleCallPlayer />
+        </div>
+      </section>
     </div>
   );
 }
