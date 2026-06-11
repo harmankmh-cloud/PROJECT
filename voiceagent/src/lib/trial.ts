@@ -27,10 +27,19 @@ export type TrialOrg = {
   stripe_subscription_id?: string | null;
   trial_minutes_remaining?: number | null;
   sandbox_test_calls_used?: number | null;
+  subscription_status?: string | null;
+  access_until?: string | null;
 };
 
 export function hasActiveSubscription(org: TrialOrg): boolean {
-  return Boolean(org.stripe_subscription_id);
+  if (!org.stripe_subscription_id) return false;
+  const status = org.subscription_status;
+  if (!status) return true;
+  if (status === "active" || status === "trialing" || status === "past_due") return true;
+  if (status === "canceled" && org.access_until) {
+    return new Date(org.access_until).getTime() > Date.now();
+  }
+  return false;
 }
 
 export function isTrialPlan(org: TrialOrg): boolean {

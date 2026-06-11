@@ -15,6 +15,14 @@ create table if not exists va_organizations (
   sandbox_test_calls_used integer not null default 0,
   stripe_customer_id text,
   stripe_subscription_id text,
+  subscription_status text check (subscription_status is null or subscription_status in (
+    'trialing', 'active', 'past_due', 'unpaid', 'canceled', 'incomplete', 'incomplete_expired', 'paused'
+  )),
+  billing_period_start timestamptz,
+  billing_period_end timestamptz,
+  access_until timestamptz,
+  spending_limit_cents integer,
+  overage_blocked boolean not null default false,
   transfer_phone text,
   business_hours jsonb default '{"mon":{"open":"09:00","close":"17:00"},"tue":{"open":"09:00","close":"17:00"},"wed":{"open":"09:00","close":"17:00"},"thu":{"open":"09:00","close":"17:00"},"fri":{"open":"09:00","close":"17:00"}}'::jsonb,
   webhook_url text,
