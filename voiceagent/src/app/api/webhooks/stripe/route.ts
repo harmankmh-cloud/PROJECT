@@ -3,6 +3,11 @@ import type Stripe from "stripe";
 import { createAdminClient } from "@/lib/supabase/admin";
 import { getStripe, reportVoiceMinutes } from "@/lib/stripe";
 import { planFromResolvedPrices, resolveStripePriceIds } from "@/lib/stripe-prices";
+import {
+  billableMinutesFromBatch,
+  currentBillingPeriodStart,
+  planIncludedMinutes,
+} from "@/lib/usage-metering";
 
 async function updateOrgPlan(
   admin: ReturnType<typeof createAdminClient>,
@@ -107,24 +112,60 @@ export async function POST(request: NextRequest) {
   }
 
   if (event.type === "invoice.created") {
+    const periodStart = currentBillingPeriodStart();
     const { data: pending } = await admin
       .from("va_usage_events")
-      .select("id, org_id, quantity, va_organizations(stripe_customer_id)")
+      .select(
+        "id, org_id, quantity, created_at, va_organizations(stripe_customer_id, stripe_subscription_id, plan)"
+      )
       .eq("reported_to_stripe", false)
-      .limit(100);
+      .eq("event_type", "voice_minute")
+      .limit(500);
 
     const reportedIds: string[] = [];
+    const byOrg = new Map<string, typeof pending>();
 
     for (const usage of pending || []) {
-      const org = usage.va_organizations as
-        | { stripe_customer_id: string | null }
-        | { stripe_customer_id: string | null }[]
-        | null;
-      const customerId = Array.isArray(org) ? org[0]?.stripe_customer_id : org?.stripe_customer_id;
-      if (!customerId) continue;
+      const list = byOrg.get(usage.org_id) || [];
+      list.push(usage);
+      byOrg.set(usage.org_id, list);
+    }
 
-      const result = await reportVoiceMinutes(customerId, Number(usage.quantity));
-      if (result.ok) reportedIds.push(usage.id);
+    for (const [orgId, orgPending] of byOrg) {
+      if (!orgPending?.length) continue;
+      const orgRaw = orgPending[0]?.va_organizations;
+      const org = Array.isArray(orgRaw) ? orgRaw[0] : orgRaw;
+      const customerId = org?.stripe_customer_id;
+      const unreportedIds = new Set(orgPending.map((u) => u.id));
+
+      if (org?.stripe_subscription_id && customerId) {
+        const included = planIncludedMinutes(org.plan);
+        const { data: periodEvents } = await admin
+          .from("va_usage_events")
+          .select("id, quantity, reported_to_stripe, created_at")
+          .eq("org_id", orgId)
+          .eq("event_type", "voice_minute")
+          .gte("created_at", periodStart)
+          .order("created_at", { ascending: true });
+
+        const billable = billableMinutesFromBatch(
+          (periodEvents || []).map((row) => ({
+            id: row.id,
+            quantity: Number(row.quantity),
+            reported_to_stripe: Boolean(row.reported_to_stripe),
+            created_at: row.created_at,
+          })),
+          included,
+          unreportedIds
+        );
+
+        if (billable > 0) {
+          const result = await reportVoiceMinutes(customerId, billable);
+          if (!result.ok) continue;
+        }
+      }
+
+      reportedIds.push(...orgPending.map((u) => u.id));
     }
 
     if (reportedIds.length) {
