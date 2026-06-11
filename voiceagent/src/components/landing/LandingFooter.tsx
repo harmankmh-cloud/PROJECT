@@ -1,7 +1,12 @@
 import Link from "next/link";
+import dynamic from "next/dynamic";
 import { BRAND } from "@/lib/brand";
 import { LANDING_COPY } from "@/lib/copy/landing";
 import { TrustBar } from "./TrustBar";
+
+const ConversionWidgets = dynamic(() =>
+  import("./ConversionWidgets").then((m) => ({ default: m.ConversionWidgets }))
+);
 
 const COLUMNS = [
   {
@@ -13,6 +18,7 @@ const COLUMNS = [
       { href: "/docs", label: "Developers & API" },
       { href: "/compare", label: "Compare" },
       { href: "/demo", label: "Demo" },
+      { href: "/changelog", label: "Changelog" },
       { href: "/status", label: "System status" },
     ],
   },
@@ -38,6 +44,7 @@ const COLUMNS = [
       { href: "/case-studies", label: "Case studies" },
       { href: "/press", label: "Press" },
       { href: "/careers", label: "Careers" },
+      { href: "/partners", label: "Partners" },
       { href: "/contact", label: "Contact" },
     ],
   },
@@ -48,6 +55,7 @@ const COLUMNS = [
       { href: "/privacy", label: "Privacy policy" },
       { href: "/terms", label: "Terms of service" },
       { href: "/languages", label: "Languages" },
+      { href: "/fr", label: "Français" },
       { href: "/help", label: "Help center" },
       { href: `mailto:${BRAND.contact.email}`, label: BRAND.contact.email },
     ],
@@ -87,6 +95,7 @@ export function LandingFooter() {
           © {new Date().getFullYear()} {BRAND.legalName}. All rights reserved.
         </p>
       </div>
+      <ConversionWidgets />
     </footer>
   );
 }
