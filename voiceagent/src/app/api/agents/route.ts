@@ -1,8 +1,14 @@
 import { NextRequest, NextResponse } from "next/server";
 import { createClient } from "@/lib/supabase/server";
+import { createAdminClient } from "@/lib/supabase/admin";
 import { getUserOrg } from "@/lib/auth";
 import { logAudit } from "@/lib/compliance/audit";
 import { denyUnlessCanOperate } from "@/lib/require-org-access";
+import {
+  agentLimitBlockReason,
+  canCreateAgent,
+  type BillingOrg,
+} from "@/lib/billing-gates";
 
 export async function GET() {
   const supabase = await createClient();
@@ -35,6 +41,20 @@ export async function POST(request: NextRequest) {
 
   const denied = await denyUnlessCanOperate(org.id, user.id);
   if (denied) return denied;
+
+  const admin = createAdminClient();
+  const { count: agentCount } = await admin
+    .from("va_agents")
+    .select("id", { count: "exact", head: true })
+    .eq("org_id", org.id);
+
+  const billingOrg = org as BillingOrg;
+  if (!canCreateAgent(billingOrg, agentCount ?? 0)) {
+    return NextResponse.json(
+      { error: agentLimitBlockReason(billingOrg, agentCount ?? 0) },
+      { status: 403 }
+    );
+  }
 
   const body = await request.json();
   const { data, error } = await supabase

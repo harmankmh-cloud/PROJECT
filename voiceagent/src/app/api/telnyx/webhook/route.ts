@@ -19,11 +19,10 @@ import { intelligenceToCallUpdate } from "@/lib/call-intelligence-persist";
 import { dispatchCallWebhook } from "@/lib/outbound-webhook";
 import { isWithinBusinessHours, type BusinessHours } from "@/lib/business-hours";
 import {
-  canMakeProductionCall,
-  deductTrialMinutes,
-  productionBlockReason,
-  type TrialOrg,
-} from "@/lib/trial";
+  canAcceptNewCall,
+  type BillingOrg,
+} from "@/lib/billing-gates";
+import { recordCallUsage } from "@/lib/usage-metering";
 
 export async function POST(request: NextRequest) {
   const rawBody = await request.text();
@@ -95,28 +94,31 @@ export async function POST(request: NextRequest) {
       const { data: orgRow } = await admin
         .from("va_organizations")
         .select(
-          "business_hours, transfer_phone, plan, stripe_subscription_id, trial_minutes_remaining"
+          "id, business_hours, transfer_phone, plan, stripe_subscription_id, trial_minutes_remaining, subscription_status, access_until, spending_limit_cents, overage_blocked, billing_period_start"
         )
         .eq("id", orgId)
         .maybeSingle();
 
-      const orgTrial = (orgRow || {}) as TrialOrg;
+      const orgBilling = (orgRow || {}) as BillingOrg;
       const withinHours = isWithinBusinessHours(
         (orgRow?.business_hours as BusinessHours) || undefined
       );
 
-      if (!isSandbox && !canMakeProductionCall(orgTrial)) {
-        const blockedMsg =
-          productionBlockReason(orgTrial) ||
-          "This line is not active. Please visit greetq.com to subscribe.";
-        await answerCall(callControlId, {
-          clientState: encodeClientState({ orgId, agentId: agentId || "default" }),
-        });
-        await speakOnCall(callControlId, blockedMsg, {
-          voice: speakOpts.telnyx_voice,
-          language: speakOpts.language,
-        });
-        return NextResponse.json({ ok: true, blocked: "trial_exhausted" });
+      if (!isSandbox) {
+        const gate = await canAcceptNewCall(admin, { ...orgBilling, id: orgId });
+        if (!gate.allowed) {
+          const blockedMsg =
+            gate.reason ||
+            "This line is not active. Please visit greetq.com to subscribe.";
+          await answerCall(callControlId, {
+            clientState: encodeClientState({ orgId, agentId: agentId || "default" }),
+          });
+          await speakOnCall(callControlId, blockedMsg, {
+            voice: speakOpts.telnyx_voice,
+            language: speakOpts.language,
+          });
+          return NextResponse.json({ ok: true, blocked: "billing_gate" });
+        }
       }
 
       if (isInbound && !withinHours && !isSandbox) {
@@ -339,23 +341,12 @@ export async function POST(request: NextRequest) {
         analysis,
       });
 
-      await admin.from("va_usage_events").insert({
-        org_id: call.org_id,
-        call_id: call.id,
-        event_type: "voice_minute",
-        quantity: minutes,
+      await recordCallUsage(admin, {
+        orgId: call.org_id,
+        callId: call.id,
+        minutes,
+        isSandbox: Boolean(call.is_sandbox),
       });
-
-      if (!call.is_sandbox) {
-        const { data: orgRow } = await admin
-          .from("va_organizations")
-          .select("plan, stripe_subscription_id, trial_minutes_remaining")
-          .eq("id", call.org_id)
-          .maybeSingle();
-        if (orgRow) {
-          await deductTrialMinutes(admin, call.org_id, orgRow as TrialOrg, minutes);
-        }
-      }
 
       if (!call.transferred && call.from_number) {
         await logHubSpotCall(call.org_id, {

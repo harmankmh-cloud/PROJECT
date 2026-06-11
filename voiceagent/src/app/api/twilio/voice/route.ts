@@ -7,7 +7,7 @@ import {
   isSimpleTwilioVoiceMode,
 } from "@/lib/twilio";
 import { createAdminClient } from "@/lib/supabase/admin";
-import { canMakeProductionCall, productionBlockReason, type TrialOrg } from "@/lib/trial";
+import { canAcceptNewCall, type BillingOrg } from "@/lib/billing-gates";
 import { ensureCallRecord, resolveVoiceContext } from "@/lib/twilio-voice-context";
 import { getFlowWelcomeGreeting } from "@/lib/voice-flow-runtime";
 import { getPublicAppUrl } from "@/lib/public-url";
@@ -33,16 +33,24 @@ export async function POST(request: NextRequest) {
         const admin = createAdminClient();
         const { data: orgRow } = await admin
           .from("va_organizations")
-          .select("plan, stripe_subscription_id, trial_minutes_remaining")
+          .select(
+            "id, plan, stripe_subscription_id, trial_minutes_remaining, subscription_status, access_until, spending_limit_cents, overage_blocked, billing_period_start"
+          )
           .eq("id", ctx.orgId)
           .maybeSingle();
-        if (orgRow && !canMakeProductionCall(orgRow as TrialOrg)) {
-          return twimlResponse(
-            buildErrorTwiml(
-              productionBlockReason(orgRow as TrialOrg) ||
-                "This line is not active. Please visit greetq.com to subscribe."
-            )
-          );
+        if (orgRow) {
+          const gate = await canAcceptNewCall(admin, {
+            ...(orgRow as BillingOrg),
+            id: ctx.orgId,
+          });
+          if (!gate.allowed) {
+            return twimlResponse(
+              buildErrorTwiml(
+                gate.reason ||
+                  "This line is not active. Please visit greetq.com to subscribe."
+              )
+            );
+          }
         }
       } catch {
         // Fall through if admin client unavailable in dev

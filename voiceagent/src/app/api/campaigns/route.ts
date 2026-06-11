@@ -6,7 +6,7 @@ import { getTwilioClient } from "@/lib/twilio";
 import { dialOutbound, encodeClientState, isTelnyxConfigured } from "@/lib/telnyx";
 import { logAudit } from "@/lib/compliance/audit";
 import { denyUnlessCanOperate } from "@/lib/require-org-access";
-import { canMakeProductionCall, productionBlockReason } from "@/lib/trial";
+import { canMakeProductionCall, productionBlockReason, type BillingOrg } from "@/lib/billing-gates";
 
 export async function GET() {
   const supabase = await createClient();
@@ -86,8 +86,8 @@ export async function PATCH(request: NextRequest) {
   const { id, action } = body;
 
   if (action === "start") {
-    if (!canMakeProductionCall(org)) {
-      return NextResponse.json({ error: productionBlockReason(org) }, { status: 402 });
+    if (!canMakeProductionCall(org as BillingOrg)) {
+      return NextResponse.json({ error: productionBlockReason(org as BillingOrg) }, { status: 402 });
     }
 
     if (!isWithinCallingHours()) {
