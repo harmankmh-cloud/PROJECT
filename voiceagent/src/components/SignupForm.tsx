@@ -9,7 +9,6 @@ import { AuthLayout } from "@/components/auth/AuthLayout";
 import { GoogleAuthButton, isGoogleAuthEnabled } from "@/components/auth/GoogleAuthButton";
 import { GlowButton } from "@/components/ui/GlowButton";
 import { Input } from "@/components/ui/Input";
-import { BRAND } from "@/lib/brand";
 import { markOnboardingPending } from "@/lib/onboarding";
 import type { PlanKey } from "@/lib/plans";
 import { TRIAL_MARKETING } from "@/lib/trial";
