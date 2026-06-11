@@ -11,6 +11,14 @@ export const LANDING_COPY = {
     ctaPrimary: "Start free trial",
     ctaSecondary: "Watch demo",
     footnote: `${TRIAL_MARKETING.exploreShort} · ${TRIAL_MARKETING.goLiveShort}`,
+    capabilities: [
+      { label: "AI call summaries", href: "#intelligence" },
+      { label: "Sentiment analysis", href: "#intelligence" },
+      { label: "Appointment booking", href: "#features" },
+      { label: "Warm transfer", href: "#features" },
+      { label: "SMS follow-up", href: "#intelligence" },
+      { label: "API & webhooks", href: "/docs" },
+    ] as const,
   },
   marquee: {
     label: "Trusted by businesses across Canada",
@@ -35,6 +43,54 @@ export const LANDING_COPY = {
     tagline: "Made with love in Canada",
   },
 } as const;
+
+export const FEATURE_SPOTLIGHTS = [
+  {
+    id: "intelligence",
+    eyebrow: "Call intelligence",
+    title: "Every call analyzed the moment it ends",
+    desc: "GreetQ doesn't just answer — it writes the summary, scores the sentiment, detects the caller's intent, and extracts action items so your team knows exactly what to do next.",
+    bullets: ["2-sentence AI summary per call", "Positive / neutral / negative sentiment", "Action items extracted automatically", "0–100 call quality score"],
+    cta: { label: "See the analytics dashboard", href: "/demo" },
+    artifact: "call-card" as const,
+  },
+  {
+    id: "sms",
+    eyebrow: "SMS follow-up",
+    title: "The call ends. The text goes out.",
+    desc: "Booking confirmations, next steps, and missed-call follow-ups sent automatically — so callers never wonder what happened.",
+    bullets: ["Booking confirmations by text", "Missed-call instant reply", "CASL-compliant consent tracking"],
+    cta: { label: "View plans with SMS", href: "/pricing" },
+    artifact: "sms-thread" as const,
+  },
+  {
+    id: "api",
+    eyebrow: "Developers & API",
+    title: "Your call data, one GET away",
+    desc: "Pull transcripts, summaries, sentiment, and action items into any system with the REST API — or push events out with webhooks and Zapier.",
+    bullets: ["REST API with org-scoped keys", "Webhooks for call events", "Zapier & Make friendly payloads"],
+    cta: { label: "Read the API docs", href: "/docs" },
+    artifact: "code" as const,
+  },
+  {
+    id: "security",
+    eyebrow: "Security & compliance",
+    title: "Built for Canadian privacy from day one",
+    desc: "PIPEDA-aligned handling, CASL outbound tooling, full audit logs, and optional US HIPAA mode on Enterprise — with your data isolated per organization.",
+    bullets: ["PIPEDA-first data handling", "CASL consent + quiet hours", "Full audit trail", "Enterprise HIPAA + BAA"],
+    cta: { label: "Read the security overview", href: "/security" },
+    artifact: "security" as const,
+  },
+] as const;
+
+export const COMPARISON_ROWS = [
+  { label: "Answers 24/7, never sick", human: false, voicemail: false, greetq: true },
+  { label: "Books appointments live", human: true, voicemail: false, greetq: true },
+  { label: "AI summary + sentiment per call", human: false, voicemail: false, greetq: true },
+  { label: "Answers in under 2 seconds", human: false, voicemail: true, greetq: true },
+  { label: "Warm transfer with context", human: true, voicemail: false, greetq: true },
+  { label: "Monthly cost", human: "$3,000+", voicemail: "$0 (and lost jobs)", greetq: "From $79" },
+] as const;
 
 export const BENTO_FEATURES = [
   {
