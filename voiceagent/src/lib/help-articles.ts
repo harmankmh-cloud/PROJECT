@@ -47,6 +47,7 @@ export const HELP_ARTICLES: HelpArticle[] = [
     body: [
       "The text sandbox lets you chat with your agent without telephony costs.",
       "Trial accounts include 30 free voice minutes and up to three one-minute test calls to your mobile.",
+      "Voice test calls require Telnyx or Twilio to be configured on the server. If the Call my phone button is disabled, use text chat — it works the same agent logic.",
       "Review transcripts in Dashboard → Calls after each test.",
     ],
   },

@@ -23,6 +23,20 @@ function SandboxContent() {
   const [callMessage, setCallMessage] = useState("");
   const [calling, setCalling] = useState(false);
   const [trialInfo, setTrialInfo] = useState<string>("");
+  const [voiceAvailable, setVoiceAvailable] = useState<boolean | null>(null);
+  const [voiceNotice, setVoiceNotice] = useState("");
+
+  useEffect(() => {
+    apiFetch<{ voiceAvailable: boolean; message?: string }>("/api/sandbox/telephony-status").then(
+      (res) => {
+        if (!res.ok) return;
+        setVoiceAvailable(res.data.voiceAvailable);
+        if (!res.data.voiceAvailable && res.data.message) {
+          setVoiceNotice(res.data.message);
+        }
+      }
+    );
+  }, []);
 
   useEffect(() => {
     fetchTrialStatus().then((status) => {
@@ -108,7 +122,19 @@ function SandboxContent() {
         </p>
       )}
 
-      <form onSubmit={testCall} className="surface-card flex flex-col gap-3 p-5 sm:flex-row sm:items-end">
+      {voiceAvailable === false && voiceNotice ? (
+        <div className="rounded-xl border border-amber-500/30 bg-amber-500/10 px-4 py-3 text-sm text-amber-100">
+          {voiceNotice}{" "}
+          <Link href="/help/sandbox-testing" className="font-medium text-amber-50 underline">
+            Learn more
+          </Link>
+        </div>
+      ) : null}
+
+      <form
+        onSubmit={testCall}
+        className={`surface-card flex flex-col gap-3 p-5 sm:flex-row sm:items-end ${voiceAvailable === false ? "opacity-60" : ""}`}
+      >
         <div className="flex-1">
           <label className="mb-2 block text-xs font-semibold uppercase tracking-wider text-slate-text">
             Call my phone
@@ -118,11 +144,12 @@ function SandboxContent() {
             placeholder="+1 604 555 0100"
             value={testPhone}
             onChange={(e) => setTestPhone(e.target.value)}
+            disabled={voiceAvailable === false}
           />
         </div>
         <button
           type="submit"
-          disabled={calling || !agentId}
+          disabled={calling || !agentId || voiceAvailable === false}
           className="btn-primary rounded-xl px-5 py-3 text-sm disabled:opacity-50"
         >
           {calling ? "Calling…" : "Start test call"}
