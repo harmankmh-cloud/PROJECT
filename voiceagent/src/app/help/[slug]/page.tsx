@@ -4,6 +4,8 @@ import { notFound } from "next/navigation";
 import { MarketingFooterNew } from "@/components/marketing/MarketingFooterNew";
 import { MarketingNavbar } from "@/components/marketing/MarketingNavbar";
 import { SkipToContent } from "@/components/SkipToContent";
+import { JsonLd } from "@/components/seo/JsonLd";
+import { BRAND } from "@/lib/brand";
 import { getHelpArticle, HELP_ARTICLES, HELP_CATEGORIES } from "@/lib/help-articles";
 
 export function generateStaticParams() {
@@ -38,6 +40,17 @@ export default async function HelpArticlePage({
 
   return (
     <div className="dark-mesh-bg grid-pattern flex min-h-screen flex-col">
+      <JsonLd
+        data={{
+          "@context": "https://schema.org",
+          "@type": "Article",
+          headline: article.title,
+          description: article.excerpt,
+          url: `https://${BRAND.domain}/help/${slug}`,
+          author: { "@type": "Organization", name: BRAND.name },
+          publisher: { "@type": "Organization", name: BRAND.name },
+        }}
+      />
       <SkipToContent />
       <MarketingNavbar />
       <main id="main-content" className="flex-1 pb-16 pt-24">

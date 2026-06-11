@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import { DemoPageStatic } from "@/components/landing/DemoPageStatic";
 import { DemoSalesPage } from "@/components/landing/DemoSalesPage";
 import { LandingFooter } from "@/components/landing/LandingFooter";
 import { LandingNavbar } from "@/components/landing/LandingNavbar";
@@ -17,6 +18,7 @@ export default function DemoPage() {
       <SkipToContent />
       <LandingNavbar />
       <main id="main-content" className="flex-1 pt-24">
+        <DemoPageStatic />
         <DemoSalesPage />
       </main>
       <LandingFooter />

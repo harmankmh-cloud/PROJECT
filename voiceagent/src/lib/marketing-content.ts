@@ -161,6 +161,8 @@ export const TESTIMONIALS = [
     role: "Operations Director",
     company: "Pacific Dental Group",
     industry: "Dental",
+    location: "Abbotsford, BC",
+    caseStudyHref: "/dental",
   },
   {
     quote:
