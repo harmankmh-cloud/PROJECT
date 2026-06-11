@@ -1,5 +1,6 @@
 "use client";
 
+import Link from "next/link";
 import { motion, AnimatePresence } from "framer-motion";
 import { CheckCircle2, PhoneCall, X } from "lucide-react";
 import { useEffect, useState } from "react";
@@ -87,10 +88,17 @@ function ExitIntentModal() {
             {state === "done" ? (
               <div className="text-center">
                 <CheckCircle2 className="mx-auto h-10 w-10 text-emerald-400" />
-                <h3 className="font-display mt-4 text-xl text-text">Check your inbox</h3>
+                <h3 className="font-display mt-4 text-xl text-text">You&apos;re all set</h3>
                 <p className="mt-2 text-sm text-muted">
-                  The AI Receptionist Buyer&apos;s Guide is on its way.
+                  Read the buyer&apos;s guide now — or we&apos;ll follow up by email.
                 </p>
+                <Link
+                  href="/resources/buyers-guide"
+                  className="mt-4 inline-block rounded-lg bg-violet-600 px-5 py-2.5 text-sm font-semibold text-white transition hover:bg-violet-500"
+                  onClick={() => setOpen(false)}
+                >
+                  Open buyer&apos;s guide →
+                </Link>
               </div>
             ) : (
               <>

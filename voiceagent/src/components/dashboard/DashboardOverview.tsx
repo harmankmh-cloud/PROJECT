@@ -17,6 +17,7 @@ import { MotionItem, MotionSection } from "@/components/ui/MotionSection";
 import { Skeleton } from "@/components/ui/Skeleton";
 import { useCalls } from "@/hooks/useCalls";
 import { useDashboardStats } from "@/hooks/useDashboardStats";
+import { extractBookingsFromCalls } from "@/lib/call-bookings";
 import type { OrgSetupStatus } from "@/lib/org-setup-status";
 import { DEMO_APPOINTMENTS, DEMO_MESSAGES } from "@/lib/demo-data";
 
@@ -49,6 +50,7 @@ export function DashboardOverview({
     : statsQuery.data;
 
   const calls = isDemo ? [] : callsQuery.data?.calls?.slice(0, 5) ?? [];
+  const bookings = isDemo ? [] : extractBookingsFromCalls(callsQuery.data?.calls ?? []).slice(0, 3);
   const loading = !isDemo && (statsQuery.isLoading || callsQuery.isLoading);
   const showSetup =
     setup &&
@@ -196,12 +198,32 @@ export function DashboardOverview({
                   </div>
                 ))
               ) : (
-                <div className="py-4 text-center">
-                  <Calendar className="mx-auto h-7 w-7 text-muted" />
-                  <p className="mt-3 text-sm text-muted">
-                    Bookings from live calls appear here once Google Calendar is connected.
-                  </p>
-                </div>
+                bookings.length === 0 ? (
+                  <div className="py-4 text-center">
+                    <Calendar className="mx-auto h-7 w-7 text-muted" />
+                    <p className="mt-3 text-sm text-muted">
+                      Bookings from live calls appear here once callers ask to schedule.
+                    </p>
+                  </div>
+                ) : (
+                  bookings.map((booking) => (
+                    <div
+                      key={booking.id}
+                      className="flex items-center justify-between border-b border-border py-3 last:border-0"
+                    >
+                      <div className="min-w-0 pr-3">
+                        <p className="truncate text-sm font-medium text-text">{booking.name}</p>
+                        <p className="truncate text-xs text-muted">{booking.summary}</p>
+                      </div>
+                      <p className="shrink-0 text-xs text-accent">
+                        {new Date(booking.when).toLocaleDateString("en-CA", {
+                          month: "short",
+                          day: "numeric",
+                        })}
+                      </p>
+                    </div>
+                  ))
+                )
               )}
               <Link
                 href={isDemo ? "/signup" : "/dashboard/appointments"}

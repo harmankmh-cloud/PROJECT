@@ -1,6 +1,7 @@
 import { GeistMono } from "geist/font/mono";
 import { redirect } from "next/navigation";
 import { DashboardShell } from "@/components/DashboardShell";
+import { PwaRegister } from "@/components/PwaRegister";
 import { TrialStatusBanner } from "@/components/dashboard/TrialStatusBanner";
 import { DashboardProviders } from "@/components/providers/AppProviders";
 import { PageTransition } from "@/components/ui/PageTransition";
@@ -23,6 +24,7 @@ export default async function DashboardLayout({ children }: { children: React.Re
   return (
     <div className={GeistMono.variable}>
       <DashboardProviders>
+        <PwaRegister />
         <DashboardShell
           orgName={org?.name}
           userEmail={user.email}

@@ -19,6 +19,7 @@ const COLUMNS = [
       { href: "/compare", label: "Compare" },
       { href: "/demo", label: "Demo" },
       { href: "/changelog", label: "Changelog" },
+      { href: "/resources/buyers-guide", label: "Buyer's guide" },
       { href: "/status", label: "System status" },
     ],
   },
