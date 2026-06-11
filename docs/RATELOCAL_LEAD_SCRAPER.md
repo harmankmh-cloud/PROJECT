@@ -13,11 +13,11 @@ discover URLs → scrape emails → import to Supabase → daily job sends 100 N
 | 1. Find businesses | `cd tools/ratelocal-lead-scraper && npm run discover` |
 | 2. Scrape emails | `npm run scrape:batch` |
 | 3. Import pool | `RATELOCAL_URL=https://ratelocal.ca npm run import` |
-| 4. Daily send | Activepieces → `POST https://ratelocal.ca/api/make/outreach/daily` with `limit: 100` |
+| 4. Daily send | Activepieces → `POST https://ratelocal.ca/api/make/outreach/daily` with `limit: 5` per batch (20 batches = 100/day) |
 
 ## Daily send rules
 
-- Max **100 emails per run**
+- Max **100 emails per run** (20 Activepieces batches × 5 — avoids Vercel 504 timeouts)
 - Only `status = pending` with a valid email
 - After send → `status = sent` (never emailed again)
 - **45s delay** between sends
