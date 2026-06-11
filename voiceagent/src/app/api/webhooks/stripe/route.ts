@@ -5,6 +5,11 @@ import { getStripe, reportVoiceMinutes } from "@/lib/stripe";
 import { planFromResolvedPrices, resolveStripePriceIds } from "@/lib/stripe-prices";
 import { graceAccessUntil } from "@/lib/billing-gates";
 import {
+  isBillingMigrationApplied,
+  orgSelectFields,
+  orgUpdateFields,
+} from "@/lib/billing-schema";
+import {
   billableMinutesFromBatch,
   billingPeriodStart,
   planIncludedMinutes,
@@ -50,14 +55,16 @@ async function updateOrgFromSubscription(
 
   await admin
     .from("va_organizations")
-    .update({
-      stripe_subscription_id: subscription.id,
-      plan,
-      subscription_status: status,
-      billing_period_start: period.start,
-      billing_period_end: period.end,
-      access_until: accessUntil,
-    })
+    .update(
+      await orgUpdateFields({
+        stripe_subscription_id: subscription.id,
+        plan,
+        subscription_status: status,
+        billing_period_start: period.start,
+        billing_period_end: period.end,
+        access_until: accessUntil,
+      })
+    )
     .eq("stripe_customer_id", customerId);
 }
 
@@ -118,7 +125,10 @@ export async function POST(request: NextRequest) {
         }
       }
 
-      await admin.from("va_organizations").update(updates).eq("id", orgId);
+      await admin
+        .from("va_organizations")
+        .update(await orgUpdateFields(updates))
+        .eq("id", orgId);
     }
   }
 
@@ -146,15 +156,17 @@ export async function POST(request: NextRequest) {
 
     await admin
       .from("va_organizations")
-      .update({
-        plan: "trial",
-        stripe_subscription_id: null,
-        subscription_status: "canceled",
-        access_until: endedAt,
-        billing_period_start: null,
-        billing_period_end: null,
-        trial_minutes_remaining: 0,
-      })
+      .update(
+        await orgUpdateFields({
+          plan: "trial",
+          stripe_subscription_id: null,
+          subscription_status: "canceled",
+          access_until: endedAt,
+          billing_period_start: null,
+          billing_period_end: null,
+          trial_minutes_remaining: 0,
+        })
+      )
       .eq("stripe_customer_id", customerId);
   }
 
@@ -166,10 +178,12 @@ export async function POST(request: NextRequest) {
     if (customerId) {
       await admin
         .from("va_organizations")
-        .update({
-          subscription_status: "past_due",
-          access_until: graceAccessUntil(),
-        })
+        .update(
+          await orgUpdateFields({
+            subscription_status: "past_due",
+            access_until: graceAccessUntil(),
+          })
+        )
         .eq("stripe_customer_id", customerId);
     }
   }
@@ -179,7 +193,7 @@ export async function POST(request: NextRequest) {
     const customerId =
       typeof invoice.customer === "string" ? invoice.customer : invoice.customer?.id;
 
-    if (customerId) {
+    if (customerId && (await isBillingMigrationApplied())) {
       await admin
         .from("va_organizations")
         .update({
@@ -193,10 +207,20 @@ export async function POST(request: NextRequest) {
   }
 
   if (event.type === "invoice.created") {
-    const { data: orgs } = await admin
+    const { data: orgRows } = await admin
       .from("va_organizations")
-      .select("id, stripe_customer_id, stripe_subscription_id, plan, billing_period_start")
+      .select(
+        await orgSelectFields("id, stripe_customer_id, stripe_subscription_id, plan")
+      )
       .not("stripe_subscription_id", "is", null);
+
+    const orgs = (orgRows || []) as unknown as Array<{
+      id: string;
+      stripe_customer_id: string | null;
+      stripe_subscription_id: string | null;
+      plan: string | null;
+      billing_period_start?: string | null;
+    }>;
 
     const reportedIds: string[] = [];
 

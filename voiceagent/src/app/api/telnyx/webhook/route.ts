@@ -22,6 +22,7 @@ import {
   canAcceptNewCall,
   type BillingOrg,
 } from "@/lib/billing-gates";
+import { orgSelectFields } from "@/lib/billing-schema";
 import { recordCallUsage } from "@/lib/usage-metering";
 
 export async function POST(request: NextRequest) {
@@ -91,13 +92,19 @@ export async function POST(request: NextRequest) {
     });
 
     if (orgId && orgId !== "default") {
-      const { data: orgRow } = await admin
+      const { data: orgData } = await admin
         .from("va_organizations")
         .select(
-          "id, business_hours, transfer_phone, plan, stripe_subscription_id, trial_minutes_remaining, subscription_status, access_until, spending_limit_cents, overage_blocked, billing_period_start"
+          await orgSelectFields(
+            "id, business_hours, transfer_phone, plan, stripe_subscription_id, trial_minutes_remaining"
+          )
         )
         .eq("id", orgId)
         .maybeSingle();
+
+      const orgRow = orgData as
+        | (BillingOrg & { business_hours?: BusinessHours; transfer_phone?: string | null })
+        | null;
 
       const orgBilling = (orgRow || {}) as BillingOrg;
       const withinHours = isWithinBusinessHours(

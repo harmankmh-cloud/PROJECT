@@ -8,6 +8,7 @@ import {
 } from "@/lib/twilio";
 import { createAdminClient } from "@/lib/supabase/admin";
 import { canAcceptNewCall, type BillingOrg } from "@/lib/billing-gates";
+import { orgSelectFields } from "@/lib/billing-schema";
 import { ensureCallRecord, resolveVoiceContext } from "@/lib/twilio-voice-context";
 import { getFlowWelcomeGreeting } from "@/lib/voice-flow-runtime";
 import { getPublicAppUrl } from "@/lib/public-url";
@@ -34,7 +35,9 @@ export async function POST(request: NextRequest) {
         const { data: orgRow } = await admin
           .from("va_organizations")
           .select(
-            "id, plan, stripe_subscription_id, trial_minutes_remaining, subscription_status, access_until, spending_limit_cents, overage_blocked, billing_period_start"
+            await orgSelectFields(
+              "id, plan, stripe_subscription_id, trial_minutes_remaining"
+            )
           )
           .eq("id", ctx.orgId)
           .maybeSingle();

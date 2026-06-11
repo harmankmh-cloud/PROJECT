@@ -3,6 +3,7 @@ import { createClient } from "@/lib/supabase/server";
 import { createAdminClient } from "@/lib/supabase/admin";
 import { getUserOrg } from "@/lib/auth";
 import { denyUnlessCanOperate } from "@/lib/require-org-access";
+import { isBillingMigrationApplied } from "@/lib/billing-schema";
 
 export async function PATCH(request: NextRequest) {
   const supabase = await createClient();
@@ -18,6 +19,14 @@ export async function PATCH(request: NextRequest) {
   if (denied) return denied;
 
   const body = await request.json().catch(() => ({}));
+
+  if (!(await isBillingMigrationApplied())) {
+    return NextResponse.json(
+      { error: "Billing settings require a pending database update. Try again shortly." },
+      { status: 503 }
+    );
+  }
+
   const updates: Record<string, unknown> = {};
 
   if (body.spending_limit_cents !== undefined) {

@@ -12,6 +12,7 @@ import {
   fetchPeriodUsageEvents,
   summarizeUsage,
 } from "@/lib/usage-metering";
+import { isBillingMigrationApplied } from "@/lib/billing-schema";
 import {
   canMakeProductionCall as trialCanMakeProductionCall,
   canMakeSandboxTestCall,
@@ -189,18 +190,20 @@ export async function canAcceptNewCall(
     return { allowed: false, reason: blockReason };
   }
 
-  if (hasPaidAccess(org) && org.id && (await isOverSpendingLimit(admin, org))) {
-    if (!org.overage_blocked) {
-      await admin
-        .from("va_organizations")
-        .update({ overage_blocked: true })
-        .eq("id", org.id);
+  if (hasPaidAccess(org) && org.id && (await isBillingMigrationApplied())) {
+    if (await isOverSpendingLimit(admin, org)) {
+      if (!org.overage_blocked) {
+        await admin
+          .from("va_organizations")
+          .update({ overage_blocked: true })
+          .eq("id", org.id);
+      }
+      const limit = ((org.spending_limit_cents ?? 0) / 100).toFixed(2);
+      return {
+        allowed: false,
+        reason: `Overage spending limit ($${limit}) reached for this billing period. Raise the limit in Billing settings or wait for the period to reset.`,
+      };
     }
-    const limit = ((org.spending_limit_cents ?? 0) / 100).toFixed(2);
-    return {
-      allowed: false,
-      reason: `Overage spending limit ($${limit}) reached for this billing period. Raise the limit in Billing settings or wait for the period to reset.`,
-    };
   }
 
   if (!org.id) return { allowed: true, reason: "" };

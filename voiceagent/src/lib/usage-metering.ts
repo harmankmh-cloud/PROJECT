@@ -3,6 +3,7 @@ import type { SupabaseClient } from "@supabase/supabase-js";
 import { PLANS, type PlanKey } from "@/lib/plans";
 import { deductTrialMinutes, type TrialOrg } from "@/lib/trial";
 import type { BillingOrg } from "@/lib/billing-gates";
+import { orgSelectFields } from "@/lib/billing-schema";
 
 export type UsageEventRow = {
   id: string;
@@ -151,7 +152,7 @@ export async function recordCallUsage(
   const { data: orgRow } = await admin
     .from("va_organizations")
     .select(
-      "plan, stripe_subscription_id, trial_minutes_remaining, subscription_status, billing_period_start"
+      await orgSelectFields("plan, stripe_subscription_id, trial_minutes_remaining")
     )
     .eq("id", orgId)
     .maybeSingle();
