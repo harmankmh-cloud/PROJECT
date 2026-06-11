@@ -15,6 +15,7 @@ import {
   HelpCircle,
   History,
   LayoutDashboard,
+  ListChecks,
   MessageSquare,
   Phone,
   PhoneCall,
@@ -33,6 +34,7 @@ import { BRAND } from "@/lib/brand";
 const PRIMARY_NAV = [
   { href: "/dashboard", label: "Dashboard", icon: LayoutDashboard, demoHref: "/demo" },
   { href: "/dashboard/calls", label: "Call Logs", icon: PhoneCall, demoHref: "/demo#recent-calls" },
+  { href: "/dashboard/tasks", label: "Tasks", icon: ListChecks, demoHref: "/demo" },
   { href: "/dashboard/appointments", label: "Appointments", icon: Calendar, demoHref: "/demo#appointments" },
   { href: "/dashboard/messages", label: "Messages", icon: MessageSquare, demoHref: "/demo#messages" },
   { href: "/dashboard/settings", label: "Settings", icon: Settings, demoHref: "/signup" },
