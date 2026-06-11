@@ -10,6 +10,21 @@ import { BRAND } from "@/lib/brand";
 const FeaturesBento = dynamic(
   () => import("@/components/landing/FeaturesBento").then((m) => ({ default: m.FeaturesBento }))
 );
+const FeatureSpotlight = dynamic(
+  () => import("@/components/landing/FeatureSpotlight").then((m) => ({ default: m.FeatureSpotlight }))
+);
+const DashboardShowcase = dynamic(
+  () => import("@/components/landing/DashboardShowcase").then((m) => ({ default: m.DashboardShowcase }))
+);
+const ComparisonStrip = dynamic(
+  () => import("@/components/landing/ComparisonStrip").then((m) => ({ default: m.ComparisonStrip }))
+);
+const SampleCallPlayer = dynamic(
+  () => import("@/components/landing/SampleCallPlayer").then((m) => ({ default: m.SampleCallPlayer }))
+);
+const MissedRevenueEstimator = dynamic(
+  () => import("@/components/landing/MissedRevenueEstimator").then((m) => ({ default: m.MissedRevenueEstimator }))
+);
 const LandingHowItWorks = dynamic(
   () => import("@/components/landing/LandingHowItWorks").then((m) => ({ default: m.LandingHowItWorks }))
 );
@@ -62,16 +77,31 @@ export default function HomePage() {
         <LandingHero />
         <LogoMarquee />
         <div className="perf-below-fold">
+          <SampleCallPlayer />
+        </div>
+        <div className="perf-below-fold">
           <FeaturesBento />
         </div>
         <div className="perf-below-fold">
+          <FeatureSpotlight />
+        </div>
+        <div className="perf-below-fold">
           <LandingHowItWorks />
+        </div>
+        <div className="perf-below-fold">
+          <DashboardShowcase />
         </div>
         <div className="perf-below-fold">
           <StatsBar />
         </div>
         <div className="perf-below-fold">
           <LandingTestimonials />
+        </div>
+        <div className="perf-below-fold">
+          <ComparisonStrip />
+        </div>
+        <div className="perf-below-fold">
+          <MissedRevenueEstimator />
         </div>
         <div className="perf-below-fold">
           <PricingTeaser />

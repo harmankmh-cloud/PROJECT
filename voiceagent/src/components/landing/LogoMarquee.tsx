@@ -3,13 +3,11 @@ import { HUBSPOT_LOGO, ZAPIER_LOGO } from "@/lib/marketing-content";
 import { LANDING_COPY } from "@/lib/copy/landing";
 
 const LOGOS = [
-  { name: "Pacific Dental", abbr: "PD", color: "bg-violet-600" },
-  { name: "North Shore HVAC", abbr: "NH", color: "bg-teal-600" },
-  { name: "Glow Studio", abbr: "GS", color: "bg-rose-600" },
-  { name: "Harbour Legal", abbr: "HL", color: "bg-slate-600" },
   { name: "HubSpot", logo: HUBSPOT_LOGO },
   { name: "Zapier", logo: ZAPIER_LOGO },
+  { name: "Google Calendar", abbr: "GC", color: "bg-blue-600" },
   { name: "Telnyx", abbr: "TX", color: "bg-emerald-600" },
+  { name: "Twilio", abbr: "TW", color: "bg-rose-600" },
   { name: "Stripe", abbr: "ST", color: "bg-violet-500" },
 ] as const;
 

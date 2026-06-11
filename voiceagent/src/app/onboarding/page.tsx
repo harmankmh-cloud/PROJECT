@@ -1,7 +1,7 @@
 "use client";
 
 import Link from "next/link";
-import { useRouter } from "next/navigation";
+import { useRouter, useSearchParams } from "next/navigation";
 import { useEffect, useState } from "react";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { AnimatePresence, motion } from "framer-motion";
@@ -33,7 +33,8 @@ const DEFAULT_GREETING =
 
 export default function OnboardingPage() {
   const router = useRouter();
-  const [showWelcome, setShowWelcome] = useState(false);
+  const searchParams = useSearchParams();
+  const [showWelcome] = useState(() => searchParams.get("welcome") === "1");
   const [step, setStep] = useState(0);
   const [greeting, setGreeting] = useState(DEFAULT_GREETING);
   const [agentId, setAgentId] = useState("");
@@ -42,9 +43,6 @@ export default function OnboardingPage() {
   const [error, setError] = useState("");
 
   useEffect(() => {
-    if (typeof window !== "undefined" && window.location.search.includes("welcome=1")) {
-      setShowWelcome(true);
-    }
     void apiFetch<{ agents: Array<{ id: string }> }>("/api/agents").then((res) => {
       if (res.ok && res.data.agents[0]) setAgentId(res.data.agents[0].id);
     });

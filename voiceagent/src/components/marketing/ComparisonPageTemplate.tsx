@@ -1,8 +1,17 @@
 import Link from "next/link";
+import { Check } from "lucide-react";
 import { MarketingFooterNew } from "@/components/marketing/MarketingFooterNew";
 import { MarketingNavbar } from "@/components/marketing/MarketingNavbar";
 import { SkipToContent } from "@/components/SkipToContent";
 import { COMPARISON_HUB, COMPARISON_PAGES, type ComparisonSlug } from "@/lib/comparison-pages";
+
+const GREETQ_DIFFERENTIATORS = [
+  { label: "Canada-first compliance", detail: "PIPEDA-aligned handling and CASL outbound tooling on every plan" },
+  { label: "Flat plans with included minutes", detail: "From $79/mo — no usage-credit math at small-business volume" },
+  { label: "Call intelligence included", detail: "AI summary, sentiment, action items, and quality score on every call" },
+  { label: "Warm transfer with context", detail: "Your team picks up with the transcript and intent already in hand" },
+  { label: "API on every plan", detail: "GET /api/v1/calls with org-scoped keys — no enterprise gate" },
+] as const;
 
 export function ComparisonPageTemplate({ slug }: { slug: ComparisonSlug }) {
   const page = COMPARISON_PAGES[slug];
@@ -45,13 +54,28 @@ export function ComparisonPageTemplate({ slug }: { slug: ComparisonSlug }) {
             </div>
           </div>
 
+          <div className="mt-10 rounded-xl border border-violet-500/20 bg-violet-500/5 p-8">
+            <h2 className="font-display text-xl text-text">Where GreetQ stands apart</h2>
+            <ul className="mt-5 space-y-4">
+              {GREETQ_DIFFERENTIATORS.map((d) => (
+                <li key={d.label} className="flex items-start gap-3">
+                  <Check className="mt-0.5 h-4 w-4 shrink-0 text-violet-400" />
+                  <div>
+                    <p className="text-sm font-medium text-text">{d.label}</p>
+                    <p className="text-sm text-muted">{d.detail}</p>
+                  </div>
+                </li>
+              ))}
+            </ul>
+          </div>
+
           <div className="mt-10 flex flex-col gap-3 sm:flex-row">
             <Link href="/signup" className="btn-primary px-8 py-3.5 text-center">
               {page.cta}
             </Link>
             {slug === "vs-receptionist" && (
-              <Link href="/#roi" className="btn-secondary px-8 py-3.5 text-center">
-                ROI calculator
+              <Link href="/#estimator" className="btn-secondary px-8 py-3.5 text-center">
+                Missed revenue estimator
               </Link>
             )}
             <Link href="/compare" className="btn-ghost px-8 py-3.5 text-center">

@@ -1,3 +1,4 @@
+import Link from "next/link";
 import { Play } from "lucide-react";
 import { LANDING_COPY } from "@/lib/copy/landing";
 import { GlowButton } from "@/components/ui/GlowButton";
@@ -27,6 +28,17 @@ export function LandingHero() {
             </GlowButton>
           </div>
           <p className="mt-4 text-sm text-muted">{LANDING_COPY.hero.footnote}</p>
+          <div className="mt-6 flex flex-wrap gap-2" aria-label="Capabilities">
+            {LANDING_COPY.hero.capabilities.map((cap) => (
+              <Link
+                key={cap.label}
+                href={cap.href}
+                className="rounded-full border border-border/80 bg-white/[0.03] px-3 py-1.5 text-xs text-muted transition hover:border-violet-500/40 hover:text-text"
+              >
+                {cap.label}
+              </Link>
+            ))}
+          </div>
         </div>
         <HeroPhoneWidget />
       </div>

@@ -5,7 +5,6 @@ import { useEffect, useRef, useState } from "react";
 import { Phone } from "lucide-react";
 import { GlowButton } from "@/components/ui/GlowButton";
 import { Input } from "@/components/ui/Input";
-import { fadeUp } from "@/lib/motion";
 
 const INDUSTRIES = [
   { id: "salon", label: "Salon", greeting: "Hi! Thanks for calling Glow Studio. How can I help you book today?" },

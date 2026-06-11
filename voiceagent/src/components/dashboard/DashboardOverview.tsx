@@ -4,10 +4,12 @@ import Link from "next/link";
 import {
   Calendar,
   Clock,
+  MessageSquare,
   Phone,
   PhoneMissed,
   TrendingUp,
 } from "lucide-react";
+import { SetupChecklist } from "@/components/SetupChecklist";
 import { Badge } from "@/components/ui/Badge";
 import { GlowCard } from "@/components/ui/GlowCard";
 import { CountUp } from "@/components/ui/CountUp";
@@ -15,6 +17,7 @@ import { MotionItem, MotionSection } from "@/components/ui/MotionSection";
 import { Skeleton } from "@/components/ui/Skeleton";
 import { useCalls } from "@/hooks/useCalls";
 import { useDashboardStats } from "@/hooks/useDashboardStats";
+import type { OrgSetupStatus } from "@/lib/org-setup-status";
 import { DEMO_APPOINTMENTS, DEMO_MESSAGES } from "@/lib/demo-data";
 
 function formatDuration(seconds: number) {
@@ -31,9 +34,11 @@ function greeting(name?: string) {
 
 export function DashboardOverview({
   orgName,
+  setup,
   isDemo = false,
 }: {
   orgName?: string;
+  setup?: OrgSetupStatus;
   isDemo?: boolean;
 }) {
   const statsQuery = useDashboardStats();
@@ -45,6 +50,10 @@ export function DashboardOverview({
 
   const calls = isDemo ? [] : callsQuery.data?.calls?.slice(0, 5) ?? [];
   const loading = !isDemo && (statsQuery.isLoading || callsQuery.isLoading);
+  const showSetup =
+    setup &&
+    orgName &&
+    !(setup.hasAgent && setup.hasPhoneNumber && setup.hasKnowledge && setup.hasPublishedFlow);
 
   return (
     <div className="dashboard-container space-y-8 py-8">
@@ -53,6 +62,10 @@ export function DashboardOverview({
           {greeting(orgName)}
         </h1>
       </div>
+
+      {showSetup ? (
+        <SetupChecklist orgName={orgName} {...setup} />
+      ) : null}
 
       <MotionSection className="grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
         {[
@@ -91,13 +104,19 @@ export function DashboardOverview({
         <div className="flex items-center gap-3">
           <span className="pulse-dot" />
           <div>
-            <p className="font-semibold text-text">GreetQ is Active</p>
-            <p className="text-sm text-muted">Open now · Answering all calls</p>
+            <p className="font-semibold text-text">
+              {(stats?.activeAgents ?? 0) > 0 ? "GreetQ is active" : "Finish setup to go live"}
+            </p>
+            <p className="text-sm text-muted">
+              {(stats?.activeAgents ?? 0) > 0
+                ? "Your agent is ready to answer inbound calls"
+                : "Configure an agent and connect a phone number"}
+            </p>
           </div>
         </div>
-        <button type="button" className="btn-secondary text-sm">
-          Pause GreetQ
-        </button>
+        <Link href="/dashboard/agents" className="btn-secondary text-sm">
+          Manage agents
+        </Link>
       </GlowCard>
 
       <div className="grid gap-6 lg:grid-cols-3">
@@ -114,8 +133,15 @@ export function DashboardOverview({
           {loading ? (
             <Skeleton className="h-48 w-full" />
           ) : calls.length === 0 && !isDemo ? (
-            <GlowCard className="text-center">
-              <p className="text-muted">No calls yet — your number is active</p>
+            <GlowCard className="p-8 text-center">
+              <Phone className="mx-auto h-8 w-8 text-muted" />
+              <p className="mt-3 font-medium text-text">No calls yet</p>
+              <p className="mt-1 text-sm text-muted">
+                Connect a phone number or run a sandbox test to see call logs here.
+              </p>
+              <Link href="/dashboard/sandbox" className="mt-4 inline-block text-sm text-primary-glow hover:underline">
+                Open sandbox →
+              </Link>
             </GlowCard>
           ) : (
             <div className="overflow-x-auto rounded-xl border border-border">
@@ -157,15 +183,26 @@ export function DashboardOverview({
           <div id="appointments">
             <h2 className="mb-3 font-display text-lg text-text">Today&apos;s appointments</h2>
             <GlowCard className="p-5">
-              {DEMO_APPOINTMENTS.map((a) => (
-                <div key={a.id} className="flex items-center justify-between border-b border-border py-3 last:border-0">
-                  <div>
-                    <p className="text-sm font-medium text-text">{a.name}</p>
-                    <p className="text-xs text-muted">{a.service}</p>
+              {isDemo ? (
+                DEMO_APPOINTMENTS.map((a) => (
+                  <div key={a.id} className="flex items-center justify-between border-b border-border py-3 last:border-0">
+                    <div>
+                      <p className="text-sm font-medium text-text">{a.name}</p>
+                      <p className="text-xs text-muted">{a.service}</p>
+                    </div>
+                    <p className="text-sm text-accent">
+                      {a.day} {a.time}
+                    </p>
                   </div>
-                  <p className="text-sm text-accent">{a.day} {a.time}</p>
+                ))
+              ) : (
+                <div className="py-4 text-center">
+                  <Calendar className="mx-auto h-7 w-7 text-muted" />
+                  <p className="mt-3 text-sm text-muted">
+                    Bookings from live calls appear here once Google Calendar is connected.
+                  </p>
                 </div>
-              ))}
+              )}
               <Link
                 href={isDemo ? "/signup" : "/dashboard/appointments"}
                 className="mt-3 block text-sm text-primary-glow hover:underline"
@@ -178,19 +215,34 @@ export function DashboardOverview({
           <div id="messages">
             <h2 className="mb-3 font-display text-lg text-text">Messages</h2>
             <GlowCard className="p-5">
-              {DEMO_MESSAGES.map((m) => (
-                <Link
-                  key={m.id}
-                  href={isDemo ? "/signup" : "/dashboard/messages"}
-                  className="flex items-start gap-2 border-b border-border py-3 last:border-0"
-                >
-                  {m.unread && <span className="mt-1.5 h-2 w-2 shrink-0 rounded-full bg-accent" />}
-                  <div className="min-w-0 flex-1">
-                    <p className="text-sm font-medium text-text">{m.from}</p>
-                    <p className="truncate text-xs text-muted">{m.preview}</p>
-                  </div>
-                </Link>
-              ))}
+              {isDemo ? (
+                DEMO_MESSAGES.map((m) => (
+                  <Link
+                    key={m.id}
+                    href={isDemo ? "/signup" : "/dashboard/messages"}
+                    className="flex items-start gap-2 border-b border-border py-3 last:border-0"
+                  >
+                    {m.unread && <span className="mt-1.5 h-2 w-2 shrink-0 rounded-full bg-accent" />}
+                    <div className="min-w-0 flex-1">
+                      <p className="text-sm font-medium text-text">{m.from}</p>
+                      <p className="truncate text-xs text-muted">{m.preview}</p>
+                    </div>
+                  </Link>
+                ))
+              ) : (
+                <div className="py-4 text-center">
+                  <MessageSquare className="mx-auto h-7 w-7 text-muted" />
+                  <p className="mt-3 text-sm text-muted">
+                    SMS follow-ups and inbound texts show up after you enable channels.
+                  </p>
+                </div>
+              )}
+              <Link
+                href={isDemo ? "/signup" : "/dashboard/messages"}
+                className="mt-3 block text-sm text-primary-glow hover:underline"
+              >
+                Open messages
+              </Link>
             </GlowCard>
           </div>
         </div>

@@ -1,6 +1,7 @@
 "use client";
 
 import Link from "next/link";
+import { useRouter } from "next/navigation";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
 import { createClient } from "@/lib/supabase/client";
@@ -12,6 +13,7 @@ import { Input } from "@/components/ui/Input";
 import { TRIAL_MARKETING } from "@/lib/trial";
 
 export function LoginForm({ initialError = "" }: { initialError?: string }) {
+  const router = useRouter();
   const {
     register,
     handleSubmit,
@@ -39,7 +41,8 @@ export function LoginForm({ initialError = "" }: { initialError?: string }) {
       });
       return;
     }
-    window.location.href = "/dashboard";
+    router.push("/dashboard");
+    router.refresh();
   }
 
   return (
@@ -47,7 +50,7 @@ export function LoginForm({ initialError = "" }: { initialError?: string }) {
       <div className="auth-card">
         <h1 className="font-display text-3xl text-text">Welcome back</h1>
         <p className="mt-2 text-sm text-muted">
-          Join 500+ businesses who never miss a call.
+          Sign in to your {TRIAL_MARKETING.exploreShort.toLowerCase()} workspace.
         </p>
 
         <form onSubmit={handleSubmit(onSubmit)} className="mt-8 space-y-4" noValidate>
