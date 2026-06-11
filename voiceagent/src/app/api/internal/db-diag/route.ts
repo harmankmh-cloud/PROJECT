@@ -11,11 +11,6 @@ function deployToken(): string {
   return createHash("sha256").update(`greetq-migrate:${sha}`).digest("hex").slice(0, 24);
 }
 
-function migrationKeyHint(): string | null {
-  const key = process.env.SUPABASE_SERVICE_ROLE_KEY;
-  return key ? key.slice(-32) : null;
-}
-
 async function verifyColumns(): Promise<boolean> {
   try {
     const admin = createAdminClient();
@@ -112,7 +107,6 @@ export async function GET(request: NextRequest) {
     return NextResponse.json({
       applied,
       deployToken: expected,
-      serviceRoleSuffix: migrationKeyHint(),
     });
   }
 
