@@ -1,7 +1,6 @@
 "use client";
 
 import { motion, useInView } from "framer-motion";
-import Link from "next/link";
 import { useRef, useState } from "react";
 import { FaqAccordion } from "@/components/FaqAccordion";
 import { GlowButton } from "@/components/ui/GlowButton";

@@ -1,6 +1,11 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
+import { useSyncExternalStore } from "react";
+
+function subscribe() {
+  return () => {};
+}
 
 export function CountUp({
   value,
@@ -13,17 +18,15 @@ export function CountUp({
   suffix?: string;
   className?: string;
 }) {
+  const mounted = useSyncExternalStore(subscribe, () => true, () => false);
   const [display, setDisplay] = useState(value);
-  const [mounted, setMounted] = useState(false);
-
-  useEffect(() => {
-    setMounted(true);
-  }, []);
+  const prevValue = useRef(value);
 
   useEffect(() => {
     if (!mounted) return;
+    if (prevValue.current === value) return;
+    prevValue.current = value;
 
-    setDisplay(0);
     const start = performance.now();
     let frame: number;
 
@@ -38,9 +41,11 @@ export function CountUp({
     return () => cancelAnimationFrame(frame);
   }, [value, duration, mounted]);
 
+  const shown = mounted ? display : value;
+
   return (
     <span className={className}>
-      {display.toLocaleString()}
+      {shown.toLocaleString()}
       {suffix}
     </span>
   );

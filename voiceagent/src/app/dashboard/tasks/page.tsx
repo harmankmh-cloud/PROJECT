@@ -2,7 +2,7 @@
 
 import Link from "next/link";
 import { CheckCircle2, Circle, PhoneCall, RefreshCw } from "lucide-react";
-import { useEffect, useMemo, useState } from "react";
+import { useCallback, useEffect, useMemo, useState } from "react";
 import type { Call } from "@/lib/types";
 import { apiFetch } from "@/lib/api-client";
 
@@ -18,7 +18,7 @@ type Task = {
   createdAt: string;
 };
 
-function loadDone(): Set<string> {
+function loadLocalDone(): Set<string> {
   if (typeof window === "undefined") return new Set();
   try {
     return new Set(JSON.parse(localStorage.getItem(DONE_KEY) || "[]") as string[]);
@@ -27,7 +27,7 @@ function loadDone(): Set<string> {
   }
 }
 
-function saveDone(done: Set<string>) {
+function saveLocalDone(done: Set<string>) {
   localStorage.setItem(DONE_KEY, JSON.stringify([...done]));
 }
 
@@ -35,8 +35,32 @@ export default function TasksPage() {
   const [calls, setCalls] = useState<Call[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState("");
-  const [done, setDone] = useState<Set<string>>(() => loadDone());
+  const [done, setDone] = useState<Set<string>>(() => loadLocalDone());
   const [filter, setFilter] = useState<"open" | "all">("open");
+
+  const persistDone = useCallback((next: Set<string>) => {
+    saveLocalDone(next);
+    void apiFetch<{ completed: string[] }>("/api/tasks/completed", {
+      method: "PUT",
+      body: JSON.stringify({ completed: [...next] }),
+    });
+  }, []);
+
+  useEffect(() => {
+    let active = true;
+    void apiFetch<{ completed: string[] }>("/api/tasks/completed").then((res) => {
+      if (!active || !res.ok) return;
+      const remote = new Set(res.data.completed || []);
+      setDone((prev) => {
+        const merged = new Set([...prev, ...remote]);
+        saveLocalDone(merged);
+        return merged;
+      });
+    });
+    return () => {
+      active = false;
+    };
+  }, []);
 
   useEffect(() => {
     let active = true;
@@ -86,7 +110,7 @@ export default function TasksPage() {
       const next = new Set(prev);
       if (next.has(id)) next.delete(id);
       else next.add(id);
-      saveDone(next);
+      persistDone(next);
       return next;
     });
   }

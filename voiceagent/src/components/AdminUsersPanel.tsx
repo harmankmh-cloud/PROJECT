@@ -20,8 +20,8 @@ export function AdminUsersPanel() {
   const [error, setError] = useState("");
   const [message, setMessage] = useState("");
 
-  async function load() {
-    setLoading(true);
+  async function load(showSpinner = false) {
+    if (showSpinner) setLoading(true);
     setError("");
     try {
       const response = await fetch("/api/admin/users");
@@ -36,7 +36,24 @@ export function AdminUsersPanel() {
   }
 
   useEffect(() => {
-    load();
+    let cancelled = false;
+    void (async () => {
+      setError("");
+      try {
+        const response = await fetch("/api/admin/users");
+        const data = await response.json();
+        if (cancelled) return;
+        if (!response.ok) throw new Error(data.error || "Could not load users");
+        setUsers(data.users || []);
+      } catch (err) {
+        if (!cancelled) setError(err instanceof Error ? err.message : "Load failed");
+      } finally {
+        if (!cancelled) setLoading(false);
+      }
+    })();
+    return () => {
+      cancelled = true;
+    };
   }, []);
 
   async function invite(e: React.FormEvent) {
@@ -54,7 +71,7 @@ export function AdminUsersPanel() {
       if (!response.ok) throw new Error(data.error || "Invite failed");
       setMessage(`Invite sent to ${email.trim()}. They'll set up their org after login.`);
       setEmail("");
-      await load();
+      await load(true);
     } catch (err) {
       setError(err instanceof Error ? err.message : "Invite failed");
     } finally {

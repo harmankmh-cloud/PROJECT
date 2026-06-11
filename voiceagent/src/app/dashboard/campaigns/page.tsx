@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 import { apiFetch } from "@/lib/api-client";
 import Link from "next/link";
 import type { Agent } from "@/lib/types";
@@ -17,7 +17,7 @@ export default function CampaignsPage() {
   const [starting, setStarting] = useState<string | null>(null);
   const [onTrial, setOnTrial] = useState(false);
 
-  function reloadCampaigns() {
+  const refreshCampaigns = useCallback(() => {
     return Promise.all([
       apiFetch<{ campaigns: typeof campaigns }>("/api/campaigns"),
       apiFetch<{ agents: Agent[] }>("/api/agents"),
@@ -31,20 +31,20 @@ export default function CampaignsPage() {
         }
       }
     });
-  }
+  }, []);
 
   useEffect(() => {
     let active = true;
     fetchTrialStatus().then((status) => {
       if (active && status) setOnTrial(status.onTrial && !status.subscribed);
     });
-    reloadCampaigns().then(() => {
+    refreshCampaigns().then(() => {
       if (!active) return;
     });
     return () => {
       active = false;
     };
-  }, []);
+  }, [refreshCampaigns]);
 
   async function createCampaign(e: React.FormEvent) {
     e.preventDefault();
@@ -74,7 +74,7 @@ export default function CampaignsPage() {
     });
     setStarting(null);
     if (res.ok) {
-      await reloadCampaigns();
+      await refreshCampaigns();
     } else {
       setError(res.error);
     }

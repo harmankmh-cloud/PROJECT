@@ -23,9 +23,12 @@ export function LandingTestimonials() {
   return (
     <section className="py-20 md:py-24" id="testimonials">
       <div className="marketing-container">
-        <h2 className="font-display mb-12 text-center text-3xl text-text">
-          Loved by local businesses
+        <h2 className="font-display mb-3 text-center text-3xl text-text">
+          What operators tell us
         </h2>
+        <p className="mx-auto mb-12 max-w-xl text-center text-sm text-muted">
+          Representative feedback from early Canadian adopters — not paid endorsements.
+        </p>
         <motion.div
           ref={ref}
           className="grid gap-6 md:grid-cols-3"

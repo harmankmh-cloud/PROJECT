@@ -3,13 +3,6 @@
 import { useQuery } from "@tanstack/react-query";
 import { apiFetch } from "@/lib/api-client";
 
-type AnalyticsResponse = {
-  todayCalls: number;
-  volumeDelta: number | null;
-  sparkline: number[];
-  activeAgents: number;
-};
-
 export function useDashboardStats() {
   return useQuery({
     queryKey: ["dashboard-stats"],

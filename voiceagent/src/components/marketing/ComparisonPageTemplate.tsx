@@ -74,8 +74,8 @@ export function ComparisonPageTemplate({ slug }: { slug: ComparisonSlug }) {
               {page.cta}
             </Link>
             {slug === "vs-receptionist" && (
-              <Link href="/#roi" className="btn-secondary px-8 py-3.5 text-center">
-                ROI calculator
+              <Link href="/#estimator" className="btn-secondary px-8 py-3.5 text-center">
+                Missed revenue estimator
               </Link>
             )}
             <Link href="/compare" className="btn-ghost px-8 py-3.5 text-center">

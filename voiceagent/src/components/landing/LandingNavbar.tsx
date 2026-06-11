@@ -34,6 +34,7 @@ const PRODUCT_MENU: MenuItem[] = [
   { href: "/security", label: "Security", desc: "PIPEDA, CASL, and HIPAA controls", icon: <ShieldCheck className="h-4 w-4" /> },
   { href: "/status", label: "Status", desc: "Live uptime and incident history", icon: <Activity className="h-4 w-4" /> },
   { href: "/compare", label: "Compare", desc: "GreetQ vs the alternatives", icon: <BookOpen className="h-4 w-4" /> },
+  { href: "/changelog", label: "Changelog", desc: "Product updates and release notes", icon: <Activity className="h-4 w-4" /> },
 ];
 
 const INDUSTRIES_MENU: MenuItem[] = [
@@ -51,6 +52,7 @@ const TOP_LINKS = [
   { href: "/pricing", label: "Pricing" },
   { href: "/demo", label: "Demo" },
   { href: "/blog", label: "Blog" },
+  { href: "/fr", label: "FR" },
 ] as const;
 
 function DesktopDropdown({

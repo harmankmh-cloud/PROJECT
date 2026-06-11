@@ -21,13 +21,13 @@ export const LANDING_COPY = {
     ] as const,
   },
   marquee: {
-    label: "Trusted by businesses across Canada",
+    label: "Integrates with your stack",
   },
   stats: [
-    { value: 10000, suffix: "+", label: "Calls handled" },
-    { value: 99.9, suffix: "%", label: "Uptime", decimals: 1 },
-    { value: 2, suffix: " min", label: "Avg. setup" },
-    { value: 500, suffix: "+", label: "Businesses" },
+    { value: 24, suffix: "/7", label: "Always answering" },
+    { value: 99.9, suffix: "%", label: "Uptime SLA", decimals: 1 },
+    { value: 30, suffix: " min", label: "Free trial included" },
+    { value: 8, suffix: "+", label: "Industry templates" },
   ],
   pricingTeaser: {
     headline: `Plans from $${PLANS.starter.monthlyPrice}/month`,

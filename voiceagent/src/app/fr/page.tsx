@@ -45,6 +45,9 @@ export default function FrenchLandingPage() {
       <main id="main-content" className="flex-1 pb-16 pt-24">
         <section className="marketing-container mx-auto max-w-3xl text-center">
           <p className="section-eyebrow mb-3">🍁 Pour les entreprises canadiennes</p>
+          <Link href="/" className="text-sm text-violet-400 transition hover:text-violet-300">
+            English version →
+          </Link>
           <h1 className="font-display text-4xl text-ghost-white md:text-5xl">
             Votre entreprise ne manque plus jamais un appel
           </h1>

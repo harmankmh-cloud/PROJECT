@@ -45,6 +45,7 @@ const COLUMNS = [
       { href: "/press", label: "Press" },
       { href: "/careers", label: "Careers" },
       { href: "/partners", label: "Partners" },
+      { href: "/community", label: "Community" },
       { href: "/contact", label: "Contact" },
     ],
   },
