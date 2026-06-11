@@ -44,6 +44,19 @@ const SECTIONS = [
     title: "Data retention",
     body: "Recording retention is configurable per organization. Transcripts and call metadata are retained according to your plan settings. Request deletion via Help & contact.",
   },
+  {
+    title: "Data residency",
+    body: `${BRAND.legalName} is Canadian-owned and operated from ${BRAND.location.label}. Application data is processed on managed cloud infrastructure (Vercel and Supabase) with org-scoped isolation; call audio transits our telephony carriers (Telnyx, Twilio) during live calls. If your organization requires guaranteed Canadian-region storage, contact us — Enterprise plans can scope data residency requirements during onboarding.`,
+  },
+] as const;
+
+const SUBPROCESSORS = [
+  { name: "Vercel", purpose: "Application hosting and edge delivery" },
+  { name: "Supabase", purpose: "Database, authentication, and storage" },
+  { name: "Telnyx", purpose: "Primary voice carrier, transcription, and TTS" },
+  { name: "Twilio", purpose: "Voice relay, SMS, and WhatsApp channels" },
+  { name: "OpenRouter", purpose: "LLM inference for conversations and call intelligence" },
+  { name: "Stripe", purpose: "Subscription billing and payment processing" },
 ] as const;
 
 export default function SecurityPage() {
@@ -64,6 +77,31 @@ export default function SecurityPage() {
               <p className="mt-2 text-sm leading-relaxed text-on-surface-variant">{s.body}</p>
             </section>
           ))}
+
+          <section>
+            <h2 className="text-lg font-semibold text-ghost-white">Subprocessors</h2>
+            <p className="mt-2 text-sm leading-relaxed text-on-surface-variant">
+              {BRAND.name} relies on the following infrastructure providers to deliver the service:
+            </p>
+            <div className="mt-4 overflow-hidden rounded-xl border border-border">
+              <table className="w-full text-left text-sm">
+                <thead>
+                  <tr className="border-b border-border bg-surface/70">
+                    <th className="px-4 py-3 font-medium text-text">Provider</th>
+                    <th className="px-4 py-3 font-medium text-text">Purpose</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {SUBPROCESSORS.map((sp) => (
+                    <tr key={sp.name} className="border-b border-border/50 last:border-0">
+                      <td className="px-4 py-3 text-text">{sp.name}</td>
+                      <td className="px-4 py-3 text-on-surface-variant">{sp.purpose}</td>
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
+            </div>
+          </section>
         </div>
         <p className="mt-10 text-sm text-on-surface-variant">
           See also{" "}
