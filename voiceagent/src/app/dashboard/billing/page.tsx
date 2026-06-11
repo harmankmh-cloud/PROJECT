@@ -1,11 +1,17 @@
 import { PLANS } from "@/lib/plans";
 import { createClient } from "@/lib/supabase/server";
+import { createAdminClient } from "@/lib/supabase/admin";
 import { getUserOrg } from "@/lib/auth";
 import { isStripeConfigured } from "@/lib/stripe";
 import { SubscribeButton } from "@/components/SubscribeButton";
 import { ManageSubscriptionButton } from "@/components/ManageSubscriptionButton";
 import { BillingAutoSubscribe } from "@/components/BillingAutoSubscribe";
 import type { PlanKey } from "@/lib/plans";
+import {
+  currentBillingPeriodStart,
+  fetchPeriodUsageEvents,
+  summarizeUsage,
+} from "@/lib/usage-metering";
 import {
   hasActiveSubscription,
   isTrialPlan,
@@ -31,16 +37,7 @@ export default async function BillingPage({
   const { data: { user } } = await supabase.auth.getUser();
   const org = user ? await getUserOrg(user.id) : null;
   const stripeReady = isStripeConfigured();
-
-  const { data: usage } = org
-    ? await supabase
-        .from("va_usage_events")
-        .select("quantity")
-        .eq("org_id", org.id)
-        .eq("event_type", "voice_minute")
-    : { data: [] };
-
-  const totalMinutes = usage?.reduce((s, e) => s + Number(e.quantity), 0) || 0;
+  const periodStart = currentBillingPeriodStart();
   const plan = org?.plan || "trial";
   const onTrial = org ? isTrialPlan(org) : false;
   const subscribed = org ? hasActiveSubscription(org) : false;
@@ -49,6 +46,23 @@ export default async function BillingPage({
       ? null
       : PLANS[plan as keyof typeof PLANS];
   const minutesLeft = org ? trialMinutesRemaining(org) : 0;
+
+  let totalMinutes = 0;
+  let overageMinutes = 0;
+  let percentUsed = 0;
+
+  if (org && subscribed && org.plan in PLANS) {
+    const admin = createAdminClient();
+    const events = await fetchPeriodUsageEvents(admin, org.id, periodStart);
+    const summary = summarizeUsage(events, PLANS[org.plan as PlanKey].includedMinutes);
+    totalMinutes = summary.totalMinutes;
+    overageMinutes = summary.overageMinutes;
+    percentUsed = summary.percentUsed;
+  } else if (org) {
+    const admin = createAdminClient();
+    const events = await fetchPeriodUsageEvents(admin, org.id, periodStart);
+    totalMinutes = events.reduce((s, e) => s + e.quantity, 0);
+  }
 
   return (
     <div>
@@ -110,18 +124,26 @@ export default async function BillingPage({
                   : ""}
             </span>
           </p>
+          {subscribed && planInfo && !onTrial ? (
+            <p className="mt-1 text-xs text-on-surface-variant">{percentUsed}% of included block</p>
+          ) : null}
         </div>
         <div className="surface-card p-5">
           <p className="text-sm text-on-surface-variant">
-            {onTrial ? "Trial minutes left" : "Est. overage"}
+            {onTrial ? "Trial minutes left" : "Est. overage this period"}
           </p>
           <p className="text-2xl font-bold">
             {onTrial
               ? minutesLeft
               : planInfo
-                ? `$${(Math.max(0, totalMinutes - planInfo.includedMinutes) * planInfo.perMinute).toFixed(2)}`
+                ? `$${(overageMinutes * planInfo.perMinute).toFixed(2)}`
                 : "—"}
           </p>
+          {subscribed && overageMinutes > 0 && planInfo ? (
+            <p className="mt-1 text-xs text-rose-300">
+              {overageMinutes.toLocaleString()} min × ${planInfo.perMinute}/min — calls still active
+            </p>
+          ) : null}
         </div>
       </div>
 
@@ -131,7 +153,7 @@ export default async function BillingPage({
             <h2 className="font-semibold">Stripe metered billing</h2>
             <p className="mt-2 text-sm text-on-surface-variant">
               {stripeReady
-                ? "Stripe is configured. Voice minutes are reported via meter events on invoice creation."
+                ? "Voice overage minutes are reported to Stripe on invoice creation (included block is free)."
                 : "Add STRIPE_SECRET_KEY and price IDs to enable billing."}
             </p>
             <p className="mt-4 text-xs text-slate-text">Webhook endpoint: /api/webhooks/stripe</p>

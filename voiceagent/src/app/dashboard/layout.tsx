@@ -3,6 +3,7 @@ import { redirect } from "next/navigation";
 import { DashboardShell } from "@/components/DashboardShell";
 import { PwaRegister } from "@/components/PwaRegister";
 import { TrialStatusBanner } from "@/components/dashboard/TrialStatusBanner";
+import { UsageMeterBanner } from "@/components/dashboard/UsageMeterBanner";
 import { DashboardProviders } from "@/components/providers/AppProviders";
 import { PageTransition } from "@/components/ui/PageTransition";
 import { isPlatformAdmin } from "@/lib/admin-auth";
@@ -31,6 +32,7 @@ export default async function DashboardLayout({ children }: { children: React.Re
           isPlatformAdmin={isPlatformAdmin(user.email)}
         >
           <TrialStatusBanner />
+          <UsageMeterBanner />
           <PageTransition>{children}</PageTransition>
         </DashboardShell>
       </DashboardProviders>
