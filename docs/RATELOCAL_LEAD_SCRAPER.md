@@ -20,7 +20,7 @@ discover URLs → scrape emails → import to Supabase → daily job sends 100 N
 - Max **100 emails per run** (20 Activepieces batches × 5 — avoids Vercel 504 timeouts)
 - Only `status = pending` with a valid email
 - After send → `status = sent` (never emailed again)
-- **45s delay** between sends
+- **1.5s delay** between sends in each batch
 - Default sequence: `initial` (Google reviews angle)
 
 ## Database (once)
@@ -32,7 +32,7 @@ Run `reviewflow/supabase/migrations/20260609210000_outreach_leads.sql` on the **
 ```json
 POST https://ratelocal.ca/api/make/outreach/daily
 Headers: X-RateLocal-Secret: ratelocal-marketing-webhook-2026
-Body: { "limit": 100, "sequence": "initial", "delay_ms": 45000 }
+Body: { "limit": 5, "sequence": "initial", "delay_ms": 1500 }
 ```
 
 ## Env (Vercel / RateLocal)
