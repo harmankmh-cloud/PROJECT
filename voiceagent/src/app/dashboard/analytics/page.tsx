@@ -4,6 +4,8 @@ import { useEffect, useState } from "react";
 import { StatCard } from "@/components/StatCard";
 import { TrendChart } from "@/components/TrendChart";
 import { MotionItem, MotionSection } from "@/components/ui/MotionSection";
+import { DashboardListSkeleton } from "@/components/ui/DashboardPageSkeleton";
+import { useToast } from "@/components/providers/ToastProvider";
 import { apiFetch } from "@/lib/api-client";
 import { INDUSTRY_BENCHMARKS } from "@/lib/industry-benchmarks";
 
@@ -21,12 +23,12 @@ type Analytics = {
 type Agent = { id: string; name: string };
 
 export default function AnalyticsPage() {
+  const { showError } = useToast();
   const [analytics, setAnalytics] = useState<Analytics | null>(null);
   const [agents, setAgents] = useState<Agent[]>([]);
   const [days, setDays] = useState(30);
   const [agentId, setAgentId] = useState("");
   const [loading, setLoading] = useState(true);
-  const [error, setError] = useState("");
 
   useEffect(() => {
     let active = true;
@@ -38,9 +40,8 @@ export default function AnalyticsPage() {
       if (res.ok) {
         setAnalytics(res.data.analytics);
         setAgents(res.data.agents || []);
-        setError("");
       } else {
-        setError(res.error);
+        showError(res.error);
       }
       setLoading(false);
     });
@@ -51,7 +52,7 @@ export default function AnalyticsPage() {
   }, [days, agentId]);
 
   if (loading && !analytics) {
-    return <p className="text-muted">Loading analytics…</p>;
+    return <DashboardListSkeleton rows={6} />;
   }
 
   return (
@@ -86,7 +87,6 @@ export default function AnalyticsPage() {
         </div>
       </header>
 
-      {error && <p className="text-sm text-error">{error}</p>}
 
       {analytics && (
         <>

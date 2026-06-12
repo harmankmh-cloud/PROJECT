@@ -1,8 +1,13 @@
 import { createBrowserClient } from "@supabase/ssr";
+import type { SupabaseClient } from "@supabase/supabase-js";
+import { getSupabaseAnonKey, getSupabaseUrl } from "@/lib/supabase/env";
 
-export function createClient() {
-  return createBrowserClient(
-    process.env.NEXT_PUBLIC_SUPABASE_URL!,
-    process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!
-  );
+let browserClient: SupabaseClient | undefined;
+
+/** Singleton browser client — one instance per tab lifetime. */
+export function createClient(): SupabaseClient {
+  if (!browserClient) {
+    browserClient = createBrowserClient(getSupabaseUrl(), getSupabaseAnonKey());
+  }
+  return browserClient;
 }

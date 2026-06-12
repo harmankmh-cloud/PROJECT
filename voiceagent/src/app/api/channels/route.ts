@@ -23,7 +23,10 @@ export async function GET() {
     .eq("org_id", org.id);
 
   const byType = Object.fromEntries(
-    (data || []).map((c) => [c.channel_type, { is_active: c.is_active, config: c.config }])
+    (data || []).map((c: { channel_type: string; is_active: boolean; config: unknown }) => [
+      c.channel_type,
+      { is_active: c.is_active, config: c.config },
+    ])
   );
 
   const channels = CHANNEL_TYPES.map((type) => ({

@@ -6,6 +6,7 @@ import { useEffect, useState } from "react";
 import { BusinessHoursEditor } from "@/components/BusinessHoursEditor";
 import { Button } from "@/components/ui/Button";
 import { Skeleton } from "@/components/ui/Skeleton";
+import { useToast } from "@/components/providers/ToastProvider";
 import { DEFAULT_BUSINESS_HOURS, type BusinessHours } from "@/lib/business-hours";
 import { apiFetch } from "@/lib/api-client";
 
@@ -33,12 +34,11 @@ const TAB_LIST = [
 ] as const;
 
 export function SettingsTabs() {
+  const { showError, showSuccess } = useToast();
   const [settings, setSettings] = useState<Settings | null>(null);
   const [greeting, setGreeting] = useState("");
   const [loading, setLoading] = useState(true);
   const [saving, setSaving] = useState(false);
-  const [message, setMessage] = useState("");
-  const [error, setError] = useState("");
   const [notifyEmail, setNotifyEmail] = useState(true);
   const [notifySms, setNotifySms] = useState(false);
 
@@ -48,7 +48,7 @@ export function SettingsTabs() {
       apiFetch<{ agents: Array<{ system_prompt: string; welcome_greeting: string }> }>("/api/agents"),
     ]).then(([settingsRes, agentsRes]) => {
       if (settingsRes.ok) setSettings(settingsRes.data.settings);
-      else setError(settingsRes.error);
+      else showError(settingsRes.error);
       if (agentsRes.ok && agentsRes.data.agents[0]) {
         setGreeting(agentsRes.data.agents[0].welcome_greeting || agentsRes.data.agents[0].system_prompt);
       }
@@ -59,8 +59,6 @@ export function SettingsTabs() {
   async function saveSettings(patch: Partial<Settings>) {
     if (!settings) return;
     setSaving(true);
-    setError("");
-    setMessage("");
     const merged = { ...settings, ...patch };
     const res = await apiFetch("/api/settings", {
       method: "PATCH",
@@ -70,8 +68,8 @@ export function SettingsTabs() {
     setSaving(false);
     if (res.ok) {
       setSettings(merged);
-      setMessage("Settings saved.");
-    } else setError(res.error);
+      showSuccess("Settings saved.");
+    } else showError(res.error);
   }
 
   if (loading) {
@@ -84,16 +82,13 @@ export function SettingsTabs() {
   }
 
   if (!settings) {
-    return <p className="p-8 text-danger">{error || "Could not load settings."}</p>;
+    return <p className="p-8 text-danger">Could not load settings.</p>;
   }
 
   return (
     <div className="dashboard-container py-8">
       <h1 className="font-display text-2xl text-text">Settings</h1>
       <p className="mt-1 text-sm text-muted">Manage your GreetQ configuration</p>
-
-      {message && <p className="mt-4 text-sm text-success">{message}</p>}
-      {error && <p className="mt-4 text-sm text-danger">{error}</p>}
 
       <Tabs.Root defaultValue="profile" className="mt-8">
         <Tabs.List className="flex flex-wrap gap-1 border-b border-border pb-px">
@@ -188,7 +183,7 @@ export function SettingsTabs() {
               <input type="checkbox" checked={notifySms} onChange={(e) => setNotifySms(e.target.checked)} className="accent-primary" />
               SMS summaries to your phone
             </label>
-            <Button onClick={() => setMessage("Notification preferences saved.")}>Save</Button>
+            <Button onClick={() => showSuccess("Notification preferences saved.")}>Save</Button>
           </CardSection>
         </Tabs.Content>
 
@@ -229,7 +224,7 @@ export function SettingsTabs() {
             <Button
               variant="outline"
               className="mt-4 border-danger/50 text-danger hover:bg-danger/10"
-              onClick={() => setError("Contact support to delete your account — hello@greetq.com")}
+              onClick={() => showError("Contact support to delete your account — hello@greetq.com")}
             >
               Request account deletion
             </Button>
