@@ -1,0 +1,47 @@
+---
+description: GreetQ enterprise architecture, security, and token-efficient coding standards
+alwaysApply: true
+---
+
+# GreetQ Enterprise Architecture & Token-Optimization Rules
+
+## 1. Token & output optimization (strict efficiency)
+
+- **Be concise:** Do not write long conversational introductions, conclusions, or polite prose. Dive straight into the code or solution.
+- **Dry / no explanations:** Do not explain *how* the code works unless explicitly asked. The code must speak for itself.
+- **Code diffs only:** Never rewrite an entire 300-line file just to change 5 lines. Provide only the modified functions or clear, targeted code diffs.
+- **No inline comment bloat:** Avoid obvious comments (e.g. `// setting state`). Only comment on highly complex business logic or edge cases.
+
+## 2. Tech stack & architecture
+
+- **Frontend / backend:** Next.js (App Router), React, TailwindCSS, TypeScript.
+- **Database & auth:** Supabase (using `@supabase/ssr` for auth and Next.js Middleware).
+- **Validation:** Strict runtime data validation via Zod schemas on all API inputs and Server Actions.
+
+## 3. Enterprise engineering standards
+
+- **Zero trust security:**
+  - Never expose `SUPABASE_SERVICE_ROLE_KEY` to the client. Frontend must only use `NEXT_PUBLIC_SUPABASE_ANON_KEY`.
+  - Never trust the client to pass its own `user_id` blindly; always verify the user's identity server-side via Supabase auth cookies/metadata.
+- **Serverless DB resilience:** Enforce a strict singleton pattern for database client instances to prevent Vercel serverless function connection pool exhaustion.
+- **No `any` types:** Strict TypeScript compilation. Every parameter, data model, and API payload must have explicit interfaces or Zod infer types.
+- **Websocket safety:** All Supabase Realtime channel subscriptions must include comprehensive cleanup/unmount returns in `useEffect` to prevent memory leaks.
+
+## 4. UI/UX experience principles
+
+- **No layout shifts:** Never use plain text "Loading..." flags. Replace them with animated Tailwind `animate-pulse` skeleton loaders matching the exact dimensions of the target components.
+- **Idempotency & double clicks:** All forms and CTA buttons must explicitly leverage pending states, applying `:disabled` layout treatments and `cursor-not-allowed` pointer modifications during asynchronous network requests.
+- **Error handling:** Wrap client layouts in functional Error Boundaries. All async failures must trigger responsive UI alerts (e.g., toast messages) instead of silently crashing the interface.
+
+## Codebase anchors (match existing patterns)
+
+| Topic | File |
+|-------|------|
+| Supabase SSR (server) | `src/lib/supabase/server.ts` |
+| Supabase browser client | `src/lib/supabase/client.ts` |
+| Admin / service role (server-only) | `src/lib/supabase/admin.ts` |
+| Middleware auth | `src/middleware.ts` |
+| Zod API validation | e.g. `src/app/api/make/outreach/daily/route.ts` |
+| Skeleton loaders | `src/components/ui/Skeleton.tsx`, `src/components/ui/PageLoadingSkeleton.tsx` |
+| Error boundary | `src/app/dashboard/error.tsx` |
+| Strict TS | `tsconfig.json` (`strict: true`) |
