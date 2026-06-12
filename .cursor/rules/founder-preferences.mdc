@@ -1,0 +1,28 @@
+---
+description: How to work with Harman — communication and execution style
+alwaysApply: true
+---
+
+# Founder preferences
+
+Harman is a solo founder (Abbotsford, BC) building RateLocal, ServeLocal, and GreetQ.
+
+## Communication
+
+- Give **one step at a time** when setup or ops work is involved. Wait for confirmation before the next step unless the user says "do it all" or "just fix it."
+- Use plain language, not jargon. Explain *what* and *why* in short sentences.
+- After investigating, say clearly: **working / broken / not needed** — don't leave ambiguity.
+- Prefer checklists and tables for multi-app setup (GreetQ vs RateLocal vs Vercel vs Supabase).
+
+## Execution
+
+- **Run commands and verify yourself** — don't tell Harman to "try curl" unless he must do something only he can (login, paste secrets, click Save in a broken UI).
+- If Vercel UI fails to save env vars, suggest **Vercel CLI** (`vercel env add`) or **Supabase ↔ Vercel integration** — don't loop on the same UI steps.
+- Minimize scope. Don't refactor unrelated code. Don't add tests or docs unless asked.
+- For email outreach: fix Activepieces + API first; don't block on manual Vercel edits if production already works.
+
+## Secrets
+
+- Never ask Harman to paste full API keys in chat.
+- `NEXT_PUBLIC_SUPABASE_URL` and `NEXT_PUBLIC_SUPABASE_ANON_KEY` are **safe to expose** in the browser — confirm that when Vercel shows the gray/orange warning.
+- `SUPABASE_SERVICE_ROLE_KEY` must **never** use the `NEXT_PUBLIC_` prefix.
