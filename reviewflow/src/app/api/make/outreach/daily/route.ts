@@ -1,16 +1,18 @@
 import { NextResponse } from "next/server";
 import { z } from "zod";
 
-export const maxDuration = 60;
+/** Real sends can exceed 60s above ~8 emails; Activepieces batches of 5 stay safe. */
+export const maxDuration = 120;
 import { sendEmail } from "@/lib/email";
 import { generateOutreachEmail } from "@/lib/outreach-email";
 import { checkOutreachSecret, outreachUnauthorized } from "@/lib/outreach-auth";
+import { formatApiError, isSendableOutreachEmail } from "@/lib/outreach-leads";
 import { createServiceClient } from "@/lib/supabase/admin";
 
 const bodySchema = z.object({
-  limit: z.number().int().min(1).max(100).default(100),
+  limit: z.number().int().min(1).max(15).default(5),
   sequence: z.enum(["initial", "morning_call", "followup_1", "followup_2"]).default("initial"),
-  delay_ms: z.number().int().min(0).max(10_000).default(2_000),
+  delay_ms: z.number().int().min(0).max(10_000).default(1_500),
   city: z.string().max(80).optional(),
   preview_to: z.string().email().optional(),
 });
@@ -35,7 +37,10 @@ export async function POST(request: Request) {
 
   const admin = createServiceClient();
   if (!admin) {
-    return NextResponse.json({ error: "Supabase service role not configured" }, { status: 503 });
+    return NextResponse.json(
+      { ok: false, error: "Supabase service role not configured" },
+      { status: 503 },
+    );
   }
 
   try {
@@ -48,7 +53,7 @@ export async function POST(request: Request) {
       .not("email", "is", null)
       .neq("email", "")
       .order("created_at", { ascending: true })
-      .limit(body.limit);
+      .limit(body.limit * 3);
 
     if (body.city) {
       query = query.ilike("city", body.city);
@@ -59,7 +64,32 @@ export async function POST(request: Request) {
       return NextResponse.json({ ok: false, error: error.message }, { status: 500 });
     }
 
-    const batch = (leads || []) as LeadRow[];
+    const batch: LeadRow[] = [];
+    const skipped: Array<{ business: string; email: string; reason: string }> = [];
+
+    for (const lead of (leads || []) as LeadRow[]) {
+      if (batch.length >= body.limit) break;
+      if (!isSendableOutreachEmail(lead.email)) {
+        skipped.push({
+          business: lead.business_name,
+          email: lead.email,
+          reason: "invalid_or_blocked_email",
+        });
+        if (!body.preview_to) {
+          await admin
+            .from("rl_outreach_leads")
+            .update({
+              status: "no_email",
+              notes: "Skipped: invalid or blocked email domain",
+              updated_at: new Date().toISOString(),
+            })
+            .eq("id", lead.id);
+        }
+        continue;
+      }
+      batch.push(lead);
+    }
+
     if (batch.length === 0) {
       const { count } = await admin
         .from("rl_outreach_leads")
@@ -69,8 +99,13 @@ export async function POST(request: Request) {
       return NextResponse.json({
         ok: true,
         sent: 0,
-        message: "No pending leads with email — run scraper + import first",
+        skipped: skipped.length,
+        message:
+          skipped.length > 0
+            ? "No sendable pending leads — blocked emails were skipped"
+            : "No pending leads with email — run scraper + import first",
         pending_with_email: count ?? 0,
+        skipped_results: skipped,
       });
     }
 
@@ -119,7 +154,7 @@ export async function POST(request: Request) {
         ok,
         sent: ok,
         subject: draft.subject,
-        error: ok ? null : ("error" in mail ? mail.error : "send failed"),
+        error: ok ? null : "error" in mail ? mail.error : "send failed",
       });
 
       if (i < batch.length - 1 && body.delay_ms > 0) {
@@ -135,14 +170,18 @@ export async function POST(request: Request) {
       total: results.length,
       succeeded,
       failed: results.length - succeeded,
+      skipped: skipped.length,
       preview: Boolean(body.preview_to),
       results,
+      skipped_results: skipped,
     });
   } catch (error) {
     if (error instanceof z.ZodError) {
-      return NextResponse.json({ error: "Invalid payload", details: error.flatten() }, { status: 400 });
+      return NextResponse.json(
+        { ok: false, error: "Invalid payload", details: error.flatten() },
+        { status: 400 },
+      );
     }
-    const message = error instanceof Error ? error.message : "Daily outreach failed";
-    return NextResponse.json({ error: message }, { status: 500 });
+    return NextResponse.json({ ok: false, error: formatApiError(error) }, { status: 500 });
   }
 }
