@@ -123,7 +123,9 @@ function SandboxContent() {
         </p>
       )}
 
-      {voiceAvailable === false && voiceNotice ? (
+      {voiceAvailable === null ? (
+        <div className="h-14 animate-pulse rounded-xl bg-surface-container-high" aria-hidden />
+      ) : voiceAvailable === false && voiceNotice ? (
         <div className="rounded-xl border border-amber-500/30 bg-amber-500/10 px-4 py-3 text-sm text-amber-100">
           {voiceNotice}{" "}
           <Link href="/help/sandbox-testing" className="font-medium text-amber-50 underline">
@@ -151,7 +153,7 @@ function SandboxContent() {
         <button
           type="submit"
           disabled={calling || !agentId || voiceAvailable === false}
-          className="btn-primary rounded-xl px-5 py-3 text-sm disabled:opacity-50"
+          className="btn-primary rounded-xl px-5 py-3 text-sm disabled:cursor-not-allowed disabled:opacity-50"
         >
           {calling ? "Calling…" : "Start test call"}
         </button>
@@ -215,7 +217,7 @@ function SandboxContent() {
         />
         <button
           type="submit"
-          className="btn-primary rounded-xl px-5 py-3 text-sm disabled:opacity-50"
+          className="btn-primary rounded-xl px-5 py-3 text-sm disabled:cursor-not-allowed disabled:opacity-50"
           disabled={loading || !agentId}
         >
           Send

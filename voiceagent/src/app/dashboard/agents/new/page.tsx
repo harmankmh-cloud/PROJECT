@@ -99,7 +99,7 @@ export default function NewAgentPage() {
               e.preventDefault();
               void saveAgent(true);
             }}
-            className="flex h-14 w-full items-center justify-center gap-2 rounded-xl bg-primary text-sm font-semibold text-on-primary shadow-xl transition-all hover:scale-[1.02] active:scale-95 disabled:opacity-50"
+            className="flex h-14 w-full items-center justify-center gap-2 rounded-xl bg-primary text-sm font-semibold text-on-primary shadow-xl transition-all hover:scale-[1.02] active:scale-95 disabled:cursor-not-allowed disabled:opacity-50"
           >
             <MaterialIcon name="science" filled />
             {saving ? "Saving…" : "Launch Test Sandbox"}
