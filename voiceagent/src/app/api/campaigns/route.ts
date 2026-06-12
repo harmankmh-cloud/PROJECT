@@ -4,6 +4,9 @@ import { getUserOrg } from "@/lib/auth";
 import { hasValidConsent, isWithinCallingHours } from "@/lib/compliance/tcpa";
 import { getTwilioClient } from "@/lib/twilio";
 import { dialOutbound, encodeClientState, isTelnyxConfigured } from "@/lib/telnyx";
+import { campaignCreateSchema } from "@/lib/api-schemas";
+import { isApiSession, requireApiSession } from "@/lib/api-session";
+import { parseJsonBody, readJsonBody } from "@/lib/parse-json-body";
 import { logAudit } from "@/lib/compliance/audit";
 import { denyUnlessCanOperate } from "@/lib/require-org-access";
 import { canMakeProductionCall, productionBlockReason, type BillingOrg } from "@/lib/billing-gates";
@@ -28,21 +31,20 @@ export async function GET() {
 }
 
 export async function POST(request: NextRequest) {
-  const supabase = await createClient();
-  const {
-    data: { user },
-  } = await supabase.auth.getUser();
-  if (!user) return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+  const session = await requireApiSession();
+  if (!isApiSession(session)) return session;
 
-  const org = await getUserOrg(user.id);
+  const org = await getUserOrg(session.user.id);
   if (!org) return NextResponse.json({ error: "No organization" }, { status: 400 });
 
-  const denied = await denyUnlessCanOperate(org.id, user.id);
+  const denied = await denyUnlessCanOperate(org.id, session.user.id);
   if (denied) return denied;
 
-  const body = await request.json();
+  const parsed = parseJsonBody(await readJsonBody(request), campaignCreateSchema);
+  if (!parsed.ok) return parsed.response;
 
-  const { data, error } = await supabase
+  const body = parsed.data;
+  const { data, error } = await session.supabase
     .from("va_campaigns")
     .insert({
       org_id: org.id,
@@ -60,7 +62,7 @@ export async function POST(request: NextRequest) {
 
   await logAudit({
     orgId: org.id,
-    userId: user.id,
+    userId: session.user.id,
     action: "campaign.created",
     resourceType: "campaign",
     resourceId: data.id,

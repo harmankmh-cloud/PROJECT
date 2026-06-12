@@ -7,20 +7,16 @@ import { UsageMeterBanner } from "@/components/dashboard/UsageMeterBanner";
 import { DashboardProviders } from "@/components/providers/AppProviders";
 import { PageTransition } from "@/components/ui/PageTransition";
 import { isPlatformAdmin } from "@/lib/admin-auth";
-import { getUserOrg } from "@/lib/auth";
-import { createClient } from "@/lib/supabase/server";
+import { getCachedUserOrg } from "@/lib/auth";
 
 export const dynamic = "force-dynamic";
 
 export default async function DashboardLayout({ children }: { children: React.ReactNode }) {
-  const supabase = await createClient();
-  const {
-    data: { user },
-  } = await supabase.auth.getUser();
+  const ctx = await getCachedUserOrg();
 
-  if (!user) redirect("/login");
+  if (!ctx?.user) redirect("/login");
 
-  const org = await getUserOrg(user.id);
+  const { user, org } = ctx;
 
   return (
     <div className={GeistMono.variable}>

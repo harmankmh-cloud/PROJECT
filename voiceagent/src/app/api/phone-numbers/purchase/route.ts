@@ -2,30 +2,28 @@ import { NextRequest, NextResponse } from "next/server";
 import { createClient } from "@/lib/supabase/server";
 import { createAdminClient } from "@/lib/supabase/admin";
 import { getUserOrg } from "@/lib/auth";
+import { phoneNumberPurchaseSchema } from "@/lib/api-schemas";
+import { isApiSession, requireApiSession } from "@/lib/api-session";
+import { parseJsonBody, readJsonBody } from "@/lib/parse-json-body";
 import { denyUnlessCanOperate } from "@/lib/require-org-access";
 import { purchasePhoneNumber } from "@/lib/telnyx-numbers";
 import { canPurchasePhoneNumber, phonePurchaseBlockReason } from "@/lib/trial";
 
 export async function POST(request: NextRequest) {
-  const supabase = await createClient();
-  const {
-    data: { user },
-  } = await supabase.auth.getUser();
-  if (!user) return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+  const session = await requireApiSession();
+  if (!isApiSession(session)) return session;
 
-  const org = await getUserOrg(user.id);
+  const org = await getUserOrg(session.user.id);
   if (!org) return NextResponse.json({ error: "No organization" }, { status: 400 });
 
-  const denied = await denyUnlessCanOperate(org.id, user.id);
+  const denied = await denyUnlessCanOperate(org.id, session.user.id);
   if (denied) return denied;
 
-  const body = await request.json();
-  const phoneNumber = (body.phone_number as string)?.trim();
-  const agentId = (body.agent_id as string) || null;
+  const parsed = parseJsonBody(await readJsonBody(request), phoneNumberPurchaseSchema);
+  if (!parsed.ok) return parsed.response;
 
-  if (!phoneNumber) {
-    return NextResponse.json({ error: "phone_number required" }, { status: 400 });
-  }
+  const phoneNumber = parsed.data.phone_number;
+  const agentId = parsed.data.agent_id ?? null;
 
   if (!canPurchasePhoneNumber(org)) {
     return NextResponse.json({ error: phonePurchaseBlockReason(org) }, { status: 402 });
