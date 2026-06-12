@@ -4,6 +4,7 @@ import { Suspense, useEffect, useState } from "react";
 import { useSearchParams } from "next/navigation";
 import type { Agent } from "@/lib/types";
 import Link from "next/link";
+import { DashboardDetailSkeleton } from "@/components/ui/DashboardPageSkeleton";
 import { apiFetch } from "@/lib/api-client";
 import { fetchTrialStatus } from "@/lib/trial-client";
 import { SANDBOX_MAX_TEST_CALLS, TRIAL_MARKETING } from "@/lib/trial";
@@ -226,7 +227,7 @@ function SandboxContent() {
 
 export default function SandboxPage() {
   return (
-    <Suspense fallback={<div className="dashboard-container py-12 text-on-primary-container">Loading sandbox…</div>}>
+    <Suspense fallback={<DashboardDetailSkeleton />}>
       <SandboxContent />
     </Suspense>
   );
