@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import { tradeSeoPlural } from "@/lib/category-copy";
 import { SERVE_LOCAL, cityName } from "@/lib/constants";
 
 const appUrl =
@@ -6,13 +7,16 @@ const appUrl =
 
 export function tradeListingTitle({
   trade,
+  tradeSlug,
   citySlug,
 }: {
   trade: string;
+  tradeSlug?: string;
   citySlug?: string;
 }) {
+  const label = tradeSeoPlural(tradeSlug, trade);
   if (citySlug) {
-    return `Best ${trade}s in ${cityName(citySlug)}, BC | Get Free Quotes | ServeLocal`;
+    return `Best ${label} in ${cityName(citySlug)}, BC | Get Free Quotes | ServeLocal`;
   }
   return `${trade} Services in Canada | Free Quotes | ServeLocal`;
 }
