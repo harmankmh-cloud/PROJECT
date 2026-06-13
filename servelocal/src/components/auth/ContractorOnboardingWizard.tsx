@@ -3,7 +3,7 @@
 import confetti from "canvas-confetti";
 import { BadgeCheck, CheckCircle2 } from "lucide-react";
 import Link from "next/link";
-import { useMemo, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { Button } from "@/components/ui/Button";
 import { Input } from "@/components/ui/Input";
 import { Badge } from "@/components/ui/Badge";
@@ -32,11 +32,13 @@ type WizardData = {
 export function ContractorOnboardingWizard({
   categories,
   userEmail,
+  initialStep = 0,
 }: {
   categories: ServiceCategory[];
   userEmail: string;
+  initialStep?: number;
 }) {
-  const [step, setStep] = useState(0);
+  const [step, setStep] = useState(initialStep);
   const [done, setDone] = useState(false);
   const [error, setError] = useState("");
   const [loading, setLoading] = useState(false);
@@ -62,6 +64,14 @@ export function ContractorOnboardingWizard({
     () => SERVICE_SUBCATEGORIES[data.categorySlug] ?? [],
     [data.categorySlug]
   );
+
+  useEffect(() => {
+    void fetch("/api/user-profile", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ onboarding_step: step }),
+    });
+  }, [step]);
 
   function update<K extends keyof WizardData>(key: K, value: WizardData[K]) {
     setData((d) => ({ ...d, [key]: value }));
@@ -123,6 +133,14 @@ export function ContractorOnboardingWizard({
     const previewSlug = (data.businessName || data.name).toLowerCase().replace(/[^a-z0-9]+/g, "-");
     setSlug(previewSlug);
     setDone(true);
+    void fetch("/api/user-profile", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({
+        onboarding_completed_at: new Date().toISOString(),
+        onboarding_step: STEPS.length,
+      }),
+    });
     confetti({ particleCount: 120, spread: 70, origin: { y: 0.6 } });
   }
 

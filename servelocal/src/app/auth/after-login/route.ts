@@ -31,5 +31,9 @@ export async function GET(request: Request) {
     return NextResponse.redirect(`${origin}/dashboard/pro`);
   }
 
+  if (profile && !profile.onboarding_completed_at && profile.role !== "pro") {
+    return NextResponse.redirect(`${origin}/onboarding/homeowner`);
+  }
+
   return NextResponse.redirect(`${origin}/dashboard`);
 }

@@ -26,6 +26,8 @@ Open [http://localhost:3001](http://localhost:3001).
 6. Run `supabase/user-accounts.sql` so logged-in users can track job requests on `/dashboard`
 7. Run `supabase/bookings.sql` for escrow-style bookings
 8. Run `supabase/complete-features.sql` for messaging, saved pros, Q&A, review helpful votes, availability
+9. Optional legacy scripts: `pro-dashboard.sql`, `saved-searches.sql`, `extended-categories.sql`
+10. Apply numbered migrations in `supabase/migrations/` (002+ for RLS fix and onboarding columns)
 
 ## Email / auth (same as RateLocal — Resend SMTP)
 

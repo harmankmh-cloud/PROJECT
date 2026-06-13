@@ -33,7 +33,11 @@ export default async function OnboardingPage() {
     <main className="min-h-screen bg-background px-4 py-10 sm:px-8">
       <div className="marketing-grid-bg pointer-events-none absolute inset-0 opacity-15" />
       <div className="relative mx-auto max-w-2xl">
-        <ContractorOnboardingWizard categories={categories} userEmail={user.email ?? ""} />
+        <ContractorOnboardingWizard
+          categories={categories}
+          userEmail={user.email ?? ""}
+          initialStep={profile?.onboarding_step ?? 0}
+        />
       </div>
     </main>
   );

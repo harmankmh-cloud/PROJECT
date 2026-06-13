@@ -60,7 +60,7 @@ export function HomeownerSignupForm() {
       body: JSON.stringify({ role: "homeowner", display_name: data.name, phone: null }),
     });
 
-    router.push("/dashboard");
+    router.push("/auth/after-login");
     router.refresh();
   }
 

@@ -1,6 +1,7 @@
 import { NextResponse } from "next/server";
 import { z } from "zod";
 import { createServiceClient } from "@/lib/supabase/admin";
+import { createClient } from "@/lib/supabase/server";
 import { getStripe, isStripeConfigured } from "@/lib/stripe";
 
 const schema = z.object({
@@ -24,6 +25,11 @@ export async function POST(request: Request) {
 
   try {
     const body = schema.parse(await request.json());
+    const supabase = await createClient();
+    const {
+      data: { user },
+    } = supabase ? await supabase.auth.getUser() : { data: { user: null } };
+
     const platformFee = Math.round(body.baseAmountCents * 0.1);
     const tax = Math.round((body.baseAmountCents + body.addonsCents + platformFee) * 0.12);
     const total = body.baseAmountCents + body.addonsCents + platformFee + tax;
@@ -48,6 +54,7 @@ export async function POST(request: Request) {
           total_cents: total,
           payment_status: "held",
           status: "pending",
+          user_id: user?.id ?? null,
         })
         .select("id")
         .single();
