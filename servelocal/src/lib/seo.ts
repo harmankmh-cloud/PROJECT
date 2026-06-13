@@ -1,8 +1,21 @@
 import type { Metadata } from "next";
-import { SERVE_LOCAL } from "@/lib/constants";
+import { SERVE_LOCAL, cityName } from "@/lib/constants";
 
 const appUrl =
   process.env.NEXT_PUBLIC_APP_URL?.replace(/\/$/, "") || "https://www.servelocal.ca";
+
+export function tradeListingTitle({
+  trade,
+  citySlug,
+}: {
+  trade: string;
+  citySlug?: string;
+}) {
+  if (citySlug) {
+    return `Best ${trade}s in ${cityName(citySlug)}, BC | Get Free Quotes | ServeLocal`;
+  }
+  return `${trade} Services in Canada | Free Quotes | ServeLocal`;
+}
 
 export function pageMetadata({
   title,

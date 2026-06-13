@@ -10,6 +10,17 @@ const HOMEOWNER_LINKS = [
   { href: "/dashboard", label: "My Dashboard" },
 ] as const;
 
+const COST_GUIDE_LINKS = [
+  { href: "/guides/plumber", label: "Plumber costs" },
+  { href: "/guides/electrician", label: "Electrician costs" },
+  { href: "/guides/handyman", label: "Handyman costs" },
+  { href: "/guides/cleaner", label: "Cleaning costs" },
+  { href: "/guides/hvac", label: "HVAC costs" },
+  { href: "/guides/roofer", label: "Roofing costs" },
+  { href: "/guides/painter", label: "Painting costs" },
+  { href: "/guides/landscaper", label: "Landscaping costs" },
+] as const;
+
 const CONTRACTOR_LINKS = [
   { href: "/join", label: "Join as a Pro" },
   { href: "/pricing", label: "Pricing" },
@@ -36,10 +47,12 @@ const SOCIAL = [
   { href: "https://linkedin.com", icon: Globe, label: "LinkedIn" },
 ] as const;
 
+const i18nEnabled = process.env.NEXT_PUBLIC_I18N_ENABLED === "true";
+
 export function MarketingFooter() {
   return (
     <footer className="border-t border-border bg-surface px-4 py-14 sm:px-8">
-      <div className="mx-auto grid max-w-7xl gap-10 sm:grid-cols-2 lg:grid-cols-5">
+      <div className="mx-auto grid max-w-7xl gap-10 sm:grid-cols-2 lg:grid-cols-6">
         <div className="lg:col-span-2">
           <p className="font-display text-xl font-black text-foreground">
             {SERVE_LOCAL.name}
@@ -81,6 +94,19 @@ export function MarketingFooter() {
         </div>
 
         <div>
+          <p className="font-label text-muted">Local Trade Cost Guides</p>
+          <ul className="mt-3 space-y-2 text-sm">
+            {COST_GUIDE_LINKS.map((link) => (
+              <li key={link.href}>
+                <Link href={link.href} className="text-muted transition hover:text-primary">
+                  {link.label}
+                </Link>
+              </li>
+            ))}
+          </ul>
+        </div>
+
+        <div>
           <p className="font-label text-muted">Contractors</p>
           <ul className="mt-3 space-y-2 text-sm">
             {CONTRACTOR_LINKS.map((link) => (
@@ -112,7 +138,7 @@ export function MarketingFooter() {
           © {new Date().getFullYear()} {SERVE_LOCAL.name}. Serving Canada — starting in BC.
         </p>
         <div className="flex flex-wrap items-center gap-4">
-          <LanguageToggle />
+          {i18nEnabled && <LanguageToggle />}
           {LEGAL_LINKS.map((link) => (
             <Link key={link.href} href={link.href} className="text-xs text-muted hover:text-foreground">
               {link.label}

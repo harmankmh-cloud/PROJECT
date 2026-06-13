@@ -24,10 +24,13 @@ export function TestimonialsCarousel() {
     <section className="border-t border-border bg-surface/50 px-4 py-16 sm:px-8">
       <div className="mx-auto max-w-7xl">
         <FadeUp className="text-center">
-          <p className="font-label text-primary">Real reviews</p>
+          <p className="font-label text-primary">What BC homeowners say</p>
           <h2 className="font-display mt-2 text-3xl font-black text-foreground sm:text-4xl">
-            What homeowners say
+            Homeowner stories
           </h2>
+          <p className="mx-auto mt-3 max-w-lg text-sm text-muted">
+            Representative experiences from early users across British Columbia.
+          </p>
         </FadeUp>
 
         <div

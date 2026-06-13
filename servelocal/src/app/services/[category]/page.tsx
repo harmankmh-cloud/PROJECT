@@ -6,25 +6,29 @@ import { MarketingPageShell } from "@/components/layout/MarketingPageShell";
 import { FilterSidebar } from "@/components/search/FilterSidebar";
 import { ProListingCard } from "@/components/search/ProListingCard";
 import { SearchSplitView } from "@/components/search/SearchSplitView";
+import { EmptyDirectoryState } from "@/components/search/EmptyDirectoryState";
 import { FadeUp } from "@/components/motion/FadeUp";
 import { SERVE_LOCAL, cityName } from "@/lib/constants";
-import { pageMetadata } from "@/lib/seo";
-import { getApprovedProviders, getCategoryBySlug, getServiceCategories } from "@/lib/data";
+import { pageMetadata, tradeListingTitle } from "@/lib/seo";
+import { getApprovedProvidersWithFallback, getCategoryBySlug, getServiceCategories } from "@/lib/data";
 import type { ProviderSort } from "@/lib/types";
 
 export async function generateMetadata({
   params,
+  searchParams,
 }: {
   params: Promise<{ category: string }>;
+  searchParams: Promise<{ city?: string }>;
 }): Promise<Metadata> {
   const { category } = await params;
+  const { city } = await searchParams;
   const cat = await getCategoryBySlug(category);
   if (!cat) return { title: "Category not found" };
 
   return pageMetadata({
-    title: `${cat.name} Services in Canada`,
-    description: `Find verified ${cat.name.toLowerCase()} pros across Canada. Compare ratings, prices, and book on ${SERVE_LOCAL.name}.`,
-    path: `/services/${category}`,
+    title: tradeListingTitle({ trade: cat.name, citySlug: city ?? "surrey" }),
+    description: `Find verified ${cat.name.toLowerCase()} pros in ${cityName(city ?? "surrey")}, BC. Compare ratings, prices, and get free quotes on ${SERVE_LOCAL.name}.`,
+    path: city ? `/services/${category}?city=${city}` : `/services/${category}`,
   });
 }
 
@@ -50,11 +54,16 @@ export default async function ServiceCategoryPage({
 
   const city = filters.city ?? "surrey";
   const sort = (filters.sort as ProviderSort) || "recommended";
+  const hasActiveFilters =
+    filters.licensed === "1" ||
+    filters.verified === "1" ||
+    Boolean(filters.minRating) ||
+    filters.fastResponse === "1";
 
-  const [providers, categories] = await Promise.all([
-    getApprovedProviders({
+  const [{ providers, fallbackProviders }, categories] = await Promise.all([
+    getApprovedProvidersWithFallback({
       categorySlug: category,
-      citySlug: filters.city || undefined,
+      citySlug: city,
       licensedOnly: filters.licensed === "1",
       verifiedOnly: filters.verified === "1",
       sort,
@@ -73,6 +82,7 @@ export default async function ServiceCategoryPage({
 
   const categoryNames = Object.fromEntries(categories.map((c) => [c.slug, c.name]));
   const avgPrice = providers.find((p) => p.min_callout_fee)?.min_callout_fee ?? "$75–$150/hr typical";
+  const isEmpty = filtered.length === 0;
 
   return (
     <MarketingPageShell>
@@ -83,10 +93,16 @@ export default async function ServiceCategoryPage({
             <h1 className="font-display mt-2 text-4xl font-black text-foreground sm:text-5xl">
               {cat.name} Pros Near You
             </h1>
-            <p className="mt-3 text-muted">
-              {filtered.length} verified pros available · Avg price: {avgPrice}
-              {filters.city && ` in ${cityName(filters.city)}`}
-            </p>
+            {!isEmpty ? (
+              <p className="mt-3 text-muted">
+                {filtered.length} verified pro{filtered.length === 1 ? "" : "s"} available · Avg price: {avgPrice}
+                {` in ${cityName(city)}`}
+              </p>
+            ) : (
+              <p className="mt-3 text-muted">
+                Growing our {cat.name.toLowerCase()} network in {cityName(city)} · Post a job for free matching
+              </p>
+            )}
           </FadeUp>
         </div>
       </div>
@@ -98,53 +114,56 @@ export default async function ServiceCategoryPage({
           </Suspense>
 
           <div>
-            <div className="mb-6 flex flex-wrap items-center justify-between gap-4">
-              <p className="text-sm text-muted">
-                Showing {filtered.length} pro{filtered.length === 1 ? "" : "s"}
-              </p>
-              <div className="flex gap-2">
-                <Link
-                  href={`/services/${category}?${new URLSearchParams({ ...filters, view: "list" } as Record<string, string>).toString()}`}
-                  className="text-sm font-medium text-muted hover:text-primary"
-                >
-                  List
-                </Link>
-                <span className="text-muted">|</span>
-                <Link
-                  href={`/services/${category}?${new URLSearchParams({ ...filters, view: "map" } as Record<string, string>).toString()}`}
-                  className="text-sm font-medium text-muted hover:text-primary"
-                >
-                  Map
-                </Link>
+            {!isEmpty && (
+              <div className="mb-6 flex flex-wrap items-center justify-between gap-4">
+                <p className="text-sm text-muted">
+                  Showing {filtered.length} pro{filtered.length === 1 ? "" : "s"}
+                </p>
+                <div className="flex gap-2">
+                  <Link
+                    href={`/services/${category}?${new URLSearchParams({ ...filters, view: "list" } as Record<string, string>).toString()}`}
+                    className="text-sm font-medium text-muted hover:text-primary"
+                  >
+                    List
+                  </Link>
+                  <span className="text-muted">|</span>
+                  <Link
+                    href={`/services/${category}?${new URLSearchParams({ ...filters, view: "map" } as Record<string, string>).toString()}`}
+                    className="text-sm font-medium text-muted hover:text-primary"
+                  >
+                    Map
+                  </Link>
+                </div>
               </div>
-            </div>
+            )}
 
             {filters.view === "map" || filters.view === "split" ? (
               <SearchSplitView
                 providers={filtered}
                 categoryNames={categoryNames}
                 citySlug={city}
+                categorySlug={category}
+                fallbackProviders={fallbackProviders}
+                hasActiveFilters={hasActiveFilters}
+              />
+            ) : isEmpty ? (
+              <EmptyDirectoryState
+                citySlug={city}
+                categorySlug={category}
+                categoryName={cat.name}
+                reason={hasActiveFilters ? "filtered-out" : "zero-pros"}
               />
             ) : (
               <div className="space-y-4">
-                {filtered.length === 0 ? (
-                  <div className="rounded-[14px] border border-dashed border-border p-8 text-center">
-                    <p className="font-medium text-foreground">No pros match your filters</p>
-                    <Link href={`/request?category=${category}`} className="mt-4 inline-block text-primary hover:underline">
-                      Post a job to get matched →
-                    </Link>
-                  </div>
-                ) : (
-                  filtered.map((p, i) => (
-                    <ProListingCard
-                      key={p.id}
-                      provider={p}
-                      categoryName={cat.name}
-                      distance={`In ${cityName(p.city_slug)}`}
-                      sponsored={i === 0 && p.featured}
-                    />
-                  ))
-                )}
+                {filtered.map((p, i) => (
+                  <ProListingCard
+                    key={p.id}
+                    provider={p}
+                    categoryName={cat.name}
+                    distance={`In ${cityName(p.city_slug)}`}
+                    sponsored={i === 0 && p.featured}
+                  />
+                ))}
               </div>
             )}
           </div>

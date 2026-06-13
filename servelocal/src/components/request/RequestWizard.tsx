@@ -4,7 +4,7 @@ import { useMemo, useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { CheckCircle2, Loader2 } from "lucide-react";
 import Link from "next/link";
-import { TRADE_CITIES, isValidCitySlug } from "@/lib/constants";
+import { TRADE_CITIES, cityName, isValidCitySlug } from "@/lib/constants";
 import {
   formatSubmitError,
   isValidPhone,
@@ -39,6 +39,8 @@ type Props = {
   defaultPro?: string;
   defaultName?: string;
   defaultEmail?: string;
+  defaultDescription?: string;
+  defaultPreferredDate?: string;
 };
 
 export function RequestWizard({
@@ -48,6 +50,8 @@ export function RequestWizard({
   defaultPro,
   defaultName = "",
   defaultEmail = "",
+  defaultDescription = "",
+  defaultPreferredDate = "",
 }: Props) {
   const safeCategories = useMemo(() => resolveCategories(categories), [categories]);
   const [step, setStep] = useState(0);
@@ -59,10 +63,10 @@ export function RequestWizard({
   const [citySlug, setCitySlug] = useState<string>(
     isValidCitySlug(defaultCity) ? defaultCity : TRADE_CITIES[0].slug
   );
-  const [description, setDescription] = useState("");
+  const [description, setDescription] = useState(defaultDescription);
   const [urgency, setUrgency] = useState("this_week");
   const [address, setAddress] = useState("");
-  const [preferredDate, setPreferredDate] = useState("");
+  const [preferredDate, setPreferredDate] = useState(defaultPreferredDate);
   const [preferredTime, setPreferredTime] = useState("");
   const [customerName, setCustomerName] = useState(defaultName);
   const [customerPhone, setCustomerPhone] = useState("");
@@ -274,6 +278,17 @@ export function RequestWizard({
                 placeholder="Phone (604-555-1234)"
                 className="input-focus-glow w-full rounded-xl border border-border bg-background px-4 py-3 text-sm"
               />
+              <p className="text-xs text-muted">
+                By submitting, you agree to our{" "}
+                <Link href="/terms" className="text-primary hover:underline">
+                  Terms
+                </Link>{" "}
+                and{" "}
+                <Link href="/privacy" className="text-primary hover:underline">
+                  Privacy Policy
+                </Link>
+                . Pros may contact you by phone{customerEmail.trim() ? " or email" : ""}.
+              </p>
             </div>
           )}
 
@@ -283,17 +298,32 @@ export function RequestWizard({
                 <div className="py-8">
                   <Loader2 className="mx-auto h-12 w-12 animate-spin text-primary" />
                   <p className="mt-4 font-semibold text-foreground">Matching you with pros...</p>
-                  <p className="mt-2 text-sm text-muted">Sending your request to up to 5 verified pros</p>
+                  <p className="mt-2 text-sm text-muted">Sending your request to verified local pros</p>
                 </div>
               ) : (
                 <>
                   <CheckCircle2 className="mx-auto h-16 w-16 text-success" />
                   <h2 className="font-display mt-4 text-2xl font-bold text-foreground">
-                    Quotes incoming! 🎉
+                    {matches.length > 0 ? "Quotes incoming!" : "Request received!"}
                   </h2>
-                  <p className="mt-2 text-sm text-muted">
-                    Your request was sent to {matches.length} matched pro{matches.length === 1 ? "" : "s"}.
-                  </p>
+                  {matches.length > 0 ? (
+                    <p className="mt-2 text-sm text-muted">
+                      Your request was sent to {matches.length} matched pro{matches.length === 1 ? "" : "s"}.
+                      Expect calls or texts soon.
+                    </p>
+                  ) : (
+                    <div className="mt-4 space-y-2 text-sm text-muted">
+                      <p>
+                        We&apos;re onboarding pros in {cityName(citySlug)} for this trade. Our team will manually
+                        match you with a vetted local pro within 24 hours.
+                      </p>
+                      <p>
+                        {customerEmail.trim()
+                          ? `We'll also email updates to ${customerEmail.trim()}.`
+                          : `We'll reach you at ${customerPhone.replace(/(\d{3})(\d{3})(\d{4})/, "($1) $2-$3")} when pros respond.`}
+                      </p>
+                    </div>
+                  )}
                   {matches.length > 0 && (
                     <ul className="mt-6 space-y-3 text-left">
                       {matches.map((p) => (

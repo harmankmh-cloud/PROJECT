@@ -40,6 +40,7 @@ export default function PrivacyPage() {
         <ul className="list-disc space-y-2 pl-5 text-sm leading-relaxed text-slate-600">
           <li>To create and manage your account and dashboard.</li>
           <li>To match job requests with local service providers.</li>
+          <li>When you post a job, your name, phone number, email (if provided), address or neighbourhood, and job description may be shared with matched service providers so they can contact you directly.</li>
           <li>To display and moderate business listings and reviews.</li>
           <li>To send transactional emails (confirmations, password resets) via our email provider.</li>
           <li>To improve the platform and respond to support requests.</li>
