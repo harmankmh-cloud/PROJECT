@@ -18,3 +18,6 @@ voiceagent/.next/
 voiceagent/orchestrator/dist/
 voiceagent/.env.local
 voiceagent/.env.sentry-build-plugin
+routemax/node_modules/
+routemax/dist/
+routemax/tsconfig.tsbuildinfo
