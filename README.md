@@ -6,7 +6,7 @@ This repo includes:
 - **VoiceAgent** (`voiceagent/`) — enterprise AI phone agent platform (Twilio + Next.js + Supabase)
 - **ServeLocal** (`servelocal/`) — standalone BC trades directory (IndiaMART-style contacts)
 - **OpenRouter chat** (`openrouter_chat/`) — earlier OpenRouter CLI/web experiment
-- **RouteMax** (`routemax/`) — scan package addresses, optimize delivery route (Spoke-style, free)
+- **Route Max** (`route-max/`) — scan package addresses, optimize delivery route ([route-max.vercel.app](https://route-max.vercel.app))
 
 ## Start RateLocal
 
