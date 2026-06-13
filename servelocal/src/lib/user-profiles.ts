@@ -8,6 +8,11 @@ export type UserProfile = {
   display_name: string | null;
   phone: string | null;
   created_at: string;
+  onboarding_completed_at?: string | null;
+  onboarding_step?: number | null;
+  notification_email?: boolean | null;
+  notification_sms?: boolean | null;
+  preferred_city_slug?: string | null;
 };
 
 export async function getUserProfile(userId: string): Promise<UserProfile | null> {
@@ -21,7 +26,19 @@ export async function getUserProfile(userId: string): Promise<UserProfile | null
 
 export async function upsertUserProfile(
   userId: string,
-  fields: Partial<Pick<UserProfile, "role" | "display_name" | "phone">>
+  fields: Partial<
+    Pick<
+      UserProfile,
+      | "role"
+      | "display_name"
+      | "phone"
+      | "onboarding_completed_at"
+      | "onboarding_step"
+      | "notification_email"
+      | "notification_sms"
+      | "preferred_city_slug"
+    >
+  >
 ) {
   const admin = createServiceClient();
   if (!admin) return { ok: false as const, error: "Database not configured" };

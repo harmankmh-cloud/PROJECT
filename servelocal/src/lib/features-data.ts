@@ -279,14 +279,4 @@ function generateMockSlots(providerId: string): AvailabilitySlot[] {
   return slots.filter((s) => !s.is_booked);
 }
 
-export async function getUserBookings(userId: string) {
-  const admin = createDbClient();
-  if (!admin) return [];
-
-  const { data } = await admin
-    .from("bookings")
-    .select("*, service_providers(display_name, slug, category_slug)")
-    .eq("user_id", userId)
-    .order("created_at", { ascending: false });
-  return data || [];
-}
+export { getUserBookings, type BookingWithProvider } from "@/lib/data/bookings";

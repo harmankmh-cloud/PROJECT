@@ -68,28 +68,8 @@ export async function getServiceCategories(): Promise<ServiceCategory[]> {
 }
 
 export async function getUserServiceRequests(userId: string, email?: string) {
-  const admin = createServiceClient() ?? createDbClient();
-  if (!admin) return [];
-
-  const { data: byUser } = await admin
-    .from("service_requests")
-    .select("*")
-    .eq("user_id", userId)
-    .order("created_at", { ascending: false })
-    .limit(50);
-
-  if (byUser?.length) return byUser as ServiceRequest[];
-
-  if (!email) return [];
-
-  const { data: byEmail } = await admin
-    .from("service_requests")
-    .select("*")
-    .eq("customer_email", email)
-    .order("created_at", { ascending: false })
-    .limit(50);
-
-  return (byEmail || []) as ServiceRequest[];
+  const { getUserServiceRequests: load } = await import("@/lib/data/requests");
+  return load(userId, email);
 }
 
 export async function getCategoryBySlug(slug: string) {
@@ -197,9 +177,16 @@ export async function subscribeNewsletter(email: string) {
   }
 }
 
-export async function getApprovedProviders(filters: ProviderFilters = {}) {
+export async function getApprovedProviders(
+  filters: ProviderFilters & { page?: number; pageSize?: number } = {}
+) {
   const admin = createDbClient();
   if (!admin) return [];
+
+  const page = Math.max(0, filters.page ?? 0);
+  const pageSize = Math.min(50, Math.max(1, filters.pageSize ?? 24));
+  const from = page * pageSize;
+  const to = from + pageSize - 1;
 
   let query = admin.from("service_providers").select("*").eq("status", "approved");
 
@@ -209,6 +196,8 @@ export async function getApprovedProviders(filters: ProviderFilters = {}) {
   if (filters.licensedOnly) query = query.eq("licensed", true);
   if (filters.verifiedOnly) query = query.eq("verified", true);
   if (filters.emergencyOnly) query = query.eq("emergency_available", true);
+
+  query = query.range(from, to);
 
   const { data } = await query;
   let list = ((data || []) as ServiceProvider[]).map((row) =>

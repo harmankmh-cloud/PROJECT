@@ -59,15 +59,12 @@ export async function middleware(request: NextRequest) {
   }
 
   if ((pathname === "/login" || pathname === "/signup" || pathname.startsWith("/signup/")) && user) {
-    if (isAdminEmail(user.email)) {
-      return NextResponse.redirect(new URL("/admin", request.url));
-    }
-    return NextResponse.redirect(new URL("/dashboard", request.url));
+    return NextResponse.redirect(new URL("/auth/after-login", request.url));
   }
 
   return response;
 }
 
 export const config = {
-  matcher: ["/dashboard/:path*", "/onboarding", "/admin/:path*", "/login", "/signup", "/signup/:path*"],
+  matcher: ["/dashboard/:path*", "/onboarding", "/onboarding/:path*", "/admin/:path*", "/login", "/signup", "/signup/:path*"],
 };
