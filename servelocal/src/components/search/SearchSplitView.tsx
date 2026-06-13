@@ -5,18 +5,32 @@ import { List, Map } from "lucide-react";
 import type { ServiceProvider } from "@/lib/types";
 import { InteractiveMap } from "@/components/search/InteractiveMap";
 import { ProListingCard } from "@/components/search/ProListingCard";
+import { EmptyDirectoryState } from "@/components/search/EmptyDirectoryState";
 import { cityName } from "@/lib/constants";
 
 type Props = {
   providers: ServiceProvider[];
   categoryNames: Record<string, string>;
   citySlug?: string;
+  categorySlug?: string;
   query?: string;
+  fallbackProviders?: ServiceProvider[];
+  hasActiveFilters?: boolean;
 };
 
-export function SearchSplitView({ providers, categoryNames, citySlug, query }: Props) {
+export function SearchSplitView({
+  providers,
+  categoryNames,
+  citySlug,
+  categorySlug,
+  query,
+  fallbackProviders = [],
+  hasActiveFilters = false,
+}: Props) {
   const [view, setView] = useState<"split" | "list" | "map">("split");
   const [hoveredId, setHoveredId] = useState<string | null>(null);
+  const categoryName = categorySlug ? categoryNames[categorySlug] : undefined;
+  const showEmpty = providers.length === 0;
 
   return (
     <div>
@@ -48,22 +62,47 @@ export function SearchSplitView({ providers, categoryNames, citySlug, query }: P
       >
         {(view === "split" || view === "list") && (
           <div className="space-y-4">
-            {providers.length === 0 ? (
-              <div className="rounded-[14px] border border-dashed border-border p-8 text-center">
-                <p className="font-medium text-foreground">No results found</p>
-                <p className="mt-2 text-sm text-muted">
-                  {query
-                    ? `We couldn't find pros for "${query}" nearby.`
-                    : "Try adjusting your filters."}
-                </p>
-                <p className="mt-4 text-sm text-muted">
-                  We found these pros in nearby cities — expand your search radius or{" "}
-                  <a href="/request" className="text-primary hover:underline">
-                    post a job
-                  </a>{" "}
-                  to get matched.
-                </p>
-              </div>
+            {showEmpty ? (
+              <>
+                {citySlug ? (
+                  <EmptyDirectoryState
+                    citySlug={citySlug}
+                    categorySlug={categorySlug}
+                    categoryName={categoryName}
+                    reason={hasActiveFilters ? "filtered-out" : "zero-pros"}
+                    compact={Boolean(fallbackProviders.length)}
+                  />
+                ) : (
+                  <div className="rounded-[14px] border border-dashed border-border p-8 text-center">
+                    <p className="font-medium text-foreground">No results found</p>
+                    <p className="mt-2 text-sm text-muted">
+                      {query
+                        ? `We couldn't find pros for "${query}" nearby.`
+                        : "Try adjusting your filters or post a job to get matched."}
+                    </p>
+                    <a href="/request" className="mt-4 inline-block text-primary hover:underline">
+                      Post a job →
+                    </a>
+                  </div>
+                )}
+                {fallbackProviders.length > 0 && (
+                  <div>
+                    <p className="mb-3 text-sm font-semibold text-foreground">
+                      Pros in nearby areas
+                    </p>
+                    {fallbackProviders.map((p, i) => (
+                      <div key={p.id} className="mb-4">
+                        <ProListingCard
+                          provider={p}
+                          categoryName={categoryNames[p.category_slug]}
+                          distance={`In ${cityName(p.city_slug)}`}
+                          sponsored={i === 0 && p.featured}
+                        />
+                      </div>
+                    ))}
+                  </div>
+                )}
+              </>
             ) : (
               providers.map((p, i) => (
                 <div
@@ -86,7 +125,10 @@ export function SearchSplitView({ providers, categoryNames, citySlug, query }: P
 
         {(view === "split" || view === "map") && (
           <div className="sticky top-24 h-fit">
-            <InteractiveMap providers={providers} citySlug={citySlug} />
+            <InteractiveMap
+              providers={providers.length > 0 ? providers : fallbackProviders}
+              citySlug={citySlug}
+            />
           </div>
         )}
       </div>

@@ -1,5 +1,5 @@
 import { createDbClient, createServiceClient } from "@/lib/supabase/admin";
-import { DEFAULT_SERVICE_CATEGORIES } from "@/lib/constants";
+import { DEFAULT_SERVICE_CATEGORIES, nearbyCitySlugs } from "@/lib/constants";
 import { slugify } from "@/lib/slugify";
 import type {
   ProviderFilters,
@@ -227,6 +227,37 @@ export async function getApprovedProviders(filters: ProviderFilters = {}) {
   }
 
   return sortProviders(list, filters.sort || "recommended");
+}
+
+export async function getApprovedProvidersWithFallback(filters: ProviderFilters = {}) {
+  const primary = await getApprovedProviders(filters);
+  if (primary.length > 0 || !filters.citySlug) {
+    return { providers: primary, fallbackProviders: [] as ServiceProvider[], usedFallback: false };
+  }
+
+  const adjacent = nearbyCitySlugs(filters.citySlug);
+  const seen = new Set<string>();
+  const fallbackProviders: ServiceProvider[] = [];
+
+  for (const citySlug of adjacent) {
+    const batch = await getApprovedProviders({
+      ...filters,
+      citySlug,
+    });
+    for (const p of batch) {
+      if (!seen.has(p.id)) {
+        seen.add(p.id);
+        fallbackProviders.push(p);
+      }
+    }
+    if (fallbackProviders.length >= 6) break;
+  }
+
+  return {
+    providers: primary,
+    fallbackProviders: sortProviders(fallbackProviders, filters.sort || "recommended").slice(0, 6),
+    usedFallback: fallbackProviders.length > 0,
+  };
 }
 
 export async function searchProviders(query: string, limit = 24) {

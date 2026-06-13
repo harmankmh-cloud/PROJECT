@@ -5,7 +5,7 @@ import { FeaturedProsCarousel } from "@/components/landing/FeaturedProsCarousel"
 import { ForProsSection } from "@/components/landing/ForProsSection";
 import { HeroSection } from "@/components/landing/HeroSection";
 import { HowItWorks } from "@/components/landing/HowItWorks";
-import { StatsBar } from "@/components/landing/StatsBar";
+import { StatsBarSection } from "@/components/landing/StatsBarSection";
 import { TestimonialsCarousel } from "@/components/landing/TestimonialsCarousel";
 import { MarketingPageShell } from "@/components/layout/MarketingPageShell";
 import { SERVE_LOCAL } from "@/lib/constants";
@@ -61,7 +61,7 @@ export default async function HomePage() {
       <CategoryGrid categories={categories} proCounts={proCounts} />
       <HowItWorks />
       <FeaturedProsCarousel providers={featured} categories={categories} />
-      <StatsBar />
+      <StatsBarSection />
       <CategorySpotlight />
       <TestimonialsCarousel />
       <ForProsSection />

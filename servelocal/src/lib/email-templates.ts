@@ -17,14 +17,17 @@ export function jobPostedEmail(input: {
   categoryName: string;
   citySlug: string;
   matchCount: number;
+  isGuest?: boolean;
 }) {
   const subject = `Your ${input.categoryName} job is posted — ServeLocal`;
+  const ctaHref = input.isGuest ? `${appUrl}/signup` : `${appUrl}/dashboard`;
+  const ctaLabel = input.isGuest ? "Create a free account to track your job" : "View your dashboard";
   const html = layout(`
 <p>Hi ${input.customerName},</p>
 <p>Your job request for <strong>${input.categoryName}</strong> in <strong>${cityName(input.citySlug)}</strong> is live.</p>
-<p>${input.matchCount > 0 ? `We found <strong>${input.matchCount}</strong> matching pro${input.matchCount === 1 ? "" : "s"} you can call direct.` : "We’ll notify you as pros join your area."}</p>
-<p><a href="${appUrl}/dashboard" style="display:inline-block;background:#0f766e;color:#fff;padding:12px 20px;border-radius:8px;text-decoration:none;font-weight:600">View your dashboard</a></p>
-<p style="font-size:14px;color:#64748b">No middleman fees — call the pro you choose.</p>
+<p>${input.matchCount > 0 ? `We found <strong>${input.matchCount}</strong> matching pro${input.matchCount === 1 ? "" : "s"} you can call direct.` : "Our team is manually matching you with vetted local pros — expect follow-up within 24 hours."}</p>
+<p><a href="${ctaHref}" style="display:inline-block;background:#0f766e;color:#fff;padding:12px 20px;border-radius:8px;text-decoration:none;font-weight:600">${ctaLabel}</a></p>
+<p style="font-size:14px;color:#64748b">No middleman fees — call the pro you choose.${input.isGuest ? " Save your confirmation email — pros may reach you by phone." : ""}</p>
 `);
   return { subject, html };
 }

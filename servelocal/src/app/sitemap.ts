@@ -1,5 +1,5 @@
 import type { MetadataRoute } from "next";
-import { COST_GUIDES, TRADE_CITIES } from "@/lib/constants";
+import { COST_GUIDES, DEFAULT_SERVICE_CATEGORIES, TRADE_CITIES } from "@/lib/constants";
 import { BLOG_POSTS } from "@/lib/site-content";
 
 function getBaseUrl(): string {
@@ -9,6 +9,8 @@ function getBaseUrl(): string {
   }
   return "https://www.servelocal.ca";
 }
+
+const CORE_CATEGORY_SLUGS = DEFAULT_SERVICE_CATEGORIES.slice(0, 8).map((c) => c.slug);
 
 export default function sitemap(): MetadataRoute.Sitemap {
   const baseUrl = getBaseUrl();
@@ -42,6 +44,22 @@ export default function sitemap(): MetadataRoute.Sitemap {
     priority: 0.8,
   }));
 
+  const cityCategoryPages: MetadataRoute.Sitemap = TRADE_CITIES.flatMap((city) =>
+    CORE_CATEGORY_SLUGS.map((category) => ({
+      url: `${baseUrl}/${city.slug}/${category}`,
+      lastModified,
+      changeFrequency: "weekly" as const,
+      priority: 0.75,
+    }))
+  );
+
+  const servicePages: MetadataRoute.Sitemap = CORE_CATEGORY_SLUGS.map((slug) => ({
+    url: `${baseUrl}/services/${slug}`,
+    lastModified,
+    changeFrequency: "weekly" as const,
+    priority: 0.7,
+  }));
+
   const guidePages: MetadataRoute.Sitemap = Object.keys(COST_GUIDES).map((slug) => ({
     url: `${baseUrl}/guides/${slug}`,
     lastModified,
@@ -56,5 +74,12 @@ export default function sitemap(): MetadataRoute.Sitemap {
     priority: 0.6,
   }));
 
-  return [...staticPages, ...cityPages, ...guidePages, ...blogPages];
+  return [
+    ...staticPages,
+    ...cityPages,
+    ...cityCategoryPages,
+    ...servicePages,
+    ...guidePages,
+    ...blogPages,
+  ];
 }
