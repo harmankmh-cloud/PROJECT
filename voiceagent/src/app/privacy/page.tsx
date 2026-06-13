@@ -77,6 +77,20 @@ export default function PrivacyPage() {
             </p>
           </section>
 
+          <section id="cookies">
+            <h2 className="text-lg font-semibold text-ghost-white">Cookies &amp; analytics</h2>
+            <p>
+              We use essential cookies to keep you signed in and remember your preferences. Non-essential
+              cookies — including live chat and product analytics — load only after you choose
+              &ldquo;Accept all&rdquo; in our cookie banner. You can change your choice anytime by clearing
+              site data or revisiting the banner after clearing your saved preference.
+            </p>
+            <p className="mt-2">
+              Essential-only mode still allows core site functionality; chat widgets and optional analytics
+              remain disabled until you opt in.
+            </p>
+          </section>
+
           <section>
             <h2 className="text-lg font-semibold text-ghost-white">Contact</h2>
             <p>

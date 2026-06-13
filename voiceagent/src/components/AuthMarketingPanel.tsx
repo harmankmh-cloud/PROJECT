@@ -13,14 +13,48 @@ const AUTH_TESTIMONIALS = TESTIMONIALS.map((t) => ({
   quote: t.quote,
   author: t.name,
   business: t.company,
+  location: "location" in t ? (t as { location?: string }).location : undefined,
+  caseStudyHref: "caseStudyHref" in t ? (t as { caseStudyHref?: string }).caseStudyHref : undefined,
 }));
 
-function TestimonialCard({ quote, author, business }: { quote: string; author: string; business: string }) {
+function TestimonialCard({
+  quote,
+  author,
+  business,
+  location,
+  caseStudyHref,
+}: {
+  quote: string;
+  author: string;
+  business: string;
+  location?: string;
+  caseStudyHref?: string;
+}) {
   return (
     <blockquote className="glass-card p-6">
       <p className="text-lg text-text">&ldquo;{quote}&rdquo;</p>
-      <footer className="mt-4 text-sm text-muted">
-        — {author}, {business}
+      <footer className="mt-4 flex items-center gap-3 text-sm text-muted">
+        <div
+          className="flex h-10 w-10 shrink-0 items-center justify-center rounded-full bg-violet-600/30 text-xs font-semibold text-violet-200"
+          aria-hidden
+        >
+          {author
+            .split(" ")
+            .map((p) => p[0])
+            .join("")
+            .slice(0, 2)}
+        </div>
+        <div>
+          <p>
+            — {author}, {business}
+            {location ? ` · ${location}` : ""}
+          </p>
+          {caseStudyHref ? (
+            <Link href={caseStudyHref} className="mt-1 inline-block font-semibold text-violet-400 hover:text-violet-300">
+              Read the full story →
+            </Link>
+          ) : null}
+        </div>
       </footer>
     </blockquote>
   );
@@ -38,19 +72,15 @@ function RotatingTestimonials() {
 
   return (
     <AnimatePresence mode="wait">
-      <motion.blockquote
+      <motion.div
         key={index}
         initial={{ opacity: 0, y: 12 }}
         animate={{ opacity: 1, y: 0 }}
         exit={{ opacity: 0, y: -12 }}
         transition={{ duration: 0.35 }}
-        className="glass-card p-6"
       >
-        <p className="text-lg text-text">&ldquo;{t.quote}&rdquo;</p>
-        <footer className="mt-4 text-sm text-muted">
-          — {t.author}, {t.business}
-        </footer>
-      </motion.blockquote>
+        <TestimonialCard {...t} />
+      </motion.div>
     </AnimatePresence>
   );
 }
@@ -71,10 +101,8 @@ export function AuthMarketingPanel({ footer }: { footer: string }) {
         <p className="mt-2 text-sm text-muted">AI receptionist for Canadian businesses</p>
       </div>
 
-      <div className="relative min-h-[140px]">
-        <ClientOnly
-          fallback={<TestimonialCard quote={first.quote} author={first.author} business={first.business} />}
-        >
+      <div className="relative min-h-[160px]">
+        <ClientOnly fallback={<TestimonialCard {...first} />}>
           <RotatingTestimonials />
         </ClientOnly>
       </div>
@@ -83,6 +111,16 @@ export function AuthMarketingPanel({ footer }: { footer: string }) {
         <Waveform />
         <p className="mt-4 text-xs text-muted">{footer}</p>
       </div>
+    </div>
+  );
+}
+
+/** Compact testimonial shown below auth forms on mobile. */
+export function AuthMobileTestimonial() {
+  const t = AUTH_TESTIMONIALS[0];
+  return (
+    <div className="mt-8 lg:hidden">
+      <TestimonialCard {...t} />
     </div>
   );
 }

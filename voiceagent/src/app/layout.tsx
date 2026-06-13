@@ -24,7 +24,7 @@ export const metadata: Metadata = {
   authors: [{ name: BRAND.name, url: siteUrl }],
   metadataBase: new URL(siteUrl),
   alternates: {
-    languages: { "en-CA": siteUrl, "fr-CA": siteUrl },
+    languages: { "en-CA": siteUrl, "fr-CA": `${siteUrl}/fr` },
   },
   icons: {
     icon: "/icon",

@@ -5,6 +5,8 @@ import { useEffect, useState } from "react";
 
 const STORAGE_KEY = "greetq-cookie-consent";
 
+export const CONSENT_CHANGED_EVENT = "greetq-consent-changed";
+
 type Consent = "all" | "essential" | null;
 
 export function CookieNotice() {
@@ -34,6 +36,7 @@ export function CookieNotice() {
   function save(value: Consent) {
     try {
       localStorage.setItem(STORAGE_KEY, value ?? "essential");
+      window.dispatchEvent(new CustomEvent(CONSENT_CHANGED_EVENT, { detail: value }));
     } catch {
       /* ignore */
     }
@@ -46,13 +49,13 @@ export function CookieNotice() {
     <div
       role="dialog"
       aria-label="Cookie consent"
-      className="fixed bottom-0 left-0 right-0 z-[60] border-t border-glass-border-subtle bg-surface-container/95 px-5 py-4 backdrop-blur-xl"
+      className="fixed bottom-0 left-0 right-0 z-[55] border-t border-glass-border-subtle bg-surface-container/95 px-5 py-4 backdrop-blur-xl"
     >
       <div className="marketing-container flex flex-col items-start justify-between gap-4 sm:flex-row sm:items-center">
         <p className="text-sm text-text">
-          We use essential cookies for sign-in. With your consent, we also use analytics to improve
-          the product. See our{" "}
-          <Link href="/privacy" className="link-subtle font-semibold text-text">
+          We use essential cookies for sign-in. With your consent, we also use analytics and live chat
+          to improve the product. See our{" "}
+          <Link href="/privacy#cookies" className="link-subtle font-semibold text-text">
             Privacy Policy
           </Link>
           .
@@ -63,7 +66,7 @@ export function CookieNotice() {
             className="rounded-full border border-border px-4 py-2 text-xs font-medium text-muted transition hover:bg-white/5 hover:text-text"
             onClick={() => save("essential")}
           >
-            Reject non-essential
+            Essential only
           </button>
           <button
             type="button"
@@ -78,7 +81,6 @@ export function CookieNotice() {
   );
 }
 
-/** Returns true when analytics cookies/scripts may load. */
 export function hasAnalyticsConsent(): boolean {
   if (typeof window === "undefined") return false;
   try {
