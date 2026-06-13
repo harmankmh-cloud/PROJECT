@@ -23,7 +23,7 @@ export async function generateMetadata({
   if (!cityMeta || !cat) return { title: "Not found" };
 
   return pageMetadata({
-    title: tradeListingTitle({ trade: cat.name, citySlug: city }),
+    title: tradeListingTitle({ trade: cat.name, tradeSlug: cat.slug, citySlug: city }),
     description: `Find ${cat.name.toLowerCase()} pros in ${cityMeta.name}, ${cityMeta.region}. Compare verified listings, reviews, and contact trades direct on ${SERVE_LOCAL.name}.`,
     path: `/${city}/${category}`,
   });

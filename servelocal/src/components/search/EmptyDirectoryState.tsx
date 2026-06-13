@@ -1,5 +1,6 @@
 import Link from "next/link";
 import { ShimmerButton } from "@/components/ui/ShimmerButton";
+import { tradeNoun, tradeSeoPlural } from "@/lib/category-copy";
 import { cityName } from "@/lib/constants";
 
 type Props = {
@@ -18,7 +19,12 @@ export function EmptyDirectoryState({
   compact = false,
 }: Props) {
   const city = cityName(citySlug);
-  const trade = categoryName?.toLowerCase() || "local trades";
+  const trade = categorySlug
+    ? tradeNoun(categorySlug, categoryName ?? "local trade")
+    : "local trades";
+  const tradePlural = categoryName
+    ? tradeSeoPlural(categorySlug, categoryName)
+    : "local trades";
   const requestHref = categorySlug
     ? `/request?city=${citySlug}&category=${categorySlug}`
     : `/request?city=${citySlug}`;
@@ -31,7 +37,7 @@ export function EmptyDirectoryState({
     reason === "filtered-out"
       ? "No pros match your filters"
       : categoryName
-        ? `We're onboarding top ${categoryName.toLowerCase()}s in ${city}!`
+        ? `We're onboarding top ${tradePlural.toLowerCase()} in ${city}!`
         : `Directory growing in ${city}`;
 
   const body =
@@ -72,7 +78,7 @@ export function EmptyDirectoryState({
       </div>
       <div className="mt-8 border-t border-border pt-6 text-center">
         <p className="text-sm font-medium text-foreground">
-          Are you a {categoryName?.toLowerCase() || "tradie"} in {city}?
+          Are you a {trade} in {city}?
         </p>
         <p className="mt-1 text-sm text-muted">Be among the first listed — free starter plan available.</p>
         <Link

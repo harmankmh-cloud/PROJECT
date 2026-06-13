@@ -26,7 +26,7 @@ export async function generateMetadata({
   if (!cat) return { title: "Category not found" };
 
   return pageMetadata({
-    title: tradeListingTitle({ trade: cat.name, citySlug: city ?? "surrey" }),
+    title: tradeListingTitle({ trade: cat.name, tradeSlug: cat.slug, citySlug: city ?? "surrey" }),
     description: `Find verified ${cat.name.toLowerCase()} pros in ${cityName(city ?? "surrey")}, BC. Compare ratings, prices, and get free quotes on ${SERVE_LOCAL.name}.`,
     path: city ? `/services/${category}?city=${city}` : `/services/${category}`,
   });
