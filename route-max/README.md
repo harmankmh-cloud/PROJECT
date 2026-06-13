@@ -55,7 +55,11 @@ npm run start:tunnel
 
 ## Deploy (Vercel)
 
+Production: **https://route-max.vercel.app**
+
 Set project **Root Directory** to `route-max`. No build command required — static files only.
+
+Note: the web bundle is `planner.js` (Vercel reserves root `app.js` / `index.js` for serverless). Expo uses `expo-entry.js`.
 
 ## Data storage
 
