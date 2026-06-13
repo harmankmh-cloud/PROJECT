@@ -5,6 +5,13 @@
       "args": ["-m", "project_rag.mcp_server"],
       "cwd": "${workspaceFolder}"
     },
+    "stitch": {
+      "command": "npx",
+      "args": ["-y", "stitch-mcp-server@latest"],
+      "env": {
+        "STITCH_API_KEY": "${env:STITCH_API_KEY}"
+      }
+    },
     "figma": {
       "url": "https://mcp.figma.com/mcp"
     },
