@@ -21,8 +21,8 @@ export function SetupChecklist({ businessName, reviewUrl, hasGoogleLink, hasFeed
       done: hasGoogleLink,
       title: "Google review link added",
       detail: hasGoogleLink
-        ? "Customers can jump straight to Google"
-        : "Add this so reviews actually post on Google Maps",
+        ? "Customers can open Google to paste their review"
+        : "Add this so happy customers jump to Google Maps after a good rating",
       action: "Fill in popup →",
       onAction: openGoogleSetup,
     },

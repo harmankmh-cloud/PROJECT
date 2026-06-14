@@ -1,0 +1,50 @@
+---
+description: GreetQ, RateLocal, Vercel, Supabase, and cold email outreach ops
+alwaysApply: true
+---
+
+# Monorepo ops map
+
+## Apps and hosting
+
+| Product | Code folder | Vercel project | Production domain |
+|---------|-------------|----------------|-------------------|
+| **GreetQ** | `voiceagent/` | `voiceagent` | https://greetq.com |
+| **RateLocal** | `reviewflow/` | `project` | https://ratelocal.ca |
+| **ServeLocal** | `servelocal/` | (separate) | https://www.servelocal.ca |
+
+Vercel team: `harmankmh-1059s-projects`
+
+## Supabase projects (separate DBs)
+
+| App | Project ref | URL pattern |
+|-----|-------------|-------------|
+| **GreetQ** | `lrihhjjxmxixppmrzvva` | `https://lrihhjjxmxixppmrzvva.supabase.co` |
+| **RateLocal** | `otnddwopphhxstteqizw` | `https://otnddwopphhxstteqizw.supabase.co` |
+
+Required env vars (each Vercel project): `NEXT_PUBLIC_SUPABASE_URL`, `NEXT_PUBLIC_SUPABASE_ANON_KEY`, `SUPABASE_SERVICE_ROLE_KEY`.
+
+Verify Supabase works by hitting production APIs — do not assume broken if Vercel UI glitches.
+
+## Cold email outreach (Activepieces → API)
+
+Daily sends are **not** configured in Vercel UI. Activepieces calls:
+
+- GreetQ: `POST https://greetq.com/api/make/outreach/daily` — header `X-GreetQ-Secret: greetq-marketing-webhook-2026`
+- RateLocal: `POST https://ratelocal.ca/api/make/outreach/daily` — header `X-RateLocal-Secret: ratelocal-marketing-webhook-2026`
+
+Schedule (Pacific, weekdays): GreetQ **11:00**, RateLocal **14:00**.
+
+Batching: **20 × 5 emails** per run (5 per API call) to avoid Vercel 504 timeouts.
+
+Lead import: `tools/greetq-lead-scraper/` and `tools/ratelocal-lead-scraper/` → import API. Empty GreetQ queue = re-import leads, not a token failure.
+
+## Google login errors
+
+`{"message":"Unrecognized client_id"}` = **Google OAuth** misconfig in Supabase → Authentication → Providers → Google (not the service role key).
+
+Redirect URI in Google Cloud must include: `https://<project-ref>.supabase.co/auth/v1/callback`
+
+## Before non-trivial work
+
+Use project RAG (`python -m project_rag search` or MCP `rag_search`) and read cited docs — see `project-rag.mdc`.

@@ -1,6 +1,7 @@
 import Link from "next/link";
-import { MaterialIcon } from "@/components/MaterialIcon";
+import { BadgeCheck, Check } from "lucide-react";
 import { estimatedMonthly, PLANS, type PlanKey } from "@/lib/plans";
+import { TRIAL_MARKETING } from "@/lib/trial";
 
 const EXAMPLE_MINUTES = 500;
 
@@ -22,7 +23,7 @@ export function PricingCard({ planKey, highlighted = false }: { planKey: PlanKey
           : "border border-primary/40 bg-primary/10 text-primary hover:bg-primary/20"
       }`}
     >
-      Start free trial
+      {TRIAL_MARKETING.cta}
     </Link>
   );
 
@@ -35,12 +36,12 @@ export function PricingCard({ planKey, highlighted = false }: { planKey: PlanKey
             <span className="text-3xl font-bold text-ghost-white">{`$${plan.monthlyPrice}`}</span>
             <span className="text-on-surface-variant">/mo</span>
           </div>
-          <p className="mt-2 text-xs text-on-surface-variant">{`+ $${plan.perMinute}/min voice usage`}</p>
+          <p className="mt-2 text-xs text-on-surface-variant">{`${plan.includedMinutes.toLocaleString()} min included, then $${plan.perMinute}/min`}</p>
         </div>
         <ul className="mb-10 flex-grow space-y-4 text-sm">
-          {plan.features.slice(0, 3).map((f) => (
+          {plan.features.map((f) => (
             <li key={f} className="flex gap-2 text-on-surface-variant">
-              <MaterialIcon name="verified" className="text-primary text-[20px]" />
+              <BadgeCheck className="h-5 w-5 shrink-0 text-primary" aria-hidden />
               {f}
             </li>
           ))}
@@ -69,7 +70,7 @@ export function PricingCard({ planKey, highlighted = false }: { planKey: PlanKey
           <span className="text-3xl font-bold text-ghost-white">{`$${plan.monthlyPrice}`}</span>
           <span className="text-on-surface-variant">/mo</span>
         </div>
-        <p className="mt-2 text-xs text-on-surface-variant">{`+ $${plan.perMinute}/min voice usage`}</p>
+        <p className="mt-2 text-xs text-on-surface-variant">{`${plan.includedMinutes.toLocaleString()} min included, then $${plan.perMinute}/min`}</p>
         <p className="mt-2 text-xs text-slate-text">
           ~{EXAMPLE_MINUTES} min/mo ≈ <strong className="text-on-surface">${estimate}/mo</strong> all-in
         </p>
@@ -77,7 +78,7 @@ export function PricingCard({ planKey, highlighted = false }: { planKey: PlanKey
       <ul className="mb-10 flex-grow space-y-4 text-sm">
         {plan.features.map((f) => (
           <li key={f} className="flex gap-2 text-on-surface-variant">
-            <MaterialIcon name="check" className="text-[20px] text-primary" />
+            <Check className="h-5 w-5 shrink-0 text-primary" aria-hidden />
             {f}
           </li>
         ))}

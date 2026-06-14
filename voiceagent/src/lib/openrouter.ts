@@ -26,16 +26,30 @@ export function hasOpenRouter() {
 
 type ChatMessage = { role: string; content: string };
 
+/** Scale fetch timeout with expected output size — strategist runs need ~20–40s. */
+function completionTimeoutMs(maxTokens = 200): number {
+  if (maxTokens <= 100) return 5_000;
+  if (maxTokens <= 500) return 15_000;
+  if (maxTokens <= 1_500) return 30_000;
+  return 60_000;
+}
+
 export async function chatCompletion(params: {
   messages: ChatMessage[];
   max_tokens?: number;
   temperature?: number;
   jsonMode?: boolean;
+  model?: string;
+  timeoutMs?: number;
 }): Promise<string | null> {
   const apiKey = process.env.OPENROUTER_API_KEY;
   if (!apiKey) return null;
 
-  for (const model of MODEL_CHAIN) {
+  const chain = params.model
+    ? [params.model, ...MODEL_CHAIN.filter((m) => m !== params.model)]
+    : MODEL_CHAIN;
+
+  for (const model of chain) {
     try {
       const res = await fetch("https://openrouter.ai/api/v1/chat/completions", {
         method: "POST",
@@ -52,7 +66,9 @@ export async function chatCompletion(params: {
           temperature: params.temperature ?? 0.7,
           ...(params.jsonMode ? { response_format: { type: "json_object" } } : {}),
         }),
-        signal: AbortSignal.timeout(params.max_tokens && params.max_tokens <= 100 ? 5000 : 8000),
+        signal: AbortSignal.timeout(
+          params.timeoutMs ?? completionTimeoutMs(params.max_tokens ?? 200),
+        ),
       });
 
       if (!res.ok) continue;
@@ -72,11 +88,16 @@ export async function chatCompletionVoice(params: {
   messages: ChatMessage[];
   max_tokens?: number;
   temperature?: number;
+  model?: string;
 }): Promise<string | null> {
   const apiKey = process.env.OPENROUTER_API_KEY;
   if (!apiKey) return null;
 
-  for (const model of VOICE_MODEL_CHAIN) {
+  const chain = params.model
+    ? [params.model, ...VOICE_MODEL_CHAIN.filter((m) => m !== params.model)]
+    : VOICE_MODEL_CHAIN;
+
+  for (const model of chain) {
     try {
       const res = await fetch("https://openrouter.ai/api/v1/chat/completions", {
         method: "POST",

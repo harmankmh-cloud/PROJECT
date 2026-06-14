@@ -1,15 +1,6 @@
 import { createServerClient } from "@supabase/ssr";
 import { NextResponse, type NextRequest } from "next/server";
-
-function isAdminEmail(email: string | undefined) {
-  if (!email) return false;
-  const raw = process.env.ADMIN_EMAILS || process.env.ADMIN_EMAIL || "";
-  return raw
-    .split(",")
-    .map((item) => item.trim().toLowerCase())
-    .filter(Boolean)
-    .includes(email.toLowerCase());
-}
+import { isPlatformAdmin } from "@/lib/admin-auth";
 
 export async function middleware(request: NextRequest) {
   let response = NextResponse.next({
@@ -46,28 +37,43 @@ export async function middleware(request: NextRequest) {
 
   const pathname = request.nextUrl.pathname;
 
+  // Public auth handlers — must run without session gates (OTP / PKCE cookie exchange)
+  if (
+    pathname.startsWith("/auth/confirm") ||
+    pathname.startsWith("/auth/callback") ||
+    pathname.startsWith("/auth/after-login")
+  ) {
+    return response;
+  }
+
   if (pathname.startsWith("/admin") && !user) {
     return NextResponse.redirect(new URL("/login", request.url));
   }
 
-  if (pathname.startsWith("/admin") && user && !isAdminEmail(user.email)) {
+  if (pathname.startsWith("/admin") && user && !isPlatformAdmin(user.email)) {
     return NextResponse.redirect(new URL("/dashboard", request.url));
   }
 
-  if (pathname.startsWith("/dashboard") && !user) {
+  if ((pathname.startsWith("/dashboard") || pathname.startsWith("/onboarding")) && !user) {
     return NextResponse.redirect(new URL("/login", request.url));
   }
 
-  if ((pathname === "/login" || pathname === "/signup") && user) {
-    if (isAdminEmail(user.email)) {
-      return NextResponse.redirect(new URL("/admin", request.url));
-    }
-    return NextResponse.redirect(new URL("/dashboard", request.url));
+  if ((pathname === "/login" || pathname === "/signup" || pathname.startsWith("/signup/")) && user) {
+    return NextResponse.redirect(new URL("/auth/after-login", request.url));
   }
 
   return response;
 }
 
 export const config = {
-  matcher: ["/dashboard/:path*", "/admin/:path*", "/login", "/signup"],
+  matcher: [
+    "/auth/:path*",
+    "/dashboard/:path*",
+    "/onboarding",
+    "/onboarding/:path*",
+    "/admin/:path*",
+    "/login",
+    "/signup",
+    "/signup/:path*",
+  ],
 };

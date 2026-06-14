@@ -1,0 +1,27 @@
+GreetQ Lead Agent — Abbotsford
+Sectors: 4 | Discover + scrape
+
+▸ Dental & Medical Clinics (discover up to 50)…
+  found 30 sites (0 new)
+  emails: 0/0
+
+▸ Salons & Spas (discover up to 50)…
+  found 17 sites (2 new)
+  emails: 1/2
+
+▸ Restaurants (discover up to 50)…
+  found 15 sites (5 new)
+  emails: 1/5
+
+▸ Auto Repair & Dealerships (discover up to 50)…
+  found 20 sites (1 new)
+  emails: 0/1
+
+── Done ──
+  Discovered & scraped: 8 businesses
+  Emails found:         2
+  Hit rate:             25%
+  Output:               output/leads-2026-06-09.csv
+                        output/emails-only.txt
+hello@opalandivy.ca
+info@thebavariarestaurant.com

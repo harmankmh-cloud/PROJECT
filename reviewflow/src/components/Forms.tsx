@@ -6,6 +6,7 @@ import { friendlyAuthError } from "@/lib/auth-errors";
 import { useRouter } from "next/navigation";
 import { IndustryPicker } from "@/components/IndustryPicker";
 import { TermsConsent } from "@/components/TermsConsent";
+import { validateGoogleReviewUrl } from "@/lib/google-review-url";
 
 export function SetupBusinessForm() {
   const router = useRouter();
@@ -29,6 +30,14 @@ export function SetupBusinessForm() {
   async function handleSubmit(e: React.FormEvent) {
     e.preventDefault();
     if (name.trim().length < 2 || !businessType) return;
+
+    if (googleReviewUrl.trim()) {
+      const validated = validateGoogleReviewUrl(googleReviewUrl);
+      if (!validated.ok) {
+        setError(validated.error);
+        return;
+      }
+    }
 
     setLoading(true);
     setError("");

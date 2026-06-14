@@ -1,5 +1,6 @@
 import { NextResponse } from "next/server";
 import { z } from "zod";
+import { validateGoogleReviewUrl } from "@/lib/google-review-url";
 import { createClient } from "@/lib/supabase/server";
 
 const bodySchema = z.object({
@@ -37,7 +38,13 @@ export async function PATCH(request: Request) {
 
     if (body.name !== undefined) patch.name = body.name.trim();
     if (body.businessType !== undefined) patch.business_type = body.businessType.trim();
-    if (body.googleReviewUrl !== undefined) patch.google_review_url = body.googleReviewUrl.trim() || null;
+    if (body.googleReviewUrl !== undefined) {
+      const validated = validateGoogleReviewUrl(body.googleReviewUrl);
+      if (!validated.ok) {
+        return NextResponse.json({ error: validated.error }, { status: 400 });
+      }
+      patch.google_review_url = validated.value || null;
+    }
     if (body.tone !== undefined) patch.tone = body.tone;
 
     const { data: updated, error } = await supabase

@@ -1,8 +1,9 @@
 import type { StripeConfigStatus } from "@/lib/stripe-config";
+import { SETUP_FEE_ENABLED } from "@/lib/plans";
 
 const labels: Record<string, string> = {
   STRIPE_SECRET_KEY: "Stripe secret key (sk_live_... or sk_test_...)",
-  STRIPE_PRICE_SETUP: "Setup price ID — $99 one-time (must be price_..., NOT prod_...)",
+  STRIPE_PRICE_SETUP: "Setup price ID — one-time (must be price_..., NOT prod_...)",
   STRIPE_PRICE_MONTHLY: "Monthly price ID — $39/mo recurring (must be price_..., NOT prod_...)",
   STRIPE_WEBHOOK_SECRET: "Webhook secret (whsec_...) from Stripe Dashboard",
   SUPABASE_SERVICE_ROLE_KEY: "Supabase service role — activates Pro after payment",
@@ -17,7 +18,7 @@ export function StripeSetupChecklist({
 }) {
   const items = [
     { key: "STRIPE_SECRET_KEY", ok: status.secretKey },
-    { key: "STRIPE_PRICE_SETUP", ok: status.setupPriceValid },
+    ...(SETUP_FEE_ENABLED ? [{ key: "STRIPE_PRICE_SETUP", ok: status.setupPriceValid }] : []),
     { key: "STRIPE_PRICE_MONTHLY", ok: status.monthlyPriceValid },
     { key: "STRIPE_WEBHOOK_SECRET", ok: status.webhookSecret },
     { key: "SUPABASE_SERVICE_ROLE_KEY", ok: status.serviceRole },

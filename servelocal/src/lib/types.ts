@@ -38,6 +38,7 @@ export type ServiceProvider = {
   avg_rating?: number;
   review_count?: number;
   requested_plan?: ListingTier | string | null;
+  owner_user_id?: string | null;
 };
 
 export type ServiceRequest = {
@@ -51,6 +52,9 @@ export type ServiceRequest = {
   status: string;
   created_at: string;
   user_id?: string | null;
+  urgency?: string | null;
+  budget_min?: number | null;
+  budget_max?: number | null;
 };
 
 export type ProviderReview = {
@@ -83,5 +87,44 @@ export type SiteSuggestion = {
   email: string | null;
   page_url: string | null;
   status: "new" | "read" | "done";
+  created_at: string;
+};
+
+export type BookingStatus = "pending" | "confirmed" | "in_progress" | "completed" | "cancelled";
+export type PaymentStatus = "held" | "released" | "refunded" | "failed";
+
+export type Booking = {
+  id: string;
+  provider_id: string;
+  customer_name: string;
+  customer_email: string;
+  customer_phone: string | null;
+  service_description: string;
+  scheduled_at: string | null;
+  status: BookingStatus;
+  base_amount_cents: number;
+  addons_cents: number;
+  platform_fee_cents: number;
+  tax_cents: number;
+  total_cents: number;
+  payment_status: PaymentStatus;
+  user_id: string | null;
+  created_at: string;
+  updated_at: string;
+};
+
+export type SavedSearch = {
+  id: string;
+  user_id: string;
+  email: string;
+  label: string;
+  query: string | null;
+  city_slug: string | null;
+  category_slug: string | null;
+  licensed_only: boolean;
+  verified_only: boolean;
+  emergency_only: boolean;
+  alerts_enabled: boolean;
+  last_notified_at: string | null;
   created_at: string;
 };

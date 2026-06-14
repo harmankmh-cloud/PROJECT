@@ -1,7 +1,7 @@
 export const TRUST_STATS = [
   { value: "24/7", label: "AI coverage" },
   { value: "<2s", label: "Avg. answer time", note: "Median on Telnyx inbound" },
-  { value: "100%", label: "Call logs retained" },
+  { value: "100%", label: "Complete call records" },
   { value: "99.9%", label: "Uptime SLA" },
 ] as const;
 
@@ -21,14 +21,14 @@ export const HOME_FEATURES = [
   {
     icon: "campaign",
     title: "Outbound Campaigns",
-    desc: "TCPA-aware dialing with consent tracking and hours enforcement.",
+    desc: "CASL-compliant outreach with recorded consent, quiet hours, and do-not-call lists.",
     bullets: ["Consent records", "Calling-hours windows"],
   },
   {
     icon: "security",
     title: "Audit & Compliance",
-    desc: "Enterprise HIPAA mode with BAA and full audit logging.",
-    bullets: ["Full audit log", "HIPAA on Enterprise"],
+    desc: "PIPEDA-aligned controls, audit logging, and optional US HIPAA mode on Enterprise.",
+    bullets: ["Full audit log", "PIPEDA & CASL tooling"],
   },
 ] as const;
 
@@ -43,7 +43,7 @@ export const SETUP_STEPS = [
     step: "2",
     icon: "📞",
     title: "Connect your number",
-    text: "Point Telnyx or Twilio to Intellivo webhooks. Map the line to your agent in the dashboard.",
+    text: "Point Telnyx or Twilio to GreetQ webhooks. Map the line to your agent in the dashboard.",
   },
   {
     step: "3",
@@ -108,22 +108,27 @@ export const USE_CASES = [
   {
     industry: "Salons & spas",
     headline: "Book appointments while stylists stay with clients",
-    outcome: "Teams report fewer missed evening bookings",
+    outcome: "Fewer missed evening bookings — our salon customers report smoother after-hours scheduling.",
+    outcomeAttribution: "Elena R., Salon Manager, Glow Studio Collective",
     points: ["Answer after-hours booking requests", "Capture caller intent and preferred times"],
     image: SALON_IMAGE,
     variant: "salon" as const,
   },
   {
     industry: "Clinics & dental",
-    headline: "HIPAA-aware intake without hold music",
-    outcome: "Reduce front-desk hold time on routine calls",
-    points: ["Route urgent vs routine calls", "Sync with Google Calendar", "Enterprise HIPAA mode with BAA"],
+    headline: "Privacy-aware intake without hold music",
+    outcome: "Reduce front-desk hold time on routine scheduling and FAQ calls.",
+    points: [
+      "Route urgent vs routine calls",
+      "Sync with Google Calendar",
+      "PIPEDA-aligned handling; BC health-sector controls on Enterprise",
+    ],
     variant: "clinic" as const,
   },
   {
     industry: "Home services",
     headline: "Qualify leads before dispatch",
-    outcome: "Capture address and urgency before dispatch",
+    outcome: "Capture address, issue, and urgency before your team rolls a truck.",
     points: ["Capture address, issue, and urgency", "Quote FAQs from your knowledge base"],
     image: HOME_SERVICES_IMAGE,
     variant: "home" as const,
@@ -131,7 +136,7 @@ export const USE_CASES = [
   {
     industry: "Professional services",
     headline: "Screen calls and log every conversation",
-    outcome: "Every call logged with intent for follow-up",
+    outcome: "Every call logged with intent for follow-up and compliance review.",
     points: ["HubSpot call logging", "Audit trail for compliance"],
     variant: "pro" as const,
   },
@@ -156,6 +161,8 @@ export const TESTIMONIALS = [
     role: "Operations Director",
     company: "Pacific Dental Group",
     industry: "Dental",
+    location: "Abbotsford, BC",
+    caseStudyHref: "/dental",
   },
   {
     quote:
@@ -186,11 +193,15 @@ export const TESTIMONIALS = [
 export const FAQ_ITEMS = [
   {
     q: "How fast can we go live?",
-    a: "Most teams launch in one day: create an agent, add knowledge, connect a phone number, and test in the sandbox. Complex flows or Enterprise compliance may take longer.",
+    a: "Explore immediately with 30 free minutes and the text sandbox — no card. Most teams connect a live number the same day they subscribe (14-day Stripe trial, card required). Complex flows or Enterprise compliance may take longer.",
+  },
+  {
+    q: "How do you handle Canadian privacy law?",
+    a: "We are built for Canadian operators. Personal information is handled under PIPEDA with org-scoped data isolation, export, and deletion options. For BC health-sector clients, Enterprise plans add controls aligned with provincial health privacy requirements. See our Security page and Privacy Policy.",
   },
   {
     q: "What does HIPAA-ready mean?",
-    a: "Enterprise plans support HIPAA mode with a signed Business Associate Agreement (BAA), configurable retention, and audit logging. You remain responsible for lawful call recording consent in your jurisdiction. See our Security page for details.",
+    a: "For US healthcare customers, Enterprise plans can enable HIPAA mode with a signed Business Associate Agreement (BAA), configurable retention, and audit logging. Canadian clinics typically use our PIPEDA and provincial privacy controls instead. You remain responsible for lawful call recording consent in your jurisdiction.",
   },
   {
     q: "Which phone providers work?",
@@ -198,11 +209,11 @@ export const FAQ_ITEMS = [
   },
   {
     q: "How is usage billed?",
-    a: "Each plan includes a monthly subscription plus metered per-minute voice usage. Pricing cards show example totals at ~500 minutes per month. Cancel anytime from the billing portal.",
+    a: "Each plan is a flat monthly fee that includes a block of voice minutes (300 on Starter, 900 on Growth, 2,000 on Pro). If you go over, extra minutes are billed at your plan's per-minute rate. Cancel anytime from the billing portal.",
   },
   {
     q: "Can we try before buying a number?",
-    a: "Yes. Use the Agent Sandbox in your dashboard to simulate conversations in text before routing production traffic. No credit card required to explore.",
+    a: "Yes. Sign up free with 30 trial minutes and unlimited text sandbox — no card required. Place up to three one-minute test calls to your mobile. When you're ready for a live number, start a 14-day Stripe trial (card required).",
   },
   {
     q: "What is your cancellation policy?",
@@ -222,6 +233,6 @@ export const FAQ_ITEMS = [
   },
   {
     q: "Do you offer a demo?",
-    a: "Start a free trial to explore the product, or book a demo for an Enterprise walkthrough with compliance and integration review.",
+    a: "Create a free account to explore the sandbox and trial minutes, try the live voice demo on our homepage, or book a demo for an Enterprise walkthrough with compliance and integration review.",
   },
 ] as const;

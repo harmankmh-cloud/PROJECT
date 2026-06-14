@@ -1,5 +1,7 @@
 "use client";
 
+import Link from "next/link";
+
 export default function LoginError({
   error,
   reset,
@@ -20,9 +22,9 @@ export default function LoginError({
           <button type="button" onClick={reset} className="btn-gold px-4 py-2 text-sm">
             Try again
           </button>
-          <a href="/" className="btn-ghost px-4 py-2 text-sm">
+          <Link href="/" className="btn-ghost px-4 py-2 text-sm">
             Go home
-          </a>
+          </Link>
         </div>
       </div>
     </main>

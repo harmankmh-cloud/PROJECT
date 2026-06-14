@@ -9,6 +9,7 @@ import { BrandLogo } from "@/components/BrandLogo";
 const adminLinks = [
   { href: "/admin", label: "Overview", icon: "◉" },
   { href: "/admin/businesses", label: "All businesses", icon: "🏪" },
+  { href: "/admin/users", label: "Users", icon: "👤" },
   { href: "/admin/reviews", label: "All reviews", icon: "★" },
   { href: "/admin/activity", label: "Activity", icon: "↻" },
   { href: "/admin/revenue", label: "Revenue & plans", icon: "◈" },

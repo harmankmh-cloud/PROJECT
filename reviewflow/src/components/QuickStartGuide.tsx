@@ -12,7 +12,19 @@ function subscribe() {
 }
 
 function readFlag(key: string) {
-  return localStorage.getItem(key) === "1";
+  try {
+    return localStorage.getItem(key) === "1";
+  } catch {
+    return false;
+  }
+}
+
+function setFlag(key: string) {
+  try {
+    localStorage.setItem(key, "1");
+  } catch {
+    /* private mode */
+  }
 }
 
 function useStoredFlag(key: string) {
@@ -48,7 +60,7 @@ export function QuickStartGuide({
       title: "Print QR at your counter",
       detail: "Download poster from dashboard → print → laminate → place visible",
       onMark: () => {
-        localStorage.setItem(STORAGE_PRINT, "1");
+        setFlag(STORAGE_PRINT);
         setPrintedMarked(true);
       },
       action: "Mark as done",
@@ -58,7 +70,7 @@ export function QuickStartGuide({
       title: "Text one customer the link",
       detail: "Copy from Share kit below",
       onMark: () => {
-        localStorage.setItem(STORAGE_TEXTED, "1");
+        setFlag(STORAGE_TEXTED);
         setTextedMarked(true);
       },
       action: "Mark as done",

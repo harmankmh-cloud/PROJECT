@@ -1,118 +1,109 @@
 "use client";
 
 import Link from "next/link";
-import { useState } from "react";
+import { useRouter } from "next/navigation";
+import { zodResolver } from "@hookform/resolvers/zod";
+import { useForm } from "react-hook-form";
 import { createClient } from "@/lib/supabase/client";
-import { AuthMarketingPanel } from "@/components/AuthMarketingPanel";
-import { BrandLogo } from "@/components/BrandLogo";
-import { MarketingFooter } from "@/components/MarketingFooter";
-import { SkipToContent } from "@/components/SkipToContent";
+import { loginSchema, type LoginFormData } from "@/lib/schemas/auth";
+import { AuthLayout } from "@/components/auth/AuthLayout";
+import { GoogleAuthButton, isGoogleAuthEnabled } from "@/components/auth/GoogleAuthButton";
+import { GlowButton } from "@/components/ui/GlowButton";
+import { Input } from "@/components/ui/Input";
+import { TRIAL_MARKETING } from "@/lib/trial";
 
 export function LoginForm({ initialError = "" }: { initialError?: string }) {
-  const [email, setEmail] = useState("");
-  const [password, setPassword] = useState("");
-  const [error, setError] = useState(initialError);
-  const [loading, setLoading] = useState(false);
+  const router = useRouter();
+  const {
+    register,
+    handleSubmit,
+    formState: { errors, isSubmitting },
+    setError: setFormError,
+  } = useForm<LoginFormData>({
+    resolver: zodResolver(loginSchema),
+    defaultValues: { email: "", password: "" },
+  });
 
-  async function handleSubmit(e: React.FormEvent<HTMLFormElement>) {
-    e.preventDefault();
-    setLoading(true);
-    setError("");
+  async function onSubmit(data: LoginFormData) {
     const supabase = createClient();
-    const { error: signInError } = await supabase.auth.signInWithPassword({ email, password });
+    const { error: signInError } = await supabase.auth.signInWithPassword(data);
     if (signInError) {
-      setError(signInError.message);
-      setLoading(false);
+      setFormError("root", { message: signInError.message });
       return;
     }
     const setupRes = await fetch("/api/org/setup", { method: "POST" });
     if (!setupRes.ok) {
-      const data = await setupRes.json().catch(() => ({}));
-      setError(
-        (data as { error?: string }).error ||
-          "Account signed in but organization setup failed. Contact support."
-      );
-      setLoading(false);
+      const body = await setupRes.json().catch(() => ({}));
+      setFormError("root", {
+        message:
+          (body as { error?: string }).error ||
+          "Account signed in but organization setup failed. Contact support.",
+      });
       return;
     }
-    window.location.href = "/dashboard";
+    router.push("/dashboard");
+    router.refresh();
   }
 
   return (
-    <div className="page-shell flex min-h-screen flex-col">
-      <SkipToContent />
-      <div className="flex flex-1">
-        <AuthMarketingPanel footer="Sign in to your command center" />
+    <AuthLayout panelFooter={TRIAL_MARKETING.authPanel}>
+      <div className="auth-card">
+        <h1 className="font-display text-3xl text-text">Welcome back</h1>
+        <p className="mt-2 text-sm text-muted">
+          Sign in to your {TRIAL_MARKETING.exploreShort.toLowerCase()} workspace.
+        </p>
 
-        <main id="main-content" className="flex flex-1 items-center justify-center px-4 py-12">
-          <div className="w-full max-w-md">
-            <div className="mb-8 lg:hidden">
-              <BrandLogo href="/" />
+        <form onSubmit={handleSubmit(onSubmit)} className="mt-8 space-y-4" noValidate>
+          <Input
+            label="Email"
+            type="email"
+            autoComplete="email"
+            error={errors.email?.message}
+            {...register("email")}
+          />
+          <Input
+            label="Password"
+            type="password"
+            autoComplete="current-password"
+            error={errors.password?.message}
+            {...register("password")}
+          />
+          {(errors.root?.message || initialError) && (
+            <p className="text-sm text-danger" role="alert">
+              {errors.root?.message || initialError}
+            </p>
+          )}
+          <GlowButton type="submit" className="w-full justify-center" loading={isSubmitting}>
+            Sign In
+          </GlowButton>
+        </form>
+
+        {isGoogleAuthEnabled && (
+          <>
+            <div className="relative my-6">
+              <div className="absolute inset-0 flex items-center">
+                <div className="w-full border-t border-border" />
+              </div>
+              <div className="relative flex justify-center text-xs">
+                <span className="bg-surface px-2 text-muted">or continue with</span>
+              </div>
             </div>
-            <div className="auth-card">
-              <p className="page-eyebrow">Welcome back</p>
-              <h1 className="font-display mt-2 text-3xl tracking-tight text-ghost-white">Sign in</h1>
-              <p className="mt-2 text-sm text-on-surface-variant">Your dashboard opens next.</p>
+            <GoogleAuthButton mode="login" />
+          </>
+        )}
 
-              <form onSubmit={handleSubmit} className="mt-8 space-y-4" noValidate>
-                <div>
-                  <label htmlFor="login-email" className="mb-1.5 block text-sm font-medium text-on-surface-variant">
-                    Work email
-                  </label>
-                  <input
-                    id="login-email"
-                    name="email"
-                    type="email"
-                    autoComplete="email"
-                    placeholder="you@company.com"
-                    value={email}
-                    onChange={(e) => setEmail(e.target.value)}
-                    className="input-field"
-                    required
-                  />
-                </div>
-                <div>
-                  <label htmlFor="login-password" className="mb-1.5 block text-sm font-medium text-on-surface-variant">
-                    Password
-                  </label>
-                  <input
-                    id="login-password"
-                    name="password"
-                    type="password"
-                    autoComplete="current-password"
-                    placeholder="Your password"
-                    value={password}
-                    onChange={(e) => setPassword(e.target.value)}
-                    className="input-field"
-                    required
-                  />
-                </div>
-                {error && (
-                  <p className="text-sm text-error" role="alert">
-                    {error}
-                  </p>
-                )}
-                <button type="submit" disabled={loading} className="btn-primary w-full py-3">
-                  {loading ? "Signing in…" : "Sign in"}
-                </button>
-              </form>
-
-              <p className="mt-3 text-center text-sm">
-                <Link href="/forgot-password" className="link-accent">
-                  Forgot password?
-                </Link>
-              </p>
-              <p className="mt-6 text-center text-sm text-on-surface-variant">
-                No account?{" "}
-                <Link href="/signup" className="link-accent">
-                  Start free trial
-                </Link>
-              </p>
-            </div>
-          </div>
-        </main>
+        <p className="mt-4 text-center text-sm">
+          <Link href="/forgot-password" className="font-medium text-accent hover:underline">
+            Forgot password?
+          </Link>
+        </p>
+        <p className="mt-4 text-center text-sm text-muted">
+          New to GreetQ?{" "}
+          <Link href="/signup" className="text-primary-glow hover:underline">
+            {TRIAL_MARKETING.cta} →
+          </Link>
+        </p>
       </div>
-      <MarketingFooter />
-    </div>
+    </AuthLayout>
   );
 }

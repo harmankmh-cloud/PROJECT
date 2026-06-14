@@ -84,10 +84,10 @@ Open http://localhost:3000
 5. Customer copies draft or opens Google review
 6. Bad experiences get private feedback helper first
 
-## Pricing idea
+## Pricing
 
-- $99 setup
-- $39/month starter
+- $39/month — no setup fee
+- $390/year (2 months free)
 
 Stripe billing can be added in version 2.
 

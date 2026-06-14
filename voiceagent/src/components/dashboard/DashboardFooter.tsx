@@ -1,5 +1,4 @@
 import Link from "next/link";
-import { MaterialIcon } from "@/components/MaterialIcon";
 import { BRAND } from "@/lib/brand";
 
 export function DashboardFooter() {
@@ -31,18 +30,16 @@ export function DashboardFooter() {
           </Link>
         </div>
         <div className="flex flex-col gap-3">
-          <span className="text-sm font-semibold uppercase text-ghost-white">Social</span>
-          <div className="flex gap-4">
-            <a
-              href="https://www.linkedin.com/company/intellivohealth"
-              target="_blank"
-              rel="noopener noreferrer"
-              className="text-on-surface-variant hover:text-primary"
-              aria-label="LinkedIn"
-            >
-              <MaterialIcon name="share" />
-            </a>
-          </div>
+          <span className="text-sm font-semibold uppercase text-ghost-white">Contact</span>
+          <a
+            href={`mailto:${BRAND.contact.supportEmail}`}
+            className="text-sm text-on-surface-variant hover:text-primary"
+          >
+            {BRAND.contact.supportEmail}
+          </a>
+          <Link href="/help" className="text-sm text-on-surface-variant hover:text-primary">
+            Help & support
+          </Link>
         </div>
       </div>
     </footer>

@@ -1,8 +1,13 @@
 import { NextRequest, NextResponse } from "next/server";
 import { createClient } from "@/lib/supabase/server";
 import { getUserOrg } from "@/lib/auth";
+import { knowledgeCreateSchema } from "@/lib/api-schemas";
+import { isApiSession, requireApiSession } from "@/lib/api-session";
+import { parseJsonBody, readJsonBody } from "@/lib/parse-json-body";
 import { logAudit } from "@/lib/compliance/audit";
 import { denyUnlessCanOperate } from "@/lib/require-org-access";
+import { createAdminClient } from "@/lib/supabase/admin";
+import { embedText } from "@/lib/embeddings";
 
 export async function GET() {
   const supabase = await createClient();
@@ -24,49 +29,49 @@ export async function GET() {
 }
 
 export async function POST(request: NextRequest) {
-  const supabase = await createClient();
-  const {
-    data: { user },
-  } = await supabase.auth.getUser();
-  if (!user) return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+  const session = await requireApiSession();
+  if (!isApiSession(session)) return session;
 
-  const org = await getUserOrg(user.id);
+  const org = await getUserOrg(session.user.id);
   if (!org) return NextResponse.json({ error: "No organization" }, { status: 400 });
 
-  const denied = await denyUnlessCanOperate(org.id, user.id);
+  const denied = await denyUnlessCanOperate(org.id, session.user.id);
   if (denied) return denied;
 
-  const body = await request.json();
-  const title = String(body.title || "").trim();
-  const content = String(body.content || "").trim();
+  const parsed = parseJsonBody(await readJsonBody(request), knowledgeCreateSchema);
+  if (!parsed.ok) return parsed.response;
 
-  if (!title || !content) {
-    return NextResponse.json({ error: "Title and content are required" }, { status: 400 });
-  }
+  const { title, content, source_url, agent_id } = parsed.data;
 
-  const { data, error } = await supabase
+  const { data, error } = await session.supabase
     .from("va_knowledge_docs")
     .insert({
       org_id: org.id,
-      agent_id: body.agent_id || null,
+      agent_id: agent_id ?? null,
       title,
       content,
-      source_url: body.source_url || null,
+      source_url: source_url ? source_url.trim() : null,
     })
     .select()
     .single();
 
   if (error) return NextResponse.json({ error: error.message }, { status: 400 });
 
+  const embedding = await embedText(`${title}\n${content}`);
+  if (embedding) {
+    const admin = createAdminClient();
+    await admin.from("va_knowledge_docs").update({ embedding }).eq("id", data.id);
+  }
+
   await logAudit({
     orgId: org.id,
-    userId: user.id,
+    userId: session.user.id,
     action: "knowledge.created",
     resourceType: "knowledge_doc",
     resourceId: data.id,
   });
 
-  return NextResponse.json({ doc: data });
+  return NextResponse.json({ doc: { ...data, embedding: embedding || null } });
 }
 
 export async function PATCH(request: NextRequest) {
@@ -100,6 +105,15 @@ export async function PATCH(request: NextRequest) {
     .single();
 
   if (error) return NextResponse.json({ error: error.message }, { status: 400 });
+
+  if (body.title !== undefined || body.content !== undefined) {
+    const embedding = await embedText(`${data.title}\n${data.content}`);
+    if (embedding) {
+      const admin = createAdminClient();
+      await admin.from("va_knowledge_docs").update({ embedding }).eq("id", data.id);
+    }
+  }
+
   return NextResponse.json({ doc: data });
 }
 

@@ -8,7 +8,7 @@ export function hashApiKey(key: string): string {
 
 export function generateApiKey(): { key: string; prefix: string; hash: string } {
   const token = randomBytes(24).toString("hex");
-  const key = `ivo_${token}`;
+  const key = `grtq_${token}`;
   const prefix = key.slice(0, 12);
   return { key, prefix, hash: hashApiKey(key) };
 }
@@ -20,7 +20,7 @@ export async function verifyApiKey(
   if (!header) return null;
 
   const key = header.startsWith("Bearer ") ? header.slice(7).trim() : header.trim();
-  if (!key.startsWith("ivo_")) return null;
+  if (!key.startsWith("grtq_") && !key.startsWith("ivo_")) return null;
 
   const admin = createAdminClient();
   const { data: row } = await admin

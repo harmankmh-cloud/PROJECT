@@ -3,20 +3,24 @@
 import Link from "next/link";
 import { useEffect, useState } from "react";
 import { MaterialIcon } from "@/components/MaterialIcon";
+import { DashboardListSkeleton } from "@/components/ui/DashboardPageSkeleton";
+import { useToast } from "@/components/providers/ToastProvider";
+import { getVoiceById } from "@/lib/voice-catalog";
 import type { Agent } from "@/lib/types";
 import { apiFetch } from "@/lib/api-client";
 
 export default function AgentsPage() {
+  const { showError, showSuccess } = useToast();
   const [agents, setAgents] = useState<Agent[]>([]);
   const [loading, setLoading] = useState(true);
-  const [error, setError] = useState("");
+  const [togglingId, setTogglingId] = useState<string | null>(null);
 
   useEffect(() => {
     let active = true;
     apiFetch<{ agents: Agent[] }>("/api/agents").then((res) => {
       if (!active) return;
       if (res.ok) setAgents(res.data.agents || []);
-      else setError(res.error);
+      else showError(res.error);
       setLoading(false);
     });
     return () => {
@@ -25,16 +29,23 @@ export default function AgentsPage() {
   }, []);
 
   async function toggleActive(agent: Agent) {
+    setTogglingId(agent.id);
     const res = await apiFetch<{ agent: Agent }>("/api/agents", {
       method: "PATCH",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({ id: agent.id, is_active: !agent.is_active }),
     });
+    setTogglingId(null);
     if (res.ok) {
       setAgents((prev) => prev.map((a) => (a.id === agent.id ? res.data.agent : a)));
+      showSuccess(agent.is_active ? "Agent deactivated" : "Agent activated");
     } else {
-      setError(res.error);
+      showError(res.error);
     }
+  }
+
+  if (loading) {
+    return <DashboardListSkeleton rows={4} />;
   }
 
   return (
@@ -53,11 +64,7 @@ export default function AgentsPage() {
         </Link>
       </header>
 
-      {error && <p className="mb-4 text-sm text-error">{error}</p>}
-
-      {loading ? (
-        <p className="text-on-primary-container">Loading agents…</p>
-      ) : agents.length === 0 ? (
+      {agents.length === 0 ? (
         <div className="glass-panel rounded-xl p-10 text-center">
           <MaterialIcon name="smart_toy" className="mb-4 text-5xl text-on-primary-container" />
           <h2 className="text-xl font-bold text-on-surface">No agents yet</h2>
@@ -87,7 +94,8 @@ export default function AgentsPage() {
                   <h3 className="font-semibold text-on-surface">{agent.name}</h3>
                   <p className="mt-1 line-clamp-1 text-sm text-slate-text">{agent.system_prompt || "No prompt set"}</p>
                   <p className="mt-1 text-xs text-on-primary-container">
-                    {agent.voice} · {agent.language}
+                    {getVoiceById(agent.voice_id || "")?.name || agent.voice} · {agent.language}
+                    {agent.llm_model ? ` · ${agent.llm_model.split("/").pop()}` : ""}
                   </p>
                 </div>
               </div>
@@ -104,10 +112,17 @@ export default function AgentsPage() {
                 <button
                   type="button"
                   onClick={() => toggleActive(agent)}
-                  className="rounded-lg border border-outline-variant/30 px-3 py-1.5 text-xs font-semibold text-slate-text hover:bg-surface-container-low"
+                  disabled={togglingId === agent.id}
+                  className="rounded-lg border border-outline-variant/30 px-3 py-1.5 text-xs font-semibold text-slate-text hover:bg-surface-container-low disabled:cursor-not-allowed disabled:opacity-50"
                 >
                   {agent.is_active ? "Deactivate" : "Activate"}
                 </button>
+                <Link
+                  href={`/dashboard/sandbox?agent=${agent.id}`}
+                  className="rounded-lg border border-primary/30 px-3 py-1.5 text-xs font-semibold text-primary hover:bg-primary/10"
+                >
+                  Test
+                </Link>
                 <Link
                   href={`/dashboard/agents/${agent.id}`}
                   className="rounded-lg bg-secondary px-4 py-1.5 text-xs font-semibold text-on-secondary"

@@ -9,7 +9,7 @@ export function ProductPreview() {
         <span className="h-2.5 w-2.5 rounded-full bg-red-400/80" />
         <span className="h-2.5 w-2.5 rounded-full bg-amber-400/80" />
         <span className="h-2.5 w-2.5 rounded-full bg-teal-400/80" />
-        <span className="ml-2 text-xs text-white/40">Intellivo — Live call</span>
+        <span className="ml-2 text-xs text-white/40">GreetQ — Live call</span>
       </div>
       <div className="grid gap-0 sm:grid-cols-5">
         <div className="border-r border-white/10 p-4 sm:col-span-2">

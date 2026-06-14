@@ -1,3 +1,5 @@
+import { SETUP_FEE_ENABLED } from "@/lib/plans";
+
 export type StripeConfigStatus = {
   secretKey: boolean;
   setupPrice: boolean;
@@ -41,17 +43,21 @@ export function getStripeConfigStatus(): StripeConfigStatus {
   const missing: string[] = [];
   const invalid: string[] = [];
   if (!secretKey) missing.push("STRIPE_SECRET_KEY");
-  if (!setupPrice) missing.push("STRIPE_PRICE_SETUP");
+  if (SETUP_FEE_ENABLED && !setupPrice) missing.push("STRIPE_PRICE_SETUP");
   if (!monthlyPrice) missing.push("STRIPE_PRICE_MONTHLY");
   if (!webhookSecret) missing.push("STRIPE_WEBHOOK_SECRET");
   if (!serviceRole) missing.push("SUPABASE_SERVICE_ROLE_KEY");
 
-  const setupErr = validateStripePriceEnv("STRIPE_PRICE_SETUP", setupRaw);
-  if (setupErr) invalid.push(setupErr);
+  // Only validate the setup price when a setup fee is actually charged.
+  if (SETUP_FEE_ENABLED) {
+    const setupErr = validateStripePriceEnv("STRIPE_PRICE_SETUP", setupRaw);
+    if (setupErr) invalid.push(setupErr);
+  }
   const monthlyErr = validateStripePriceEnv("STRIPE_PRICE_MONTHLY", monthlyRaw);
   if (monthlyErr) invalid.push(monthlyErr);
 
-  const ready = secretKey && setupPriceValid && monthlyPriceValid;
+  const ready =
+    secretKey && monthlyPriceValid && (SETUP_FEE_ENABLED ? setupPriceValid : true);
   const webhookReady = ready && webhookSecret && serviceRole;
 
   return {

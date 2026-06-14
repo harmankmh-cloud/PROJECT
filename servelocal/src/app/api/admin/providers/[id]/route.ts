@@ -1,7 +1,7 @@
 import { NextResponse } from "next/server";
 import { z } from "zod";
 import { requirePlatformAdminApi } from "@/lib/require-admin";
-import { updateProviderAdmin } from "@/lib/data";
+import { getProviderById, notifySavedSearchesForProvider, updateProviderAdmin } from "@/lib/data";
 
 const patchSchema = z.object({
   status: z.enum(["pending", "approved", "rejected", "paused"]).optional(),
@@ -46,6 +46,25 @@ export async function PATCH(
 
     const result = await updateProviderAdmin(id, patch as Parameters<typeof updateProviderAdmin>[1]);
     if (!result.ok) return NextResponse.json({ error: result.error }, { status: 500 });
+
+    if (body.status === "approved") {
+      const provider = await getProviderById(id);
+      if (provider) {
+        const email = provider.email;
+        if (email) {
+          const { proApprovedEmail } = await import("@/lib/email-templates");
+          const { sendTransactionalEmail } = await import("@/lib/email");
+          const { subject, html } = proApprovedEmail({
+            displayName: provider.display_name,
+            slug: provider.slug,
+            citySlug: provider.city_slug,
+          });
+          await sendTransactionalEmail({ to: email, subject, html, template: "pro_approved" });
+        }
+        await notifySavedSearchesForProvider(provider);
+      }
+    }
+
     return NextResponse.json({ ok: true });
   } catch (error) {
     if (error instanceof z.ZodError) {

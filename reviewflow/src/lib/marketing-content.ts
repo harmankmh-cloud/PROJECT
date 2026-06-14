@@ -6,8 +6,9 @@ export const COMPANY = {
 } as const;
 
 export const PRICING = {
-  setup: 99,
+  setup: 0,
   monthly: 39,
+  annual: 390,
   guarantee: "14-day money-back guarantee on your first month",
 } as const;
 

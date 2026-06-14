@@ -7,7 +7,11 @@ export function getTelnyxApiKey() {
 }
 
 export function isTelnyxConfigured() {
-  return Boolean(getTelnyxApiKey());
+  return Boolean(
+    getTelnyxApiKey() &&
+      process.env.TELNYX_CONNECTION_ID?.trim() &&
+      process.env.TELNYX_PHONE_NUMBER?.trim()
+  );
 }
 
 export function encodeClientState(data: Record<string, string>) {
@@ -72,12 +76,39 @@ export async function startTranscription(callControlId: string) {
   });
 }
 
-export async function speakOnCall(callControlId: string, text: string) {
+export async function speakOnCall(
+  callControlId: string,
+  text: string,
+  options: { voice?: string; language?: string } = {}
+) {
   return telnyxPost(`/calls/${encodeURIComponent(callControlId)}/actions/speak`, {
     payload: text,
-    voice: "female",
-    language: "en-US",
+    voice: options.voice || "female",
+    language: options.language || "en-US",
   });
+}
+
+export async function startCallRecording(callControlId: string) {
+  return telnyxPost(`/calls/${encodeURIComponent(callControlId)}/actions/record_start`, {
+    format: "mp3",
+    channels: "single",
+  });
+}
+
+export async function telnyxGet(path: string) {
+  const apiKey = getTelnyxApiKey();
+  if (!apiKey) throw new Error("TELNYX_API_KEY not configured");
+
+  const res = await fetch(`${TELNYX_API}${path}`, {
+    headers: { Authorization: `Bearer ${apiKey}` },
+  });
+
+  if (!res.ok) {
+    const text = await res.text();
+    throw new Error(`Telnyx API error ${res.status}: ${text}`);
+  }
+
+  return res.json();
 }
 
 export async function transferCall(callControlId: string, to: string, from?: string) {

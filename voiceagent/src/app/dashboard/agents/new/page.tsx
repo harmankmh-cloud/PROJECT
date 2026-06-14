@@ -11,10 +11,15 @@ import {
 import {
   DEFAULT_AGENT_GREETING,
   DEFAULT_AGENT_LANGUAGE,
+  DEFAULT_AGENT_LLM_MODEL,
   DEFAULT_AGENT_NAME,
+  DEFAULT_AGENT_PERSONA,
   DEFAULT_AGENT_PROMPT,
   DEFAULT_AGENT_VOICE,
+  DEFAULT_AGENT_VOICE_ID,
+  DEFAULT_AGENT_VOICE_PROVIDER,
 } from "@/lib/agent-defaults";
+import { formValuesToPayload } from "@/lib/agent-form";
 import { apiFetch } from "@/lib/api-client";
 import type { Agent } from "@/lib/types";
 
@@ -28,7 +33,13 @@ export default function NewAgentPage() {
     welcome_greeting: DEFAULT_AGENT_GREETING,
     escalation_phone: "",
     voice: DEFAULT_AGENT_VOICE,
+    voice_provider: DEFAULT_AGENT_VOICE_PROVIDER,
+    voice_id: DEFAULT_AGENT_VOICE_ID,
     language: DEFAULT_AGENT_LANGUAGE,
+    llm_model: DEFAULT_AGENT_LLM_MODEL,
+    temperature: 0.2,
+    max_tokens: 50,
+    persona_template: DEFAULT_AGENT_PERSONA,
     knowledge_base_enabled: true,
   });
   const [saving, setSaving] = useState(false);
@@ -40,15 +51,7 @@ export default function NewAgentPage() {
     const res = await apiFetch<{ agent: Agent }>("/api/agents", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({
-        name: values.name,
-        system_prompt: values.system_prompt,
-        welcome_greeting: values.welcome_greeting,
-        escalation_phone: values.escalation_phone || null,
-        voice: values.voice,
-        language: values.language,
-        knowledge_base_enabled: values.knowledge_base_enabled,
-      }),
+      body: JSON.stringify(formValuesToPayload(values)),
     });
     setSaving(false);
 
@@ -77,7 +80,7 @@ export default function NewAgentPage() {
         onSave={() => void saveAgent(false)}
         saving={saving}
       />
-      <main className="dashboard-container mx-auto max-w-lg pt-4">
+      <main className="dashboard-container mx-auto max-w-2xl pt-4">
         {error && <p className="mb-4 text-sm text-error">{error}</p>}
         <AgentConfigureForm
           formId={FORM_ID}
@@ -96,7 +99,7 @@ export default function NewAgentPage() {
               e.preventDefault();
               void saveAgent(true);
             }}
-            className="flex h-14 w-full items-center justify-center gap-2 rounded-xl bg-primary text-sm font-semibold text-on-primary shadow-xl transition-all hover:scale-[1.02] active:scale-95 disabled:opacity-50"
+            className="flex h-14 w-full items-center justify-center gap-2 rounded-xl bg-primary text-sm font-semibold text-on-primary shadow-xl transition-all hover:scale-[1.02] active:scale-95 disabled:cursor-not-allowed disabled:opacity-50"
           >
             <MaterialIcon name="science" filled />
             {saving ? "Saving…" : "Launch Test Sandbox"}
