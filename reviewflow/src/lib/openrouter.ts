@@ -1,62 +1,119 @@
+import { buildFallbackReviewOptions } from "./review-fallbacks";
+
 type GenerateReviewInput = {
   businessName: string;
   businessType: string;
   tone: string;
-  experienceLevel: "great" | "good" | "okay" | "bad";
+  starRating: number;
   customerNotes: string;
   customInstruction: string;
 };
 
-export async function generateReviewDraft(input: GenerateReviewInput): Promise<string> {
+const MODEL_CHAIN = [
+  process.env.OPENROUTER_MODEL,
+  "google/gemini-2.0-flash-001",
+  "openrouter/free",
+].filter(Boolean) as string[];
+
+function fallbacks(input: GenerateReviewInput): string[] {
+  return buildFallbackReviewOptions({
+    businessName: input.businessName,
+    starRating: input.starRating,
+    customerNotes: input.customerNotes,
+  });
+}
+
+export async function generateReviewOptions(input: GenerateReviewInput): Promise<string[]> {
+  const backup = fallbacks(input);
   const apiKey = process.env.OPENROUTER_API_KEY;
-  const model = process.env.OPENROUTER_MODEL || "openrouter/free";
 
   if (!apiKey) {
-    return fallbackDraft(input);
+    return backup;
   }
 
-  const isPrivate = input.experienceLevel === "bad";
+  const systemPrompt = `You help customers write honest Google reviews for local businesses.
+Tone: ${input.tone}. Match the star rating honestly. Never invent facts. Never be rude.
+Reply with exactly 3 review options separated by the line --- on its own line. No numbering, no JSON.`;
 
-  const systemPrompt = isPrivate
-    ? `You help customers write calm private feedback to a local business. Never make the message more aggressive. Never create a public Google review. Keep it honest, short, and polite. Business tone: ${input.tone}.`
-    : `You help customers write honest Google reviews for local businesses. Never invent facts. Never exaggerate. Keep reviews natural and human. Business tone: ${input.tone}.`;
-
-  const userPrompt = `
-Business: ${input.businessName}
-Business type: ${input.businessType}
-Experience level: ${input.experienceLevel}
+  const userPrompt = `Business: ${input.businessName} (${input.businessType})
+Star rating: ${input.starRating}/5
 Customer notes: ${input.customerNotes}
-Custom instruction: ${input.customInstruction}
+Extra instruction: ${input.customInstruction || "none"}
 
-Write one ${isPrivate ? "private feedback message" : "Google review draft"} only.
-`;
+Write 3 different Google review options.`;
 
-  const response = await fetch("https://openrouter.ai/api/v1/chat/completions", {
-    method: "POST",
-    headers: {
-      Authorization: `Bearer ${apiKey}`,
-      "Content-Type": "application/json",
-      "HTTP-Referer": process.env.NEXT_PUBLIC_APP_URL || "http://localhost:3000",
-      "X-Title": "ReviewFlow",
-    },
-    body: JSON.stringify({
-      model,
-      messages: [
-        { role: "system", content: systemPrompt },
-        { role: "user", content: userPrompt },
-      ],
-      temperature: 0.7,
-      max_tokens: 220,
-    }),
-  });
+  for (const model of MODEL_CHAIN) {
+    try {
+      const response = await fetch("https://openrouter.ai/api/v1/chat/completions", {
+        method: "POST",
+        headers: {
+          Authorization: `Bearer ${apiKey}`,
+          "Content-Type": "application/json",
+          "HTTP-Referer": process.env.NEXT_PUBLIC_APP_URL || "http://localhost:3000",
+          "X-Title": "ReviewFlow",
+        },
+        body: JSON.stringify({
+          model,
+          messages: [
+            { role: "system", content: systemPrompt },
+            { role: "user", content: userPrompt },
+          ],
+          temperature: 0.85,
+          max_tokens: 600,
+        }),
+      });
 
-  if (!response.ok) {
-    return fallbackDraft(input);
+      if (!response.ok) continue;
+
+      const data = await response.json();
+      const raw = data.choices?.[0]?.message?.content?.trim() || "";
+      const parsed = parseReviewOptions(raw);
+
+      if (parsed.length >= 3) return parsed.slice(0, 3);
+      if (parsed.length > 0) {
+        const merged = [...parsed];
+        for (const item of backup) {
+          if (merged.length >= 3) break;
+          if (!merged.includes(item)) merged.push(item);
+        }
+        return merged.slice(0, 3);
+      }
+    } catch {
+      continue;
+    }
   }
 
-  const data = await response.json();
-  const content = data.choices?.[0]?.message?.content?.trim();
-  return content || fallbackDraft(input);
+  return backup;
+}
+
+function parseReviewOptions(raw: string): string[] {
+  if (!raw) return [];
+
+  const byDivider = raw
+    .split(/\n---\n|\n---|\r---\r/)
+    .map((part) => part.replace(/^\d+[\).\s]+/, "").trim())
+    .filter((part) => part.length > 15);
+
+  if (byDivider.length >= 2) return byDivider;
+
+  try {
+    const cleaned = raw.replace(/^```json?\s*|\s*```$/g, "").trim();
+    const parsed = JSON.parse(cleaned);
+    if (Array.isArray(parsed)) {
+      return parsed.filter((item) => typeof item === "string" && item.trim().length > 10);
+    }
+  } catch {
+    /* try line split */
+  }
+
+  const byLines = raw
+    .split(/\n+/)
+    .map((line) => line.replace(/^\d+[\).\s]+|^[-*]\s+/, "").trim())
+    .filter((line) => line.length > 20);
+
+  if (byLines.length >= 2) return byLines;
+
+  return [];
 }
 
 export async function generateSocialCaption(input: {
@@ -64,10 +121,10 @@ export async function generateSocialCaption(input: {
   reviewText: string;
 }): Promise<string> {
   const apiKey = process.env.OPENROUTER_API_KEY;
-  const model = process.env.OPENROUTER_MODEL || "openrouter/free";
+  const model = MODEL_CHAIN[0] || "openrouter/free";
 
   if (!apiKey) {
-    return `Another happy customer at ${input.businessName}! Thanks for the kind words. Book with us today.`;
+    return `Another happy customer at ${input.businessName}! Thanks for the kind words.`;
   }
 
   const response = await fetch("https://openrouter.ai/api/v1/chat/completions", {
@@ -83,7 +140,7 @@ export async function generateSocialCaption(input: {
       messages: [
         {
           role: "user",
-          content: `Turn this customer review into a short Instagram/Facebook caption for ${input.businessName}. Keep it natural. Add 3 hashtags.\n\nReview: ${input.reviewText}`,
+          content: `Turn this review into a short social caption for ${input.businessName}. Add 3 hashtags.\n\n${input.reviewText}`,
         },
       ],
       temperature: 0.8,
@@ -92,7 +149,7 @@ export async function generateSocialCaption(input: {
   });
 
   if (!response.ok) {
-    return `Another happy customer at ${input.businessName}! Thanks for the kind words. Book with us today.`;
+    return `Another happy customer at ${input.businessName}! Thanks for the kind words.`;
   }
 
   const data = await response.json();
@@ -104,7 +161,7 @@ export async function generateReviewReply(input: {
   reviewText: string;
 }): Promise<string> {
   const apiKey = process.env.OPENROUTER_API_KEY;
-  const model = process.env.OPENROUTER_MODEL || "openrouter/free";
+  const model = MODEL_CHAIN[0] || "openrouter/free";
 
   if (!apiKey) {
     return `Thank you for your feedback! We appreciate you choosing ${input.businessName}.`;
@@ -137,15 +194,4 @@ export async function generateReviewReply(input: {
 
   const data = await response.json();
   return data.choices?.[0]?.message?.content?.trim() || "";
-}
-
-function fallbackDraft(input: GenerateReviewInput): string {
-  const notes = input.customerNotes.trim();
-  if (input.experienceLevel === "bad") {
-    return `I had a disappointing experience at ${input.businessName}. ${notes} I would appreciate if someone could follow up with me.`;
-  }
-  if (input.experienceLevel === "okay") {
-    return `My experience at ${input.businessName} was okay overall. ${notes}`;
-  }
-  return `I had a good experience at ${input.businessName}. ${notes} I would recommend them.`;
 }

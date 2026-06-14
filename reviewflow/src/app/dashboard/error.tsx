@@ -8,22 +8,18 @@ export default function DashboardError({
   reset: () => void;
 }) {
   return (
-    <main className="flex min-h-screen items-center justify-center bg-zinc-50 px-6">
-      <div className="max-w-md rounded-3xl border border-zinc-200 bg-white p-6 shadow-sm">
-        <h1 className="text-xl font-semibold text-zinc-900">Dashboard error</h1>
-        <p className="mt-2 text-sm text-zinc-600">
+    <main className="flex min-h-screen items-center justify-center bg-cream px-6">
+      <div className="surface-card max-w-md p-6">
+        <h1 className="font-display text-xl text-brand-950">Dashboard error</h1>
+        <p className="mt-2 text-sm text-stone-600">
           Something went wrong loading your dashboard. This is usually a login or Supabase setup issue.
         </p>
-        <p className="mt-4 rounded-2xl bg-zinc-50 p-3 text-xs text-zinc-700">{error.message}</p>
+        <p className="mt-4 rounded-xl bg-cream-dark p-3 text-xs text-stone-700">{error.message}</p>
         <div className="mt-4 flex gap-3">
-          <button
-            type="button"
-            onClick={reset}
-            className="rounded-2xl bg-emerald-600 px-4 py-2 text-sm font-semibold text-white"
-          >
+          <button type="button" onClick={reset} className="btn-gold px-4 py-2 text-sm">
             Try again
           </button>
-          <a href="/login" className="rounded-2xl border border-zinc-300 px-4 py-2 text-sm text-zinc-800">
+          <a href="/login" className="btn-ghost px-4 py-2 text-sm">
             Go to login
           </a>
         </div>
