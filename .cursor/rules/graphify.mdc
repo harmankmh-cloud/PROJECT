@@ -1,0 +1,10 @@
+---
+description: graphify knowledge graph context (RateLocal app)
+alwaysApply: true
+---
+
+The RateLocal app lives in `reviewflow/`. Its graphify knowledge graph is at `reviewflow/graphify-out/`.
+
+- For codebase or architecture questions, when `reviewflow/graphify-out/graph.json` exists, first run `graphify query "<question>"` from the `reviewflow/` folder (or `graphify path` / `graphify explain`). These return a scoped subgraph — much smaller than reading whole files.
+- Read `reviewflow/graphify-out/GRAPH_REPORT.md` only for broad architecture review.
+- After modifying code in `reviewflow/`, run `cd reviewflow && graphify update .` (AST-only, no API cost).

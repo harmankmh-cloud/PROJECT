@@ -1,18 +1,15 @@
 {
-  "name": "route-max",
-  "version": "1.0.0",
+  "name": "project-workspace",
   "private": true,
-  "description": "Route Max multi-stop route planner",
-  "main": "index.js",
   "scripts": {
-    "start": "expo start --host lan",
-    "start:tunnel": "expo start --host tunnel",
-    "start:static": "node server.js",
-    "check": "node --check app.js && node --check server.js && node --check App.js && node --check index.js"
+    "stitch": "npx -y stitch-design-cli",
+    "stitch:setup": "bash scripts/stitch-setup.sh",
+    "stitch:auth": "npx -y stitch-design-cli auth set",
+    "stitch:doctor": "bash scripts/stitch-doctor.sh",
+    "stitch:doctor:upstream": "npx -y stitch-design-cli doctor --json",
+    "stitch:projects": "npx -y stitch-design-cli project list --json"
   },
-  "dependencies": {
-    "expo": "^56.0.5",
-    "react": "^19.2.6",
-    "react-native": "^0.85.3"
+  "devDependencies": {
+    "stitch-design-cli": "^0.1.3"
   }
 }

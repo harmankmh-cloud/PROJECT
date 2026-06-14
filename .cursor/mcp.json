@@ -1,0 +1,15 @@
+{
+  "mcpServers": {
+    "project-rag": {
+      "command": "python3",
+      "args": ["-m", "project_rag.mcp_server"],
+      "cwd": "${workspaceFolder}"
+    },
+    "figma": {
+      "url": "https://mcp.figma.com/mcp"
+    },
+    "datadog": {
+      "url": "https://mcp.datadoghq.com/api/unstable/mcp-server/mcp?referrer_ide=cursor-project&toolsets=core,visualizations"
+    }
+  }
+}
