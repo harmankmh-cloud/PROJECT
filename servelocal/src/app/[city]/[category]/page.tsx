@@ -6,9 +6,9 @@ import { CategoryFilters } from "@/components/CategoryFilters";
 import { ProviderCard } from "@/components/ProviderCard";
 import { ProvidersMapSection } from "@/components/ProvidersMapSection";
 import { MarketingPageShell } from "@/components/layout/MarketingPageShell";
-import { ShimmerButton } from "@/components/ui/ShimmerButton";
+import { EmptyDirectoryState } from "@/components/search/EmptyDirectoryState";
 import { TRADE_CITIES, SERVE_LOCAL, cityName, SERVICE_SUBCATEGORIES } from "@/lib/constants";
-import { pageMetadata } from "@/lib/seo";
+import { pageMetadata, tradeListingTitle } from "@/lib/seo";
 import { getApprovedProviders, getCategoryBySlug } from "@/lib/data";
 import type { ProviderSort } from "@/lib/types";
 
@@ -23,7 +23,7 @@ export async function generateMetadata({
   if (!cityMeta || !cat) return { title: "Not found" };
 
   return pageMetadata({
-    title: `${cat.name} in ${cityMeta.name} BC`,
+    title: tradeListingTitle({ trade: cat.name, tradeSlug: cat.slug, citySlug: city }),
     description: `Find ${cat.name.toLowerCase()} pros in ${cityMeta.name}, ${cityMeta.region}. Compare verified listings, reviews, and contact trades direct on ${SERVE_LOCAL.name}.`,
     path: `/${city}/${category}`,
   });
@@ -64,7 +64,9 @@ export default async function CategoryPage({
           {cat.icon} {cat.name} in {cityName(city)}
         </h1>
         <p className="mt-2 text-muted">
-          {providers.length} listing{providers.length === 1 ? "" : "s"} — verified badges, reviews & direct contact.
+          {providers.length > 0
+            ? `${providers.length} listing${providers.length === 1 ? "" : "s"} — verified badges, reviews & direct contact.`
+            : `Growing our ${cat.name.toLowerCase()} network in ${cityName(city)} — post a job for free matching.`}
         </p>
 
         <Suspense fallback={null}>
@@ -85,18 +87,18 @@ export default async function CategoryPage({
           </div>
         )}
 
-        {providers.length === 0 ? (
-          <div className="mt-10 rounded-[14px] border border-border bg-surface p-8 text-center">
-            <p className="font-medium text-foreground">No listings match your filters.</p>
-            <div className="mt-6 flex flex-wrap justify-center gap-3">
-              <ShimmerButton href="/join">List my business</ShimmerButton>
-              <Link
-                href={`/request?city=${city}&category=${category}`}
-                className="inline-flex items-center justify-center rounded-full border border-border px-6 py-3 text-sm font-semibold text-foreground hover:border-amber-400/50"
-              >
-                Post a job
-              </Link>
-            </div>
+        {!providers.length ? (
+          <div className="mt-10">
+            <EmptyDirectoryState
+            citySlug={city}
+            categorySlug={category}
+            categoryName={cat.name}
+            reason={
+              filters.licensed === "1" || filters.verified === "1" || filters.emergency === "1"
+                ? "filtered-out"
+                : "zero-pros"
+            }
+            />
           </div>
         ) : (
           <div className="mt-10 grid gap-4 sm:grid-cols-2 lg:grid-cols-3">

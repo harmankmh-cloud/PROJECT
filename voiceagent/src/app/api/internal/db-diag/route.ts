@@ -1,15 +1,10 @@
 import { NextRequest, NextResponse } from "next/server";
-import { createHash } from "node:crypto";
 import { createAdminClient } from "@/lib/supabase/admin";
+import { authorizedInternal, unauthorizedInternalResponse } from "@/lib/internal-auth";
 import { readFileSync } from "node:fs";
 import { join } from "node:path";
 
 export const maxDuration = 60;
-
-function deployToken(): string {
-  const sha = process.env.VERCEL_GIT_COMMIT_SHA || "";
-  return createHash("sha256").update(`greetq-migrate:${sha}`).digest("hex").slice(0, 24);
-}
 
 async function verifyColumns(): Promise<boolean> {
   try {
@@ -97,21 +92,15 @@ async function runStatementsIndividually(): Promise<string | null> {
 }
 
 export async function GET(request: NextRequest) {
-  const token = request.nextUrl.searchParams.get("token");
-  const apply = request.nextUrl.searchParams.get("apply") === "1";
-  const expected = deployToken();
+  if (!authorizedInternal(request)) {
+    return unauthorizedInternalResponse();
+  }
 
+  const apply = request.nextUrl.searchParams.get("apply") === "1";
   const applied = await verifyColumns();
 
   if (!apply) {
-    return NextResponse.json({
-      applied,
-      deployToken: expected,
-    });
-  }
-
-  if (token !== expected) {
-    return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+    return NextResponse.json({ applied });
   }
 
   if (applied) {

@@ -23,10 +23,10 @@ const CREDENTIALS = [
   },
   {
     key: "background",
-    label: "Background Check",
+    label: "Verified Pro",
     icon: BadgeCheck,
     check: (p: ServiceProvider) => p.verified,
-    detail: () => "Identity & credentials verified",
+    detail: () => "Licence & identity reviewed by ServeLocal",
   },
 ] as const;
 

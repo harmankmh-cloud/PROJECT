@@ -1,4 +1,4 @@
-import { AuthMarketingPanel } from "@/components/AuthMarketingPanel";
+import { AuthMarketingPanel, AuthMobileTestimonial } from "@/components/AuthMarketingPanel";
 import { BrandLogo } from "@/components/BrandLogo";
 import { LandingFooter } from "@/components/landing/LandingFooter";
 import { SkipToContent } from "@/components/SkipToContent";
@@ -21,6 +21,7 @@ export function AuthLayout({
               <BrandLogo href="/" />
             </div>
             {children}
+            <AuthMobileTestimonial />
           </div>
         </main>
       </div>

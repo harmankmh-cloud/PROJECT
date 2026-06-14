@@ -17,12 +17,16 @@ export const metadata: Metadata = {
 
 export default async function SignupPage() {
   if (isSupabaseConfigured()) {
-    const supabase = await createClient();
-    if (supabase) {
-      const {
-        data: { user },
-      } = await supabase.auth.getUser();
-      if (user) redirect("/auth/after-login");
+    try {
+      const supabase = await createClient();
+      if (supabase) {
+        const {
+          data: { user },
+        } = await supabase.auth.getUser();
+        if (user) redirect("/auth/after-login");
+      }
+    } catch {
+      // Render signup form
     }
   }
 

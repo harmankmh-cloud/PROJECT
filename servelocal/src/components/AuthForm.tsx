@@ -1,13 +1,12 @@
 "use client";
 
 import { useState } from "react";
-import { useRouter } from "next/navigation";
 import { TermsConsent } from "@/components/TermsConsent";
+import { redirectAfterAuth } from "@/lib/auth/client-redirect";
 import { createClient, isSupabaseConfigured } from "@/lib/supabase/client";
 import { friendlyAuthError } from "@/lib/auth-errors";
 
 export function AuthForm({ mode }: { mode: "login" | "signup" }) {
-  const router = useRouter();
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [termsAccepted, setTermsAccepted] = useState(false);
@@ -49,7 +48,7 @@ export function AuthForm({ mode }: { mode: "login" | "signup" }) {
           email: email.trim(),
           password,
           options: {
-            emailRedirectTo: `${window.location.origin}/auth/callback?next=/dashboard`,
+            emailRedirectTo: `${window.location.origin}/auth/confirm`,
           },
         });
         if (result.error) throw result.error;
@@ -59,8 +58,7 @@ export function AuthForm({ mode }: { mode: "login" | "signup" }) {
           return;
         }
 
-        router.push("/auth/after-login");
-        router.refresh();
+        await redirectAfterAuth("/auth/after-login");
         return;
       }
 
@@ -70,8 +68,7 @@ export function AuthForm({ mode }: { mode: "login" | "signup" }) {
       });
       if (result.error) throw result.error;
 
-      router.push("/auth/after-login");
-      router.refresh();
+      await redirectAfterAuth("/auth/after-login");
     } catch (err) {
       setError(friendlyAuthError(err instanceof Error ? err.message : "Authentication failed"));
     } finally {
@@ -89,7 +86,7 @@ export function AuthForm({ mode }: { mode: "login" | "signup" }) {
     try {
       const supabase = createClient();
       const { error: resetError } = await supabase.auth.resetPasswordForEmail(email.trim(), {
-        redirectTo: `${window.location.origin}/auth/callback?next=/dashboard`,
+        redirectTo: `${window.location.origin}/auth/confirm?next=/dashboard`,
       });
       if (resetError) throw resetError;
       setInfo("Password reset email sent. Check your inbox.");

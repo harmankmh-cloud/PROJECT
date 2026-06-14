@@ -2,13 +2,15 @@
 
 import Link from "next/link";
 import { useEffect, useState } from "react";
+import { Skeleton } from "@/components/ui/Skeleton";
+import { useToast } from "@/components/providers/ToastProvider";
 import type { Call } from "@/lib/types";
 import { apiFetch } from "@/lib/api-client";
 
 export default function CallsPage() {
+  const { showError } = useToast();
   const [calls, setCalls] = useState<Call[]>([]);
   const [stats, setStats] = useState({ total: 0, containmentRate: 0, transferRate: 0, totalMinutes: 0 });
-  const [error, setError] = useState("");
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
@@ -19,7 +21,7 @@ export default function CallsPage() {
         setCalls(res.data.calls || []);
         setStats(res.data.stats || { total: 0, containmentRate: 0, transferRate: 0, totalMinutes: 0 });
       } else {
-        setError(res.error);
+        showError(res.error);
       }
       setLoading(false);
     });
@@ -32,9 +34,15 @@ export default function CallsPage() {
     <div>
       <h1 className="text-2xl font-bold text-ghost-white">Call Logs</h1>
       <p className="mt-1 text-on-surface-variant">{stats.totalMinutes} minutes · {stats.containmentRate}% contained</p>
-      {error && <p className="mt-4 text-sm text-error">{error}</p>}
-      {loading && <p className="mt-4 text-sm text-slate-text">Loading calls…</p>}
 
+      {loading ? (
+        <div className="mt-8 animate-pulse space-y-3">
+          <Skeleton className="h-10 w-full" />
+          {Array.from({ length: 6 }).map((_, i) => (
+            <Skeleton key={i} className="h-12 w-full" />
+          ))}
+        </div>
+      ) : (
       <div className="mt-8 surface-card overflow-x-auto">
         <table className="w-full text-left text-sm">
           <thead className="bg-surface-container text-on-surface-variant">
@@ -73,6 +81,7 @@ export default function CallsPage() {
           </tbody>
         </table>
       </div>
+      )}
     </div>
   );
 }

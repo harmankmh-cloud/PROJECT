@@ -5,7 +5,9 @@ import { MarketingFooterNew } from "@/components/marketing/MarketingFooterNew";
 import { MarketingNavbar } from "@/components/marketing/MarketingNavbar";
 import { SkipToContent } from "@/components/SkipToContent";
 import { SupportForm } from "@/components/SupportForm";
+import { JsonLd } from "@/components/seo/JsonLd";
 import { BRAND } from "@/lib/brand";
+import { HELP_ARTICLES } from "@/lib/help-articles";
 
 export const metadata: Metadata = {
   title: "Help center",
@@ -25,6 +27,24 @@ export default async function HelpPage({
 
   return (
     <div className="dark-mesh-bg grid-pattern flex min-h-screen flex-col">
+      <JsonLd
+        data={{
+          "@context": "https://schema.org",
+          "@type": "WebPage",
+          name: `${BRAND.name} Help Center`,
+          description: metadata.description,
+          url: `https://${BRAND.domain}/help`,
+          mainEntity: {
+            "@type": "ItemList",
+            itemListElement: HELP_ARTICLES.map((article, i) => ({
+              "@type": "ListItem",
+              position: i + 1,
+              url: `https://${BRAND.domain}/help/${article.slug}`,
+              name: article.title,
+            })),
+          },
+        }}
+      />
       <SkipToContent />
       <MarketingNavbar />
       <main id="main-content" className="mx-auto w-full max-w-4xl flex-1 space-y-12 px-4 pb-12 pt-24">

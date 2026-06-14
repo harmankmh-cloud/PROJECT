@@ -21,6 +21,10 @@ Harman is a solo founder (Abbotsford, BC) building RateLocal, ServeLocal, and Gr
 - Minimize scope. Don't refactor unrelated code. Don't add tests or docs unless asked.
 - For email outreach: fix Activepieces + API first; don't block on manual Vercel edits if production already works.
 
+## GreetQ code (`voiceagent/`)
+
+When editing TypeScript/React/API code under `voiceagent/`, follow `greetq-enterprise.mdc`: concise output, targeted diffs, minimal prose. Keep step-by-step + plain language for ops/setup (Vercel, Supabase dashboard, Activepieces, imports).
+
 ## Secrets
 
 - Never ask Harman to paste full API keys in chat.

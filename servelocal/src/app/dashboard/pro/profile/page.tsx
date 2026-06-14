@@ -11,7 +11,7 @@ export default async function ProProfilePage() {
   } = supabase ? await supabase.auth.getUser() : { data: { user: null } };
   if (!user) redirect("/login");
 
-  const listings = await getProvidersForUser(user.id, user.email ?? undefined);
+  const listings = await getProvidersForUser(user.id);
   if (listings.length === 0) redirect("/onboarding");
 
   const listing = listings[0];

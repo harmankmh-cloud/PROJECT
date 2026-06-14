@@ -14,10 +14,10 @@ export const SANDBOX_MAX_SECONDS = 60;
 /** Shared marketing copy — keep site and product aligned. */
 export const TRIAL_MARKETING = {
   exploreShort: "30 free minutes — no card",
-  exploreLong:
-    "Explore free with 30 trial minutes and unlimited text sandbox — no card required.",
+  exploreLong: "30 trial minutes, no card. Go live with a 14-day trial when you're ready.",
   goLiveShort: "14-day trial to go live",
-  goLiveLong: `Go live with a ${STRIPE_TRIAL_DAYS}-day Stripe trial — card required.`,
+  goLiveLong: "",
+  authPanel: "30 trial minutes, no card. Go live with a 14-day trial when you're ready.",
   cta: "Get started free",
   goLiveCta: "Go live — 14-day trial",
 } as const;

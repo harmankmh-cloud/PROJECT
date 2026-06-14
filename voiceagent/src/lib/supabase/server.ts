@@ -1,26 +1,25 @@
 import { createServerClient } from "@supabase/ssr";
+import type { SupabaseClient } from "@supabase/supabase-js";
 import { cookies } from "next/headers";
+import { getSupabaseAnonKey, getSupabaseUrl } from "@/lib/supabase/env";
 
-export async function createClient() {
+/** Per-request SSR client (cookies vary per invocation — not a process singleton). */
+export async function createClient(): Promise<SupabaseClient> {
   const cookieStore = await cookies();
-  return createServerClient(
-    process.env.NEXT_PUBLIC_SUPABASE_URL!,
-    process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!,
-    {
-      cookies: {
-        getAll() {
-          return cookieStore.getAll();
-        },
-        setAll(cookiesToSet) {
-          try {
-            cookiesToSet.forEach(({ name, value, options }) =>
-              cookieStore.set(name, value, options)
-            );
-          } catch {
-            // Server Component — ignore
-          }
-        },
+  return createServerClient(getSupabaseUrl(), getSupabaseAnonKey(), {
+    cookies: {
+      getAll() {
+        return cookieStore.getAll();
       },
-    }
-  );
+      setAll(cookiesToSet) {
+        try {
+          cookiesToSet.forEach(({ name, value, options }) =>
+            cookieStore.set(name, value, options)
+          );
+        } catch {
+          // Server Component — ignore
+        }
+      },
+    },
+  });
 }

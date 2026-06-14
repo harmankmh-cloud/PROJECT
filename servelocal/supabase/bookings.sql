@@ -28,9 +28,10 @@ create index if not exists bookings_user_idx on bookings (user_id) where user_id
 
 alter table bookings enable row level security;
 
+drop policy if exists "Users read own bookings" on bookings;
 create policy "Users read own bookings"
   on bookings for select
-  using (auth.uid() = user_id or auth.uid() is not null);
+  using (auth.uid() = user_id);
 
 create policy "Anyone can create booking"
   on bookings for insert
