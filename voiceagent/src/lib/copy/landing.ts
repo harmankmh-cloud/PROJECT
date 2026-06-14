@@ -4,8 +4,8 @@ import { TRIAL_MARKETING } from "@/lib/trial";
 export const LANDING_COPY = {
   hero: {
     eyebrow: "Your receptionist never calls in sick",
-    headline: "Your AI Receptionist.",
-    wordSwap: ["Always On.", "Never Late.", "Never Forgets."] as const,
+    headline: "Canadian AI phone agents",
+    wordSwap: ["that book appointments.", "while you work.", "24/7 — no missed calls."] as const,
     subhead:
       "GreetQ answers calls, books appointments, and greets every customer like a pro — so you don't have to.",
     ctaPrimary: "Start free trial",
@@ -145,7 +145,7 @@ export const HOW_IT_WORKS = [
   {
     step: 3,
     title: "Go live in minutes",
-    desc: "Connect your calendar, point your number at GreetQ, and start answering every call.",
+    desc: "Connect your calendar, point your number at GreetQ, and start answering every call. Takes 5 minutes. No IT help needed.",
   },
 ] as const;
 

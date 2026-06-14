@@ -1,16 +1,27 @@
 import { NextRequest, NextResponse } from "next/server";
 import { createAdminClient } from "@/lib/supabase/admin";
 import { notifyActivepiecesMarketingLead } from "@/lib/activepieces";
+import { clientIp, isRateLimited } from "@/lib/rate-limit";
 
 const EMAIL_RE = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 
 export async function POST(request: NextRequest) {
+  const ip = clientIp(request);
+  if (isRateLimited(`leads:${ip}`, 10, 60 * 60 * 1000)) {
+    return NextResponse.json({ error: "Too many requests. Try again later." }, { status: 429 });
+  }
+
   const body = await request.json().catch(() => ({}));
   const email = String(body.email || "")
     .trim()
     .toLowerCase();
   const businessName = body.business_name ? String(body.business_name).trim() : null;
   const source = body.source ? String(body.source).trim() : "hero";
+  const website = body.website ? String(body.website).trim() : "";
+
+  if (website) {
+    return NextResponse.json({ ok: true });
+  }
 
   if (!email || !EMAIL_RE.test(email)) {
     return NextResponse.json({ error: "Valid email required" }, { status: 400 });
