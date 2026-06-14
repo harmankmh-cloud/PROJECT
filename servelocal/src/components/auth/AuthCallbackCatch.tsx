@@ -1,12 +1,11 @@
 "use client";
 
 import { useEffect } from "react";
-
-const AUTH_HANDLER_PREFIXES = ["/auth/confirm", "/auth/callback", "/auth/after-login"];
-
-function isAuthHandlerPath(pathname: string) {
-  return AUTH_HANDLER_PREFIXES.some((prefix) => pathname.startsWith(prefix));
-}
+import {
+  authConfirmUrlFromSearch,
+  hasAuthCallbackParams,
+  isAuthHandlerPath,
+} from "@/lib/auth/catch-auth-tokens";
 
 /**
  * Supabase sometimes redirects email confirmations to Site URL (/) instead of
@@ -19,14 +18,9 @@ export function AuthCallbackCatch() {
     if (isAuthHandlerPath(pathname)) return;
 
     const query = new URLSearchParams(search);
-    const code = query.get("code");
-    const tokenHash = query.get("token_hash");
-    const type = query.get("type");
 
-    if (code || (tokenHash && type)) {
-      const target = new URL("/auth/confirm", origin);
-      query.forEach((value, key) => target.searchParams.set(key, value));
-      window.location.replace(target.toString());
+    if (hasAuthCallbackParams(query)) {
+      window.location.replace(authConfirmUrlFromSearch(origin, query));
       return;
     }
 

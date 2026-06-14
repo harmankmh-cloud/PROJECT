@@ -31,6 +31,8 @@ async function finishAuthRedirect(
 export async function GET(request: NextRequest) {
   const { searchParams, origin } = new URL(request.url);
   const tokenHash = searchParams.get("token_hash");
+  const token = searchParams.get("token");
+  const email = searchParams.get("email");
   const typeParam = searchParams.get("type");
   const code = searchParams.get("code");
   const next = searchParams.get("next");
@@ -63,6 +65,22 @@ export async function GET(request: NextRequest) {
 
     if (error) {
       console.error("[auth/confirm] verifyOtp failed:", error.message);
+      return NextResponse.redirect(`${origin}/login?error=verification_failed`);
+    }
+
+    return finishAuthRedirect(origin, next, supabase, redirectWithSession);
+  }
+
+  // Legacy/alternate Supabase redirect shape (?token=&type=, sometimes with email=)
+  if (token && isEmailOtpType(typeParam)) {
+    const verifyPayload = email
+      ? { type: typeParam as EmailOtpType, token, email }
+      : { type: typeParam as EmailOtpType, token_hash: token };
+
+    const { error } = await supabase.auth.verifyOtp(verifyPayload);
+
+    if (error) {
+      console.error("[auth/confirm] verifyOtp (token) failed:", error.message);
       return NextResponse.redirect(`${origin}/login?error=verification_failed`);
     }
 
