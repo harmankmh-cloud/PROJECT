@@ -1,5 +1,10 @@
 import { createServerClient } from "@supabase/ssr";
 import { NextResponse, type NextRequest } from "next/server";
+import {
+  buildAuthConfirmRedirect,
+  hasAuthCallbackParams,
+  isAuthHandlerPath,
+} from "@/lib/auth/catch-auth-tokens";
 import { isHomeownerDashboardPath, isProPath } from "@/lib/auth-routing";
 import { isPlatformAdmin } from "@/lib/admin-auth";
 import type { UserRole } from "@/lib/user-profiles";
@@ -11,6 +16,13 @@ function roleFromUser(user: { user_metadata?: Record<string, unknown> }): UserRo
 }
 
 export async function middleware(request: NextRequest) {
+  const pathname = request.nextUrl.pathname;
+
+  // Email confirm links often land on / (Site URL) with ?code= or ?token_hash= — forward server-side.
+  if (!isAuthHandlerPath(pathname) && hasAuthCallbackParams(request.nextUrl.searchParams)) {
+    return NextResponse.redirect(buildAuthConfirmRedirect(request));
+  }
+
   let response = NextResponse.next({
     request: {
       headers: request.headers,
@@ -42,8 +54,6 @@ export async function middleware(request: NextRequest) {
   const {
     data: { user },
   } = await supabase.auth.getUser();
-
-  const pathname = request.nextUrl.pathname;
 
   // Public auth handlers — must run without session gates (OTP / PKCE cookie exchange)
   if (
@@ -87,6 +97,7 @@ export async function middleware(request: NextRequest) {
 
 export const config = {
   matcher: [
+    "/",
     "/auth/:path*",
     "/dashboard/:path*",
     "/onboarding",
