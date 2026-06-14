@@ -12,7 +12,13 @@ import { GlowButton } from "@/components/ui/GlowButton";
 import { Input } from "@/components/ui/Input";
 import { TRIAL_MARKETING } from "@/lib/trial";
 
-export function LoginForm({ initialError = "" }: { initialError?: string }) {
+export function LoginForm({
+  initialError = "",
+  confirmed = false,
+}: {
+  initialError?: string;
+  confirmed?: boolean;
+}) {
   const router = useRouter();
   const {
     register,
@@ -28,7 +34,13 @@ export function LoginForm({ initialError = "" }: { initialError?: string }) {
     const supabase = createClient();
     const { error: signInError } = await supabase.auth.signInWithPassword(data);
     if (signInError) {
-      setFormError("root", { message: signInError.message });
+      const message = signInError.message;
+      setFormError("root", { message });
+      if (message.toLowerCase().includes("email not confirmed") || message.toLowerCase().includes("not confirmed")) {
+        setFormError("root", {
+          message: "Confirm your email first — check your inbox, then sign in here.",
+        });
+      }
       return;
     }
     const setupRes = await fetch("/api/org/setup", { method: "POST" });
@@ -52,6 +64,12 @@ export function LoginForm({ initialError = "" }: { initialError?: string }) {
         <p className="mt-2 text-sm text-muted">
           Sign in to your {TRIAL_MARKETING.exploreShort.toLowerCase()} workspace.
         </p>
+
+        {confirmed && (
+          <p className="mt-4 rounded-lg border border-emerald-500/30 bg-emerald-500/10 px-4 py-3 text-sm text-emerald-200" role="status">
+            Email verified — sign in below to continue.
+          </p>
+        )}
 
         <form onSubmit={handleSubmit(onSubmit)} className="mt-8 space-y-4" noValidate>
           <Input
