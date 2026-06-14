@@ -3,6 +3,7 @@
 import { useState } from "react";
 import { TermsConsent } from "@/components/TermsConsent";
 import { redirectAfterAuth } from "@/lib/auth/client-redirect";
+import { authConfirmUrl } from "@/lib/auth/redirect-origin";
 import { createClient, isSupabaseConfigured } from "@/lib/supabase/client";
 import { friendlyAuthError } from "@/lib/auth-errors";
 
@@ -48,7 +49,7 @@ export function AuthForm({ mode }: { mode: "login" | "signup" }) {
           email: email.trim(),
           password,
           options: {
-            emailRedirectTo: `${window.location.origin}/auth/confirm`,
+            emailRedirectTo: authConfirmUrl(typeof window !== "undefined" ? window.location.origin : undefined),
           },
         });
         if (result.error) throw result.error;
@@ -86,7 +87,7 @@ export function AuthForm({ mode }: { mode: "login" | "signup" }) {
     try {
       const supabase = createClient();
       const { error: resetError } = await supabase.auth.resetPasswordForEmail(email.trim(), {
-        redirectTo: `${window.location.origin}/auth/confirm?next=/dashboard`,
+        redirectTo: `${authConfirmUrl(window.location.origin)}?next=/dashboard`,
       });
       if (resetError) throw resetError;
       setInfo("Password reset email sent. Check your inbox.");

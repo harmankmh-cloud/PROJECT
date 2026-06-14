@@ -1,8 +1,27 @@
-import { type EmailOtpType } from "@supabase/supabase-js";
+import { type EmailOtpType, type SupabaseClient } from "@supabase/supabase-js";
 import { NextRequest, NextResponse } from "next/server";
+import { ensureUserProfileFromMetadata } from "@/lib/auth/queries";
 import { isEmailOtpType, resolvePostAuthRedirect } from "@/lib/auth/post-auth-redirect";
 import { createAuthRouteHandlerClient } from "@/lib/supabase/route-handler";
 import { isSupabaseConfigured } from "@/lib/supabase/config";
+
+async function finishAuthRedirect(
+  origin: string,
+  next: string | null,
+  supabase: SupabaseClient,
+  redirectWithSession: (target: string) => NextResponse
+) {
+  const {
+    data: { user },
+  } = await supabase.auth.getUser();
+
+  if (user) {
+    await ensureUserProfileFromMetadata(user);
+  }
+
+  const target = await resolvePostAuthRedirect(origin, next, supabase);
+  return redirectWithSession(target);
+}
 
 /**
  * Server-side email / OTP link verification.
@@ -27,18 +46,15 @@ export async function GET(request: NextRequest) {
 
   const { supabase, redirectWithSession } = auth;
 
-  // PKCE: ?code=... (some Supabase projects send this to the confirm redirect URL)
   if (code) {
     const { error } = await supabase.auth.exchangeCodeForSession(code);
     if (error) {
       console.error("[auth/confirm] exchangeCodeForSession failed:", error.message);
       return NextResponse.redirect(`${origin}/login?error=auth_failed`);
     }
-    const target = await resolvePostAuthRedirect(origin, next, supabase);
-    return redirectWithSession(target);
+    return finishAuthRedirect(origin, next, supabase, redirectWithSession);
   }
 
-  // Email OTP / magic link: ?token_hash=...&type=signup|email|recovery|...
   if (tokenHash && isEmailOtpType(typeParam)) {
     const { error } = await supabase.auth.verifyOtp({
       type: typeParam as EmailOtpType,
@@ -50,8 +66,7 @@ export async function GET(request: NextRequest) {
       return NextResponse.redirect(`${origin}/login?error=verification_failed`);
     }
 
-    const target = await resolvePostAuthRedirect(origin, next, supabase);
-    return redirectWithSession(target);
+    return finishAuthRedirect(origin, next, supabase, redirectWithSession);
   }
 
   return NextResponse.redirect(`${origin}/login?error=invalid_link`);
