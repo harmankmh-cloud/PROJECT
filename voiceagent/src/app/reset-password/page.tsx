@@ -1,106 +1,100 @@
 "use client";
 
 import Link from "next/link";
+import type { Session } from "@supabase/supabase-js";
 import { useEffect, useState } from "react";
+import { zodResolver } from "@hookform/resolvers/zod";
+import { useForm } from "react-hook-form";
 import { createClient } from "@/lib/supabase/client";
+import { resetPasswordSchema, type ResetPasswordFormData } from "@/lib/schemas/auth";
+import { AuthLayout } from "@/components/auth/AuthLayout";
+import { Button } from "@/components/ui/Button";
+import { Input } from "@/components/ui/Input";
 
 export default function ResetPasswordPage() {
-  const [password, setPassword] = useState("");
-  const [confirm, setConfirm] = useState("");
-  const [error, setError] = useState("");
   const [ready, setReady] = useState(false);
-  const [loading, setLoading] = useState(false);
   const [done, setDone] = useState(false);
+
+  const {
+    register,
+    handleSubmit,
+    formState: { errors, isSubmitting },
+    setError: setFormError,
+  } = useForm<ResetPasswordFormData>({
+    resolver: zodResolver(resetPasswordSchema),
+  });
 
   useEffect(() => {
     const supabase = createClient();
-    supabase.auth.getSession().then(({ data: { session } }) => {
+    supabase.auth.getSession().then(({ data: { session } }: { data: { session: Session | null } }) => {
       setReady(Boolean(session));
       if (!session) {
-        setError("Reset link expired. Request a new one from the forgot password page.");
+        setFormError("root", {
+          message: "Reset link expired. Request a new one from the forgot password page.",
+        });
       }
     });
-  }, []);
+  }, [setFormError]);
 
-  async function handleSubmit(e: React.FormEvent) {
-    e.preventDefault();
-    if (password.length < 8) {
-      setError("Password must be at least 8 characters.");
-      return;
-    }
-    if (password !== confirm) {
-      setError("Passwords do not match.");
-      return;
-    }
-
-    setLoading(true);
-    setError("");
+  async function onSubmit(data: ResetPasswordFormData) {
     const supabase = createClient();
-    const { error: updateError } = await supabase.auth.updateUser({ password });
-
-    setLoading(false);
-    if (updateError) {
-      setError(updateError.message);
+    const { error } = await supabase.auth.updateUser({ password: data.password });
+    if (error) {
+      setFormError("root", { message: error.message });
       return;
     }
-
     setDone(true);
     setTimeout(() => {
       window.location.href = "/dashboard";
     }, 1500);
   }
 
-  if (done) {
-    return (
-      <div className="flex min-h-screen items-center justify-center px-4">
-        <div className="surface-card w-full max-w-md p-8 text-center">
-          <p className="text-teal-700 font-medium">Password updated. Redirecting…</p>
-        </div>
-      </div>
-    );
-  }
-
   return (
-    <div className="flex min-h-screen items-center justify-center px-4">
-      <div className="surface-card w-full max-w-md p-8">
-        <h1 className="text-2xl font-bold text-ghost-white">Set new password</h1>
-
-        {ready ? (
-          <form onSubmit={handleSubmit} className="mt-6 space-y-4">
-            <input
-              type="password"
-              placeholder="New password (min 8 chars)"
-              value={password}
-              onChange={(e) => setPassword(e.target.value)}
-              className="input-field"
-              minLength={8}
-              required
-            />
-            <input
-              type="password"
-              placeholder="Confirm password"
-              value={confirm}
-              onChange={(e) => setConfirm(e.target.value)}
-              className="input-field"
-              minLength={8}
-              required
-            />
-            {error && <p className="text-sm text-error">{error}</p>}
-            <button type="submit" disabled={loading} className="btn-primary w-full">
-              {loading ? "Saving…" : "Update password"}
-            </button>
-          </form>
+    <AuthLayout panelFooter="Set your new password">
+      <div className="auth-card">
+        {done ? (
+          <p className="text-success font-medium">Password updated. Redirecting…</p>
+        ) : ready ? (
+          <>
+            <h1 className="font-display text-3xl text-text">Set new password</h1>
+            <form onSubmit={handleSubmit(onSubmit)} className="mt-8 space-y-4" noValidate>
+              <Input
+                label="New password"
+                type="password"
+                autoComplete="new-password"
+                error={errors.password?.message}
+                {...register("password")}
+              />
+              <Input
+                label="Confirm password"
+                type="password"
+                autoComplete="new-password"
+                error={errors.confirm?.message}
+                {...register("confirm")}
+              />
+              {errors.root?.message && (
+                <p className="text-sm text-danger" role="alert">
+                  {errors.root.message}
+                </p>
+              )}
+              <Button type="submit" className="w-full" loading={isSubmitting}>
+                Update password
+              </Button>
+            </form>
+          </>
         ) : (
-          <div className="mt-6">
-            {error && <p className="text-sm text-error">{error}</p>}
-            <p className="mt-4 text-center text-sm">
-              <Link href="/forgot-password" className="text-teal-600 hover:underline">
+          <div>
+            {errors.root?.message && (
+              <p className="text-sm text-danger">{errors.root.message}</p>
+            )}
+            <p className="mt-4 text-center text-sm text-muted">
+              <Link href="/forgot-password" className="text-primary-glow hover:underline">
                 Request a new reset link
               </Link>
             </p>
           </div>
         )}
       </div>
-    </div>
+    </AuthLayout>
   );
 }

@@ -1,6 +1,6 @@
 import Link from "next/link";
 import { SupportForm } from "@/components/SupportForm";
-import { BrandLogo } from "@/components/BrandLogo";
+import { MarketingHeader } from "@/components/MarketingHeader";
 import { SiteFooter } from "@/components/SiteFooter";
 import { BRAND } from "@/lib/brand";
 
@@ -11,29 +11,23 @@ export const metadata = {
 
 export default function HelpPage() {
   return (
-    <main className="mesh-bg min-h-screen">
-      <header className="site-header">
-        <div className="mx-auto flex max-w-3xl items-center justify-between px-4 py-4 sm:px-8">
-          <BrandLogo />
-          <div className="flex gap-2">
-            <Link href="/" className="btn-ghost hidden px-4 py-2 text-sm sm:inline-flex">
-              Home
-            </Link>
-            <Link href="/login" className="btn-gold px-4 py-2 text-sm">
-              Sign in
-            </Link>
+    <main className="min-h-screen bg-[#f8f9fc]">
+      <section className="hero-dark relative overflow-hidden pb-10 pt-6 sm:pb-12 sm:pt-8">
+        <div className="hero-glow right-0 top-0 h-48 w-48 bg-gold-600/10" />
+        <div className="relative mx-auto max-w-3xl px-4 sm:px-8">
+          <MarketingHeader />
+          <div className="mt-10">
+            <p className="text-xs font-semibold uppercase tracking-widest text-white/50">Help center</p>
+            <h1 className="font-display mt-2 text-4xl text-white">Help & suggestions</h1>
+            <p className="mt-3 text-lg text-white/55">
+              Talk to the {BRAND.name} team — questions about your account, QR codes, billing, or ideas to
+              make the product better.
+            </p>
           </div>
         </div>
-      </header>
+      </section>
 
       <div className="mx-auto max-w-3xl px-4 pb-16 sm:px-8">
-        <p className="page-eyebrow">Help center</p>
-        <h1 className="font-display mt-2 text-4xl text-brand-950">Help & suggestions</h1>
-        <p className="mt-3 text-lg text-slate-600">
-          Talk to the {BRAND.name} team — questions about your account, QR codes, billing, or ideas to
-          make the product better.
-        </p>
-
         <div className="mt-10 grid gap-6 sm:grid-cols-3">
           {[
             ["💬", "Help", "Stuck on setup or not sure how something works"],

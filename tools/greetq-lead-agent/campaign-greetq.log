@@ -1,0 +1,127 @@
+GreetQ Lead Agent — Abbotsford
+Sectors: 10 | Discover + scrape
+
+▸ Dental & Medical Clinics (discover up to 40)…
+  found 30 sites (20 new)
+  emails: 10/20
+
+▸ Law Firms (discover up to 40)…
+  found 17 sites (17 new)
+  emails: 10/17
+
+▸ HVAC / Plumbers / Electricians (discover up to 40)…
+  found 24 sites (23 new)
+  emails: 14/23
+
+▸ Property Management (discover up to 40)…
+  found 19 sites (18 new)
+  emails: 9/18
+
+▸ Auto Repair & Dealerships (discover up to 40)…
+  found 20 sites (19 new)
+  emails: 7/19
+
+▸ Salons & Spas (discover up to 40)…
+  found 17 sites (16 new)
+  emails: 5/16
+
+▸ Restaurants (discover up to 40)…
+  found 12 sites (12 new)
+  emails: 2/12
+
+▸ Accountants & Financial Advisors (discover up to 40)…
+  found 19 sites (17 new)
+  emails: 8/17
+
+▸ Physio & Chiro (discover up to 40)…
+  found 24 sites (22 new)
+  emails: 8/22
+
+▸ Real Estate (discover up to 40)…
+  found 17 sites (16 new)
+  emails: 5/16
+
+── Done ──
+  Discovered & scraped: 180 businesses
+  Emails found:         78
+  Hit rate:             43%
+  Output:               output/leads-2026-06-09.csv
+                        output/emails-only.txt
+info@allwooddental.com
+info@gatewayhealth.ca
+info@clinicfinder.ca
+healthlinkbc@gov.bc.ca
+help@cortico.health
+hello@mydoctorbc.ca
+info@findadoctorbc.ca
+info@skipthewaitingroom.com
+support@threebestrated.ca
+info@walkin.ca
+info@bestlawfirms.com
+info@albertlawco.com
+info@abbotsfordsbest.com
+clientcontact@rsglawyers.ca
+jimmy@ambassadorlaw.ca
+reception@bajpai.ca
+info@pathfinderlaw.ca
+admin@vickerslaw.ca
+info@bestlawyers.com
+info@rdmlawyers.com
+service@highmarkplumbing.com
+info@acecomforthvac.com
+info@hvac-replacement.ca
+hello@callairvantage.ca
+support@bestofplumbers.com
+info@mr-drain.ca
+hello@prosgrade.com
+admin@cskelectric.ca
+info@lichtielectric.com
+info@premium-electric.ca
+support@trustedpros.ca
+service@greggelectric.ca
+info@blueridgehvac.ca
+sales@veteranhvac.ca
+admin@teamworkpm.com
+property@wynford.com
+info@remirealty.ca
+office@arenprop.ca
+info@pivotpointproperties.com
+reception@advantagepm.ca
+vancouver@quaypacific.com
+amanda.kennedy@diverserentals.com
+sean@fraservalleyrentals.com
+info2@budgetbrake.com
+info@gripauto.ca
+service@helmutsservicecentre.com
+info@gerrysoktire.com
+sales@msaford.com
+sales@windmillauto.com
+carowner@preferredmechanic.ca
+booking@sin7salon.com
+info@cbhairlounge.ca
+info@labellemaisondayspa.com
+info@thewildorangespa.com
+info@shenails.ca
+catering@chefbossculinary.com
+hello@restaurantobserver.com
+info@accountantabbotsford.com
+info@sajaccounting.com
+admin@evera.ca
+info@wtcca.com
+jason.tuffs@mnp.ca
+avidhillon@aerocpa.ca
+([^
+rhys@wellbuiltwealth.ca
+admin@abbyphysio.com
+&
+support@bestofchiropractors.com
+info@abbotsfordspinecentre.ca
+info@chirolife.ca
+info@revolutionwellnessclinic.ca
+serena@mindreach.ca
+info@bodytunewellness.ca
+cbignite@coldwellbanker.ca
+info@rodfriesen.com
+info@hardyteam.ca
+support@realestateagents.com
+customercare@realtor.com

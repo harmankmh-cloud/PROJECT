@@ -1,0 +1,21 @@
+{
+  "name": "route-max",
+  "version": "2.0.0",
+  "private": true,
+  "description": "Route Max multi-stop route planner",
+  "main": "expo-entry.js",
+  "scripts": {
+    "start": "expo start --host lan",
+    "start:tunnel": "expo start --host tunnel",
+    "start:static": "node server.js",
+    "test": "node --test tests/*.test.js",
+    "check": "node --check lib/route-engine.js && node --check lib/storage.js && node --check lib/geocode.js && node --check planner.js && node --check server.js && node --check App.js && node --check expo-entry.js && npm test"
+  },
+  "dependencies": {
+    "@react-native-async-storage/async-storage": "^2.2.0",
+    "expo": "^56.0.5",
+    "expo-image-picker": "~17.0.10",
+    "react": "^19.2.6",
+    "react-native": "^0.85.3"
+  }
+}

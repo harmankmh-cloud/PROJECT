@@ -5,7 +5,7 @@ import type { PlanKey } from "@/lib/plans";
 
 export const metadata: Metadata = {
   title: "Create account",
-  description: `Start your ${BRAND.name} free trial. Set up AI phone agents for inbound calls, booking, and warm transfer.`,
+  description: `Create your ${BRAND.name} account — 30 free minutes and sandbox testing, no card required. Go live with a 14-day trial when you're ready.`,
   alternates: { canonical: "/signup" },
 };
 
@@ -17,8 +17,14 @@ function parsePlan(plan?: string): PlanKey | null {
 export default async function SignupPage({
   searchParams,
 }: {
-  searchParams: Promise<{ plan?: string }>;
+  searchParams: Promise<{ plan?: string; email?: string; business?: string }>;
 }) {
   const params = await searchParams;
-  return <SignupForm initialPlan={parsePlan(params.plan)} />;
+  return (
+    <SignupForm
+      initialPlan={parsePlan(params.plan)}
+      initialEmail={params.email?.trim() ?? ""}
+      initialBusinessName={params.business?.trim() ?? ""}
+    />
+  );
 }

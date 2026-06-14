@@ -32,6 +32,7 @@ export function SupportForm({
   const [orgName, setOrgName] = useState(defaultOrgName);
   const [category, setCategory] = useState<Category>(defaultCategory);
   const [message, setMessage] = useState(defaultMessage);
+  const [website, setWebsite] = useState("");
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
   const [sent, setSent] = useState(false);
@@ -50,6 +51,7 @@ export function SupportForm({
           orgName: orgName.trim() || undefined,
           category,
           message: message.trim(),
+          website,
         }),
       });
       const data = await response.json();
@@ -86,6 +88,17 @@ export function SupportForm({
           <p className="mt-1 text-sm text-on-surface-variant">Questions, ideas, or issues — we read every one.</p>
         </div>
       )}
+
+      <input
+        type="text"
+        name="website"
+        value={website}
+        onChange={(e) => setWebsite(e.target.value)}
+        className="hidden"
+        tabIndex={-1}
+        autoComplete="off"
+        aria-hidden
+      />
 
       <label className="block space-y-2 text-sm">
         <span className="font-semibold text-ghost-white">Your email</span>
@@ -138,7 +151,7 @@ export function SupportForm({
 
       {error && <p className="text-sm text-rose-600">{error}</p>}
 
-      <button type="submit" disabled={loading} className="btn-gold w-full py-3.5 disabled:opacity-60">
+      <button type="submit" disabled={loading} className="btn-gold w-full py-3.5 disabled:cursor-not-allowed disabled:opacity-60">
         {loading ? "Sending…" : "Send message"}
       </button>
     </form>

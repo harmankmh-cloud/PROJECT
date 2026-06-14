@@ -23,14 +23,16 @@ export const PLANS = {
     monthlyPrice: 79,
     includedMinutes: 300,
     perMinute: 0.25,
+    maxAgents: 1,
     concurrentCalls: 5,
-    features: ["1 agent", "300 minutes included", "Inbound calls", "Call logs", "Basic analytics", "Sandbox testing"],
+    features: ["1 agent", "300 minutes included", "Inbound calls", "Call logs", "Basic analytics", "Free sandbox explore"],
   },
   growth: {
     name: "Growth",
     monthlyPrice: 199,
     includedMinutes: 900,
     perMinute: 0.22,
+    maxAgents: 2,
     concurrentCalls: 10,
     features: ["2 agents", "900 minutes included", "Flow builder", "Google Calendar", "Warm transfer", "SMS follow-up"],
   },
@@ -39,6 +41,7 @@ export const PLANS = {
     monthlyPrice: 399,
     includedMinutes: 2000,
     perMinute: 0.18,
+    maxAgents: 5,
     concurrentCalls: 20,
     features: ["5 agents", "2,000 minutes included", "Flow builder", "HubSpot + Calendar", "Warm transfer", "Outbound campaigns"],
   },
@@ -47,6 +50,7 @@ export const PLANS = {
     monthlyPrice: 1500,
     includedMinutes: 8000,
     perMinute: 0.15,
+    maxAgents: 999,
     concurrentCalls: 1000,
     features: [
       "Unlimited agents",
@@ -74,3 +78,17 @@ export function estimatedMonthly(planKey: PlanKey, minutes = 500): number {
   const overage = overageMinutes(planKey, minutes);
   return Math.round((plan.monthlyPrice + overage * plan.perMinute) * 100) / 100;
 }
+
+export function planMaxAgents(planKey: PlanKey): number {
+  return PLANS[planKey].maxAgents;
+}
+
+export function planConcurrentCalls(planKey: PlanKey): number {
+  return PLANS[planKey].concurrentCalls;
+}
+
+/** Stack cost per minute used for margin checks (not customer-facing). */
+export const PLANNED_COST_PER_MINUTE = 0.08;
+
+/** Days of grace after payment failure before blocking production calls. */
+export const PAYMENT_GRACE_DAYS = 7;

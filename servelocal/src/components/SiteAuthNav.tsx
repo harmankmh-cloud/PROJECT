@@ -5,7 +5,15 @@ import { useEffect, useState } from "react";
 import { createClient, isSupabaseConfigured } from "@/lib/supabase/client";
 import type { User } from "@supabase/supabase-js";
 
-export function SiteAuthNav({ compact }: { compact?: boolean }) {
+export function SiteAuthNav({
+  compact,
+  accountHref,
+  accountLabel,
+}: {
+  compact?: boolean;
+  accountHref?: string | null;
+  accountLabel?: string | null;
+}) {
   const [user, setUser] = useState<User | null>(null);
 
   useEffect(() => {
@@ -27,12 +35,15 @@ export function SiteAuthNav({ compact }: { compact?: boolean }) {
   if (!isSupabaseConfigured()) return null;
 
   if (user) {
+    const href = accountHref || "/dashboard";
+    const label = accountLabel || "My account";
+
     return (
       <Link
-        href="/dashboard"
+        href={href}
         className="rounded-full px-3 py-2 text-sm font-medium text-slate-600 transition hover:bg-slate-100/80 hover:text-brand-950"
       >
-        My account
+        {label}
       </Link>
     );
   }

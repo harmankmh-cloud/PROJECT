@@ -2,7 +2,7 @@ import { NextResponse } from "next/server";
 import { z } from "zod";
 import { TRADE_CITIES } from "@/lib/constants";
 import { normalizePhone, zodFieldError } from "@/lib/form-utils";
-import { createServiceRequest, getServiceCategories } from "@/lib/data";
+import { createServiceRequest, getServiceCategories, notifyProsForJobRequest } from "@/lib/data";
 import { createClient } from "@/lib/supabase/server";
 
 const citySlugs = TRADE_CITIES.map((c) => c.slug);
@@ -14,6 +14,9 @@ const bodySchema = z.object({
   customerPhone: z.string().transform(normalizePhone).pipe(z.string().length(10)),
   customerEmail: z.union([z.string().email(), z.literal("")]).optional(),
   description: z.string().min(10).max(2000),
+  urgency: z.enum(["asap", "this_week", "this_month", "flexible"]).optional(),
+  budgetMin: z.number().int().min(0).optional(),
+  budgetMax: z.number().int().min(0).optional(),
 });
 
 export async function POST(request: Request) {
@@ -37,11 +40,40 @@ export async function POST(request: Request) {
       customerEmail: body.customerEmail || user?.email || undefined,
       description: body.description,
       userId: user?.id,
+      urgency: body.urgency,
+      budgetMin: body.budgetMin,
+      budgetMax: body.budgetMax,
     });
 
     if (!result.ok) {
       return NextResponse.json({ error: result.error }, { status: 500 });
     }
+
+    const email = body.customerEmail || user?.email;
+    if (email) {
+      const categoryName = categories.find((c) => c.slug === body.categorySlug)?.name || body.categorySlug;
+      const { jobPostedEmail } = await import("@/lib/email-templates");
+      const { sendTransactionalEmail } = await import("@/lib/email");
+      const { subject, html } = jobPostedEmail({
+        customerName: body.customerName,
+        categoryName,
+        citySlug: body.citySlug,
+        matchCount: result.matches?.length ?? 0,
+        isGuest: !user,
+      });
+      await sendTransactionalEmail({ to: email, subject, html, template: "job_posted" });
+    }
+
+    await notifyProsForJobRequest({
+      categorySlug: body.categorySlug,
+      citySlug: body.citySlug,
+      customerName: body.customerName,
+      customerPhone: body.customerPhone,
+      description: body.description,
+      urgency: body.urgency,
+      budgetMin: body.budgetMin,
+      budgetMax: body.budgetMax,
+    });
 
     return NextResponse.json({
       ok: true,

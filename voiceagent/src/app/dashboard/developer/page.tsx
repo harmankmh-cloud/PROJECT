@@ -2,6 +2,7 @@
 
 import { useEffect, useState } from "react";
 import { apiFetch } from "@/lib/api-client";
+import { APP_URL, BRAND } from "@/lib/brand";
 
 type ApiKey = {
   id: string;
@@ -64,7 +65,7 @@ export default function DeveloperPage() {
           List recent calls with your API key:
         </p>
         <code className="block rounded-xl bg-slate-900 px-4 py-3 text-sm text-teal-300">
-          curl -H &quot;Authorization: Bearer ivo_…&quot; https://intellivo.ca/api/v1/calls
+          curl -H &quot;Authorization: Bearer grtq_…&quot; {APP_URL}/api/v1/calls
         </code>
       </div>
 
@@ -137,7 +138,7 @@ export default function DeveloperPage() {
       <div className="surface-card space-y-3 p-6 text-sm text-on-surface-variant">
         <h2 className="font-semibold text-ghost-white">Outbound webhooks</h2>
         <p>
-          Configure your webhook URL in <strong>Settings</strong>. Intellivo sends a signed{" "}
+          Configure your webhook URL in <strong>Settings</strong>. {BRAND.name} sends a signed{" "}
           <code className="text-xs">call.completed</code> event after each call with transcript analysis.
         </p>
       </div>

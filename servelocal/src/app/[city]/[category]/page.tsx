@@ -1,13 +1,33 @@
+import type { Metadata } from "next";
 import Link from "next/link";
 import { notFound } from "next/navigation";
 import { Suspense } from "react";
 import { CategoryFilters } from "@/components/CategoryFilters";
 import { ProviderCard } from "@/components/ProviderCard";
-import { SiteFooter } from "@/components/SiteFooter";
-import { SiteHeader } from "@/components/SiteHeader";
-import { TRADE_CITIES, SERVE_LOCAL, cityName } from "@/lib/constants";
+import { ProvidersMapSection } from "@/components/ProvidersMapSection";
+import { MarketingPageShell } from "@/components/layout/MarketingPageShell";
+import { EmptyDirectoryState } from "@/components/search/EmptyDirectoryState";
+import { TRADE_CITIES, SERVE_LOCAL, cityName, SERVICE_SUBCATEGORIES } from "@/lib/constants";
+import { pageMetadata, tradeListingTitle } from "@/lib/seo";
 import { getApprovedProviders, getCategoryBySlug } from "@/lib/data";
 import type { ProviderSort } from "@/lib/types";
+
+export async function generateMetadata({
+  params,
+}: {
+  params: Promise<{ city: string; category: string }>;
+}): Promise<Metadata> {
+  const { city, category } = await params;
+  const cityMeta = TRADE_CITIES.find((c) => c.slug === city);
+  const cat = await getCategoryBySlug(category);
+  if (!cityMeta || !cat) return { title: "Not found" };
+
+  return pageMetadata({
+    title: tradeListingTitle({ trade: cat.name, tradeSlug: cat.slug, citySlug: city }),
+    description: `Find ${cat.name.toLowerCase()} pros in ${cityMeta.name}, ${cityMeta.region}. Compare verified listings, reviews, and contact trades direct on ${SERVE_LOCAL.name}.`,
+    path: `/${city}/${category}`,
+  });
+}
 
 export default async function CategoryPage({
   params,
@@ -34,31 +54,51 @@ export default async function CategoryPage({
   });
 
   return (
-    <main className="mesh-bg min-h-screen">
-      <SiteHeader compact />
+    <MarketingPageShell>
       <div className="mx-auto max-w-6xl px-4 py-10 sm:px-8">
-        <Link href={`/${city}`} className="text-sm font-semibold text-teal-600 hover:underline">
+        <Link href={`/${city}`} className="text-sm font-semibold text-primary hover:underline">
           ← {cityName(city)}
         </Link>
-        <p className="section-eyebrow mt-4">{SERVE_LOCAL.name}</p>
-        <h1 className="font-display mt-2 text-3xl text-brand-950 sm:text-4xl">
+        <p className="font-label mt-4 text-primary">{SERVE_LOCAL.name}</p>
+        <h1 className="font-display mt-2 text-3xl font-black text-foreground sm:text-4xl">
           {cat.icon} {cat.name} in {cityName(city)}
         </h1>
-        <p className="mt-2 text-slate-600">
-          {providers.length} listing{providers.length === 1 ? "" : "s"} — verified badges, reviews & direct contact.
+        <p className="mt-2 text-muted">
+          {providers.length > 0
+            ? `${providers.length} listing${providers.length === 1 ? "" : "s"} — verified badges, reviews & direct contact.`
+            : `Growing our ${cat.name.toLowerCase()} network in ${cityName(city)} — post a job for free matching.`}
         </p>
 
         <Suspense fallback={null}>
           <CategoryFilters />
         </Suspense>
 
-        {providers.length === 0 ? (
-          <div className="surface-card mt-10 p-8 text-center">
-            <p className="font-medium text-brand-950">No listings match your filters.</p>
-            <div className="mt-6 flex flex-wrap justify-center gap-3">
-              <Link href="/join" className="btn-gold px-6 py-3">List my business</Link>
-              <Link href={`/request?city=${city}&category=${category}`} className="btn-ghost px-6 py-3">Post a job</Link>
-            </div>
+        {SERVICE_SUBCATEGORIES[category] && (
+          <div className="mt-4 flex flex-wrap gap-2">
+            {SERVICE_SUBCATEGORIES[category].map((sub) => (
+              <Link
+                key={sub.slug}
+                href={`/${city}/${category}?q=${encodeURIComponent(sub.label)}`}
+                className="chip-tag text-xs"
+              >
+                {sub.label}
+              </Link>
+            ))}
+          </div>
+        )}
+
+        {!providers.length ? (
+          <div className="mt-10">
+            <EmptyDirectoryState
+            citySlug={city}
+            categorySlug={category}
+            categoryName={cat.name}
+            reason={
+              filters.licensed === "1" || filters.verified === "1" || filters.emergency === "1"
+                ? "filtered-out"
+                : "zero-pros"
+            }
+            />
           </div>
         ) : (
           <div className="mt-10 grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
@@ -68,11 +108,10 @@ export default async function CategoryPage({
           </div>
         )}
 
-        <p className="mt-10 text-center text-xs text-slate-500">
-          {SERVE_LOCAL.name} provides contacts only. Verify license & insurance before hiring.
+        <p className="mt-10 text-center text-xs text-muted">
+          {SERVE_LOCAL.name} provides contacts only. Verify license &amp; insurance before hiring.
         </p>
       </div>
-      <SiteFooter />
-    </main>
+    </MarketingPageShell>
   );
 }

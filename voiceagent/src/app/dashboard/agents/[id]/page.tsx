@@ -5,6 +5,8 @@ import { useEffect, useState } from "react";
 import { AgentConfigBottomBar } from "@/components/dashboard/AgentConfigBottomBar";
 import { AgentConfigHeader } from "@/components/dashboard/AgentConfigHeader";
 import { AgentConfigureForm } from "@/components/dashboard/AgentConfigureForm";
+import { DashboardDetailSkeleton } from "@/components/ui/DashboardPageSkeleton";
+import { useToast } from "@/components/providers/ToastProvider";
 import { agentToFormValues, formValuesToPayload } from "@/lib/agent-form";
 import type { AgentFormValues } from "@/components/dashboard/AgentConfigureForm";
 import { apiFetch } from "@/lib/api-client";
@@ -15,12 +17,12 @@ const FORM_ID = "agent-config-form";
 export default function EditAgentPage() {
   const params = useParams();
   const router = useRouter();
+  const { showError, showSuccess } = useToast();
   const agentId = params.id as string;
 
   const [values, setValues] = useState<AgentFormValues | null>(null);
   const [saving, setSaving] = useState(false);
   const [loading, setLoading] = useState(true);
-  const [error, setError] = useState("");
 
   useEffect(() => {
     let active = true;
@@ -29,9 +31,9 @@ export default function EditAgentPage() {
       if (res.ok) {
         const agent = res.data.agents.find((a) => a.id === agentId);
         if (agent) setValues(agentToFormValues(agent));
-        else setError("Agent not found");
+        else showError("Agent not found");
       } else {
-        setError(res.error);
+        showError(res.error);
       }
       setLoading(false);
     });
@@ -43,7 +45,6 @@ export default function EditAgentPage() {
   async function saveAgent() {
     if (!values) return;
     setSaving(true);
-    setError("");
     const res = await apiFetch<{ agent: Agent }>("/api/agents", {
       method: "PATCH",
       headers: { "Content-Type": "application/json" },
@@ -53,9 +54,10 @@ export default function EditAgentPage() {
 
     if (res.ok) {
       setValues(agentToFormValues(res.data.agent));
+      showSuccess("Agent saved");
       return;
     }
-    setError(res.error);
+    showError(res.error);
   }
 
   async function handleSubmit(e: React.FormEvent) {
@@ -64,15 +66,13 @@ export default function EditAgentPage() {
   }
 
   if (loading) {
-    return (
-      <div className="dashboard-container py-12 text-on-primary-container">Loading agent…</div>
-    );
+    return <DashboardDetailSkeleton />;
   }
 
   if (!values) {
     return (
       <div className="dashboard-container py-12">
-        <p className="text-error">{error || "Agent not found"}</p>
+        <p className="text-error">Agent not found</p>
         <button
           type="button"
           onClick={() => router.push("/dashboard/agents")}
@@ -88,7 +88,6 @@ export default function EditAgentPage() {
     <div className="pb-36">
       <AgentConfigHeader title="Configure Agent" onSave={() => void saveAgent()} saving={saving} />
       <main className="dashboard-container mx-auto max-w-2xl pt-4">
-        {error && <p className="mb-4 text-sm text-error">{error}</p>}
         <AgentConfigureForm
           formId={FORM_ID}
           agentId={agentId}
