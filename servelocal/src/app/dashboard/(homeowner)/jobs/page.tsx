@@ -4,6 +4,7 @@ import { cityName } from "@/lib/constants";
 import { getServiceCategories } from "@/lib/data";
 import { getUserServiceRequests, groupRequestsByStatus } from "@/lib/data/requests";
 import { createClient } from "@/lib/supabase/server";
+import { getServerAuthUser } from "@/lib/supabase/get-server-user";
 
 type Tab = "all" | "open" | "in-progress" | "completed";
 
@@ -14,9 +15,7 @@ export default async function JobsPage({
 }) {
   const { tab = "all" } = await searchParams;
   const supabase = await createClient();
-  const {
-    data: { user },
-  } = supabase ? await supabase.auth.getUser() : { data: { user: null } };
+  const user = await getServerAuthUser();
 
   const [requests, categories] = await Promise.all([
     getUserServiceRequests(user?.id ?? ""),

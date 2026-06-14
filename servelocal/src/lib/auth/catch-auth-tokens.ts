@@ -1,6 +1,11 @@
 import type { NextRequest } from "next/server";
 
-const AUTH_HANDLER_PREFIXES = ["/auth/confirm", "/auth/callback", "/auth/after-login"];
+const AUTH_HANDLER_PREFIXES = [
+  "/auth/confirm",
+  "/auth/callback",
+  "/auth/after-login",
+  "/auth/auth-code-error",
+];
 
 export function isAuthHandlerPath(pathname: string) {
   return AUTH_HANDLER_PREFIXES.some((prefix) => pathname.startsWith(prefix));

@@ -3,6 +3,7 @@ import { redirect } from "next/navigation";
 import { HomeownerOnboardingWizard } from "@/components/homeowner/HomeownerOnboardingWizard";
 import { pageMetadata } from "@/lib/seo";
 import { createClient } from "@/lib/supabase/server";
+import { getServerAuthUser } from "@/lib/supabase/get-server-user";
 import { getUserProfile } from "@/lib/user-profiles";
 
 export const metadata: Metadata = pageMetadata({
@@ -13,9 +14,7 @@ export const metadata: Metadata = pageMetadata({
 
 export default async function HomeownerOnboardingPage() {
   const supabase = await createClient();
-  const {
-    data: { user },
-  } = supabase ? await supabase.auth.getUser() : { data: { user: null } };
+  const user = await getServerAuthUser();
 
   if (!user) redirect("/login");
 

@@ -9,6 +9,7 @@ import {
   SIGNUP_CONFIRM_EMAIL_MESSAGE,
   signUpAccount,
 } from "@/lib/auth/signup-client";
+import { useSubmitGuard } from "@/lib/auth/submit-guard";
 import { useForm } from "react-hook-form";
 import { Button } from "@/components/ui/Button";
 import { Input } from "@/components/ui/Input";
@@ -21,6 +22,7 @@ export function HomeownerSignupForm() {
   const [error, setError] = useState<string | null>(null);
   const [info, setInfo] = useState<string | null>(null);
   const [completed, setCompleted] = useState(false);
+  const guardSubmit = useSubmitGuard();
 
   const {
     register,
@@ -37,41 +39,46 @@ export function HomeownerSignupForm() {
 
   async function onSubmit(data: HomeownerSignupData) {
     if (completed) return;
-    setError(null);
-    setInfo(null);
-    const supabase = createClient();
 
-    const result = await signUpAccount(supabase, {
-      email: data.email,
-      password: data.password,
-      metadata: { role: "homeowner", display_name: data.name, city: data.city },
-      fallbackOrigin: typeof window !== "undefined" ? window.location.origin : undefined,
+    const ran = await guardSubmit(async () => {
+      setError(null);
+      setInfo(null);
+      const supabase = createClient();
+
+      const result = await signUpAccount(supabase, {
+        email: data.email,
+        password: data.password,
+        metadata: { role: "homeowner", display_name: data.name, city: data.city },
+        fallbackOrigin: typeof window !== "undefined" ? window.location.origin : undefined,
+      });
+
+      if (result.status === "error") {
+        setError(result.message);
+        return;
+      }
+
+      if (result.status === "already_registered") {
+        setCompleted(true);
+        setInfo(SIGNUP_ALREADY_REGISTERED_MESSAGE);
+        return;
+      }
+
+      if (result.status === "confirm_email") {
+        setCompleted(true);
+        setInfo(SIGNUP_CONFIRM_EMAIL_MESSAGE);
+        return;
+      }
+
+      await fetch("/api/user-profile", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ role: "homeowner", display_name: data.name, phone: null }),
+      });
+
+      await redirectAfterAuth("/auth/after-login");
     });
 
-    if (result.status === "error") {
-      setError(result.message);
-      return;
-    }
-
-    if (result.status === "already_registered") {
-      setCompleted(true);
-      setInfo(SIGNUP_ALREADY_REGISTERED_MESSAGE);
-      return;
-    }
-
-    if (result.status === "confirm_email") {
-      setCompleted(true);
-      setInfo(SIGNUP_CONFIRM_EMAIL_MESSAGE);
-      return;
-    }
-
-    await fetch("/api/user-profile", {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ role: "homeowner", display_name: data.name, phone: null }),
-    });
-
-    await redirectAfterAuth("/auth/after-login");
+    if (ran === "skipped") return;
   }
 
   return (

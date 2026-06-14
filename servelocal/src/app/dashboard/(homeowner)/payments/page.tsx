@@ -3,6 +3,7 @@ import { Badge } from "@/components/ui/Badge";
 import { getUserBookings, isPaidBooking } from "@/lib/data/bookings";
 import type { PaymentStatus } from "@/lib/types";
 import { createClient } from "@/lib/supabase/server";
+import { getServerAuthUser } from "@/lib/supabase/get-server-user";
 
 function paymentLabel(status: PaymentStatus) {
   if (status === "released") return "Paid";
@@ -19,9 +20,7 @@ function paymentVariant(status: PaymentStatus): "success" | "orange" | "default"
 
 export default async function PaymentsPage() {
   const supabase = await createClient();
-  const {
-    data: { user },
-  } = supabase ? await supabase.auth.getUser() : { data: { user: null } };
+  const user = await getServerAuthUser();
 
   const bookings = user ? await getUserBookings(user.id) : [];
   const paidBookings = bookings.filter(isPaidBooking);

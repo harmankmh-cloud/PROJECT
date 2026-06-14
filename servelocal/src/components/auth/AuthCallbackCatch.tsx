@@ -1,25 +1,36 @@
 "use client";
 
-import { useEffect } from "react";
+import { useEffect, useRef } from "react";
 import {
   authConfirmUrlFromSearch,
   hasAuthCallbackParams,
   isAuthHandlerPath,
 } from "@/lib/auth/catch-auth-tokens";
 
+const CONFIRM_FORWARD_KEY = "servelocal:auth-confirm-forward";
+
 /**
  * Supabase sometimes redirects email confirmations to Site URL (/) instead of
- * /auth/confirm when redirect URLs are misconfigured. Catch tokens on any page
- * and forward to the server handler, or set session from hash tokens client-side.
+ * /auth/confirm when redirect URLs are misconfigured. Forward once — never
+ * re-hit verify from client effects (single-use tokens).
  */
 export function AuthCallbackCatch() {
+  const ran = useRef(false);
+
   useEffect(() => {
+    if (ran.current) return;
+    ran.current = true;
+
     const { pathname, search, hash, origin } = window.location;
     if (isAuthHandlerPath(pathname)) return;
 
     const query = new URLSearchParams(search);
 
     if (hasAuthCallbackParams(query)) {
+      // sessionStorage guard: Strict Mode double-mount must not forward twice.
+      const dedupeKey = `${CONFIRM_FORWARD_KEY}:${search}`;
+      if (sessionStorage.getItem(dedupeKey)) return;
+      sessionStorage.setItem(dedupeKey, "1");
       window.location.replace(authConfirmUrlFromSearch(origin, query));
       return;
     }
@@ -41,12 +52,12 @@ export function AuthCallbackCatch() {
           refresh_token: refreshToken,
         });
         if (error) {
-          window.location.replace("/login?error=auth_failed");
+          window.location.replace("/auth/auth-code-error?reason=auth_failed");
           return;
         }
         window.location.replace("/auth/after-login");
       } catch {
-        window.location.replace("/login?error=auth_failed");
+        window.location.replace("/auth/auth-code-error?reason=auth_failed");
       }
     })();
   }, []);

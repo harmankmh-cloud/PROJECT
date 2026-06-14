@@ -10,6 +10,7 @@ import {
   SIGNUP_CONFIRM_EMAIL_MESSAGE,
   signUpAccount,
 } from "@/lib/auth/signup-client";
+import { useSubmitGuard } from "@/lib/auth/submit-guard";
 import { createClient, isSupabaseConfigured } from "@/lib/supabase/client";
 
 export function AuthForm({ mode }: { mode: "login" | "signup" }) {
@@ -18,6 +19,7 @@ export function AuthForm({ mode }: { mode: "login" | "signup" }) {
   const [termsAccepted, setTermsAccepted] = useState(false);
   const [loading, setLoading] = useState(false);
   const [completed, setCompleted] = useState(false);
+  const guardSubmit = useSubmitGuard();
   const [error, setError] = useState("");
   const [info, setInfo] = useState("");
 
@@ -32,65 +34,68 @@ export function AuthForm({ mode }: { mode: "login" | "signup" }) {
   async function handleSubmit(e: React.FormEvent) {
     e.preventDefault();
     if (completed) return;
-    setLoading(true);
-    setError("");
-    setInfo("");
 
-    if (mode === "signup" && !termsAccepted) {
-      setError("Please accept the Terms and Privacy Policy to continue.");
-      setLoading(false);
-      return;
-    }
+    const ran = await guardSubmit(async () => {
+      setLoading(true);
+      setError("");
+      setInfo("");
 
-    if (password.length < 8) {
-      setError("Password must be at least 8 characters.");
-      setLoading(false);
-      return;
-    }
-
-    try {
-      const supabase = createClient();
-
-      if (mode === "signup") {
-        const result = await signUpAccount(supabase, {
-          email: email.trim(),
-          password,
-          metadata: {},
-          fallbackOrigin: typeof window !== "undefined" ? window.location.origin : undefined,
-        });
-
-        if (result.status === "error") {
-          throw new Error(result.message);
-        }
-
-        if (result.status === "already_registered") {
-          setCompleted(true);
-          setInfo(SIGNUP_ALREADY_REGISTERED_MESSAGE);
-          return;
-        }
-
-        if (result.status === "confirm_email") {
-          setCompleted(true);
-          setInfo(SIGNUP_CONFIRM_EMAIL_MESSAGE);
-          return;
-        }
-
-        await redirectAfterAuth("/auth/after-login");
+      if (mode === "signup" && !termsAccepted) {
+        setError("Please accept the Terms and Privacy Policy to continue.");
         return;
       }
 
-      const result = await supabase.auth.signInWithPassword({
-        email: email.trim(),
-        password,
-      });
-      if (result.error) throw result.error;
+      if (password.length < 8) {
+        setError("Password must be at least 8 characters.");
+        return;
+      }
 
-      await redirectAfterAuth("/auth/after-login");
-    } catch (err) {
-      setError(friendlyAuthError(err instanceof Error ? err.message : "Authentication failed"));
-    } finally {
-      setLoading(false);
-    }
+      try {
+        const supabase = createClient();
+
+        if (mode === "signup") {
+          const result = await signUpAccount(supabase, {
+            email: email.trim(),
+            password,
+            metadata: {},
+            fallbackOrigin: typeof window !== "undefined" ? window.location.origin : undefined,
+          });
+
+          if (result.status === "error") {
+            throw new Error(result.message);
+          }
+
+          if (result.status === "already_registered") {
+            setCompleted(true);
+            setInfo(SIGNUP_ALREADY_REGISTERED_MESSAGE);
+            return;
+          }
+
+          if (result.status === "confirm_email") {
+            setCompleted(true);
+            setInfo(SIGNUP_CONFIRM_EMAIL_MESSAGE);
+            return;
+          }
+
+          await redirectAfterAuth("/auth/after-login");
+          return;
+        }
+
+        const result = await supabase.auth.signInWithPassword({
+          email: email.trim(),
+          password,
+        });
+        if (result.error) throw result.error;
+
+        await redirectAfterAuth("/auth/after-login");
+      } catch (err) {
+        setError(friendlyAuthError(err instanceof Error ? err.message : "Authentication failed"));
+      } finally {
+        setLoading(false);
+      }
+    });
+
+    if (ran === "skipped") return;
   }
 
   async function handleForgotPassword() {

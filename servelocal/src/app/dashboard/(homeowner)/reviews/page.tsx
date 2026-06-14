@@ -2,13 +2,12 @@ import Link from "next/link";
 import { ShimmerButton } from "@/components/ui/ShimmerButton";
 import { getPendingReviewBookings } from "@/lib/data/bookings";
 import { createClient } from "@/lib/supabase/server";
+import { getServerAuthUser } from "@/lib/supabase/get-server-user";
 import { getUserProfile } from "@/lib/user-profiles";
 
 export default async function ReviewsPage() {
   const supabase = await createClient();
-  const {
-    data: { user },
-  } = supabase ? await supabase.auth.getUser() : { data: { user: null } };
+  const user = await getServerAuthUser();
 
   const profile = user ? await getUserProfile(user.id) : null;
   const pending = user

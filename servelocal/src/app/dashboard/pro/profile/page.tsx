@@ -3,12 +3,11 @@ import { redirect } from "next/navigation";
 import { ProProfileEditor } from "@/components/dashboard/ProProfileEditor";
 import { getProvidersForUser } from "@/lib/data";
 import { createClient } from "@/lib/supabase/server";
+import { getServerAuthUser } from "@/lib/supabase/get-server-user";
 
 export default async function ProProfilePage() {
   const supabase = await createClient();
-  const {
-    data: { user },
-  } = supabase ? await supabase.auth.getUser() : { data: { user: null } };
+  const user = await getServerAuthUser();
   if (!user) redirect("/login");
 
   const listings = await getProvidersForUser(user.id);

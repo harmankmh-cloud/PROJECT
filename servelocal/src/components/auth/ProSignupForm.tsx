@@ -9,6 +9,7 @@ import {
   SIGNUP_CONFIRM_EMAIL_MESSAGE,
   signUpAccount,
 } from "@/lib/auth/signup-client";
+import { useSubmitGuard } from "@/lib/auth/submit-guard";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
 import { Button } from "@/components/ui/Button";
@@ -25,6 +26,7 @@ export function ProSignupForm() {
   const [error, setError] = useState<string | null>(null);
   const [info, setInfo] = useState<string | null>(null);
   const [completed, setCompleted] = useState(false);
+  const guardSubmit = useSubmitGuard();
 
   const {
     register,
@@ -40,41 +42,46 @@ export function ProSignupForm() {
 
   async function onSubmit(data: ProSignupData) {
     if (completed) return;
-    setError(null);
-    setInfo(null);
-    const supabase = createClient();
 
-    const result = await signUpAccount(supabase, {
-      email: data.email,
-      password: data.password,
-      metadata: { role: "pro", display_name: data.name, city: data.city },
-      fallbackOrigin: typeof window !== "undefined" ? window.location.origin : undefined,
+    const ran = await guardSubmit(async () => {
+      setError(null);
+      setInfo(null);
+      const supabase = createClient();
+
+      const result = await signUpAccount(supabase, {
+        email: data.email,
+        password: data.password,
+        metadata: { role: "pro", display_name: data.name, city: data.city },
+        fallbackOrigin: typeof window !== "undefined" ? window.location.origin : undefined,
+      });
+
+      if (result.status === "error") {
+        setError(result.message);
+        return;
+      }
+
+      if (result.status === "already_registered") {
+        setCompleted(true);
+        setInfo(SIGNUP_ALREADY_REGISTERED_MESSAGE);
+        return;
+      }
+
+      if (result.status === "confirm_email") {
+        setCompleted(true);
+        setInfo(SIGNUP_CONFIRM_EMAIL_MESSAGE);
+        return;
+      }
+
+      await fetch("/api/user-profile", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ role: "pro", display_name: data.name }),
+      });
+
+      await redirectAfterAuth("/auth/after-login");
     });
 
-    if (result.status === "error") {
-      setError(result.message);
-      return;
-    }
-
-    if (result.status === "already_registered") {
-      setCompleted(true);
-      setInfo(SIGNUP_ALREADY_REGISTERED_MESSAGE);
-      return;
-    }
-
-    if (result.status === "confirm_email") {
-      setCompleted(true);
-      setInfo(SIGNUP_CONFIRM_EMAIL_MESSAGE);
-      return;
-    }
-
-    await fetch("/api/user-profile", {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ role: "pro", display_name: data.name }),
-    });
-
-    await redirectAfterAuth("/auth/after-login");
+    if (ran === "skipped") return;
   }
 
   return (

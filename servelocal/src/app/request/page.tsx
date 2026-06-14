@@ -6,6 +6,7 @@ import { FadeUp } from "@/components/motion/FadeUp";
 import { getServiceCategories } from "@/lib/data";
 import { pageMetadata } from "@/lib/seo";
 import { createClient } from "@/lib/supabase/server";
+import { getServerAuthUser } from "@/lib/supabase/get-server-user";
 import { isSupabaseConfigured } from "@/lib/supabase/config";
 
 export const metadata: Metadata = pageMetadata({
@@ -38,9 +39,7 @@ export default async function RequestPage({
   if (isSupabaseConfigured()) {
     const supabase = await createClient();
     if (supabase) {
-      const {
-        data: { user },
-      } = await supabase.auth.getUser();
+      const user = await getServerAuthUser();
       if (user) {
         isLoggedIn = true;
         defaultEmail = defaultEmail || (user.email ?? "");
