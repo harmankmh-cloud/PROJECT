@@ -30,6 +30,7 @@ cd voiceagent && node scripts/dns-audit.mjs --fix   # when VERCEL_TOKEN is set
 | GreetQ      | `voiceagent`   | `greetq.com` (primary), `www.greetq.com` → apex, `intellivo.ca` → `greetq.com`, `www.intellivo.ca` → `greetq.com` |
 | RateLocal   | `project`      | `ratelocal.ca`, `www.ratelocal.ca` → apex |
 | ServeLocal  | `project-pqhe` | `servelocal.ca`, `www.servelocal.ca` → apex |
+| Route Max   | `route-max` | `route-max.vercel.app` (production) |
 
 ## Cloudflare records
 
