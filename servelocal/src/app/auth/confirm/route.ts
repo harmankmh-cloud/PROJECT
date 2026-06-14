@@ -1,17 +1,13 @@
 import { type EmailOtpType } from "@supabase/supabase-js";
 import { NextRequest, NextResponse } from "next/server";
-import { buildAfterLoginRedirect, isEmailOtpType, resolvePostAuthRedirect } from "@/lib/auth/post-auth-redirect";
-import { createClient } from "@/lib/supabase/server";
+import { isEmailOtpType, resolvePostAuthRedirect } from "@/lib/auth/post-auth-redirect";
+import { createAuthRouteHandlerClient } from "@/lib/supabase/route-handler";
 import { isSupabaseConfigured } from "@/lib/supabase/config";
 
 /**
  * Server-side email / OTP link verification.
- * Sets session cookies via the SSR client, then 302 redirects so the browser
- * persists cookies before the next page load (avoids stale client router state).
- *
- * Supports:
- * - token_hash + type (email template / OTP links)
- * - code (PKCE flow — same as /auth/callback)
+ * Sets session cookies on the redirect response, then 302 so the browser
+ * persists cookies before /auth/after-login runs.
  */
 export async function GET(request: NextRequest) {
   const { searchParams, origin } = new URL(request.url);
@@ -24,10 +20,12 @@ export async function GET(request: NextRequest) {
     return NextResponse.redirect(`${origin}/login?error=not_configured`);
   }
 
-  const supabase = await createClient();
-  if (!supabase) {
+  const auth = createAuthRouteHandlerClient(request);
+  if (!auth) {
     return NextResponse.redirect(`${origin}/login?error=auth_failed`);
   }
+
+  const { supabase, redirectWithSession } = auth;
 
   // PKCE: ?code=... (some Supabase projects send this to the confirm redirect URL)
   if (code) {
@@ -36,8 +34,8 @@ export async function GET(request: NextRequest) {
       console.error("[auth/confirm] exchangeCodeForSession failed:", error.message);
       return NextResponse.redirect(`${origin}/login?error=auth_failed`);
     }
-    const target = await resolvePostAuthRedirect(origin, next);
-    return NextResponse.redirect(target);
+    const target = await resolvePostAuthRedirect(origin, next, supabase);
+    return redirectWithSession(target);
   }
 
   // Email OTP / magic link: ?token_hash=...&type=signup|email|recovery|...
@@ -52,8 +50,8 @@ export async function GET(request: NextRequest) {
       return NextResponse.redirect(`${origin}/login?error=verification_failed`);
     }
 
-    const target = await resolvePostAuthRedirect(origin, next);
-    return NextResponse.redirect(target);
+    const target = await resolvePostAuthRedirect(origin, next, supabase);
+    return redirectWithSession(target);
   }
 
   return NextResponse.redirect(`${origin}/login?error=invalid_link`);
