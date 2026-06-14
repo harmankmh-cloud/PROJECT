@@ -6,7 +6,7 @@
       "cwd": "${workspaceFolder}"
     },
     "supabase": {
-      "url": "https://mcp.supabase.com/mcp"
+      "url": "https://mcp.supabase.com/mcp?project_ref=otnddwopphhxstteqizw"
     },
     "figma": {
       "url": "https://mcp.figma.com/mcp"
