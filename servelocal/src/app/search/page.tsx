@@ -1,125 +1,182 @@
+import type { Metadata } from "next";
 import Link from "next/link";
-import { SiteFooter } from "@/components/SiteFooter";
-import { SiteHeader } from "@/components/SiteHeader";
-import { ProviderCard } from "@/components/ProviderCard";
-import { SearchBar } from "@/components/SearchBar";
-import { TRADE_CITIES } from "@/lib/constants";
+import { Suspense } from "react";
+import { MarketingPageShell } from "@/components/layout/MarketingPageShell";
+import { FilterSidebar } from "@/components/search/FilterSidebar";
+import { SearchSplitView } from "@/components/search/SearchSplitView";
+import { FadeUp } from "@/components/motion/FadeUp";
+import { SearchBarWithSuggest } from "@/components/SearchBarWithSuggest";
 import { POPULAR_SEARCHES } from "@/lib/marketing-content";
-import { getApprovedProviders, getServiceCategories, searchProviders } from "@/lib/data";
+import { TRADE_CITIES } from "@/lib/constants";
+import { pageMetadata } from "@/lib/seo";
+import { getApprovedProviders, getServiceCategories } from "@/lib/data";
+
+type SearchParams = {
+  q?: string;
+  city?: string;
+  category?: string;
+  licensed?: string;
+  verified?: string;
+  emergency?: string;
+  minRating?: string;
+  fastResponse?: string;
+  instantBook?: string;
+  sort?: string;
+};
+
+export async function generateMetadata({
+  searchParams,
+}: {
+  searchParams: Promise<SearchParams>;
+}): Promise<Metadata> {
+  const params = await searchParams;
+  const query = params.q?.trim();
+  if (query) {
+    return pageMetadata({
+      title: `Search: ${query}`,
+      description: `Find local ${query} pros in Canada. Browse verified contractors on ServeLocal.`,
+      path: `/search?q=${encodeURIComponent(query)}`,
+    });
+  }
+  return pageMetadata({
+    title: "Search Local Pros in Canada",
+    description: "Search plumbers, electricians, cleaners, and more. Split map view with instant filters.",
+    path: "/search",
+  });
+}
+
+async function getFilteredResults(params: SearchParams) {
+  const hasFilters =
+    params.city ||
+    params.category ||
+    params.licensed === "1" ||
+    params.verified === "1" ||
+    params.emergency === "1" ||
+    params.q?.trim();
+
+  if (!hasFilters) return [];
+
+  let results = await getApprovedProviders({
+    query: params.q?.trim(),
+    citySlug: params.city,
+    categorySlug: params.category,
+    licensedOnly: params.licensed === "1",
+    verifiedOnly: params.verified === "1",
+    emergencyOnly: params.emergency === "1",
+    sort: (params.sort as "recommended") || "recommended",
+  });
+
+  if (params.minRating) {
+    const min = parseFloat(params.minRating);
+    results = results.filter((p) => (p.avg_rating ?? 0) >= min);
+  }
+  if (params.fastResponse === "1") {
+    results = results.filter((p) => p.response_time?.includes("hour"));
+  }
+  if (params.instantBook === "1") {
+    results = results.filter((p) => p.listing_tier === "premium" || p.featured);
+  }
+
+  return results;
+}
 
 export default async function SearchPage({
   searchParams,
 }: {
-  searchParams: Promise<{ q?: string }>;
+  searchParams: Promise<SearchParams>;
 }) {
-  const { q } = await searchParams;
-  const query = q?.trim() || "";
-  const [results, categories, featured] = await Promise.all([
-    query ? searchProviders(query) : Promise.resolve([]),
+  const params = await searchParams;
+  const query = params.q?.trim() || "";
+  const hasActiveSearch = Boolean(
+    query || params.city || params.category || params.licensed === "1" ||
+    params.verified === "1" || params.emergency === "1"
+  );
+
+  const [results, categories] = await Promise.all([
+    hasActiveSearch ? getFilteredResults(params) : Promise.resolve([]),
     getServiceCategories(),
-    query ? Promise.resolve([]) : getApprovedProviders({ sort: "recommended" }),
   ]);
 
+  const categoryNames = Object.fromEntries(categories.map((c) => [c.slug, c.name]));
+
   return (
-    <main className="mesh-bg min-h-screen">
-      <SiteHeader compact />
-      <div className="mx-auto max-w-6xl px-4 py-10 sm:px-8">
-        <h1 className="font-display text-3xl font-bold tracking-tight text-brand-950">Search local pros</h1>
-        <p className="mt-2 text-slate-600">Browse categories, popular searches, or find a business by name.</p>
-        <div className="mt-6 max-w-xl">
-          <SearchBar defaultValue={query} />
+    <MarketingPageShell>
+      <div className="border-b border-border px-4 py-8 sm:px-8">
+        <div className="mx-auto max-w-7xl">
+          <FadeUp>
+            <h1 className="font-display text-3xl font-black text-foreground sm:text-4xl">
+              Find Local Pros
+            </h1>
+            <p className="mt-2 text-muted">Search by service, city, or pro name</p>
+            <div className="mt-6 max-w-2xl">
+              <SearchBarWithSuggest defaultValue={query} />
+            </div>
+          </FadeUp>
         </div>
+      </div>
 
-        {!query && (
-          <>
-            <div className="mt-10">
-              <h2 className="font-semibold text-brand-950">Popular searches</h2>
-              <div className="mt-4 flex flex-wrap gap-2">
-                {POPULAR_SEARCHES.map((item) => (
-                  <Link key={item.href} href={item.href} className="chip-tag">
-                    {item.label}
-                  </Link>
-                ))}
-              </div>
-            </div>
-
-            <div className="mt-10">
-              <h2 className="font-semibold text-brand-950">Browse by service</h2>
-              <div className="mt-4 grid gap-3 sm:grid-cols-2 lg:grid-cols-4">
-                {categories.map((cat) => (
-                  <Link
-                    key={cat.slug}
-                    href={`/search?q=${encodeURIComponent(cat.name)}`}
-                    className="surface-card flex items-center gap-3 p-4 transition hover:border-teal-400/30"
-                  >
-                    <span className="text-2xl">{cat.icon}</span>
-                    <span className="font-medium text-brand-950">{cat.name}</span>
-                  </Link>
-                ))}
-              </div>
-            </div>
-
-            <div className="mt-10">
-              <h2 className="font-semibold text-brand-950">Browse by city</h2>
-              <div className="mt-4 grid gap-3 sm:grid-cols-2 lg:grid-cols-4">
-                {TRADE_CITIES.map((city) => (
-                  <Link key={city.slug} href={`/${city.slug}`} className="surface-card-hover p-4">
-                    <p className="font-semibold text-brand-950">{city.name}</p>
-                    <p className="text-xs text-slate-500">{city.region}</p>
-                  </Link>
-                ))}
-              </div>
-            </div>
-
-            {featured.length > 0 ? (
-              <div className="mt-12">
-                <h2 className="font-semibold text-brand-950">Featured pros</h2>
-                <div className="mt-4 grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
-                  {featured.slice(0, 6).map((p) => (
-                    <ProviderCard key={p.id} provider={p} />
-                  ))}
-                </div>
-              </div>
-            ) : (
-              <div className="surface-card mt-12 p-8 text-center">
-                <p className="font-medium text-brand-950">No listings yet — post a job to get started</p>
-                <p className="mt-2 text-sm text-slate-600">
-                  Tell us what you need and we&apos;ll match you as pros join your area.
-                </p>
-                <Link href="/request" className="btn-gold mt-4 inline-flex px-6 py-3">
-                  Post a job
+      <div className="mx-auto max-w-7xl px-4 py-10 sm:px-8">
+        {!hasActiveSearch ? (
+          <FadeUp>
+            <h2 className="font-semibold text-foreground">Popular searches</h2>
+            <div className="mt-4 flex flex-wrap gap-2">
+              {POPULAR_SEARCHES.map((item) => (
+                <Link
+                  key={item.href}
+                  href={item.href}
+                  className="rounded-full border border-border bg-surface px-3 py-1.5 text-sm text-muted transition hover:border-amber-400/50 hover:text-primary"
+                >
+                  {item.label}
                 </Link>
-              </div>
-            )}
-          </>
-        )}
-
-        {query && (
-          <>
-            <p className="mt-8 text-sm text-slate-500">
-              {results.length} result{results.length === 1 ? "" : "s"} for &quot;{query}&quot;
-            </p>
-            {results.length === 0 ? (
-              <div className="surface-card mt-6 p-8 text-center">
-                <p className="font-medium text-brand-950">No matches yet</p>
-                <p className="mt-2 text-sm text-slate-600">
-                  Post your job — we&apos;ll notify local pros as the directory grows.
-                </p>
-                <Link href="/request" className="btn-gold mt-4 inline-flex px-6 py-3">
-                  Post a job
+              ))}
+            </div>
+            <h2 className="mt-10 font-semibold text-foreground">Browse by service</h2>
+            <div className="mt-4 grid gap-3 sm:grid-cols-2 lg:grid-cols-4">
+              {categories.map((cat) => (
+                <Link
+                  key={cat.slug}
+                  href={`/services/${cat.slug}`}
+                  className="card-glow flex items-center gap-3 rounded-[14px] border border-border bg-surface p-4 transition hover:-translate-y-0.5"
+                >
+                  <span className="text-2xl">{cat.icon}</span>
+                  <span className="font-medium text-foreground">{cat.name}</span>
                 </Link>
-              </div>
-            ) : (
-              <div className="mt-6 grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
-                {results.map((p) => (
-                  <ProviderCard key={p.id} provider={p} />
-                ))}
-              </div>
-            )}
-          </>
+              ))}
+            </div>
+            <h2 className="mt-10 font-semibold text-foreground">Browse by city</h2>
+            <div className="mt-4 grid gap-3 sm:grid-cols-2 lg:grid-cols-4">
+              {TRADE_CITIES.map((city) => (
+                <Link
+                  key={city.slug}
+                  href={`/${city.slug}`}
+                  className="card-glow rounded-[14px] border border-border bg-surface p-4 transition hover:-translate-y-0.5"
+                >
+                  <p className="font-semibold text-foreground">{city.name}</p>
+                  <p className="text-xs text-muted">{city.region}</p>
+                </Link>
+              ))}
+            </div>
+          </FadeUp>
+        ) : (
+          <div className="grid gap-8 lg:grid-cols-[280px_1fr]">
+            <Suspense fallback={<div className="h-96 animate-pulse rounded-[14px] bg-surface" />}>
+              <FilterSidebar categories={categories} />
+            </Suspense>
+            <div>
+              <p className="mb-4 text-sm text-muted">
+                {results.length} result{results.length === 1 ? "" : "s"}
+                {query && <> for &quot;{query}&quot;</>}
+              </p>
+              <SearchSplitView
+                providers={results}
+                categoryNames={categoryNames}
+                citySlug={params.city}
+                query={query}
+              />
+            </div>
+          </div>
         )}
       </div>
-      <SiteFooter />
-    </main>
+    </MarketingPageShell>
   );
 }

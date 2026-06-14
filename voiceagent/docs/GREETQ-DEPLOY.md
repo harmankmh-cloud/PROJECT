@@ -20,15 +20,16 @@ Code defaults to **https://greetq.com** via `src/lib/brand.ts`. After merging th
 
 ## Cloudflare (DNS)
 
-`greetq.com` and `www.greetq.com` are attached to the **voiceagent** Vercel project. Add these records in Cloudflare (DNS only / grey cloud):
+`greetq.com` and `www.greetq.com` are attached to the **voiceagent** Vercel project. Records in Cloudflare (DNS only / grey cloud):
 
 | Type  | Name | Content |
 | ----- | ---- | ------- |
-| A     | `@`  | `216.150.1.1` |
-| A     | `@`  | `216.150.16.1` |
-| CNAME | `www`| `e6e937ce5d27f994.vercel-dns-017.com` |
+| A     | `@`  | `76.76.21.21` |
+| CNAME | `www`| `cname.vercel-dns.com` |
 
-`intellivo.ca` and `www.intellivo.ca` redirect to `greetq.com` on Vercel. Full DNS map: `docs/DNS.md`. Audit: `node scripts/dns-audit.mjs`.
+`intellivo.ca` and `www.intellivo.ca` redirect to `greetq.com` on Vercel. Full DNS map: `docs/DNS.md`.
+
+Audit: `cd voiceagent && node scripts/dns-audit.mjs --skip-vercel`
 
 SSL/TLS mode: **Full (strict)**.
 
@@ -55,6 +56,11 @@ Dashboard → Authentication → URL Configuration:
 
 Update redirect URIs to use `greetq.com` host (see `voiceagent/.env.example`).
 
-## Email (optional)
+## Email
 
-Set up `hello@greetq.com`, `sales@greetq.com`, `support@greetq.com` in your mail provider and update `src/lib/brand.ts` if addresses differ.
+| Direction | Provider | Address |
+| --------- | -------- | ------- |
+| **Outbound** (cold outreach, notifications) | Brevo | `hello@greetq.com` |
+| **Inbound** (replies) | Cloudflare Email Routing → Gmail | `hello@`, `sales@`, `support@greetq.com` → `harmankmh@gmail.com` |
+
+See **`docs/GREETQ_INBOX.md`** and `scripts/greetq-email-routing.mjs`. Brand addresses are in `src/lib/brand.ts`.

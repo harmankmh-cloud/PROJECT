@@ -1,5 +1,6 @@
 import "server-only";
 import { createHmac } from "crypto";
+import { notifyActivepiecesCallCompleted } from "@/lib/activepieces";
 import { createAdminClient } from "@/lib/supabase/admin";
 import type { CallIntelligence } from "./intelligence";
 
@@ -14,7 +15,7 @@ export async function dispatchCallWebhook(
   const admin = createAdminClient();
   const { data: org } = await admin
     .from("va_organizations")
-    .select("webhook_url, webhook_secret")
+    .select("webhook_url, webhook_secret, name")
     .eq("id", orgId)
     .maybeSingle();
 
@@ -37,4 +38,12 @@ export async function dispatchCallWebhook(
   }
 
   await fetch(url, { method: "POST", headers, body }).catch(() => {});
+
+  void notifyActivepiecesCallCompleted({
+    event: "call.completed",
+    orgId,
+    orgName: org?.name || "Unknown org",
+    call: payload.call,
+    analysis: payload.analysis,
+  });
 }

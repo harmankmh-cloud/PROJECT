@@ -1,51 +1,126 @@
-import Link from "next/link";
-import { BrandLogo } from "@/components/BrandLogo";
-import { BRAND } from "@/lib/brand";
+"use client";
 
-export function AuthMarketingPanel({ footer }: { footer: string }) {
-  const items = [
-    "24/7 AI receptionist on your line",
-    "Appointment booking + CRM updates",
-    "Warm transfer with full context",
-    "TCPA-ready outbound campaigns",
-  ];
+import Link from "next/link";
+import { AnimatePresence, motion } from "framer-motion";
+import { Sparkles } from "lucide-react";
+import { useEffect, useState } from "react";
+import { ClientOnly } from "@/components/ui/ClientOnly";
+import { Waveform } from "@/components/ui/Waveform";
+import { BRAND } from "@/lib/brand";
+import { TESTIMONIALS } from "@/lib/marketing-content";
+
+const AUTH_TESTIMONIALS = TESTIMONIALS.map((t) => ({
+  quote: t.quote,
+  author: t.name,
+  business: t.company,
+  location: "location" in t ? (t as { location?: string }).location : undefined,
+  caseStudyHref: "caseStudyHref" in t ? (t as { caseStudyHref?: string }).caseStudyHref : undefined,
+}));
+
+function TestimonialCard({
+  quote,
+  author,
+  business,
+  location,
+  caseStudyHref,
+}: {
+  quote: string;
+  author: string;
+  business: string;
+  location?: string;
+  caseStudyHref?: string;
+}) {
+  return (
+    <blockquote className="glass-card p-6">
+      <p className="text-lg text-text">&ldquo;{quote}&rdquo;</p>
+      <footer className="mt-4 flex items-center gap-3 text-sm text-muted">
+        <div
+          className="flex h-10 w-10 shrink-0 items-center justify-center rounded-full bg-violet-600/30 text-xs font-semibold text-violet-200"
+          aria-hidden
+        >
+          {author
+            .split(" ")
+            .map((p) => p[0])
+            .join("")
+            .slice(0, 2)}
+        </div>
+        <div>
+          <p>
+            — {author}, {business}
+            {location ? ` · ${location}` : ""}
+          </p>
+          {caseStudyHref ? (
+            <Link href={caseStudyHref} className="mt-1 inline-block font-semibold text-violet-400 hover:text-violet-300">
+              Read the full story →
+            </Link>
+          ) : null}
+        </div>
+      </footer>
+    </blockquote>
+  );
+}
+
+function RotatingTestimonials() {
+  const [index, setIndex] = useState(0);
+
+  useEffect(() => {
+    const t = setInterval(() => setIndex((i) => (i + 1) % AUTH_TESTIMONIALS.length), 5000);
+    return () => clearInterval(t);
+  }, []);
+
+  const t = AUTH_TESTIMONIALS[index];
 
   return (
-    <div className="sidebar-shell relative hidden w-[42%] max-w-md flex-col justify-between overflow-hidden p-10 2xl:max-w-xl 2xl:p-12 lg:flex">
-      <div className="hero-glow -left-24 top-0 h-80 w-80 bg-teal-500/20" />
-      <div className="hero-glow bottom-0 right-0 h-72 w-72 bg-violet-500/15" />
+    <AnimatePresence mode="wait">
+      <motion.div
+        key={index}
+        initial={{ opacity: 0, y: 12 }}
+        animate={{ opacity: 1, y: 0 }}
+        exit={{ opacity: 0, y: -12 }}
+        transition={{ duration: 0.35 }}
+      >
+        <TestimonialCard {...t} />
+      </motion.div>
+    </AnimatePresence>
+  );
+}
+
+export function AuthMarketingPanel({ footer }: { footer: string }) {
+  const first = AUTH_TESTIMONIALS[0];
+
+  return (
+    <div className="relative hidden w-[45%] flex-col justify-between overflow-hidden bg-gradient-to-br from-indigo-950 via-bg to-bg p-10 lg:flex">
+      <div className="hero-glow left-0 top-0 h-80 w-80 bg-primary/20" />
+      <div className="hero-glow bottom-0 right-0 h-72 w-72 bg-accent/10" />
+
       <div className="relative">
-        <BrandLogo href="/" light size="lg" />
-        <h2 className="font-display mt-10 text-4xl leading-tight text-white">
-          Never miss
-          <br />
-          <span className="bg-gradient-to-r from-teal-200 to-violet-300 bg-clip-text text-teal-200">
-            another call
-          </span>
-        </h2>
-        <p className="mt-4 max-w-sm text-sm leading-relaxed text-white/50">
-          {BRAND.name} gives local businesses enterprise-grade phone agents — not a voicemail black hole.
-        </p>
-      </div>
-      <ul className="relative space-y-3">
-        {items.map((item) => (
-          <li
-            key={item}
-            className="flex items-center gap-3 rounded-xl border border-white/[0.06] bg-white/[0.04] px-4 py-3 text-sm text-white/85"
-          >
-            <span className="flex h-8 w-8 shrink-0 items-center justify-center rounded-lg bg-gradient-to-br from-teal-500/30 to-violet-500/25 text-sm text-teal-300">
-              ✓
-            </span>
-            {item}
-          </li>
-        ))}
-      </ul>
-      <div className="relative flex items-center justify-between gap-4 text-xs text-white/35">
-        <p>{footer}</p>
-        <Link href="/help" className="text-teal-400/80 hover:text-teal-300 hover:underline">
-          Help →
+        <Link href="/" className="flex items-center gap-2 font-display text-xl text-text">
+          <Sparkles className="h-5 w-5 text-primary-glow" />
+          {BRAND.name}
         </Link>
+        <p className="mt-2 text-sm text-muted">AI receptionist for Canadian businesses</p>
       </div>
+
+      <div className="relative min-h-[160px]">
+        <ClientOnly fallback={<TestimonialCard {...first} />}>
+          <RotatingTestimonials />
+        </ClientOnly>
+      </div>
+
+      <div className="relative">
+        <Waveform />
+        <p className="mt-4 text-xs text-muted">{footer}</p>
+      </div>
+    </div>
+  );
+}
+
+/** Compact testimonial shown below auth forms on mobile. */
+export function AuthMobileTestimonial() {
+  const t = AUTH_TESTIMONIALS[0];
+  return (
+    <div className="mt-8 lg:hidden">
+      <TestimonialCard {...t} />
     </div>
   );
 }

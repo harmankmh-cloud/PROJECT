@@ -1,0 +1,1 @@
+# One email per line — already contacted (won't send again)

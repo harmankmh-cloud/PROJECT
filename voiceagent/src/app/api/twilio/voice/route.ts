@@ -6,6 +6,9 @@ import {
   twimlResponse,
   isSimpleTwilioVoiceMode,
 } from "@/lib/twilio";
+import { createAdminClient } from "@/lib/supabase/admin";
+import { canAcceptNewCall, type BillingOrg } from "@/lib/billing-gates";
+import { orgSelectFields } from "@/lib/billing-schema";
 import { ensureCallRecord, resolveVoiceContext } from "@/lib/twilio-voice-context";
 import { getFlowWelcomeGreeting } from "@/lib/voice-flow-runtime";
 import { getPublicAppUrl } from "@/lib/public-url";
@@ -25,6 +28,38 @@ export async function POST(request: NextRequest) {
     const lookupNumber = direction.toLowerCase().startsWith("outbound") ? from : to;
 
     const ctx = await resolveVoiceContext(lookupNumber);
+
+    if (ctx.orgId && ctx.orgId !== "default") {
+      try {
+        const admin = createAdminClient();
+        const { data: orgRow } = await admin
+          .from("va_organizations")
+          .select(
+            await orgSelectFields(
+              "id, plan, stripe_subscription_id, trial_minutes_remaining"
+            )
+          )
+          .eq("id", ctx.orgId)
+          .maybeSingle();
+        if (orgRow) {
+          const gate = await canAcceptNewCall(admin, {
+            ...(orgRow as BillingOrg),
+            id: ctx.orgId,
+          });
+          if (!gate.allowed) {
+            return twimlResponse(
+              buildErrorTwiml(
+                gate.reason ||
+                  "This line is not active. Please visit greetq.com to subscribe."
+              )
+            );
+          }
+        }
+      } catch {
+        // Fall through if admin client unavailable in dev
+      }
+    }
+
     const welcomeGreeting = await getFlowWelcomeGreeting(
       ctx.orgId,
       ctx.agentId,

@@ -2,9 +2,10 @@
 
 import Link from "next/link";
 import { useParams } from "next/navigation";
-import { useCallback, useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import { CallDetailHeader } from "@/components/dashboard/CallDetailHeader";
-import { Toast } from "@/components/dashboard/Toast";
+import { DashboardDetailSkeleton } from "@/components/ui/DashboardPageSkeleton";
+import { useToast } from "@/components/providers/ToastProvider";
 import { MaterialIcon } from "@/components/MaterialIcon";
 import { apiFetch } from "@/lib/api-client";
 import { formatDuration } from "@/lib/format-duration";
@@ -44,18 +45,16 @@ function formatCallDate(iso: string): string {
 
 export default function CallDetailPage() {
   const params = useParams();
+  const { showError, showSuccess } = useToast();
   const id = params.id as string;
   const [call, setCall] = useState<Call | null>(null);
   const [transcripts, setTranscripts] = useState<TranscriptRow[]>([]);
-  const [error, setError] = useState("");
   const [loading, setLoading] = useState(true);
   const [syncing, setSyncing] = useState(false);
-  const [toast, setToast] = useState<string | null>(null);
   const [recordings, setRecordings] = useState<
     Array<{ id: string; storage_url: string | null; created_at: string }>
   >([]);
-
-  const clearToast = useCallback(() => setToast(null), []);
+  const [loadError, setLoadError] = useState("");
 
   useEffect(() => {
     let active = true;
@@ -70,7 +69,8 @@ export default function CallDetailPage() {
         setTranscripts(res.data.transcripts || []);
         setRecordings(res.data.recordings || []);
       } else {
-        setError(res.error);
+        setLoadError(res.error);
+        showError(res.error);
       }
       setLoading(false);
     });
@@ -86,9 +86,9 @@ export default function CallDetailPage() {
     });
     setSyncing(false);
     if (res.ok) {
-      setToast(`Synced to ${res.data.provider || "CRM"}`);
+      showSuccess(`Synced to ${res.data.provider || "CRM"}`);
     } else {
-      setToast(res.error);
+      showError(res.error);
     }
   }
 
@@ -99,22 +99,20 @@ export default function CallDetailPage() {
       "No summary available";
     try {
       await navigator.clipboard.writeText(text);
-      setToast("Summary copied to clipboard");
+      showSuccess("Summary copied to clipboard");
     } catch {
-      setToast("Could not copy to clipboard");
+      showError("Could not copy to clipboard");
     }
   }
 
   if (loading) {
-    return (
-      <div className="dashboard-container py-12 text-on-primary-container">Loading call…</div>
-    );
+    return <DashboardDetailSkeleton />;
   }
 
-  if (error || !call) {
+  if (loadError || !call) {
     return (
       <div className="dashboard-container py-12">
-        <p className="text-error">{error || "Call not found"}</p>
+        <p className="text-error">{loadError || "Call not found"}</p>
         <Link href="/dashboard/calls" className="mt-4 inline-block text-sm font-semibold text-secondary hover:underline">
           Back to calls
         </Link>
@@ -265,7 +263,6 @@ export default function CallDetailPage() {
 
         <div className="h-20" />
       </main>
-      <Toast message={toast} onClear={clearToast} />
     </div>
   );
 }

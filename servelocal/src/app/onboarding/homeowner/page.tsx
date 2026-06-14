@@ -1,0 +1,33 @@
+import type { Metadata } from "next";
+import { redirect } from "next/navigation";
+import { HomeownerOnboardingWizard } from "@/components/homeowner/HomeownerOnboardingWizard";
+import { pageMetadata } from "@/lib/seo";
+import { createClient } from "@/lib/supabase/server";
+import { getUserProfile } from "@/lib/user-profiles";
+
+export const metadata: Metadata = pageMetadata({
+  title: "Homeowner Setup",
+  description: "Set your location and preferences on ServeLocal.",
+  path: "/onboarding/homeowner",
+});
+
+export default async function HomeownerOnboardingPage() {
+  const supabase = await createClient();
+  const {
+    data: { user },
+  } = supabase ? await supabase.auth.getUser() : { data: { user: null } };
+
+  if (!user) redirect("/login");
+
+  const profile = await getUserProfile(user.id);
+  if (profile?.onboarding_completed_at) redirect("/dashboard");
+  if (profile?.role === "pro") redirect("/dashboard/pro");
+
+  return (
+    <main className="min-h-screen bg-background px-4 py-10 sm:px-8">
+      <div className="mx-auto max-w-lg">
+        <HomeownerOnboardingWizard defaultCity={profile?.preferred_city_slug ?? undefined} />
+      </div>
+    </main>
+  );
+}

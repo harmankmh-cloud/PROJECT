@@ -73,7 +73,7 @@ export function SuggestionButton() {
         type="button"
         onClick={() => setOpen(true)}
         className="suggestion-fab"
-        aria-label="Send a suggestion"
+        aria-label="Send feedback"
       >
         <svg width="18" height="18" viewBox="0 0 24 24" fill="none" aria-hidden="true">
           <path
@@ -90,7 +90,7 @@ export function SuggestionButton() {
             strokeLinejoin="round"
           />
         </svg>
-        Suggestion
+        Feedback
       </button>
 
       {open && (

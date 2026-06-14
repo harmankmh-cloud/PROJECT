@@ -7,7 +7,11 @@ export function getTelnyxApiKey() {
 }
 
 export function isTelnyxConfigured() {
-  return Boolean(getTelnyxApiKey());
+  return Boolean(
+    getTelnyxApiKey() &&
+      process.env.TELNYX_CONNECTION_ID?.trim() &&
+      process.env.TELNYX_PHONE_NUMBER?.trim()
+  );
 }
 
 export function encodeClientState(data: Record<string, string>) {

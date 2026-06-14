@@ -8,10 +8,10 @@ Run an audit anytime:
 test -n "$VERCEL_TOKEN" && echo set || echo not-set
 
 # All products (RateLocal, ServeLocal, GreetQ) — needs VERCEL_TOKEN
-VERCEL_TOKEN=... node scripts/dns-audit.mjs
-VERCEL_TOKEN=... node scripts/dns-audit.mjs --fix
+node scripts/dns-audit.mjs
+node scripts/dns-audit.mjs --fix
 
-# GreetQ only — public DNS + optional Cloudflare zone; no token needed with --skip-vercel
+# GreetQ only — public DNS + optional Cloudflare zone; no token with --skip-vercel
 cd voiceagent && node scripts/dns-audit.mjs --skip-vercel
 cd voiceagent && node scripts/dns-audit.mjs --fix   # when VERCEL_TOKEN is set
 ```
@@ -30,50 +30,52 @@ cd voiceagent && node scripts/dns-audit.mjs --fix   # when VERCEL_TOKEN is set
 | GreetQ      | `voiceagent`   | `greetq.com` (primary), `www.greetq.com` → apex, `intellivo.ca` → `greetq.com`, `www.intellivo.ca` → `greetq.com` |
 | RateLocal   | `project`      | `ratelocal.ca`, `www.ratelocal.ca` → apex |
 | ServeLocal  | `project-pqhe` | `servelocal.ca`, `www.servelocal.ca` → apex |
+| Route Max   | `route-max` | `route-max.vercel.app` (production) |
 
-## Cloudflare records to add or fix
+## Cloudflare records
 
 Use **DNS only** (grey cloud) for apex and `www` unless you have a specific reason to proxy.
 
 SSL/TLS mode: **Full (strict)**.
 
-### greetq.com (action required)
+### greetq.com (live)
 
-No DNS records exist yet. Add in Cloudflare for zone `greetq.com`:
+| Type  | Name | Content | Status |
+| ----- | ---- | ------- | ------ |
+| A     | `@`  | `76.76.21.21` | OK |
+| CNAME | `www`| `cname.vercel-dns.com` | OK |
+| MX    | `@`  | `route1.mx.cloudflare.net` (24), `route2.mx.cloudflare.net` (67), `route3.mx.cloudflare.net` (34) | OK — Cloudflare Email Routing |
+| TXT   | `@`  | `v=spf1 include:_spf.mx.cloudflare.net include:spf.brevo.com ~all` | OK — inbound + Brevo outbound |
+| TXT   | `@`  | `brevo-code:…` | OK — Brevo sender verify |
+| TXT   | `cf2024-1._domainkey` | Cloudflare DKIM | OK — Email Routing |
 
-| Type  | Name | Content |
-| ----- | ---- | ------- |
-| A     | `@`  | `216.150.1.1` |
-| A     | `@`  | `216.150.16.1` |
-| CNAME | `www`| `e6e937ce5d27f994.vercel-dns-017.com` |
-
-Fallback if the project-specific CNAME is unavailable: `cname.vercel-dns.com`.
+**Inbox:** `hello@greetq.com`, `sales@greetq.com`, `support@greetq.com` → `harmankmh@gmail.com`. See `docs/GREETQ_INBOX.md`.
 
 ### intellivo.ca (legacy → GreetQ)
 
 | Type  | Name | Content | Status |
 | ----- | ---- | ------- | ------ |
 | A     | `@`  | `76.76.21.21` | OK — Vercel redirects to `greetq.com` |
-| CNAME | `www`| `cname.vercel-dns.com` | **Add** — Vercel redirects to `greetq.com` |
+| CNAME | `www`| `cname.vercel-dns.com` | OK — Vercel redirects to `greetq.com` |
 
 ### ratelocal.ca
 
 | Type  | Name | Content | Status |
 | ----- | ---- | ------- | ------ |
 | A     | `@`  | `216.198.79.1` | OK |
-| CNAME | `www`| `0bc33a526d82afa6.vercel-dns-017.com` | **Add** — Vercel redirects to apex |
+| CNAME | `www`| project-specific `*.vercel-dns-017.com` | verify via `node scripts/dns-audit.mjs` |
 
 ### servelocal.ca
 
 | Type  | Name | Content | Status |
 | ----- | ---- | ------- | ------ |
 | A     | `@`  | `216.198.79.1` | OK |
-| CNAME | `www`| `988a7d41f27e911d.vercel-dns-017.com` | OK |
+| CNAME | `www`| project-specific `*.vercel-dns-017.com` | verify via `node scripts/dns-audit.mjs` |
 
 ## After DNS changes
 
 1. Wait for propagation (usually minutes; up to 48h globally).
-2. Re-run `node scripts/dns-audit.mjs` — misconfigured domains should flip to OK.
+2. Re-run audits — misconfigured domains should flip to OK.
 3. For GreetQ, confirm `NEXT_PUBLIC_APP_URL=https://greetq.com` in Vercel env (see `voiceagent/docs/GREETQ-DEPLOY.md`).
 
 ## Vercel API (optional)

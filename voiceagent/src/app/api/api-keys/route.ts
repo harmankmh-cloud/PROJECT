@@ -2,6 +2,9 @@ import { NextRequest, NextResponse } from "next/server";
 import { createClient } from "@/lib/supabase/server";
 import { createAdminClient } from "@/lib/supabase/admin";
 import { getUserOrg } from "@/lib/auth";
+import { apiKeyCreateSchema } from "@/lib/api-schemas";
+import { isApiSession, requireApiSession } from "@/lib/api-session";
+import { parseJsonBody, readJsonBody } from "@/lib/parse-json-body";
 import { logAudit } from "@/lib/compliance/audit";
 import { canManageOrg, getOrgRole } from "@/lib/org-role";
 import { generateApiKey } from "@/lib/api-key-auth";
@@ -33,22 +36,21 @@ export async function GET() {
 }
 
 export async function POST(request: NextRequest) {
-  const supabase = await createClient();
-  const {
-    data: { user },
-  } = await supabase.auth.getUser();
-  if (!user) return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+  const session = await requireApiSession();
+  if (!isApiSession(session)) return session;
 
-  const org = await getUserOrg(user.id);
+  const org = await getUserOrg(session.user.id);
   if (!org) return NextResponse.json({ error: "No organization" }, { status: 400 });
 
-  const role = await getOrgRole(org.id, user.id);
+  const role = await getOrgRole(org.id, session.user.id);
   if (!canManageOrg(role)) {
     return NextResponse.json({ error: "Admin access required" }, { status: 403 });
   }
 
-  const body = await request.json();
-  const name = String(body.name || "API key").trim() || "API key";
+  const parsed = parseJsonBody(await readJsonBody(request), apiKeyCreateSchema);
+  if (!parsed.ok) return parsed.response;
+
+  const name = parsed.data.name;
   const { key, prefix, hash } = generateApiKey();
 
   const admin = createAdminClient();
@@ -62,7 +64,7 @@ export async function POST(request: NextRequest) {
 
   await logAudit({
     orgId: org.id,
-    userId: user.id,
+    userId: session.user.id,
     action: "api_key.created",
     resourceType: "api_key",
     resourceId: row.id,

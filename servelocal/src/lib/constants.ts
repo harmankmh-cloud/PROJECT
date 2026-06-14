@@ -1,4 +1,7 @@
 import type { ServiceCategory } from "@/lib/types";
+import { EXTENDED_COST_GUIDES, EXTENDED_SERVICE_CATEGORIES, SERVICE_SUBCATEGORIES } from "@/lib/extended-catalog";
+
+export { SERVICE_SUBCATEGORIES };
 
 export const SERVE_LOCAL = {
   name: "ServeLocal",
@@ -15,6 +18,10 @@ export const TRADE_CITIES = [
   { slug: "delta", name: "Delta", region: "Metro Vancouver" },
   { slug: "burnaby", name: "Burnaby", region: "Metro Vancouver" },
   { slug: "vancouver", name: "Vancouver", region: "Metro Vancouver" },
+  { slug: "richmond", name: "Richmond", region: "Metro Vancouver" },
+  { slug: "coquitlam", name: "Coquitlam", region: "Metro Vancouver" },
+  { slug: "maple-ridge", name: "Maple Ridge", region: "Fraser Valley" },
+  { slug: "kelowna", name: "Kelowna", region: "Okanagan" },
 ] as const;
 
 export type CitySlug = (typeof TRADE_CITIES)[number]["slug"];
@@ -33,10 +40,31 @@ export const DEFAULT_SERVICE_CATEGORIES: ServiceCategory[] = [
   { id: "default-roofer", slug: "roofer", name: "Roofer", icon: "🏠", sort_order: 6 },
   { id: "default-painter", slug: "painter", name: "Painter", icon: "🎨", sort_order: 7 },
   { id: "default-landscaper", slug: "landscaper", name: "Landscaping", icon: "🌿", sort_order: 8 },
+  ...EXTENDED_SERVICE_CATEGORIES,
 ];
 
 export function isValidCitySlug(slug: string | undefined): slug is CitySlug {
   return Boolean(slug && TRADE_CITIES.some((c) => c.slug === slug));
+}
+
+/** Adjacent cities for directory fallback when a market has zero listings. */
+export const NEARBY_CITIES: Record<string, string[]> = {
+  surrey: ["langley", "delta", "burnaby", "richmond"],
+  langley: ["surrey", "abbotsford", "maple-ridge", "mission"],
+  abbotsford: ["chilliwack", "langley", "mission"],
+  chilliwack: ["abbotsford", "mission", "langley"],
+  mission: ["abbotsford", "chilliwack", "maple-ridge", "langley"],
+  delta: ["surrey", "burnaby", "richmond", "vancouver"],
+  burnaby: ["vancouver", "coquitlam", "surrey", "delta"],
+  vancouver: ["burnaby", "richmond", "coquitlam", "delta"],
+  richmond: ["vancouver", "delta", "burnaby", "surrey"],
+  coquitlam: ["burnaby", "maple-ridge", "vancouver"],
+  "maple-ridge": ["coquitlam", "langley", "mission", "burnaby"],
+  kelowna: [],
+};
+
+export function nearbyCitySlugs(citySlug: string): string[] {
+  return NEARBY_CITIES[citySlug] ?? [];
 }
 
 export const HOW_IT_WORKS = [
@@ -75,15 +103,16 @@ export const LISTING_PLANS = [
   {
     id: "featured" as const,
     name: "Featured Pro",
-    priceLabel: "$49/mo",
-    setupLabel: "No setup fee",
-    monthlyLabel: "$49/month · $490/yr (2 months free)",
+    priceLabel: "$29/mo",
+    strikePrice: "$49/mo",
+    setupLabel: "Founding Pro",
+    monthlyLabel: "First 6 months · then $49/mo · cancel anytime",
     highlight: true,
     features: [
-      "Homepage & category featured spots",
+      "Job alerts when homeowners post in your trade + city",
+      "Top placement in search & category pages",
+      "Homepage featured spot",
       "Verified badge review by our team",
-      "Priority in search results",
-      "Response time & jobs completed stats",
       "Up to 3 portfolio photos",
       "No per-lead fees — ever",
     ],
@@ -92,8 +121,9 @@ export const LISTING_PLANS = [
     id: "premium" as const,
     name: "Premium Elite",
     priceLabel: "$99/mo",
-    setupLabel: "No setup fee",
-    monthlyLabel: "$99/month · $990/yr (2 months free)",
+    setupLabel: "Waitlist",
+    monthlyLabel: "Join waitlist — we're onboarding Featured pros first",
+    waitlistOnly: true,
     highlight: false,
     features: [
       "Top placement in your category",
@@ -199,6 +229,7 @@ export const COST_GUIDES: Record<
       { name: "Patio install", range: "$3,000–$12,000" },
     ],
   },
+  ...EXTENDED_COST_GUIDES,
 };
 
 export const TRUST_BADGES = [

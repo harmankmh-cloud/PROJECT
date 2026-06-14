@@ -3,6 +3,7 @@
 import { useState } from "react";
 
 import type { PlanKey } from "@/lib/plans";
+import { STRIPE_TRIAL_DAYS } from "@/lib/trial";
 
 export function SubscribeButton({
   plan,
@@ -58,7 +59,12 @@ export function SubscribeButton({
         disabled={!stripeReady || loading}
         className="btn-primary w-full text-sm disabled:opacity-50"
       >
-        {loading ? "Redirecting…" : label || `Subscribe to ${plan}`}
+        {loading
+          ? "Redirecting…"
+          : label ||
+            (currentPlan === "trial"
+              ? `Go live — ${STRIPE_TRIAL_DAYS}-day trial (${plan})`
+              : `Subscribe to ${plan}`)}
       </button>
       {!stripeReady && (
         <p className="mt-2 text-xs text-slate-text">Stripe price IDs required in env.</p>

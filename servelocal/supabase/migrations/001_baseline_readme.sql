@@ -1,0 +1,25 @@
+-- ServeLocal baseline migrations index
+-- Apply in order on a fresh Supabase project, OR run legacy scripts then 002+ for deltas.
+--
+-- Legacy manual scripts (pre-migrations):
+--   1. servelocal.sql
+--   2. premium.sql
+--   3. suggestions.sql
+--   4. guest-access.sql
+--   5. user-accounts.sql
+--   6. bookings.sql
+--   7. complete-features.sql
+--   8. pro-dashboard.sql
+--   9. saved-searches.sql
+--  10. extended-categories.sql
+--
+-- Numbered migrations (deltas / new environments):
+--   002_bookings_rls_fix.sql
+--   003_user_profiles_onboarding.sql
+--   004_schema_baseline.sql
+--   005_pro_job_leads_rls.sql
+--
+-- Verify bookings RLS after apply:
+--   select policyname, qual from pg_policies where tablename = 'bookings';
+
+select 1;

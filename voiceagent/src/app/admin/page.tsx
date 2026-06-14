@@ -1,6 +1,8 @@
 import { getPlatformTotals } from "@/lib/admin-data";
 import { BRAND } from "@/lib/brand";
 
+export const dynamic = "force-dynamic";
+
 export default async function AdminPage() {
   const totals = await getPlatformTotals();
 

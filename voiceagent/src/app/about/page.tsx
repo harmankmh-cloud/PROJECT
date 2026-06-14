@@ -1,7 +1,7 @@
 import type { Metadata } from "next";
 import Link from "next/link";
-import { MarketingFooter } from "@/components/MarketingFooter";
-import { MarketingHeader } from "@/components/MarketingHeader";
+import { LandingFooter } from "@/components/landing/LandingFooter";
+import { LandingNavbar } from "@/components/landing/LandingNavbar";
 import { SkipToContent } from "@/components/SkipToContent";
 import { BRAND } from "@/lib/brand";
 
@@ -15,8 +15,8 @@ export default function AboutPage() {
   return (
     <div className="dark-mesh-bg grid-pattern flex min-h-screen flex-col">
       <SkipToContent />
-      <MarketingHeader />
-      <main id="main-content" className="mx-auto max-w-3xl flex-1 px-6 py-16">
+      <LandingNavbar />
+      <main id="main-content" className="mx-auto max-w-3xl flex-1 px-6 pb-16 pt-24">
         <h1 className="font-display text-3xl text-ghost-white">About {BRAND.name}</h1>
         <p className="mt-3 text-sm text-slate-text">
           {BRAND.legalName} · {BRAND.location.label}
@@ -77,13 +77,13 @@ export default function AboutPage() {
             </Link>{" "}
             or{" "}
             <Link href="/signup" className="text-primary hover:underline">
-              start a free trial
+              get started free
             </Link>
             .
           </p>
         </div>
       </main>
-      <MarketingFooter />
+      <LandingFooter />
     </div>
   );
 }

@@ -2,6 +2,7 @@ import "server-only";
 import type { SupabaseClient } from "@supabase/supabase-js";
 import { analyzeCall } from "./intelligence";
 import { intelligenceToCallUpdate } from "./call-intelligence-persist";
+import { recordCallUsage } from "./usage-metering";
 
 const STALE_MS = 2 * 60 * 60 * 1000; // 2 hours
 
@@ -14,7 +15,7 @@ export async function reconcileStaleCalls(
 
   const { data: stale } = await admin
     .from("va_calls")
-    .select("id, org_id, created_at, ended_at, status, handoff_payload, transferred, from_number")
+    .select("id, org_id, created_at, ended_at, status, handoff_payload, transferred, from_number, is_sandbox")
     .eq("org_id", orgId)
     .is("ended_at", null)
     .lt("created_at", cutoff)
@@ -50,20 +51,12 @@ export async function reconcileStaleCalls(
       })
       .eq("id", call.id);
 
-    const { count } = await admin
-      .from("va_usage_events")
-      .select("id", { count: "exact", head: true })
-      .eq("call_id", call.id)
-      .eq("event_type", "voice_minute");
-
-    if (!count) {
-      await admin.from("va_usage_events").insert({
-        org_id: call.org_id,
-        call_id: call.id,
-        event_type: "voice_minute",
-        quantity: minutes,
-      });
-    }
+    await recordCallUsage(admin, {
+      orgId: call.org_id,
+      callId: call.id,
+      minutes,
+      isSandbox: Boolean(call.is_sandbox),
+    });
 
     closed++;
   }

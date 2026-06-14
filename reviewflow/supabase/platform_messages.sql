@@ -17,4 +17,11 @@ create index if not exists platform_messages_status_idx on platform_messages (st
 
 alter table platform_messages enable row level security;
 
--- No public policies — inserts go through API with service role
+-- Service-role API only — explicit deny for PostgREST clients (satisfies RLS linter)
+create policy "Deny anon access to platform_messages"
+  on platform_messages for all to anon
+  using (false) with check (false);
+
+create policy "Deny authenticated access to platform_messages"
+  on platform_messages for all to authenticated
+  using (false) with check (false);

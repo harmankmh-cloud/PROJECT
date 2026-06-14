@@ -1,0 +1,10 @@
+{
+  "name": "ratelocal-lead-scraper",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "discover": "node discover-nominatim.mjs --limit 2500 && node discover-yellowpages.mjs --pages 5 --limit 5000",
+    "scrape:batch": "node scrape-batch.mjs --input seeds/fraser-valley-discovered.txt --output leads-batch.csv",
+    "import": "node import-leads.mjs --input leads-batch.csv --mark-sent sent-yesterday.txt"
+  }
+}
