@@ -1,5 +1,6 @@
 import type { User } from "@supabase/supabase-js";
 import { parseUserProfile } from "@/lib/schemas/db/user-profile";
+import { createServiceClient } from "@/lib/supabase/admin";
 import { createUserDbClient } from "@/lib/supabase/user-db";
 import type { UserProfile, UserRole } from "@/lib/user-profiles";
 
@@ -53,6 +54,24 @@ export async function ensureUserProfileFromMetadata(user: User): Promise<UserPro
     .select("*")
     .maybeSingle();
 
-  if (error || !data) return null;
-  return parseUserProfile(data) as UserProfile | null;
+  if (!error && data) {
+    return parseUserProfile(data) as UserProfile | null;
+  }
+
+  // RLS insert can fail if policies were not applied — bootstrap via service role.
+  const admin = createServiceClient();
+  if (!admin) return null;
+
+  const { data: upserted, error: upsertError } = await admin
+    .from("user_profiles")
+    .upsert({ id: user.id, role, display_name: displayName }, { onConflict: "id" })
+    .select("*")
+    .maybeSingle();
+
+  if (upsertError || !upserted) {
+    console.error("[ensureUserProfileFromMetadata] upsert failed:", upsertError?.message ?? error?.message);
+    return null;
+  }
+
+  return parseUserProfile(upserted) as UserProfile | null;
 }

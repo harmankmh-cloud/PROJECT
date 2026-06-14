@@ -1,6 +1,6 @@
 import { isPlatformAdmin } from "@/lib/admin-auth";
 import { createClient } from "@/lib/supabase/server";
-import type { EmailOtpType } from "@supabase/supabase-js";
+import type { EmailOtpType, SupabaseClient } from "@supabase/supabase-js";
 
 /** Build redirect URL after session is established (profile bootstrap happens in after-login). */
 export function buildAfterLoginRedirect(origin: string, next?: string | null) {
@@ -11,8 +11,12 @@ export function buildAfterLoginRedirect(origin: string, next?: string | null) {
   return url.toString();
 }
 
-export async function resolvePostAuthRedirect(origin: string, next?: string | null) {
-  const supabase = await createClient();
+export async function resolvePostAuthRedirect(
+  origin: string,
+  next?: string | null,
+  existingClient?: SupabaseClient
+) {
+  const supabase = existingClient ?? (await createClient());
   if (!supabase) {
     return `${origin}/login?error=auth_failed`;
   }

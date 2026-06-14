@@ -1,10 +1,10 @@
-import { NextResponse } from "next/server";
+import { NextRequest, NextResponse } from "next/server";
 import { resolvePostAuthRedirect } from "@/lib/auth/post-auth-redirect";
-import { createClient } from "@/lib/supabase/server";
+import { createAuthRouteHandlerClient } from "@/lib/supabase/route-handler";
 import { isSupabaseConfigured } from "@/lib/supabase/config";
 
 /** PKCE OAuth / email confirmation via authorization code. */
-export async function GET(request: Request) {
+export async function GET(request: NextRequest) {
   const { searchParams, origin } = new URL(request.url);
   const code = searchParams.get("code");
   const next = searchParams.get("next");
@@ -17,10 +17,12 @@ export async function GET(request: Request) {
     return NextResponse.redirect(`${origin}/login?error=missing_code`);
   }
 
-  const supabase = await createClient();
-  if (!supabase) {
+  const auth = createAuthRouteHandlerClient(request);
+  if (!auth) {
     return NextResponse.redirect(`${origin}/login?error=auth_failed`);
   }
+
+  const { supabase, redirectWithSession } = auth;
 
   const { error } = await supabase.auth.exchangeCodeForSession(code);
   if (error) {
@@ -28,6 +30,6 @@ export async function GET(request: Request) {
     return NextResponse.redirect(`${origin}/login?error=auth_failed`);
   }
 
-  const target = await resolvePostAuthRedirect(origin, next);
-  return NextResponse.redirect(target);
+  const target = await resolvePostAuthRedirect(origin, next, supabase);
+  return redirectWithSession(target);
 }
