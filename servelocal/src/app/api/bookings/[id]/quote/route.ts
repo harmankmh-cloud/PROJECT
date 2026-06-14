@@ -19,7 +19,7 @@ export async function POST(
 
   try {
     const { action } = z.object({ action: z.enum(["accept", "decline"]) }).parse(await request.json());
-    const result = await updateBookingQuoteAction(id, user.id, user.email ?? undefined, action);
+    const result = await updateBookingQuoteAction(id, user.id, action);
     if (!result.ok) return NextResponse.json({ error: result.error }, { status: 400 });
     return NextResponse.json({ ok: true });
   } catch {

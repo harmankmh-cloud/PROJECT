@@ -23,7 +23,7 @@ export default async function PaymentsPage() {
     data: { user },
   } = supabase ? await supabase.auth.getUser() : { data: { user: null } };
 
-  const bookings = user ? await getUserBookings(user.id, user.email ?? undefined) : [];
+  const bookings = user ? await getUserBookings(user.id) : [];
   const paidBookings = bookings.filter(isPaidBooking);
 
   return (

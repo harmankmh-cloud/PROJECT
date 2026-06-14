@@ -17,8 +17,8 @@ export async function GET() {
 
   const [profile, requests, bookings, threads] = await Promise.all([
     getUserProfile(user.id),
-    getUserServiceRequests(user.id, user.email ?? undefined),
-    getUserBookings(user.id, user.email ?? undefined),
+    getUserServiceRequests(user.id),
+    getUserBookings(user.id),
     getUserMessageThreads(user.id),
   ]);
 

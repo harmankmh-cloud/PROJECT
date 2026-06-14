@@ -1,4 +1,6 @@
-import { createDbClient, createServiceClient } from "@/lib/supabase/admin";
+import { createServiceClient } from "@/lib/supabase/admin";
+import { createUserDbClient } from "@/lib/supabase/user-db";
+import { parseBooking } from "@/lib/schemas/db/booking";
 import type { Booking, BookingStatus, PaymentStatus } from "@/lib/types";
 
 export type BookingWithProvider = Booking & {
@@ -7,63 +9,53 @@ export type BookingWithProvider = Booking & {
 
 const BOOKING_SELECT = "*, service_providers(display_name, slug, category_slug)";
 
-export async function getUserBookings(userId: string, email?: string): Promise<BookingWithProvider[]> {
-  const admin = createServiceClient() ?? createDbClient();
-  if (!admin) return [];
+export async function getUserBookings(userId: string): Promise<BookingWithProvider[]> {
+  const ctx = await createUserDbClient();
+  if (!ctx || ctx.user.id !== userId) return [];
 
-  const { data: byUser } = await admin
+  const { data, error } = await ctx.supabase
     .from("bookings")
     .select(BOOKING_SELECT)
     .eq("user_id", userId)
     .order("created_at", { ascending: false });
 
-  if (byUser?.length) return byUser as BookingWithProvider[];
-
-  if (!email) return [];
-
-  const { data: byEmail } = await admin
-    .from("bookings")
-    .select(BOOKING_SELECT)
-    .eq("customer_email", email)
-    .order("created_at", { ascending: false });
-
-  return (byEmail || []) as BookingWithProvider[];
+  if (error || !data) return [];
+  return data.map(parseBooking).filter((b): b is BookingWithProvider => b !== null);
 }
 
-export async function getBookingById(
-  bookingId: string,
-  userId: string,
-  email?: string
-): Promise<BookingWithProvider | null> {
-  const admin = createServiceClient() ?? createDbClient();
-  if (!admin) return null;
+export async function getBookingById(bookingId: string, userId: string): Promise<BookingWithProvider | null> {
+  const ctx = await createUserDbClient();
+  if (!ctx || ctx.user.id !== userId) return null;
 
-  const { data } = await admin.from("bookings").select(BOOKING_SELECT).eq("id", bookingId).maybeSingle();
-  if (!data) return null;
+  const { data, error } = await ctx.supabase
+    .from("bookings")
+    .select(BOOKING_SELECT)
+    .eq("id", bookingId)
+    .maybeSingle();
 
-  const booking = data as BookingWithProvider;
-  if (booking.user_id === userId) return booking;
-  if (email && booking.customer_email.toLowerCase() === email.toLowerCase()) return booking;
-  return null;
+  if (error || !data) return null;
+  const booking = parseBooking(data);
+  if (!booking || booking.user_id !== userId) return null;
+  return booking as BookingWithProvider;
 }
 
 export async function updateBookingQuoteAction(
   bookingId: string,
   userId: string,
-  email: string | undefined,
   action: "accept" | "decline"
 ) {
-  const admin = createServiceClient() ?? createDbClient();
-  if (!admin) return { ok: false as const, error: "Not configured" };
+  const ctx = await createUserDbClient();
+  if (!ctx || ctx.user.id !== userId) return { ok: false as const, error: "Not configured" };
 
-  const booking = await getBookingById(bookingId, userId, email);
+  const booking = await getBookingById(bookingId, userId);
   if (!booking) return { ok: false as const, error: "Booking not found" };
 
   const status: BookingStatus = action === "accept" ? "confirmed" : "cancelled";
-  const { error } = await admin
+  const { error } = await ctx.supabase
     .from("bookings")
     .update({ status, updated_at: new Date().toISOString() })
-    .eq("id", bookingId);
+    .eq("id", bookingId)
+    .eq("user_id", userId);
 
   if (error) return { ok: false as const, error: error.message };
   return { ok: true as const };
@@ -106,14 +98,13 @@ export type PendingReviewItem = {
 
 export async function getPendingReviewBookings(
   userId: string,
-  email?: string,
   displayName?: string
 ): Promise<PendingReviewItem[]> {
-  const bookings = await getUserBookings(userId, email);
+  const bookings = await getUserBookings(userId);
   const completed = bookings.filter((b) => b.status === "completed");
   if (!completed.length) return [];
 
-  const admin = createDbClient();
+  const admin = createServiceClient();
   if (!admin) return [];
 
   const providerIds = [...new Set(completed.map((b) => b.provider_id))];
@@ -128,7 +119,7 @@ export async function getPendingReviewBookings(
     )
   );
 
-  const reviewerKey = (displayName || email || userId).toLowerCase();
+  const reviewerKey = (displayName || userId).toLowerCase();
 
   return completed
     .filter((b) => !reviewed.has(`${b.provider_id}:${reviewerKey}`))
@@ -142,21 +133,19 @@ export async function getPendingReviewBookings(
     }));
 }
 
-export async function getHomeownerDashboardCounts(userId: string, email?: string) {
+export async function getHomeownerDashboardCounts(userId: string) {
   const [bookings, threads, pendingReviews, requests] = await Promise.all([
-    getUserBookings(userId, email),
+    getUserBookings(userId),
     import("@/lib/features-data").then((m) => m.getUserMessageThreads(userId)),
-    getPendingReviewBookings(userId, email),
-    import("@/lib/data/requests").then((m) => m.getUserServiceRequests(userId, email)),
+    getPendingReviewBookings(userId),
+    import("@/lib/data/requests").then((m) => m.getUserServiceRequests(userId)),
   ]);
 
   const openQuotes = bookings.filter(
     (b) => b.status === "pending" || (b.status === "confirmed" && b.payment_status === "held")
   ).length;
 
-  const activeJobs = requests.filter(
-    (r) => r.status !== "completed" && r.status !== "closed"
-  ).length;
+  const activeJobs = requests.filter((r) => r.status !== "completed" && r.status !== "closed").length;
 
   return {
     openQuotes,

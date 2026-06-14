@@ -1,6 +1,6 @@
 import { NextResponse } from "next/server";
 import { z } from "zod";
-import { upsertUserProfile } from "@/lib/user-profiles";
+import { getUserProfile, upsertUserProfile } from "@/lib/user-profiles";
 import { createClient } from "@/lib/supabase/server";
 
 const bodySchema = z.object({
@@ -33,7 +33,18 @@ export async function POST(request: Request) {
     return NextResponse.json({ error: "Invalid body" }, { status: 400 });
   }
 
-  const result = await upsertUserProfile(user.id, parsed.data);
+  const existing = await getUserProfile(user.id);
+  const fields = { ...parsed.data };
+
+  if (existing?.role && fields.role && fields.role !== existing.role) {
+    return NextResponse.json({ error: "Role cannot be changed after signup" }, { status: 403 });
+  }
+
+  if (existing?.role) {
+    delete fields.role;
+  }
+
+  const result = await upsertUserProfile(user.id, fields);
   if (!result.ok) {
     return NextResponse.json({ error: result.error }, { status: 500 });
   }

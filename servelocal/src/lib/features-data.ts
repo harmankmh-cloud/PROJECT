@@ -1,4 +1,6 @@
 import { createDbClient, createServiceClient } from "@/lib/supabase/admin";
+import { createUserDbClient } from "@/lib/supabase/user-db";
+import { parseServiceProvider } from "@/lib/schemas/db";
 import type { ServiceProvider } from "@/lib/types";
 
 export type MessageThread = {
@@ -42,18 +44,18 @@ export type AvailabilitySlot = {
 };
 
 export async function getUserMessageThreads(userId: string, asPro = false) {
-  const admin = createDbClient();
-  if (!admin) return [];
+  const ctx = await createUserDbClient();
+  if (!ctx || ctx.user.id !== userId) return [];
 
   if (asPro) {
-    const { data: listings } = await admin
+    const { data: listings } = await ctx.supabase
       .from("service_providers")
       .select("id")
       .eq("owner_user_id", userId);
     const providerIds = (listings || []).map((l: { id: string }) => l.id);
     if (!providerIds.length) return [];
 
-    const { data } = await admin
+    const { data } = await ctx.supabase
       .from("message_threads")
       .select("*, service_providers(*)")
       .in("provider_id", providerIds)
@@ -61,7 +63,7 @@ export async function getUserMessageThreads(userId: string, asPro = false) {
     return (data || []) as MessageThread[];
   }
 
-  const { data } = await admin
+  const { data } = await ctx.supabase
     .from("message_threads")
     .select("*, service_providers(*)")
     .eq("homeowner_user_id", userId)
@@ -69,11 +71,15 @@ export async function getUserMessageThreads(userId: string, asPro = false) {
   return (data || []) as MessageThread[];
 }
 
-export async function getThreadMessages(threadId: string) {
-  const admin = createDbClient();
-  if (!admin) return [];
+export async function getThreadMessages(threadId: string, userId: string) {
+  const ctx = await createUserDbClient();
+  if (!ctx || ctx.user.id !== userId) return [];
 
-  const { data } = await admin
+  const { isThreadParticipant } = await import("@/lib/data/messaging");
+  const allowed = await isThreadParticipant(userId, threadId);
+  if (!allowed) return [];
+
+  const { data } = await ctx.supabase
     .from("messages")
     .select("*")
     .eq("thread_id", threadId)
@@ -87,10 +93,16 @@ export async function sendMessage(input: {
   senderRole: "homeowner" | "pro";
   body: string;
 }) {
-  const admin = createServiceClient() ?? createDbClient();
-  if (!admin) return { ok: false as const, error: "Not configured" };
+  const ctx = await createUserDbClient();
+  if (!ctx || ctx.user.id !== input.senderUserId) {
+    return { ok: false as const, error: "Not authorized" };
+  }
 
-  const { data, error } = await admin
+  const { isThreadParticipant } = await import("@/lib/data/messaging");
+  const allowed = await isThreadParticipant(input.senderUserId, input.threadId);
+  if (!allowed) return { ok: false as const, error: "Not authorized" };
+
+  const { data, error } = await ctx.supabase
     .from("messages")
     .insert({
       thread_id: input.threadId,
@@ -103,7 +115,7 @@ export async function sendMessage(input: {
 
   if (error) return { ok: false as const, error: error.message };
 
-  await admin
+  await ctx.supabase
     .from("message_threads")
     .update({ last_message_at: new Date().toISOString() })
     .eq("id", input.threadId);
@@ -117,10 +129,12 @@ export async function createMessageThread(input: {
   subject?: string;
   initialMessage: string;
 }) {
-  const admin = createServiceClient() ?? createDbClient();
-  if (!admin) return { ok: false as const, error: "Not configured" };
+  const ctx = await createUserDbClient();
+  if (!ctx || ctx.user.id !== input.homeownerUserId) {
+    return { ok: false as const, error: "Not authorized" };
+  }
 
-  const { data: thread, error } = await admin
+  const { data: thread, error } = await ctx.supabase
     .from("message_threads")
     .upsert(
       {
@@ -136,7 +150,7 @@ export async function createMessageThread(input: {
 
   if (error || !thread) return { ok: false as const, error: error?.message || "Failed" };
 
-  await admin.from("messages").insert({
+  await ctx.supabase.from("messages").insert({
     thread_id: thread.id,
     sender_user_id: input.homeownerUserId,
     sender_role: "homeowner",
@@ -147,23 +161,29 @@ export async function createMessageThread(input: {
 }
 
 export async function getSavedProviders(userId: string) {
-  const admin = createDbClient();
-  if (!admin) return [];
+  const ctx = await createUserDbClient();
+  if (!ctx || ctx.user.id !== userId) return [];
 
-  const { data } = await admin
+  const { data } = await ctx.supabase
     .from("saved_providers")
     .select("*, service_providers(*)")
     .eq("user_id", userId)
     .order("created_at", { ascending: false });
 
-  return (data || []) as { id: string; provider_id: string; service_providers: ServiceProvider }[];
+  return (data || []).map((row) => {
+    const r = row as { id: string; provider_id: string; service_providers: unknown };
+    const provider = parseServiceProvider(r.service_providers);
+    return { id: r.id, provider_id: r.provider_id, service_providers: provider! };
+  }).filter((r) => r.service_providers);
 }
 
 export async function toggleSavedProvider(userId: string, providerId: string) {
-  const admin = createDbClient();
-  if (!admin) return { ok: false as const, error: "Not configured" };
+  const ctx = await createUserDbClient();
+  if (!ctx || ctx.user.id !== userId) {
+    return { ok: false as const, error: "Not authorized" };
+  }
 
-  const { data: existing } = await admin
+  const { data: existing } = await ctx.supabase
     .from("saved_providers")
     .select("id")
     .eq("user_id", userId)
@@ -171,11 +191,11 @@ export async function toggleSavedProvider(userId: string, providerId: string) {
     .maybeSingle();
 
   if (existing) {
-    await admin.from("saved_providers").delete().eq("id", existing.id);
+    await ctx.supabase.from("saved_providers").delete().eq("id", existing.id);
     return { ok: true as const, saved: false };
   }
 
-  const { error } = await admin.from("saved_providers").insert({ user_id: userId, provider_id: providerId });
+  const { error } = await ctx.supabase.from("saved_providers").insert({ user_id: userId, provider_id: providerId });
   if (error) return { ok: false as const, error: error.message };
   return { ok: true as const, saved: true };
 }

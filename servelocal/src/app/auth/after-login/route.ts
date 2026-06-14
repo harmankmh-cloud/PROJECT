@@ -24,7 +24,7 @@ export async function GET(request: Request) {
   const role = profile?.role ?? (user.user_metadata?.role as string | undefined);
 
   if (role === "pro") {
-    const listings = await getProvidersForUser(user.id, user.email ?? undefined);
+    const listings = await getProvidersForUser(user.id);
     if (listings.length === 0) {
       return NextResponse.redirect(`${origin}/onboarding`);
     }

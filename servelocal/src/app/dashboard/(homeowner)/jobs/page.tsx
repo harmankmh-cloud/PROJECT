@@ -19,7 +19,7 @@ export default async function JobsPage({
   } = supabase ? await supabase.auth.getUser() : { data: { user: null } };
 
   const [requests, categories] = await Promise.all([
-    getUserServiceRequests(user?.id ?? "", user?.email ?? undefined),
+    getUserServiceRequests(user?.id ?? ""),
     getServiceCategories(),
   ]);
 

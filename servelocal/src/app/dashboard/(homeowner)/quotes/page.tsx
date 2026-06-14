@@ -10,7 +10,7 @@ export default async function QuotesPage() {
     data: { user },
   } = supabase ? await supabase.auth.getUser() : { data: { user: null } };
 
-  const bookings = user ? await getUserBookings(user.id, user.email ?? undefined) : [];
+  const bookings = user ? await getUserBookings(user.id) : [];
 
   return (
     <div>

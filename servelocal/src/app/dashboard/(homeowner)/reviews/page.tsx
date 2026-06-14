@@ -12,7 +12,7 @@ export default async function ReviewsPage() {
 
   const profile = user ? await getUserProfile(user.id) : null;
   const pending = user
-    ? await getPendingReviewBookings(user.id, user.email ?? undefined, profile?.display_name ?? undefined)
+    ? await getPendingReviewBookings(user.id, profile?.display_name ?? undefined)
     : [];
 
   return (

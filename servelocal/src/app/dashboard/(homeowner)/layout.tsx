@@ -15,7 +15,7 @@ export default async function HomeownerDashboardLayout({ children }: { children:
     if (role === "pro") redirect("/dashboard/pro");
   }
 
-  const counts = user ? await getHomeownerDashboardCounts(user.id, user.email ?? undefined) : null;
+  const counts = user ? await getHomeownerDashboardCounts(user.id) : null;
 
   return (
     <HomeownerShell

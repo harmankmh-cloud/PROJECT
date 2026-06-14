@@ -37,7 +37,7 @@ export async function POST(request: Request) {
       );
     }
 
-    const listings = await getProvidersForUser(user.id, user.email ?? undefined);
+    const listings = await getProvidersForUser(user.id);
     const listing = listings.find((l) => l.status === "approved") || listings[0];
     if (!listing) {
       return NextResponse.json({ error: "Apply for a listing first at /join" }, { status: 404 });

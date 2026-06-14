@@ -16,7 +16,7 @@ export default async function ProDashboardLayout({ children }: { children: React
     if (role === "homeowner") redirect("/dashboard/jobs");
   }
 
-  const listings = user ? await getProvidersForUser(user.id, user.email ?? undefined) : [];
+  const listings = user ? await getProvidersForUser(user.id) : [];
   const threads = user ? await getUserMessageThreads(user.id, true) : [];
 
   return (

@@ -31,6 +31,13 @@ Open [http://localhost:3001](http://localhost:3001).
 
 **Shortcut (steps 6–7):** if `user_profiles` or `bookings` is missing, run `supabase/bootstrap-homeowner-dashboard.sql` once (after steps 1–5). It is idempotent.
 
+**Security migrations (after bootstrap):** run `supabase/migrations/004_schema_baseline.sql` then `005_pro_job_leads_rls.sql`. Verify bookings RLS with:
+
+```sql
+select policyname, qual from pg_policies where tablename = 'bookings';
+-- qual must be (auth.uid() = user_id)
+```
+
 ## Email / auth (same as RateLocal — Resend SMTP)
 
 Supabase’s built-in email hits **~2–4 emails/hour**. RateLocal signup was fixed with **Resend SMTP** in Supabase (not in Vercel).
