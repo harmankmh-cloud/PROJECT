@@ -2,7 +2,7 @@ import type { User } from "@supabase/supabase-js";
 import { parseUserProfile } from "@/lib/schemas/db/user-profile";
 import { createServiceClient } from "@/lib/supabase/admin";
 import { createUserDbClient } from "@/lib/supabase/user-db";
-import type { UserProfile, UserRole } from "@/lib/user-profiles";
+import { getUserProfile, type UserProfile, type UserRole } from "@/lib/user-profiles";
 
 /** Profile read via user JWT — RLS enforced. */
 export async function getAuthUserProfile(userId: string): Promise<UserProfile | null> {
@@ -25,15 +25,45 @@ function roleFromMetadata(user: User): UserRole | undefined {
   return undefined;
 }
 
+async function userOwnsProviderListings(userId: string): Promise<boolean> {
+  const ctx = await createUserDbClient();
+  if (ctx && ctx.user.id === userId) {
+    const { count } = await ctx.supabase
+      .from("service_providers")
+      .select("id", { count: "exact", head: true })
+      .eq("owner_user_id", userId);
+    if ((count ?? 0) > 0) return true;
+  }
+
+  const admin = createServiceClient();
+  if (!admin) return false;
+
+  const { count, error } = await admin
+    .from("service_providers")
+    .select("id", { count: "exact", head: true })
+    .eq("owner_user_id", userId);
+
+  return !error && (count ?? 0) > 0;
+}
+
 /**
  * Create user_profiles from auth metadata on first login (e.g. after email confirmation).
  * Uses the authenticated client so RLS insert policy applies.
  */
-export async function ensureUserProfileFromMetadata(user: User): Promise<UserProfile | null> {
+export async function ensureUserProfileFromMetadata(
+  user: User,
+  intent?: UserRole
+): Promise<UserProfile | null> {
   const existing = await getAuthUserProfile(user.id);
   if (existing) return existing;
 
-  const role = roleFromMetadata(user);
+  const existingAdmin = await getUserProfile(user.id);
+  if (existingAdmin) return existingAdmin;
+
+  let role = roleFromMetadata(user) ?? intent;
+  if (!role && (await userOwnsProviderListings(user.id))) {
+    role = "pro";
+  }
   if (!role) return null;
 
   const ctx = await createUserDbClient();

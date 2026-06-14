@@ -15,7 +15,17 @@ export const metadata: Metadata = {
   robots: { index: false, follow: false },
 };
 
-export default async function SignupPage() {
+export default async function SignupPage({
+  searchParams,
+}: {
+  searchParams: Promise<{ notice?: string }>;
+}) {
+  const params = await searchParams;
+  const chooseTypeNotice =
+    params.notice === "choose_account_type"
+      ? "We could not tell if this account is a homeowner or pro. Pick the right signup path below."
+      : null;
+
   if (isSupabaseConfigured()) {
     try {
       const supabase = await createClient();
@@ -35,6 +45,11 @@ export default async function SignupPage() {
       title="Join ServeLocal"
       subtitle="Choose how you'll use the platform — homeowner or contractor."
     >
+      {chooseTypeNotice ? (
+        <p className="mb-4 rounded-xl border border-amber-500/30 bg-amber-500/10 px-4 py-3 text-sm text-amber-100">
+          {chooseTypeNotice}
+        </p>
+      ) : null}
       <RolePicker />
     </AuthLayout>
   );

@@ -1,6 +1,14 @@
 import { createServerClient } from "@supabase/ssr";
 import { NextResponse, type NextRequest } from "next/server";
+import { isHomeownerDashboardPath, isProPath } from "@/lib/auth-routing";
 import { isPlatformAdmin } from "@/lib/admin-auth";
+import type { UserRole } from "@/lib/user-profiles";
+
+function roleFromUser(user: { user_metadata?: Record<string, unknown> }): UserRole | undefined {
+  const metaRole = user.user_metadata?.role;
+  if (metaRole === "pro" || metaRole === "homeowner") return metaRole;
+  return undefined;
+}
 
 export async function middleware(request: NextRequest) {
   let response = NextResponse.next({
@@ -58,7 +66,19 @@ export async function middleware(request: NextRequest) {
     return NextResponse.redirect(new URL("/login", request.url));
   }
 
-  if ((pathname === "/login" || pathname === "/signup" || pathname.startsWith("/signup/")) && user) {
+  if (user) {
+    const role = roleFromUser(user);
+
+    if (role === "pro" && isHomeownerDashboardPath(pathname)) {
+      return NextResponse.redirect(new URL("/dashboard/pro", request.url));
+    }
+
+    if (role === "homeowner" && isProPath(pathname)) {
+      return NextResponse.redirect(new URL("/dashboard", request.url));
+    }
+  }
+
+  if ((pathname === "/login" || pathname.startsWith("/login/") || pathname === "/signup" || pathname.startsWith("/signup/")) && user) {
     return NextResponse.redirect(new URL("/auth/after-login", request.url));
   }
 
@@ -73,6 +93,7 @@ export const config = {
     "/onboarding/:path*",
     "/admin/:path*",
     "/login",
+    "/login/:path*",
     "/signup",
     "/signup/:path*",
   ],

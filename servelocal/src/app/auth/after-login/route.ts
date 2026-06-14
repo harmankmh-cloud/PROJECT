@@ -1,7 +1,6 @@
 import { NextResponse } from "next/server";
-import { ensureUserProfileFromMetadata, getAuthUserProfile } from "@/lib/auth/queries";
+import { resolvePostLoginPath } from "@/lib/auth-routing";
 import { isPlatformAdmin } from "@/lib/admin-auth";
-import { getProvidersForUser } from "@/lib/data";
 import { createClient } from "@/lib/supabase/server";
 import type { UserRole } from "@/lib/user-profiles";
 
@@ -9,11 +8,15 @@ function safeRedirect(origin: string, path: string) {
   return NextResponse.redirect(`${origin}${path}`);
 }
 
+function parseIntent(value: string | null): UserRole | null {
+  if (value === "pro" || value === "homeowner") return value;
+  return null;
+}
+
 export async function GET(request: Request) {
   const { origin, searchParams } = new URL(request.url);
   const nextPath = searchParams.get("next");
-  const safeNext =
-    nextPath && nextPath.startsWith("/") && !nextPath.startsWith("//") ? nextPath : null;
+  const intent = parseIntent(searchParams.get("intent"));
 
   let user;
   try {
@@ -40,33 +43,10 @@ export async function GET(request: Request) {
   }
 
   try {
-    let profile = await getAuthUserProfile(user.id);
-    if (!profile) {
-      profile = await ensureUserProfileFromMetadata(user);
-    }
-
-    const role: UserRole | undefined =
-      profile?.role ?? (user.user_metadata?.role as UserRole | undefined);
-
-    if (role === "pro") {
-      const listings = await getProvidersForUser(user.id);
-      if (listings.length === 0) {
-        return safeRedirect(origin, "/onboarding");
-      }
-      return safeRedirect(origin, safeNext ?? "/dashboard/pro");
-    }
-
-    if (!profile || !profile.onboarding_completed_at) {
-      return safeRedirect(origin, "/onboarding/homeowner");
-    }
-
-    return safeRedirect(origin, safeNext ?? "/dashboard");
+    const target = await resolvePostLoginPath(user, { next: nextPath, intent });
+    return safeRedirect(origin, target);
   } catch (err) {
     console.error("[after-login] routing failed:", err);
-    const metaRole = user.user_metadata?.role as string | undefined;
-    if (metaRole === "pro") {
-      return safeRedirect(origin, "/onboarding?notice=listings_unavailable");
-    }
-    return safeRedirect(origin, "/dashboard?notice=profile_unavailable");
+    return safeRedirect(origin, "/login?error=session_error");
   }
 }
