@@ -24,13 +24,13 @@ export async function userOwnsProviderListings(userId: string): Promise<boolean>
 
 /** Resolve account type from profile, auth metadata, or owned pro listings. */
 export async function resolveUserRole(user: User): Promise<UserRole | undefined> {
-  const profile = await getUserProfile(user.id);
-  if (profile?.role) return profile.role;
-
   const metaRole = user.user_metadata?.role as string | undefined;
   if (metaRole === "pro" || metaRole === "homeowner") return metaRole;
 
   if (await userOwnsProviderListings(user.id)) return "pro";
+
+  const profile = await getUserProfile(user.id);
+  if (profile?.role) return profile.role;
 
   return undefined;
 }
@@ -60,7 +60,7 @@ function safeNextPath(next: string | null | undefined, role: UserRole) {
 /** Where to send the user immediately after password/OAuth login. */
 export async function resolvePostLoginPath(
   user: User,
-  options?: { next?: string | null }
+  options?: { next?: string | null; as?: UserRole | null }
 ): Promise<string> {
   let profile = await getUserProfile(user.id);
   if (!profile) {
@@ -69,8 +69,24 @@ export async function resolvePostLoginPath(
 
   let role = profile?.role ?? (await resolveUserRole(user));
 
+  if (!role && (options?.as === "pro" || options?.as === "homeowner")) {
+    const { upsertUserProfile } = await import("@/lib/user-profiles");
+    const displayName =
+      (user.user_metadata?.display_name as string | undefined)?.trim() ||
+      user.email?.split("@")[0] ||
+      null;
+    const result = await upsertUserProfile(user.id, {
+      role: options.as,
+      display_name: displayName,
+    });
+    if (result.ok) {
+      role = options.as;
+      profile = await getUserProfile(user.id);
+    }
+  }
+
   if (!role) {
-    return "/signup?notice=choose_account_type";
+    return "/auth/choose-role";
   }
 
   const next = safeNextPath(options?.next ?? null, role);

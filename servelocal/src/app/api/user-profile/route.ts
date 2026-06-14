@@ -36,7 +36,9 @@ export async function POST(request: Request) {
   const existing = await getUserProfile(user.id);
   const fields = { ...parsed.data };
 
-  if (existing?.role && fields.role && fields.role !== existing.role) {
+  if (!existing?.role && fields.role) {
+    // First-time role assignment (legacy accounts, choose-role flow).
+  } else if (existing?.role && fields.role && fields.role !== existing.role) {
     return NextResponse.json({ error: "Role cannot be changed after signup" }, { status: 403 });
   }
 

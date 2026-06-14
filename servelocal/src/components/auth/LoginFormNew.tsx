@@ -20,7 +20,13 @@ function isUnconfirmedEmailError(message: string) {
   return lower.includes("email not confirmed") || lower.includes("not confirmed");
 }
 
-export function LoginFormNew({ initialError }: { initialError?: string | null }) {
+export function LoginFormNew({
+  initialError,
+  asRole,
+}: {
+  initialError?: string | null;
+  asRole?: "homeowner" | "pro";
+}) {
   const [error, setError] = useState<string | null>(initialError ?? null);
   const [pendingEmail, setPendingEmail] = useState<string | null>(null);
   const [resetState, setResetState] = useState<EmailActionState>("idle");
@@ -56,7 +62,9 @@ export function LoginFormNew({ initialError }: { initialError?: string | null })
       return;
     }
 
-    await redirectAfterAuth("/auth/after-login");
+    await redirectAfterAuth(
+      asRole ? `/auth/after-login?as=${asRole}` : "/auth/after-login"
+    );
   }
 
   async function handleForgot() {

@@ -41,6 +41,7 @@ type Props = {
   defaultEmail?: string;
   defaultDescription?: string;
   defaultPreferredDate?: string;
+  isLoggedIn?: boolean;
 };
 
 export function RequestWizard({
@@ -52,6 +53,7 @@ export function RequestWizard({
   defaultEmail = "",
   defaultDescription = "",
   defaultPreferredDate = "",
+  isLoggedIn = false,
 }: Props) {
   const safeCategories = useMemo(() => resolveCategories(categories), [categories]);
   const [step, setStep] = useState(0);
@@ -348,6 +350,22 @@ export function RequestWizard({
                       browse top-rated pros
                     </Link>
                   </p>
+                  {isLoggedIn ? (
+                    <div className="mt-6 flex flex-col gap-3 sm:flex-row sm:justify-center">
+                      <Link
+                        href="/dashboard/jobs"
+                        className="inline-flex items-center justify-center rounded-full bg-primary px-6 py-3 text-sm font-semibold text-white"
+                      >
+                        View my jobs
+                      </Link>
+                      <Link
+                        href="/dashboard"
+                        className="inline-flex items-center justify-center rounded-full border border-border px-6 py-3 text-sm font-semibold text-foreground"
+                      >
+                        Go to dashboard
+                      </Link>
+                    </div>
+                  ) : null}
                 </>
               )}
             </div>

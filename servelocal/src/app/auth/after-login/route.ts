@@ -1,5 +1,5 @@
 import { type NextRequest, NextResponse } from "next/server";
-import { resolvePostLoginPath } from "@/lib/auth-routing";
+import { resolvePostLoginPath, type UserRole } from "@/lib/auth-routing";
 import { isPlatformAdmin } from "@/lib/admin-auth";
 import { createAuthRouteHandlerClient } from "@/lib/supabase/route-handler";
 import { isSupabaseConfigured } from "@/lib/supabase/config";
@@ -12,6 +12,9 @@ function loginRedirect(origin: string, error?: string) {
 export async function GET(request: NextRequest) {
   const { origin, searchParams } = new URL(request.url);
   const nextPath = searchParams.get("next");
+  const asParam = searchParams.get("as");
+  const asRole: UserRole | null =
+    asParam === "pro" || asParam === "homeowner" ? asParam : null;
 
   if (!isSupabaseConfigured()) {
     return loginRedirect(origin, "not_configured");
@@ -44,7 +47,7 @@ export async function GET(request: NextRequest) {
   }
 
   try {
-    const target = await resolvePostLoginPath(user, { next: nextPath });
+    const target = await resolvePostLoginPath(user, { next: nextPath, as: asRole });
     return redirectWithSession(`${origin}${target}`);
   } catch (err) {
     console.error("[after-login] routing failed:", err);

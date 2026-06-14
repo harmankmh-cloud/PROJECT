@@ -20,6 +20,7 @@ function pathNeedsSessionCheck(pathname: string) {
     pathname.startsWith("/admin") ||
     pathname.startsWith("/dashboard") ||
     pathname.startsWith("/onboarding") ||
+    pathname.startsWith("/auth/choose-role") ||
     pathname === "/login" ||
     pathname.startsWith("/login/") ||
     pathname === "/signup" ||
@@ -82,7 +83,7 @@ export async function middleware(request: NextRequest) {
     return NextResponse.redirect(new URL("/dashboard", request.url));
   }
 
-  if ((pathname.startsWith("/dashboard") || pathname.startsWith("/onboarding")) && !user) {
+  if ((pathname.startsWith("/dashboard") || pathname.startsWith("/onboarding") || pathname === "/auth/choose-role") && !user) {
     return NextResponse.redirect(new URL("/login", request.url));
   }
 
