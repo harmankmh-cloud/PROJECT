@@ -1,7 +1,7 @@
 "use client";
 
-import { motion, useInView } from "framer-motion";
-import { useEffect, useRef, useState } from "react";
+import { motion } from "framer-motion";
+import { useEffect, useState } from "react";
 import { Phone } from "lucide-react";
 import { GlowButton } from "@/components/ui/GlowButton";
 import { Input } from "@/components/ui/Input";
@@ -27,8 +27,6 @@ export function DemoSalesPage() {
   const [lineIndex, setLineIndex] = useState(0);
   const [form, setForm] = useState({ name: "", business: "", email: "", phone: "", time: "" });
   const [submitted, setSubmitted] = useState(false);
-  const heroRef = useRef(null);
-  const inView = useInView(heroRef, { once: true });
 
   const selected = INDUSTRIES.find((i) => i.id === industry)!;
   const calendlyUrl = process.env.NEXT_PUBLIC_CALENDLY_URL?.trim();
@@ -59,15 +57,7 @@ export function DemoSalesPage() {
       : activeLine.text;
 
   return (
-    <div ref={heroRef} className="marketing-container py-12 md:py-20">
-      <motion.div initial={{ opacity: 0, y: 40 }} animate={inView ? { opacity: 1, y: 0 } : {}}>
-        <h1 className="font-display text-3xl text-text md:text-4xl">See GreetQ answer a real call</h1>
-        <p className="mt-3 max-w-2xl text-muted">
-          Pick your industry. Watch the demo. We&apos;ll call you — our AI answers so you can hear it
-          yourself.
-        </p>
-      </motion.div>
-
+    <div className="marketing-container pb-12 md:pb-20">
       <div className="mt-10 flex flex-wrap gap-2">
         {INDUSTRIES.map((ind) => (
           <button

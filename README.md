@@ -5,6 +5,7 @@ This repo includes:
 - **RateLocal** (`reviewflow/`) — QR-powered Google reviews for local businesses ([ratelocal.ca](https://ratelocal.ca))
 - **VoiceAgent** (`voiceagent/`) — enterprise AI phone agent platform (Twilio + Next.js + Supabase)
 - **ServeLocal** (`servelocal/`) — standalone BC trades directory (IndiaMART-style contacts)
+- **Route Max** (`route-max/`) — unlimited multi-stop route planner for drivers
 - **OpenRouter chat** (`openrouter_chat/`) — earlier OpenRouter CLI/web experiment
 - **Route Max** (`route-max/`) — scan package addresses, optimize delivery route ([route-max.vercel.app](https://route-max.vercel.app))
 
@@ -19,6 +20,10 @@ See [voiceagent/README.md](voiceagent/README.md).
 ## Start ServeLocal
 
 See [servelocal/README.md](servelocal/README.md).
+
+## Start Route Max
+
+See [route-max/README.md](route-max/README.md).
 
 ## Project RAG (agent knowledge base)
 

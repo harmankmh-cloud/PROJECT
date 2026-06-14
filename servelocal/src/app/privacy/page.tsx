@@ -73,6 +73,17 @@ export default function PrivacyPage() {
       </section>
 
       <section className="space-y-3">
+        <h2 className="text-lg font-semibold text-brand-950">Data export &amp; deletion</h2>
+        <p className="text-sm leading-relaxed text-slate-600">
+          Signed-in homeowners can export a JSON copy of profile, jobs, and bookings from{" "}
+          <Link href="/dashboard/settings" className="font-semibold text-teal-600 hover:underline">
+            Dashboard → Settings
+          </Link>
+          , or submit an account deletion request there. We process deletion requests within 30 days under PIPEDA.
+        </p>
+      </section>
+
+      <section className="space-y-3">
         <h2 className="text-lg font-semibold text-brand-950">Your rights</h2>
         <p className="text-sm leading-relaxed text-slate-600">
           You may request access to, correction of, or deletion of your personal information by emailing{" "}

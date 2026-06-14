@@ -25,11 +25,8 @@ export default function ForgotPasswordPage() {
   async function onSubmit(data: ForgotPasswordFormData) {
     const supabase = createClient();
     const redirectTo = `${window.location.origin}/auth/callback?next=/reset-password`;
-    const { error } = await supabase.auth.resetPasswordForEmail(data.email, { redirectTo });
-    if (error) {
-      setFormError("root", { message: error.message });
-      return;
-    }
+    await supabase.auth.resetPasswordForEmail(data.email, { redirectTo });
+    // Always show success — avoids account enumeration regardless of API response.
     setSent(true);
   }
 
@@ -45,8 +42,8 @@ export default function ForgotPasswordPage() {
           <div className="mt-8 space-y-4">
             <h2 className="text-lg font-semibold text-text">Check your email</h2>
             <p className="text-sm text-success">
-              We sent a password reset link. It may take a few minutes to arrive — check spam if you
-              don&apos;t see it.
+              If an account exists for that email, we sent a password reset link. It may take a few
+              minutes to arrive — check spam if you don&apos;t see it.
             </p>
             <GlowButton type="button" variant="outline" className="w-full" onClick={() => setSent(false)}>
               Send another link

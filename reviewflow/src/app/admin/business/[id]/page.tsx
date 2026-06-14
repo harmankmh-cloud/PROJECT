@@ -1,8 +1,10 @@
 import Link from "next/link";
 import { notFound } from "next/navigation";
 import { AdminBusinessManagePanel } from "@/components/AdminBusinessManagePanel";
+import { CallLocalAdminSection } from "@/components/CallLocalAdminSection";
 import { getAppUrl } from "@/lib/app-url-server";
 import { getAdminBusinessDetail } from "@/lib/admin-data";
+import { ensureCallLocalSettingsRow } from "@/lib/calllocal-data";
 import { sortPrompts } from "@/lib/defaults";
 import type { PromptTemplate } from "@/lib/types";
 
@@ -17,6 +19,7 @@ export default async function AdminBusinessManagePage({
 
   const appUrl = await getAppUrl();
   const prompts = sortPrompts(detail.prompts as PromptTemplate[]);
+  const calllocalSettings = await ensureCallLocalSettingsRow(id);
 
   return (
     <main className="flex-1 px-4 py-8 sm:px-8">
@@ -42,6 +45,7 @@ export default async function AdminBusinessManagePage({
           googleClicks={detail.googleClicks}
           recentFeedback={detail.recentFeedback}
         />
+        <CallLocalAdminSection businessId={id} initialSettings={calllocalSettings} />
       </div>
     </main>
   );

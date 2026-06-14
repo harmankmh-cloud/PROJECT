@@ -143,6 +143,7 @@ function CallbackButton() {
   const [open, setOpen] = useState(false);
   const [email, setEmail] = useState("");
   const [phone, setPhone] = useState("");
+  const [preferredTime, setPreferredTime] = useState("");
   const [state, setState] = useState<"idle" | "loading" | "done" | "error">("idle");
   const [error, setError] = useState("");
 
@@ -151,7 +152,10 @@ function CallbackButton() {
     setState("loading");
     setError("");
     try {
-      await captureLead(email, "callback-request", phone ? `Callback: ${phone}` : undefined);
+      const note = [phone ? `Callback: ${phone}` : null, preferredTime ? `Preferred: ${preferredTime}` : null]
+        .filter(Boolean)
+        .join(" · ");
+      await captureLead(email, "callback-request", note || undefined);
       setState("done");
     } catch (err) {
       setState("error");
@@ -160,7 +164,7 @@ function CallbackButton() {
   }
 
   return (
-    <div className="fixed bottom-5 left-5 z-[60]">
+    <div className="fixed bottom-20 left-5 z-[50]">
       <AnimatePresence>
         {open ? (
           <motion.div
@@ -196,6 +200,14 @@ function CallbackButton() {
                     onChange={(e) => setPhone(e.target.value)}
                     className="rounded-lg border border-border bg-bg px-3 py-2 text-sm text-text placeholder:text-muted focus:border-violet-500/60 focus:outline-none"
                     aria-label="Phone number"
+                  />
+                  <input
+                    type="text"
+                    placeholder="Preferred time (e.g. Tue 2–4pm PT)"
+                    value={preferredTime}
+                    onChange={(e) => setPreferredTime(e.target.value)}
+                    className="rounded-lg border border-border bg-bg px-3 py-2 text-sm text-text placeholder:text-muted focus:border-violet-500/60 focus:outline-none"
+                    aria-label="Preferred callback time"
                   />
                   <button
                     type="submit"

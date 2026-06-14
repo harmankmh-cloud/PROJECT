@@ -46,7 +46,7 @@ export function LoginForm({ initialError = "" }: { initialError?: string }) {
   }
 
   return (
-    <AuthLayout panelFooter={TRIAL_MARKETING.exploreLong}>
+    <AuthLayout panelFooter={TRIAL_MARKETING.authPanel}>
       <div className="auth-card">
         <h1 className="font-display text-3xl text-text">Welcome back</h1>
         <p className="mt-2 text-sm text-muted">

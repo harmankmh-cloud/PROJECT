@@ -47,7 +47,7 @@ export async function POST(request: Request) {
   try {
     const body = inviteSchema.parse(await request.json());
     const appUrl = (process.env.NEXT_PUBLIC_APP_URL || "https://www.servelocal.ca").replace(/\/$/, "");
-    const redirectTo = `${appUrl}/auth/callback?next=/dashboard`;
+    const redirectTo = `${appUrl}/auth/confirm`;
 
     const result = await invitePlatformUser(body.email, redirectTo);
     if (!result.ok) {

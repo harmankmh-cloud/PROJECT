@@ -1,5 +1,6 @@
 import { NextResponse } from "next/server";
 import Stripe from "stripe";
+import { updateBookingPaymentStatus } from "@/lib/data/bookings";
 import { getStripe } from "@/lib/stripe";
 import { updateProviderFromSubscription } from "@/lib/stripe-subscription";
 import { notifyProUpgradeEmails } from "@/lib/stripe-notify";
@@ -38,10 +39,16 @@ export async function POST(request: Request) {
   try {
     if (event.type === "checkout.session.completed") {
       const session = event.data.object as Stripe.Checkout.Session;
+      const bookingId = session.metadata?.booking_id;
       const providerId = session.metadata?.provider_id || session.client_reference_id;
       const plan = session.metadata?.plan;
 
-      if (providerId && session.subscription) {
+      if (bookingId && !session.subscription) {
+        const result = await updateBookingPaymentStatus(bookingId, "held");
+        if (!result.ok) {
+          console.error("[servelocal stripe] booking checkout:", result.error);
+        }
+      } else if (providerId && session.subscription) {
         const subscription = await stripe.subscriptions.retrieve(String(session.subscription));
         const result = await updateProviderFromSubscription(providerId, subscription, plan);
         if (!result.ok) {
