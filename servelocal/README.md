@@ -29,6 +29,8 @@ Open [http://localhost:3001](http://localhost:3001).
 9. Optional legacy scripts: `pro-dashboard.sql`, `saved-searches.sql`, `extended-categories.sql`
 10. Apply numbered migrations in `supabase/migrations/` (002+ for RLS fix and onboarding columns)
 
+**Shortcut (steps 6–7):** if `user_profiles` or `bookings` is missing, run `supabase/bootstrap-homeowner-dashboard.sql` once (after steps 1–5). It is idempotent.
+
 ## Email / auth (same as RateLocal — Resend SMTP)
 
 Supabase’s built-in email hits **~2–4 emails/hour**. RateLocal signup was fixed with **Resend SMTP** in Supabase (not in Vercel).
