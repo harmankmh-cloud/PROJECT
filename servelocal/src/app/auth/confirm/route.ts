@@ -5,8 +5,9 @@ import {
   authCodeErrorUrl,
   type AuthCodeErrorReason,
 } from "@/lib/auth/confirm-errors";
+import { resolvePostLoginPath } from "@/lib/auth-routing";
 import { ensureUserProfileFromMetadata } from "@/lib/auth/queries";
-import { isEmailOtpType, resolvePostAuthRedirect } from "@/lib/auth/post-auth-redirect";
+import { isEmailOtpType } from "@/lib/auth/post-auth-redirect";
 import { authLog, authMetric } from "@/lib/auth/observability";
 import { createAuthRouteHandlerClient } from "@/lib/supabase/route-handler";
 import { isSupabaseConfigured } from "@/lib/supabase/config";
@@ -18,6 +19,7 @@ function redirectAuthCodeError(origin: string, reason: AuthCodeErrorReason, emai
 async function finishAuthRedirect(
   origin: string,
   next: string | null,
+  email: string | null,
   supabase: SupabaseClient,
   redirectWithSession: (target: string) => NextResponse
 ) {
@@ -26,13 +28,16 @@ async function finishAuthRedirect(
     data: { user },
   } = await supabase.auth.getUser();
 
-  if (user) {
-    await ensureUserProfileFromMetadata(user);
+  if (!user) {
+    authLog("confirm.fail", { step: "no_user_after_verify" });
+    return redirectAuthCodeError(origin, "auth_failed", email);
   }
 
-  const target = await resolvePostAuthRedirect(origin, next, supabase);
-  authLog("confirm.ok", { userId: user?.id ?? null, target });
-  return redirectWithSession(target);
+  await ensureUserProfileFromMetadata(user);
+
+  const path = await resolvePostLoginPath(user, { next });
+  authLog("confirm.ok", { userId: user.id, target: path });
+  return redirectWithSession(`${origin}${path}`);
 }
 
 /**
@@ -73,7 +78,7 @@ export async function GET(request: NextRequest) {
       authLog("confirm.fail", { step: "exchangeCodeForSession", message: error.message });
       return redirectAuthCodeError(origin, authCodeErrorReason(error.message), email);
     }
-    return finishAuthRedirect(origin, next, supabase, redirectWithSession);
+    return finishAuthRedirect(origin, next, email, supabase, redirectWithSession);
   }
 
   if (tokenHash && isEmailOtpType(typeParam)) {
@@ -87,7 +92,7 @@ export async function GET(request: NextRequest) {
       return redirectAuthCodeError(origin, authCodeErrorReason(error.message), email);
     }
 
-    return finishAuthRedirect(origin, next, supabase, redirectWithSession);
+    return finishAuthRedirect(origin, next, email, supabase, redirectWithSession);
   }
 
   if (token && isEmailOtpType(typeParam)) {
@@ -102,7 +107,7 @@ export async function GET(request: NextRequest) {
       return redirectAuthCodeError(origin, authCodeErrorReason(error.message), email);
     }
 
-    return finishAuthRedirect(origin, next, supabase, redirectWithSession);
+    return finishAuthRedirect(origin, next, email, supabase, redirectWithSession);
   }
 
   authLog("confirm.fail", { step: "missing_params" });

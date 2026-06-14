@@ -78,7 +78,7 @@ export function ProSignupForm() {
         body: JSON.stringify({ role: "pro", display_name: data.name }),
       });
 
-      await redirectAfterAuth("/auth/after-login");
+      await redirectAfterAuth("/auth/after-login?as=pro");
     });
 
     if (ran === "skipped") return;

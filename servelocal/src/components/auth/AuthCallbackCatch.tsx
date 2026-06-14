@@ -6,6 +6,7 @@ import {
   hasAuthCallbackParams,
   isAuthHandlerPath,
 } from "@/lib/auth/catch-auth-tokens";
+import { afterLoginPath } from "@/lib/auth/after-login-path";
 
 const CONFIRM_FORWARD_KEY = "servelocal:auth-confirm-forward";
 
@@ -55,7 +56,10 @@ export function AuthCallbackCatch() {
           window.location.replace("/auth/auth-code-error?reason=auth_failed");
           return;
         }
-        window.location.replace("/auth/after-login");
+        const {
+          data: { user },
+        } = await supabase.auth.getUser();
+        window.location.replace(afterLoginPath(user));
       } catch {
         window.location.replace("/auth/auth-code-error?reason=auth_failed");
       }
