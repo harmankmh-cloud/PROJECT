@@ -3,9 +3,12 @@
 import { zodResolver } from "@hookform/resolvers/zod";
 import Link from "next/link";
 import { useState } from "react";
-import { friendlyAuthError } from "@/lib/auth-errors";
-import { authConfirmUrl } from "@/lib/auth/redirect-origin";
 import { redirectAfterAuth } from "@/lib/auth/client-redirect";
+import {
+  SIGNUP_ALREADY_REGISTERED_MESSAGE,
+  SIGNUP_CONFIRM_EMAIL_MESSAGE,
+  signUpAccount,
+} from "@/lib/auth/signup-client";
 import { useForm } from "react-hook-form";
 import { Button } from "@/components/ui/Button";
 import { Input } from "@/components/ui/Input";
@@ -17,6 +20,7 @@ import { isSupabaseConfigured } from "@/lib/supabase/config";
 export function HomeownerSignupForm() {
   const [error, setError] = useState<string | null>(null);
   const [info, setInfo] = useState<string | null>(null);
+  const [completed, setCompleted] = useState(false);
 
   const {
     register,
@@ -32,26 +36,32 @@ export function HomeownerSignupForm() {
   }
 
   async function onSubmit(data: HomeownerSignupData) {
+    if (completed) return;
     setError(null);
     setInfo(null);
     const supabase = createClient();
 
-    const { data: authData, error: signUpError } = await supabase.auth.signUp({
+    const result = await signUpAccount(supabase, {
       email: data.email,
       password: data.password,
-      options: {
-        data: { role: "homeowner", display_name: data.name, city: data.city },
-        emailRedirectTo: authConfirmUrl(typeof window !== "undefined" ? window.location.origin : undefined),
-      },
+      metadata: { role: "homeowner", display_name: data.name, city: data.city },
+      fallbackOrigin: typeof window !== "undefined" ? window.location.origin : undefined,
     });
 
-    if (signUpError) {
-      setError(friendlyAuthError(signUpError.message));
+    if (result.status === "error") {
+      setError(result.message);
       return;
     }
 
-    if (authData.user && !authData.session) {
-      setInfo("Check your email to confirm, then sign in.");
+    if (result.status === "already_registered") {
+      setCompleted(true);
+      setInfo(SIGNUP_ALREADY_REGISTERED_MESSAGE);
+      return;
+    }
+
+    if (result.status === "confirm_email") {
+      setCompleted(true);
+      setInfo(SIGNUP_CONFIRM_EMAIL_MESSAGE);
       return;
     }
 
@@ -97,7 +107,7 @@ export function HomeownerSignupForm() {
       </div>
       {error && <p className="text-sm text-red-400">{error}</p>}
       {info && <p className="text-sm text-green-400">{info}</p>}
-      <Button type="submit" className="w-full" loading={isSubmitting} pill>
+      <Button type="submit" className="w-full" loading={isSubmitting} disabled={completed} pill>
         Create homeowner account
       </Button>
       <p className="text-center text-xs text-slate-500">

@@ -5,6 +5,18 @@ import { isEmailOtpType, resolvePostAuthRedirect } from "@/lib/auth/post-auth-re
 import { createAuthRouteHandlerClient } from "@/lib/supabase/route-handler";
 import { isSupabaseConfigured } from "@/lib/supabase/config";
 
+function verifyErrorParam(message: string) {
+  const lower = message.toLowerCase();
+  if (
+    lower.includes("not found") ||
+    lower.includes("expired") ||
+    lower.includes("already been used")
+  ) {
+    return "link_used";
+  }
+  return "verification_failed";
+}
+
 async function finishAuthRedirect(
   origin: string,
   next: string | null,
@@ -52,7 +64,7 @@ export async function GET(request: NextRequest) {
     const { error } = await supabase.auth.exchangeCodeForSession(code);
     if (error) {
       console.error("[auth/confirm] exchangeCodeForSession failed:", error.message);
-      return NextResponse.redirect(`${origin}/login?error=auth_failed`);
+      return NextResponse.redirect(`${origin}/login?error=${verifyErrorParam(error.message)}`);
     }
     return finishAuthRedirect(origin, next, supabase, redirectWithSession);
   }
@@ -65,7 +77,7 @@ export async function GET(request: NextRequest) {
 
     if (error) {
       console.error("[auth/confirm] verifyOtp failed:", error.message);
-      return NextResponse.redirect(`${origin}/login?error=verification_failed`);
+      return NextResponse.redirect(`${origin}/login?error=${verifyErrorParam(error.message)}`);
     }
 
     return finishAuthRedirect(origin, next, supabase, redirectWithSession);
@@ -81,7 +93,7 @@ export async function GET(request: NextRequest) {
 
     if (error) {
       console.error("[auth/confirm] verifyOtp (token) failed:", error.message);
-      return NextResponse.redirect(`${origin}/login?error=verification_failed`);
+      return NextResponse.redirect(`${origin}/login?error=${verifyErrorParam(error.message)}`);
     }
 
     return finishAuthRedirect(origin, next, supabase, redirectWithSession);

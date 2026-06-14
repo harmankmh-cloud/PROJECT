@@ -116,7 +116,11 @@ export function LoginFormNew({ initialError }: { initialError?: string | null })
   }
 
   const showResendConfirmation =
-    pendingEmail !== null || initialError?.includes("confirmation") || initialError?.includes("verification");
+    pendingEmail !== null ||
+    initialError?.includes("confirmation") ||
+    initialError?.includes("verification") ||
+    initialError?.includes("already used") ||
+    initialError?.includes("expired");
 
   return (
     <form onSubmit={handleSubmit(onSubmit)} className="space-y-4">

@@ -6,6 +6,8 @@ export const AUTH_ERROR_MESSAGES: Record<string, string> = {
   unauthorized: "You do not have access to that area.",
   verification_failed: "Email verification failed. Request a new confirmation link.",
   invalid_link: "That verification link is invalid or has expired.",
+  link_used:
+    "That confirmation link was already used or has expired. Sign in below, or request a new confirmation email.",
 };
 
 export function authErrorMessage(code: string | undefined | null) {
