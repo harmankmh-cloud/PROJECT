@@ -1,4 +1,5 @@
 import { createDbClient, createServiceClient } from "@/lib/supabase/admin";
+import { createUserDbClient } from "@/lib/supabase/user-db";
 import type { ProviderReview } from "@/lib/types";
 
 export async function getProviderReviews(providerId: string, limit = 20) {
@@ -21,11 +22,13 @@ export async function getProviderReviews(providerId: string, limit = 20) {
 }
 
 export async function getProviderReviewsForProvider(providerId: string, limit = 20) {
-  const admin = createDbClient();
-  if (!admin) return [];
+  // Pro dashboard needs JWT + owner policy (pending reviews are not public)
+  const ctx = await createUserDbClient();
+  const client = ctx?.supabase ?? createServiceClient() ?? createDbClient();
+  if (!client) return [];
 
   try {
-    const { data } = await admin
+    const { data } = await client
       .from("provider_reviews")
       .select("*")
       .eq("provider_id", providerId)
