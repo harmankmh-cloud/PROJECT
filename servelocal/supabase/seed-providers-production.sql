@@ -1,4 +1,4 @@
--- ServeLocal production seed — matches live service_providers schema (no premium columns).
+-- ServeLocal production seed — run on TRADELOCAL (`avytxgfkncpacqewnrvz`), not RateLocal's DB.
 -- Safe to re-run: on conflict (slug) do nothing.
 
 insert into service_providers (

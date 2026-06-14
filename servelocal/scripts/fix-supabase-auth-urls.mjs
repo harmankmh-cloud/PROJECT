@@ -6,13 +6,13 @@
  *
  * Requires:
  *   SUPABASE_ACCESS_TOKEN — Supabase dashboard → Account → Access Tokens
- *   SUPABASE_PROJECT_REF  — defaults to RateLocal/ServeLocal shared project
+ *   SUPABASE_PROJECT_REF  — defaults to ServeLocal TRADELOCAL project
  *
  * Usage (from repo root):
  *   SUPABASE_ACCESS_TOKEN=sbp_... node servelocal/scripts/fix-supabase-auth-urls.mjs
  */
 
-const ref = process.env.SUPABASE_PROJECT_REF || "otnddwopphhxstteqizw";
+const ref = process.env.SUPABASE_PROJECT_REF || "avytxgfkncpacqewnrvz";
 const token = process.env.SUPABASE_ACCESS_TOKEN;
 
 if (!token) {

@@ -16,6 +16,9 @@
     },
     "supabase-ratelocal": {
       "url": "https://mcp.supabase.com/mcp?project_ref=otnddwopphhxstteqizw"
+    },
+    "supabase-servelocal": {
+      "url": "https://mcp.supabase.com/mcp?project_ref=avytxgfkncpacqewnrvz"
     }
   }
 }
