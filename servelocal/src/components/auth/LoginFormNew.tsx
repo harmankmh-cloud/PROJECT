@@ -50,7 +50,7 @@ export function LoginFormNew({ initialError }: { initialError?: string | null })
     }
     const supabase = createClient();
     await supabase.auth.resetPasswordForEmail(email, {
-      redirectTo: `${window.location.origin}/auth/callback?next=/dashboard/settings`,
+      redirectTo: `${window.location.origin}/auth/confirm?next=/dashboard/settings`,
     });
     setResetSent(true);
   }

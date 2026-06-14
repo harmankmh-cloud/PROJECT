@@ -1,8 +1,9 @@
 import { NextResponse } from "next/server";
-import { isPlatformAdmin } from "@/lib/admin-auth";
+import { resolvePostAuthRedirect } from "@/lib/auth/post-auth-redirect";
 import { createClient } from "@/lib/supabase/server";
 import { isSupabaseConfigured } from "@/lib/supabase/config";
 
+/** PKCE OAuth / email confirmation via authorization code. */
 export async function GET(request: Request) {
   const { searchParams, origin } = new URL(request.url);
   const code = searchParams.get("code");
@@ -27,18 +28,6 @@ export async function GET(request: Request) {
     return NextResponse.redirect(`${origin}/login?error=auth_failed`);
   }
 
-  const {
-    data: { user },
-  } = await supabase.auth.getUser();
-
-  if (user && isPlatformAdmin(user.email)) {
-    return NextResponse.redirect(`${origin}/admin`);
-  }
-
-  const afterLoginUrl = new URL("/auth/after-login", origin);
-  if (next && next.startsWith("/") && !next.startsWith("//")) {
-    afterLoginUrl.searchParams.set("next", next);
-  }
-
-  return NextResponse.redirect(afterLoginUrl.toString());
+  const target = await resolvePostAuthRedirect(origin, next);
+  return NextResponse.redirect(target);
 }

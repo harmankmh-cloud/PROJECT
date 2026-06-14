@@ -51,6 +51,9 @@ Full steps: **`SMTP_SETUP.md`** (this folder) and **`reviewflow/SMTP_SETUP.md`**
 Add redirect URLs in Supabase for ServeLocal:
 
 ```
+https://www.servelocal.ca/auth/confirm
+https://servelocal.ca/auth/confirm
+http://localhost:3001/auth/confirm
 https://www.servelocal.ca/auth/callback
 https://servelocal.ca/auth/callback
 http://localhost:3001/auth/callback

@@ -42,7 +42,7 @@ export function ProSignupForm() {
       password: data.password,
       options: {
         data: { role: "pro", display_name: data.name, city: data.city },
-        emailRedirectTo: `${window.location.origin}/auth/callback`,
+        emailRedirectTo: `${window.location.origin}/auth/confirm`,
       },
     });
 

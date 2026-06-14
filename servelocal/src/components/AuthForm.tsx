@@ -48,7 +48,7 @@ export function AuthForm({ mode }: { mode: "login" | "signup" }) {
           email: email.trim(),
           password,
           options: {
-            emailRedirectTo: `${window.location.origin}/auth/callback`,
+            emailRedirectTo: `${window.location.origin}/auth/confirm`,
           },
         });
         if (result.error) throw result.error;
@@ -86,7 +86,7 @@ export function AuthForm({ mode }: { mode: "login" | "signup" }) {
     try {
       const supabase = createClient();
       const { error: resetError } = await supabase.auth.resetPasswordForEmail(email.trim(), {
-        redirectTo: `${window.location.origin}/auth/callback?next=/dashboard`,
+        redirectTo: `${window.location.origin}/auth/confirm?next=/dashboard`,
       });
       if (resetError) throw resetError;
       setInfo("Password reset email sent. Check your inbox.");

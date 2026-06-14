@@ -37,6 +37,15 @@ export async function middleware(request: NextRequest) {
 
   const pathname = request.nextUrl.pathname;
 
+  // Public auth handlers — must run without session gates (OTP / PKCE cookie exchange)
+  if (
+    pathname.startsWith("/auth/confirm") ||
+    pathname.startsWith("/auth/callback") ||
+    pathname.startsWith("/auth/after-login")
+  ) {
+    return response;
+  }
+
   if (pathname.startsWith("/admin") && !user) {
     return NextResponse.redirect(new URL("/login", request.url));
   }
@@ -57,5 +66,14 @@ export async function middleware(request: NextRequest) {
 }
 
 export const config = {
-  matcher: ["/dashboard/:path*", "/onboarding", "/onboarding/:path*", "/admin/:path*", "/login", "/signup", "/signup/:path*"],
+  matcher: [
+    "/auth/:path*",
+    "/dashboard/:path*",
+    "/onboarding",
+    "/onboarding/:path*",
+    "/admin/:path*",
+    "/login",
+    "/signup",
+    "/signup/:path*",
+  ],
 };

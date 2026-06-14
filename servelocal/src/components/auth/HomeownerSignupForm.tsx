@@ -39,7 +39,7 @@ export function HomeownerSignupForm() {
       password: data.password,
       options: {
         data: { role: "homeowner", display_name: data.name, city: data.city },
-        emailRedirectTo: `${window.location.origin}/auth/callback`,
+        emailRedirectTo: `${window.location.origin}/auth/confirm`,
       },
     });
 
