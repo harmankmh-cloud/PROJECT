@@ -5,6 +5,9 @@
       "args": ["-m", "project_rag.mcp_server"],
       "cwd": "${workspaceFolder}"
     },
+    "supabase": {
+      "url": "https://mcp.supabase.com/mcp"
+    },
     "figma": {
       "url": "https://mcp.figma.com/mcp"
     },
