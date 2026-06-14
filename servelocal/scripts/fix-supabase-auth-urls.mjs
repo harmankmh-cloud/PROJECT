@@ -1,5 +1,7 @@
 #!/usr/bin/env node
 /**
+ * @deprecated Use servelocal/scripts/harden-supabase-auth.mjs
+ *
  * Patch Supabase Auth URL config for ServeLocal email confirm flows.
  *
  * Requires:

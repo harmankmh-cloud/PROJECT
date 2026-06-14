@@ -1,4 +1,5 @@
 import { createClient } from "@/lib/supabase/server";
+import { getServerAuthUser } from "@/lib/supabase/get-server-user";
 import type { User } from "@supabase/supabase-js";
 
 export type UserDbContext = {
@@ -11,10 +12,7 @@ export async function createUserDbClient(): Promise<UserDbContext | null> {
   const supabase = await createClient();
   if (!supabase) return null;
 
-  const {
-    data: { user },
-  } = await supabase.auth.getUser();
-
+  const user = await getServerAuthUser();
   if (!user) return null;
   return { supabase, user };
 }

@@ -15,12 +15,31 @@ function roleFromUser(user: { user_metadata?: Record<string, unknown> }): UserRo
   return undefined;
 }
 
+function pathNeedsSessionCheck(pathname: string) {
+  return (
+    pathname.startsWith("/admin") ||
+    pathname.startsWith("/dashboard") ||
+    pathname.startsWith("/onboarding") ||
+    pathname === "/login" ||
+    pathname.startsWith("/login/") ||
+    pathname === "/signup" ||
+    pathname.startsWith("/signup/")
+  );
+}
+
 export async function middleware(request: NextRequest) {
   const pathname = request.nextUrl.pathname;
 
   // Email confirm links often land on / (Site URL) with ?code= or ?token_hash= — forward server-side.
   if (!isAuthHandlerPath(pathname) && hasAuthCallbackParams(request.nextUrl.searchParams)) {
     return NextResponse.redirect(buildAuthConfirmRedirect(request));
+  }
+
+  // Public routes: skip getUser() — avoids /auth/v1/user on every homepage hit.
+  if (isAuthHandlerPath(pathname) || pathname === "/" || !pathNeedsSessionCheck(pathname)) {
+    return NextResponse.next({
+      request: { headers: request.headers },
+    });
   }
 
   let response = NextResponse.next({
@@ -54,15 +73,6 @@ export async function middleware(request: NextRequest) {
   const {
     data: { user },
   } = await supabase.auth.getUser();
-
-  // Public auth handlers — must run without session gates (OTP / PKCE cookie exchange)
-  if (
-    pathname.startsWith("/auth/confirm") ||
-    pathname.startsWith("/auth/callback") ||
-    pathname.startsWith("/auth/after-login")
-  ) {
-    return response;
-  }
 
   if (pathname.startsWith("/admin") && !user) {
     return NextResponse.redirect(new URL("/login", request.url));

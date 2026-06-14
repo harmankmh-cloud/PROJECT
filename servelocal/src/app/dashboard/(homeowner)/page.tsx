@@ -3,12 +3,11 @@ import { ShimmerButton } from "@/components/ui/ShimmerButton";
 import { getHomeownerDashboardCounts } from "@/lib/data/bookings";
 import { getUserServiceRequests } from "@/lib/data/requests";
 import { createClient } from "@/lib/supabase/server";
+import { getServerAuthUser } from "@/lib/supabase/get-server-user";
 
 export default async function HomeownerOverviewPage() {
   const supabase = await createClient();
-  const {
-    data: { user },
-  } = supabase ? await supabase.auth.getUser() : { data: { user: null } };
+  const user = await getServerAuthUser();
 
   const [counts, requests] = await Promise.all([
     user ? getHomeownerDashboardCounts(user.id) : null,

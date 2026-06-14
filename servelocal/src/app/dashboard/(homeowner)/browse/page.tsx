@@ -3,6 +3,7 @@ import { InteractiveMap } from "@/components/search/InteractiveMap";
 import { ProListingCard } from "@/components/search/ProListingCard";
 import { getApprovedProviders, getServiceCategories } from "@/lib/data";
 import { createClient } from "@/lib/supabase/server";
+import { getServerAuthUser } from "@/lib/supabase/get-server-user";
 import { getUserProfile } from "@/lib/user-profiles";
 
 const PAGE_SIZE = 12;
@@ -16,9 +17,7 @@ export default async function BrowseProsPage({
   const page = Math.max(0, Number(pageParam || "1") - 1);
 
   const supabase = await createClient();
-  const {
-    data: { user },
-  } = supabase ? await supabase.auth.getUser() : { data: { user: null } };
+  const user = await getServerAuthUser();
   const profile = user ? await getUserProfile(user.id) : null;
 
   const citySlug = profile?.preferred_city_slug ?? undefined;

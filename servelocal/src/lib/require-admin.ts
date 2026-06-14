@@ -2,15 +2,10 @@ import "server-only";
 
 import { NextResponse } from "next/server";
 import { isPlatformAdmin } from "@/lib/admin-auth";
-import { createClient } from "@/lib/supabase/server";
+import { getServerAuthUser } from "@/lib/supabase/get-server-user";
 
 export async function requirePlatformAdmin() {
-  const supabase = await createClient();
-  if (!supabase) return null;
-
-  const {
-    data: { user },
-  } = await supabase.auth.getUser();
+  const user = await getServerAuthUser();
 
   if (!user || !isPlatformAdmin(user.email)) {
     return null;

@@ -7,13 +7,12 @@ import { cityName, LISTING_PLANS } from "@/lib/constants";
 import { getJobLeadsForProvider, getProvidersForUser } from "@/lib/data";
 import { FOUNDING_PRO } from "@/lib/tradie-program";
 import { createClient } from "@/lib/supabase/server";
+import { getServerAuthUser } from "@/lib/supabase/get-server-user";
 import { Suspense } from "react";
 
 export default async function ProOverviewPage() {
   const supabase = await createClient();
-  const {
-    data: { user },
-  } = supabase ? await supabase.auth.getUser() : { data: { user: null } };
+  const user = await getServerAuthUser();
   if (!user) redirect("/login");
 
   const listings = await getProvidersForUser(user.id);

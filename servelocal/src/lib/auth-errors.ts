@@ -25,5 +25,22 @@ export function friendlyAuthError(message: string): string {
     return "Could not send email. Verify your domain in Resend, or turn Confirm email OFF in Supabase (same fix as RateLocal). See SMTP_SETUP.md.";
   }
 
+  if (
+    lower.includes("one-time token not found") ||
+    lower.includes("otp expired") ||
+    lower.includes("token has expired") ||
+    lower.includes("invalid or expired")
+  ) {
+    return "That link was already used or has expired. Sign in below, or request a new confirmation email.";
+  }
+
+  if (
+    lower.includes("already registered") ||
+    lower.includes("already been registered") ||
+    lower.includes("user already registered")
+  ) {
+    return "An account with this email already exists. Sign in, or check your inbox for the confirmation link.";
+  }
+
   return message;
 }

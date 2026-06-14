@@ -26,9 +26,7 @@ export function SiteAuthNav({
 
     const supabase = createClient();
 
-    async function refreshSession() {
-      const { data } = await supabase.auth.getUser();
-      const user = data.user ?? null;
+    async function applySession(user: User | null) {
       if (!user) {
         setSession({ user: null, dashboardPath: "/dashboard" });
         return;
@@ -48,12 +46,14 @@ export function SiteAuthNav({
       setSession({ user, dashboardPath: "/auth/after-login" });
     }
 
-    void refreshSession();
+    void supabase.auth.getSession().then(({ data }) => {
+      void applySession(data.session?.user ?? null);
+    });
 
     const {
       data: { subscription },
-    } = supabase.auth.onAuthStateChange(() => {
-      void refreshSession();
+    } = supabase.auth.onAuthStateChange((_event, authSession) => {
+      void applySession(authSession?.user ?? null);
     });
 
     return () => subscription.unsubscribe();

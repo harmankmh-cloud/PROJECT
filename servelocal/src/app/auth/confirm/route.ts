@@ -1,9 +1,19 @@
 import { type EmailOtpType, type SupabaseClient } from "@supabase/supabase-js";
 import { NextRequest, NextResponse } from "next/server";
+import {
+  authCodeErrorReason,
+  authCodeErrorUrl,
+  type AuthCodeErrorReason,
+} from "@/lib/auth/confirm-errors";
 import { ensureUserProfileFromMetadata } from "@/lib/auth/queries";
 import { isEmailOtpType, resolvePostAuthRedirect } from "@/lib/auth/post-auth-redirect";
+import { authLog, authMetric } from "@/lib/auth/observability";
 import { createAuthRouteHandlerClient } from "@/lib/supabase/route-handler";
 import { isSupabaseConfigured } from "@/lib/supabase/config";
+
+function redirectAuthCodeError(origin: string, reason: AuthCodeErrorReason, email?: string | null) {
+  return NextResponse.redirect(authCodeErrorUrl(origin, reason, email));
+}
 
 async function finishAuthRedirect(
   origin: string,
@@ -11,6 +21,7 @@ async function finishAuthRedirect(
   supabase: SupabaseClient,
   redirectWithSession: (target: string) => NextResponse
 ) {
+  // Fresh read after verify — do not use cached getServerAuthUser here.
   const {
     data: { user },
   } = await supabase.auth.getUser();
@@ -20,13 +31,13 @@ async function finishAuthRedirect(
   }
 
   const target = await resolvePostAuthRedirect(origin, next, supabase);
+  authLog("confirm.ok", { userId: user?.id ?? null, target });
   return redirectWithSession(target);
 }
 
 /**
- * Server-side email / OTP link verification.
- * Sets session cookies on the redirect response, then 302 so the browser
- * persists cookies before /auth/after-login runs.
+ * Single server-side verify for email links — one request, no client/middleware re-verify.
+ * PKCE `code` and OTP `token_hash` both land here via emailRedirectTo.
  */
 export async function GET(request: NextRequest) {
   const { searchParams, origin } = new URL(request.url);
@@ -38,21 +49,29 @@ export async function GET(request: NextRequest) {
   const next = searchParams.get("next");
 
   if (!isSupabaseConfigured()) {
-    return NextResponse.redirect(`${origin}/login?error=not_configured`);
+    return redirectAuthCodeError(origin, "not_configured");
   }
 
   const auth = createAuthRouteHandlerClient(request);
   if (!auth) {
-    return NextResponse.redirect(`${origin}/login?error=auth_failed`);
+    return redirectAuthCodeError(origin, "auth_failed", email);
   }
 
   const { supabase, redirectWithSession } = auth;
 
+  authLog("confirm.start", {
+    hasCode: Boolean(code),
+    hasTokenHash: Boolean(tokenHash),
+    hasToken: Boolean(token),
+    type: typeParam,
+  });
+  authMetric("confirm.verify");
+
   if (code) {
     const { error } = await supabase.auth.exchangeCodeForSession(code);
     if (error) {
-      console.error("[auth/confirm] exchangeCodeForSession failed:", error.message);
-      return NextResponse.redirect(`${origin}/login?error=auth_failed`);
+      authLog("confirm.fail", { step: "exchangeCodeForSession", message: error.message });
+      return redirectAuthCodeError(origin, authCodeErrorReason(error.message), email);
     }
     return finishAuthRedirect(origin, next, supabase, redirectWithSession);
   }
@@ -64,14 +83,13 @@ export async function GET(request: NextRequest) {
     });
 
     if (error) {
-      console.error("[auth/confirm] verifyOtp failed:", error.message);
-      return NextResponse.redirect(`${origin}/login?error=verification_failed`);
+      authLog("confirm.fail", { step: "verifyOtp", message: error.message });
+      return redirectAuthCodeError(origin, authCodeErrorReason(error.message), email);
     }
 
     return finishAuthRedirect(origin, next, supabase, redirectWithSession);
   }
 
-  // Legacy/alternate Supabase redirect shape (?token=&type=, sometimes with email=)
   if (token && isEmailOtpType(typeParam)) {
     const verifyPayload = email
       ? { type: typeParam as EmailOtpType, token, email }
@@ -80,12 +98,13 @@ export async function GET(request: NextRequest) {
     const { error } = await supabase.auth.verifyOtp(verifyPayload);
 
     if (error) {
-      console.error("[auth/confirm] verifyOtp (token) failed:", error.message);
-      return NextResponse.redirect(`${origin}/login?error=verification_failed`);
+      authLog("confirm.fail", { step: "verifyOtp(token)", message: error.message });
+      return redirectAuthCodeError(origin, authCodeErrorReason(error.message), email);
     }
 
     return finishAuthRedirect(origin, next, supabase, redirectWithSession);
   }
 
-  return NextResponse.redirect(`${origin}/login?error=invalid_link`);
+  authLog("confirm.fail", { step: "missing_params" });
+  return redirectAuthCodeError(origin, "invalid_link", email);
 }

@@ -3,12 +3,11 @@ import { ProJobLeadsFeed } from "@/components/dashboard/ProJobLeadsFeed";
 import { cityName } from "@/lib/constants";
 import { getJobLeadsForProvider, getProvidersForUser } from "@/lib/data";
 import { createClient } from "@/lib/supabase/server";
+import { getServerAuthUser } from "@/lib/supabase/get-server-user";
 
 export default async function ProLeadsPage() {
   const supabase = await createClient();
-  const {
-    data: { user },
-  } = supabase ? await supabase.auth.getUser() : { data: { user: null } };
+  const user = await getServerAuthUser();
   if (!user) redirect("/login");
 
   const listings = await getProvidersForUser(user.id);
