@@ -11,7 +11,15 @@ import { loginSchema, type LoginData } from "@/lib/schemas/auth";
 import { createClient } from "@/lib/supabase/client";
 import { isSupabaseConfigured } from "@/lib/supabase/config";
 
-export function LoginFormNew({ initialError }: { initialError?: string | null }) {
+import type { UserRole } from "@/lib/user-profiles";
+
+export function LoginFormNew({
+  initialError,
+  intent,
+}: {
+  initialError?: string | null;
+  intent?: UserRole;
+}) {
   const [error, setError] = useState<string | null>(initialError ?? null);
   const [resetSent, setResetSent] = useState(false);
 
@@ -39,7 +47,10 @@ export function LoginFormNew({ initialError }: { initialError?: string | null })
       return;
     }
 
-    await redirectAfterAuth("/auth/after-login");
+    const afterLogin = intent
+      ? `/auth/after-login?intent=${intent}`
+      : "/auth/after-login";
+    await redirectAfterAuth(afterLogin);
   }
 
   async function handleForgot() {
@@ -77,7 +88,10 @@ export function LoginFormNew({ initialError }: { initialError?: string | null })
       </button>
       <p className="text-center text-sm text-slate-500">
         New here?{" "}
-        <Link href="/signup" className="font-semibold text-primary hover:underline">
+        <Link
+          href={intent === "pro" ? "/signup/pro" : intent === "homeowner" ? "/signup/homeowner" : "/signup"}
+          className="font-semibold text-primary hover:underline"
+        >
           Create account
         </Link>
       </p>
