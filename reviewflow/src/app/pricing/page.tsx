@@ -1,6 +1,6 @@
 import type { Metadata } from "next";
 import Link from "next/link";
-import { BrandLogo } from "@/components/BrandLogo";
+import { MarketingHeader } from "@/components/MarketingHeader";
 import { SiteFooter } from "@/components/SiteFooter";
 import { BRAND } from "@/lib/brand";
 import { PRICING } from "@/lib/marketing-content";
@@ -14,30 +14,25 @@ export const metadata: Metadata = {
 
 export default function PricingPage() {
   return (
-    <main className="mesh-bg min-h-screen">
-      <header className="site-header">
-        <div className="mx-auto flex max-w-6xl items-center justify-between px-4 py-4 sm:px-8">
-          <BrandLogo />
-          <div className="flex gap-2">
-            <Link href="/" className="btn-ghost px-4 py-2 text-sm">
-              Home
-            </Link>
-            <Link href="/signup" className="btn-gold px-4 py-2 text-sm">
-              Start free →
-            </Link>
+    <main className="min-h-screen bg-[#f8f9fc]">
+      <section className="hero-dark relative overflow-hidden pb-12 pt-6 sm:pb-16 sm:pt-8">
+        <div className="hero-glow left-0 top-0 h-64 w-64 bg-gold-600/10" />
+        <div className="relative mx-auto max-w-6xl px-4 sm:px-8">
+          <MarketingHeader />
+          <div className="mt-12 text-center">
+            <p className="text-xs font-semibold uppercase tracking-widest text-white/50">Pricing</p>
+            <h1 className="font-display mt-3 text-4xl text-white sm:text-5xl">
+              One plan. Everything included.
+            </h1>
+            <p className="mx-auto mt-4 max-w-xl text-lg text-white/55">
+              No tiers to decode. {BRAND.name} gives your shop a review page, QR poster, AI drafts, and private
+              feedback routing.
+            </p>
           </div>
         </div>
-      </header>
+      </section>
 
       <div className="mx-auto max-w-3xl px-4 py-14 sm:px-8">
-        <p className="page-eyebrow text-center">Pricing</p>
-        <h1 className="font-display mt-3 text-center text-4xl text-brand-950 sm:text-5xl">
-          One plan. Everything included.
-        </h1>
-        <p className="mx-auto mt-4 max-w-xl text-center text-slate-600">
-          No tiers to decode. {BRAND.name} gives your shop a review page, QR poster, AI drafts, and private
-          feedback routing.
-        </p>
 
         <div id="pricing" className="surface-dark relative mt-12 overflow-hidden p-10 text-center sm:p-14">
           <div className="hero-glow -right-10 top-0 h-48 w-48 bg-amber-500/20" />
@@ -87,8 +82,9 @@ export default function PricingPage() {
         <div className="mx-auto mt-10 max-w-xl rounded-2xl border border-gold-500/30 bg-gold-50/60 p-6 text-center">
           <p className="text-sm font-semibold text-brand-950">Bundle &amp; save: Reputation + Reception</p>
           <p className="mt-2 text-sm text-slate-600">
-            Add Intellivo (an AI phone agent that answers every call 24/7) and get both for{" "}
-            <strong className="text-brand-950">$119/mo</strong>. More reviews and never a missed call.
+            Add GreetQ (an AI phone agent that answers every call 24/7) and get both for{" "}
+            <strong className="text-brand-950">$99/mo</strong> — save $19 vs buying separately. More reviews and
+            never a missed call.
           </p>
         </div>
 

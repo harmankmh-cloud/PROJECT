@@ -1,7 +1,8 @@
 import { redirect } from "next/navigation";
-import { createClient } from "@/lib/supabase/server";
-import { isPlatformAdmin } from "@/lib/admin-auth";
+import { DatadogInit } from "@/components/DatadogInit";
 import { AdminShell } from "@/components/AdminShell";
+import { isPlatformAdmin } from "@/lib/admin-auth";
+import { createClient } from "@/lib/supabase/server";
 
 export default async function AdminLayout({ children }: { children: React.ReactNode }) {
   const supabase = await createClient();
@@ -15,5 +16,10 @@ export default async function AdminLayout({ children }: { children: React.ReactN
     redirect("/dashboard");
   }
 
-  return <AdminShell>{children}</AdminShell>;
+  return (
+    <>
+      <DatadogInit />
+      <AdminShell>{children}</AdminShell>
+    </>
+  );
 }

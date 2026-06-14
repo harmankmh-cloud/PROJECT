@@ -1,3 +1,4 @@
+import { withSentryConfig } from "@sentry/nextjs";
 import type { NextConfig } from "next";
 import path from "path";
 
@@ -11,7 +12,7 @@ const securityHeaders = [
     key: "Permissions-Policy",
     value: "camera=(), microphone=(self), geolocation=()",
   },
-  { key: "X-Frame-Options", value: "SAMEORIGIN" },
+  { key: "X-Frame-Options", value: "DENY" },
   {
     key: "Strict-Transport-Security",
     value: "max-age=63072000; includeSubDomains; preload",
@@ -35,6 +36,9 @@ const securityHeaders = [
 
 const nextConfig: NextConfig = {
   outputFileTracingRoot: monorepoRoot,
+  experimental: {
+    optimizePackageImports: ["lucide-react", "framer-motion", "recharts"],
+  },
   turbopack: {
     root: monorepoRoot,
   },
@@ -44,6 +48,17 @@ const nextConfig: NextConfig = {
   async headers() {
     return [{ source: "/:path*", headers: securityHeaders }];
   },
+  async rewrites() {
+    return [{ source: "/favicon.ico", destination: "/icon" }];
+  },
 };
 
-export default nextConfig;
+export default withSentryConfig(nextConfig, {
+  org: "greetq",
+  project: "javascript",
+  silent: !process.env.CI,
+  widenClientFileUpload: true,
+  tunnelRoute: "/monitoring",
+  disableLogger: true,
+  automaticVercelMonitors: true,
+});

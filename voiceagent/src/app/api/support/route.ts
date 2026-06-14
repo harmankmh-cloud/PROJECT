@@ -3,18 +3,31 @@ import { z } from "zod";
 import { createClient } from "@/lib/supabase/server";
 import { createAdminClient } from "@/lib/supabase/admin";
 import { getUserOrg } from "@/lib/auth";
+import { notifyActivepiecesSupportLead } from "@/lib/activepieces";
 import { logAudit } from "@/lib/compliance/audit";
+import { clientIp, isRateLimited } from "@/lib/rate-limit";
 
 const bodySchema = z.object({
   email: z.string().email(),
   orgName: z.string().max(120).optional(),
   category: z.enum(["help", "suggestion", "bug", "billing", "other"]).default("help"),
   message: z.string().min(10).max(4000),
+  website: z.string().max(0).optional(),
 });
 
 export async function POST(request: Request) {
+  const ip = clientIp(request);
+  if (isRateLimited(`support:${ip}`, 5, 60 * 60 * 1000)) {
+    return NextResponse.json({ error: "Too many messages. Try again in an hour." }, { status: 429 });
+  }
+
   try {
     const body = bodySchema.parse(await request.json());
+
+    if (body.website) {
+      return NextResponse.json({ ok: true });
+    }
+
     const supabase = await createClient();
     const {
       data: { user },
@@ -36,6 +49,13 @@ export async function POST(request: Request) {
     } catch {
       // Table may not exist yet; fall through to audit when possible.
     }
+
+    void notifyActivepiecesSupportLead({
+      email: body.email.trim(),
+      orgName,
+      category: body.category,
+      message: body.message.trim(),
+    });
 
     if (org) {
       await logAudit({

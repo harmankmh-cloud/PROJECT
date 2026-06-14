@@ -4,6 +4,7 @@ import { useState } from "react";
 import { useRouter } from "next/navigation";
 import { IndustryPicker } from "@/components/IndustryPicker";
 import { useGoogleSetup } from "@/components/GoogleSetupModal";
+import { validateGoogleReviewUrl } from "@/lib/google-review-url";
 import type { Business } from "@/lib/types";
 import { BRAND } from "@/lib/brand";
 
@@ -29,6 +30,15 @@ export function BusinessSettingsForm({
     setLoading(true);
     setError("");
     setMessage("");
+
+    if (googleReviewUrl.trim()) {
+      const validated = validateGoogleReviewUrl(googleReviewUrl);
+      if (!validated.ok) {
+        setError(validated.error);
+        setLoading(false);
+        return;
+      }
+    }
 
     try {
       const response = await fetch("/api/business/update", {

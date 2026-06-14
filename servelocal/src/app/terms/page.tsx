@@ -61,6 +61,16 @@ export default function TermsPage() {
       </section>
 
       <section className="space-y-3">
+        <h2 className="text-lg font-semibold text-brand-950">Verified and insured badges</h2>
+        <p className="text-sm leading-relaxed text-slate-600">
+          &quot;Verified&quot; and &quot;Insured&quot; badges on pro profiles indicate that ServeLocal&apos;s admin team
+          has reviewed submitted licence or insurance documentation. We do not perform criminal background
+          checks unless explicitly stated on a specific program page. Badges are not a guarantee of work
+          quality — always confirm credentials, references, and written quotes before hiring.
+        </p>
+      </section>
+
+      <section className="space-y-3">
         <h2 className="text-lg font-semibold text-brand-950">Disclaimer of warranties</h2>
         <p className="text-sm leading-relaxed text-slate-600">
           The service is provided &quot;as is.&quot; We do not guarantee uninterrupted access, the quality of

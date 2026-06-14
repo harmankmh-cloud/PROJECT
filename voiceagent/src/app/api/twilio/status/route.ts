@@ -4,6 +4,7 @@ import { validateTwilioWebhook } from "@/lib/twilio-webhook";
 import { analyzeCall } from "@/lib/intelligence";
 import { intelligenceToCallUpdate } from "@/lib/call-intelligence-persist";
 import { dispatchCallWebhook } from "@/lib/outbound-webhook";
+import { recordCallUsage } from "@/lib/usage-metering";
 
 export async function POST(request: NextRequest) {
   const formData = await request.formData();
@@ -26,7 +27,7 @@ export async function POST(request: NextRequest) {
   }
   const { data: call } = await admin
     .from("va_calls")
-    .select("id, org_id, agent_id, from_number, transferred, ended_at, handoff_payload")
+    .select("id, org_id, agent_id, from_number, transferred, ended_at, handoff_payload, is_sandbox")
     .eq("twilio_call_sid", callSid)
     .maybeSingle();
 
@@ -56,11 +57,11 @@ export async function POST(request: NextRequest) {
       })
       .eq("id", call.id);
 
-    await admin.from("va_usage_events").insert({
-      org_id: call.org_id,
-      call_id: call.id,
-      event_type: "voice_minute",
-      quantity: minutes,
+    await recordCallUsage(admin, {
+      orgId: call.org_id,
+      callId: call.id,
+      minutes,
+      isSandbox: Boolean(call.is_sandbox),
     });
 
     await dispatchCallWebhook(call.org_id, {

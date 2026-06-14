@@ -1,5 +1,6 @@
 import type { SupabaseClient } from "@supabase/supabase-js";
 import { DEFAULT_PROMPTS, slugify } from "@/lib/defaults";
+import { validateGoogleReviewUrl } from "@/lib/google-review-url";
 
 export type BusinessSetupInput = {
   name: string;
@@ -21,6 +22,13 @@ export async function createBusinessForUser(
 
   if (existingBusiness) {
     return { ok: true, businessId: existingBusiness.id };
+  }
+
+  let googleReviewUrl: string | null = null;
+  if (body.googleReviewUrl?.trim()) {
+    const validated = validateGoogleReviewUrl(body.googleReviewUrl);
+    if (!validated.ok) return { ok: false, error: validated.error };
+    googleReviewUrl = validated.value || null;
   }
 
   const baseSlug = slugify(body.name) || "business";
@@ -45,7 +53,7 @@ export async function createBusinessForUser(
       name: body.name,
       slug,
       business_type: body.businessType,
-      google_review_url: body.googleReviewUrl?.trim() || null,
+      google_review_url: googleReviewUrl,
       tone: body.tone || "friendly",
     })
     .select("id")

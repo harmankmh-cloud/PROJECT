@@ -1,12 +1,13 @@
 import type { Metadata } from "next";
 import Link from "next/link";
-import { MarketingFooter } from "@/components/MarketingFooter";
-import { MarketingHeader } from "@/components/MarketingHeader";
+import { MarketingFooterNew } from "@/components/marketing/MarketingFooterNew";
+import { MarketingNavbar } from "@/components/marketing/MarketingNavbar";
 import { SkipToContent } from "@/components/SkipToContent";
 import { BRAND } from "@/lib/brand";
 
 export const metadata: Metadata = {
   title: "Terms of Service",
+  description: `Terms governing use of the ${BRAND.name} voice AI platform, subscriptions, acceptable use, and data handling.`,
   alternates: { canonical: "/terms" },
 };
 
@@ -14,8 +15,8 @@ export default function TermsPage() {
   return (
     <div className="dark-mesh-bg grid-pattern flex min-h-screen flex-col">
       <SkipToContent />
-      <MarketingHeader />
-      <main id="main-content" className="mx-auto max-w-3xl flex-1 px-6 py-16">
+      <MarketingNavbar />
+      <main id="main-content" className="mx-auto max-w-3xl flex-1 px-6 pb-16 pt-24">
         <h1 className="font-display text-3xl text-ghost-white">Terms of Service</h1>
         <p className="mt-2 text-sm text-on-surface-variant">Last updated: June 2026</p>
 
@@ -44,6 +45,16 @@ export default function TermsPage() {
               <li>No attempts to bypass security, abuse APIs, or resell access without authorization.</li>
               <li>You are responsible for content your agents say and actions they take on your behalf.</li>
             </ul>
+          </section>
+
+          <section>
+            <h2 className="text-lg font-semibold text-ghost-white">Free explore &amp; trial</h2>
+            <p>
+              New accounts receive trial voice minutes and access to the text sandbox without a payment
+              method. Sandbox voice test calls are capped. Production inbound lines, purchased numbers,
+              and outbound campaigns require an active subscription or remaining trial minutes. Going live
+              starts a 14-day Stripe subscription trial with a payment method on file.
+            </p>
           </section>
 
           <section>
@@ -84,7 +95,7 @@ export default function TermsPage() {
           </section>
         </div>
       </main>
-      <MarketingFooter />
+      <MarketingFooterNew />
     </div>
   );
 }

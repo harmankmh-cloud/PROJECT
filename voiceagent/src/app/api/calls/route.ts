@@ -1,6 +1,7 @@
 import { NextResponse } from "next/server";
 import { createClient } from "@/lib/supabase/server";
 import { getUserOrg } from "@/lib/auth";
+import type { Call } from "@/lib/types";
 
 export async function GET() {
   const supabase = await createClient();
@@ -19,13 +20,14 @@ export async function GET() {
     .order("created_at", { ascending: false })
     .limit(100);
 
-  const total = calls?.length || 0;
-  const transferred = calls?.filter((c) => c.transferred).length || 0;
-  const contained = calls?.filter((c) => c.contained).length || 0;
-  const totalMinutes = calls?.reduce((sum, c) => sum + Math.ceil((c.duration_seconds || 0) / 60), 0) || 0;
+  const rows = (calls || []) as Call[];
+  const total = rows.length;
+  const transferred = rows.filter((c) => c.transferred).length;
+  const contained = rows.filter((c) => c.contained).length;
+  const totalMinutes = rows.reduce((sum, c) => sum + Math.ceil((c.duration_seconds || 0) / 60), 0);
 
   return NextResponse.json({
-    calls: calls || [],
+    calls: rows,
     stats: {
       total,
       containmentRate: total ? Math.round((contained / total) * 100) : 0,

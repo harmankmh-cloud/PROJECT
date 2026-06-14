@@ -5,6 +5,7 @@ import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { IndustryPicker } from "@/components/IndustryPicker";
 import { PromptEditor } from "@/components/PromptEditor";
+import { validateGoogleReviewUrl } from "@/lib/google-review-url";
 import type { AdminFeedbackRow } from "@/lib/admin-data";
 import type { Business, PromptTemplate } from "@/lib/types";
 
@@ -59,6 +60,15 @@ export function AdminBusinessManagePanel({
     setSaveMsg("");
     setSaveErr("");
 
+    if (googleReviewUrl.trim()) {
+      const validated = validateGoogleReviewUrl(googleReviewUrl);
+      if (!validated.ok) {
+        setSaveErr(validated.error);
+        setSaving(false);
+        return;
+      }
+    }
+
     try {
       const response = await fetch(`/api/admin/businesses/${business.id}`, {
         method: "PATCH",
@@ -108,6 +118,17 @@ export function AdminBusinessManagePanel({
 
   return (
     <div className="space-y-8">
+      {!googleReviewUrl.trim() && (
+        <div className="rounded-xl border-2 border-rose-300 bg-rose-50 px-5 py-4 text-sm text-rose-900">
+          <p className="font-semibold">Google review link missing — customers won&apos;t reach Google Maps</p>
+          <p className="mt-1 text-rose-800/90">
+            Customers can still leave private feedback on RateLocal, but nothing opens Google until you
+            paste their Maps &quot;Write a review&quot; URL below (usually{" "}
+            <code className="text-xs">g.page/r/...</code>).
+          </p>
+        </div>
+      )}
+
       <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
         {[
           ["Reviews", reviewCount],

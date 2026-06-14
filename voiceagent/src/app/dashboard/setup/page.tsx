@@ -16,6 +16,10 @@ const KNOWLEDGE_PROMPTS = [
 
 export default function SetupWizardPage() {
   const router = useRouter();
+
+  useEffect(() => {
+    router.replace("/onboarding");
+  }, [router]);
   const [step, setStep] = useState(1);
   const [persona, setPersona] = useState<PersonaTemplate>("receptionist");
   const [agentId, setAgentId] = useState("");
@@ -99,7 +103,7 @@ export default function SetupWizardPage() {
     <div className="dashboard-container max-w-2xl pb-16">
       <div className="mb-8">
         <p className="section-eyebrow mb-2">Go live wizard</p>
-        <h1 className="font-display text-3xl font-bold text-ghost-white">Set up Intellivo</h1>
+        <h1 className="font-display text-3xl font-bold text-ghost-white">Set up GreetQ</h1>
         <p className="mt-2 text-on-surface-variant">
           Step {step} of 5 — get your agent ready for real callers.
         </p>

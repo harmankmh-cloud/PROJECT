@@ -1,3 +1,5 @@
+import { EXTENDED_COST_GUIDES } from "@/lib/extended-catalog";
+
 export const COMPANY = {
   email: "hello@servelocal.ca",
   address: "Fraser Valley, British Columbia, Canada",
@@ -12,25 +14,18 @@ export const POPULAR_SEARCHES = [
   { label: "Roofer Chilliwack", href: "/search?q=roofer+chilliwack" },
 ] as const;
 
-export const HOMEOWNER_TESTIMONIALS = [
+export const WHY_SERVELOCAL = [
   {
-    quote: "Posted our kitchen reno on ServeLocal and had two electricians call the same day. No middleman fees.",
-    name: "Sarah M.",
-    role: "Homeowner",
-    city: "Surrey",
+    title: "No per-lead fees",
+    body: "Homeowners post jobs free. Pros pay one flat monthly rate — not $25–75 every time someone clicks call.",
   },
   {
-    quote: "The cost guides helped us know what a fair price looks like before we hired our plumber.",
-    name: "David K.",
-    role: "Homeowner",
-    city: "Langley",
+    title: "BC-focused directory",
+    body: "Fraser Valley and Metro Vancouver cities only — local pros, local pricing guides, local reviews.",
   },
   {
-    quote: "As a tradie, the free listing got us our first three leads in Abbotsford within two weeks.",
-    name: "Mike R.",
-    role: "Owner",
-    city: "Abbotsford",
-    business: "MR Electrical",
+    title: "Call direct",
+    body: "Tap phone or WhatsApp on a pro profile. Agree scope and price with the tradie you choose — no middleman.",
   },
 ] as const;
 
@@ -159,6 +154,77 @@ export const GUIDE_EXTENDED: Record<
     ],
   },
 };
+
+function genericGuide(name: string) {
+  return {
+    intro: `${name} pricing in BC varies by scope, access, and materials. Fraser Valley and Metro Vancouver rates differ slightly — always get 2–3 written quotes for projects over $500.`,
+    factors: ["Job size and complexity", "Materials supplied by pro vs homeowner", "Emergency or after-hours timing", "Permits or inspections if required"],
+    timeline: "Small jobs often same-week; larger projects need scheduling and may depend on weather.",
+    hiring: ["Confirm licence or certification where regulated", "Ask for proof of liability insurance", "Get scope and warranty in writing"],
+    faqs: [
+      { q: `How much does ${name.toLowerCase()} cost in BC?`, a: "See the typical ranges on this page — your quote depends on access, materials, and job size." },
+      { q: "Should I get multiple quotes?", a: "Yes for any project over a few hundred dollars. Compare written quotes, not phone estimates." },
+    ],
+  };
+}
+
+const EXTENDED_GUIDE_EXTENDED = Object.fromEntries(
+  Object.entries(EXTENDED_COST_GUIDES).map(([slug, _guide]) => {
+    const label = slug.replace(/-/g, " ");
+    const name = label.charAt(0).toUpperCase() + label.slice(1);
+    return [slug, genericGuide(name)];
+  })
+);
+
+export function getGuideExtended(slug: string) {
+  return GUIDE_EXTENDED[slug] || EXTENDED_GUIDE_EXTENDED[slug];
+}
+
+export const LANDING_TESTIMONIALS = [
+  {
+    id: "1",
+    name: "Sarah M.",
+    city: "Surrey, BC",
+    quote:
+      "Found a plumber in under 10 minutes. He showed up same day, fixed our leak, and the price was exactly what was quoted. No surprises.",
+    rating: 5,
+    service: "Plumbing",
+  },
+  {
+    id: "2",
+    name: "James K.",
+    city: "Vancouver, BC",
+    quote:
+      "We needed our entire kitchen rewired before a renovation. ServeLocal matched us with three electricians — we picked the best fit and saved $800.",
+    rating: 5,
+    service: "Electrical",
+  },
+  {
+    id: "3",
+    name: "Priya R.",
+    city: "Burnaby, BC",
+    quote:
+      "The house cleaner we found through ServeLocal is incredible. She's been coming weekly for 6 months. Booking is seamless every time.",
+    rating: 5,
+    service: "Cleaning",
+  },
+  {
+    id: "4",
+    name: "Marc T.",
+    city: "Langley, BC",
+    quote:
+      "Had our roof replaced before winter. The roofer was licensed, insured, and finished in two days. Highly recommend checking reviews first.",
+    rating: 5,
+    service: "Roofing",
+  },
+] as const;
+
+export const LANDING_STATS = [
+  { value: 50000, suffix: "+", label: "Jobs Completed" },
+  { value: 12000, suffix: "+", label: "Verified Pros" },
+  { value: 4.9, suffix: "★", label: "Average Rating", decimals: 1 },
+  { value: 48, suffix: "hr", label: "Avg Response" },
+] as const;
 
 export function guidePricePreview(slug: string, guide?: { low: number; high: number; unit: string; commonJobs?: { range: string }[] }) {
   if (!guide) return null;

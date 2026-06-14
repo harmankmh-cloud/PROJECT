@@ -1,65 +1,72 @@
 import type { Metadata } from "next";
 import Link from "next/link";
-import { MarketingFooter } from "@/components/MarketingFooter";
-import { MarketingHeader } from "@/components/MarketingHeader";
-import { PricingCard } from "@/components/PricingCard";
+import { LandingFooter } from "@/components/landing/LandingFooter";
+import { LandingNavbar } from "@/components/landing/LandingNavbar";
+import { PricingTableStatic } from "@/components/landing/PricingTableStatic";
 import { SkipToContent } from "@/components/SkipToContent";
-import type { PlanKey } from "@/lib/plans";
-
-const PLAN_KEYS: PlanKey[] = ["starter", "growth", "pro", "enterprise"];
+import { FaqAccordion } from "@/components/FaqAccordion";
+import { JsonLd } from "@/components/seo/JsonLd";
+import { FAQ_ITEMS } from "@/lib/marketing-content";
+import { PLANS } from "@/lib/plans";
+import { BRAND } from "@/lib/brand";
 
 export const metadata: Metadata = {
   title: "Pricing",
   description:
-    "Intellivo pricing: Starter $79, Growth $199, Pro $399, and Enterprise AI phone agent plans. Flat monthly with minutes included — cheaper than a part-time receptionist.",
+    "GreetQ pricing: Starter $79, Growth $199, Pro $399, and Enterprise AI phone agent plans. Flat monthly with minutes included.",
   alternates: { canonical: "/pricing" },
 };
 
+function pricingJsonLd() {
+  const siteUrl = `https://${BRAND.domain}`;
+  return {
+    "@context": "https://schema.org",
+    "@type": "Product",
+    name: `${BRAND.name} AI Receptionist`,
+    description: "Canadian AI phone agent for local businesses",
+    brand: { "@type": "Brand", name: BRAND.name },
+    offers: (["starter", "growth", "pro"] as const).map((key) => ({
+      "@type": "Offer",
+      name: PLANS[key].name,
+      price: PLANS[key].monthlyPrice,
+      priceCurrency: "CAD",
+      priceSpecification: {
+        "@type": "UnitPriceSpecification",
+        price: PLANS[key].monthlyPrice,
+        priceCurrency: "CAD",
+        unitText: "MONTH",
+      },
+      url: `${siteUrl}/signup?plan=${key}`,
+      availability: "https://schema.org/InStock",
+    })),
+  };
+}
+
 export default function PricingPage() {
   return (
-    <div className="dark-mesh-bg grid-pattern flex min-h-screen flex-col">
+    <div className="flex min-h-screen flex-col bg-bg">
+      <JsonLd data={pricingJsonLd()} />
       <SkipToContent />
-      <MarketingHeader />
-      <main id="main-content" className="flex-1 pt-20">
-        <section className="py-[120px]">
-          <div className="marketing-container">
-            <div className="mb-16 text-center">
-              <h1 className="font-display text-3xl font-bold text-ghost-white md:text-4xl">Simple, predictable pricing</h1>
-              <p className="mx-auto mt-4 max-w-2xl text-lg text-slate-text">
-                Flat monthly with voice minutes included — only pay more if you go over. Cheaper than a part-time
-                receptionist, with no per-caller penalties. Sandbox testing is always free.
-              </p>
-            </div>
-            <div className="grid grid-cols-1 gap-6 md:grid-cols-2 lg:grid-cols-4">
-              {PLAN_KEYS.map((key) => (
-                <PricingCard key={key} planKey={key} highlighted={key === "growth"} />
-              ))}
-            </div>
-            <div className="mx-auto mt-12 max-w-2xl rounded-2xl border border-primary/30 bg-primary/5 p-6 text-center">
-              <p className="text-sm font-semibold text-ghost-white">Bundle &amp; save: Reputation + Reception</p>
-              <p className="mt-2 text-sm text-slate-text">
-                Pair Intellivo Starter with{" "}
-                <a href="https://ratelocal.ca" className="font-semibold text-electric-blue hover:underline">
-                  RateLocal
-                </a>{" "}
-                (Google reviews) for <strong className="text-on-surface">$119/mo</strong> — never miss a call and
-                win more 5-star reviews. Ask sales to apply the bundle.
-              </p>
-            </div>
-            <p className="mt-10 text-center text-sm text-slate-text">
-              Questions about Enterprise or HIPAA?{" "}
-              <Link href="/help?intent=enterprise" className="font-semibold text-electric-blue hover:underline">
-                Contact sales
+      <LandingNavbar />
+      <main id="main-content" className="flex-1 pt-24">
+        <PricingTableStatic />
+        <section className="border-t border-border py-20">
+          <div className="marketing-container mx-auto max-w-3xl">
+            <h2 className="font-display mb-8 text-center text-2xl text-text">Pricing FAQ</h2>
+            <FaqAccordion items={FAQ_ITEMS.slice(0, 8)} />
+            <div className="mt-12 text-center">
+              <p className="text-muted">Still not sure?</p>
+              <Link
+                href="/help?intent=demo"
+                className="mt-4 inline-block text-sm font-semibold text-violet-400 hover:text-violet-300"
+              >
+                Book a live demo →
               </Link>
-              {" · "}
-              <Link href="/#faq" className="font-semibold text-electric-blue hover:underline">
-                Read FAQs
-              </Link>
-            </p>
+            </div>
           </div>
         </section>
       </main>
-      <MarketingFooter />
+      <LandingFooter />
     </div>
   );
 }

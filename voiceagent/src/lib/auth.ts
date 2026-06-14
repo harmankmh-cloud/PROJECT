@@ -1,13 +1,18 @@
 import "server-only";
+import { cache } from "react";
 import { createClient } from "@/lib/supabase/server";
 import { createAdminClient } from "@/lib/supabase/admin";
 
-export async function requireUser() {
+export const getCachedUser = cache(async () => {
   const supabase = await createClient();
   const {
     data: { user },
   } = await supabase.auth.getUser();
   return user;
+});
+
+export async function requireUser() {
+  return getCachedUser();
 }
 
 export async function getUserOrg(userId: string) {
@@ -34,18 +39,22 @@ export async function getUserOrg(userId: string) {
   return null;
 }
 
-export async function requireOrg() {
-  const user = await requireUser();
+export const getCachedUserOrg = cache(async () => {
+  const user = await getCachedUser();
   if (!user) return null;
-
   const org = await getUserOrg(user.id);
-  return org ? { user, org } : null;
+  return { user, org };
+});
+
+export async function requireOrg() {
+  const ctx = await getCachedUserOrg();
+  if (!ctx?.user || !ctx.org) return null;
+  return { user: ctx.user, org: ctx.org };
 }
 
 export function verifyOrchestratorKey(request: Request): boolean {
   const key = process.env.ORCHESTRATOR_API_KEY;
   if (!key) {
-    // In production, internal orchestrator routes must be keyed.
     return process.env.NODE_ENV !== "production";
   }
   return request.headers.get("x-orchestrator-key") === key;

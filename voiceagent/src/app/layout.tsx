@@ -1,17 +1,17 @@
-import type { Metadata } from "next";
-import { Inter, Plus_Jakarta_Sans } from "next/font/google";
-import { CookieNotice } from "@/components/CookieNotice";
+import type { Metadata, Viewport } from "next";
+import { Inter } from "next/font/google";
+import { GeistSans } from "geist/font/sans";
+import { GeistMono } from "geist/font/mono";
+import { DeferredSiteWidgets } from "@/components/DeferredSiteWidgets";
+import { MarketingProviders } from "@/components/providers/MarketingProviders";
 import { BRAND } from "@/lib/brand";
 import "./globals.css";
-
-const jakarta = Plus_Jakarta_Sans({
-  variable: "--font-jakarta",
-  subsets: ["latin"],
-});
 
 const inter = Inter({
   variable: "--font-inter",
   subsets: ["latin"],
+  weight: ["400", "500", "600"],
+  display: "swap",
 });
 
 const siteUrl = `https://${BRAND.domain}`;
@@ -24,8 +24,11 @@ export const metadata: Metadata = {
   authors: [{ name: BRAND.name, url: siteUrl }],
   metadataBase: new URL(siteUrl),
   alternates: {
-    canonical: "/",
-    languages: { "en-CA": siteUrl, "fr-CA": siteUrl },
+    languages: { "en-CA": siteUrl, "fr-CA": `${siteUrl}/fr` },
+  },
+  icons: {
+    icon: "/icon",
+    shortcut: "/icon",
   },
   openGraph: {
     type: "website",
@@ -44,32 +47,25 @@ export const metadata: Metadata = {
   },
 };
 
+export const viewport: Viewport = {
+  width: "device-width",
+  initialScale: 1,
+  maximumScale: 5,
+  userScalable: true,
+  themeColor: "#0a0a0a",
+};
+
 export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (
-    <html lang="en" className={`${jakarta.variable} ${inter.variable} scroll-smooth`}>
-      <head>
-        <link rel="preconnect" href="https://fonts.googleapis.com" />
-        <link rel="preconnect" href="https://fonts.gstatic.com" crossOrigin="anonymous" />
-        <link
-          href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@24,400,0..1,0&display=swap"
-          rel="stylesheet"
-        />
-        <style
-          dangerouslySetInnerHTML={{
-            __html: `
-              html, body { background:#020617 !important; color:#e2e8f0 !important; }
-              h1, h2, h3, h4, p, a, button, li, span, label { color: inherit; }
-              .text-ghost-white, h1, h2 { color: #f8fafc !important; }
-              .text-on-surface { color: #dae2fd !important; }
-              .text-on-surface-variant, .text-slate-text { color: #94a3b8 !important; }
-              .text-primary, .text-accent { color: #4fdbc8 !important; }
-            `,
-          }}
-        />
-      </head>
-      <body className="min-h-full bg-obsidian font-sans text-on-surface antialiased">
-        {children}
-        <CookieNotice />
+    <html
+      lang="en"
+      className={`${GeistSans.variable} ${inter.variable} ${GeistMono.variable} scroll-smooth`}
+    >
+      <body className="min-h-full bg-bg font-sans text-text antialiased">
+        <MarketingProviders>
+          {children}
+          <DeferredSiteWidgets />
+        </MarketingProviders>
       </body>
     </html>
   );

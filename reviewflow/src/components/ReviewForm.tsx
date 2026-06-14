@@ -1,6 +1,11 @@
 "use client";
 
+import { motion } from "framer-motion";
+import { Check } from "lucide-react";
 import { useEffect, useMemo, useState } from "react";
+import { ClientOnly } from "@/components/ui/ClientOnly";
+import { StarRating as StarRatingInput } from "@/components/ui/StarRating";
+import { PUBLIC_REVIEW } from "@/content/copy";
 import type { Business, PromptTemplate, StarRating } from "@/lib/types";
 import {
   STAR_OPTIONS,
@@ -219,26 +224,26 @@ export function ReviewForm({ business, prompts }: Props) {
   return (
     <div className="mx-auto w-full max-w-md">
       <div className="review-shell">
-        <div className="review-header">
+        <div className="border-b border-border bg-white px-6 py-5">
           <div className="mb-3 flex items-center justify-between gap-3">
             <button
               type="button"
               onClick={goToPreviousStep}
-              className="rounded-lg border border-white/20 px-3 py-1.5 text-sm font-medium text-white/90 hover:bg-white/10"
+              className="rounded-lg border border-border px-3 py-1.5 text-sm font-medium text-muted hover:bg-surface"
             >
               ← {backLabel}
             </button>
-            <span className="text-xs font-semibold uppercase tracking-widest text-gold-400">
+            <span className="text-xs font-semibold uppercase tracking-widest text-primary">
               Step {stepNumber} of 3
             </span>
           </div>
-          <h1 className="font-display text-2xl">{business.name}</h1>
-          <p className="mt-1 text-sm text-white/60">{headerSubtitle}</p>
+          <h1 className="font-display text-2xl text-text">{business.name}</h1>
+          <p className="mt-1 text-sm text-muted">{headerSubtitle}</p>
           <div className="mt-4 flex gap-1">
             {[1, 2, 3].map((n) => (
               <div
                 key={n}
-                className={`h-1 flex-1 rounded-full ${n <= stepNumber ? "bg-gold-500" : "bg-white/20"}`}
+                className={`h-1 flex-1 rounded-full ${n <= stepNumber ? "bg-primary" : "bg-border"}`}
               />
             ))}
           </div>
@@ -246,25 +251,29 @@ export function ReviewForm({ business, prompts }: Props) {
 
         <div className="p-6">
           {step === "stars" && (
-            <div className="space-y-4">
-              <p className="text-center text-base font-semibold text-brand-950">
-                How was your visit?
+            <div className="space-y-6">
+              <p className="text-center text-lg font-semibold text-text">
+                {PUBLIC_REVIEW.question(business.name)}
               </p>
-              <div className="space-y-3">
+              <div className="flex justify-center">
+                <StarRatingInput
+                  size="lg"
+                  value={stars ?? 0}
+                  onChange={(v) => pickStars(v as StarRating)}
+                />
+              </div>
+              <div className="space-y-2">
                 {STAR_OPTIONS.map((option) => (
                   <button
                     key={option.stars}
                     type="button"
                     onClick={() => pickStars(option.stars)}
-                    className={`star-option-lg ${option.stars === 5 ? "border-teal-400/60 bg-gradient-to-r from-teal-50 to-amber-50 ring-2 ring-teal-400/20" : ""}`}
+                    className="star-option w-full"
                   >
-                    <span className="text-2xl tracking-wider text-gold-500">
+                    <span className="text-lg tracking-wider text-accent">
                       {starsLabel(option.stars)}
                     </span>
-                    <span>
-                      <span className="block text-sm font-semibold text-brand-950">{option.label}</span>
-                      <span className="text-xs text-stone-500">{option.subtitle}</span>
-                    </span>
+                    <span className="text-sm text-muted">{option.label}</span>
                   </button>
                 ))}
               </div>
@@ -279,8 +288,8 @@ export function ReviewForm({ business, prompts }: Props) {
 
               {isLowRating && (
                 <p className="alert-danger">
-                  The owner will see your feedback on their dashboard. You can still post on Google if
-                  you choose.
+                  1–2 star feedback stays private on the owner&apos;s dashboard (by design). Google is
+                  not opened automatically — the customer can still choose to post on Google afterward.
                 </p>
               )}
 
@@ -360,14 +369,31 @@ export function ReviewForm({ business, prompts }: Props) {
               {error && <p className="text-sm text-rose-600">{error}</p>}
 
               {done ? (
-                <div className="space-y-3">
-                  <div className="alert-success">
-                    <p className="font-semibold">Done — owner notified & text copied.</p>
+                <div className="space-y-3 text-center">
+                  <ClientOnly
+                    fallback={
+                      <div className="mx-auto flex h-16 w-16 items-center justify-center rounded-full bg-success-bg">
+                        <Check className="h-8 w-8 text-primary" />
+                      </div>
+                    }
+                  >
+                    <motion.div
+                      initial={{ scale: 0 }}
+                      animate={{ scale: 1 }}
+                      transition={{ type: "spring", stiffness: 300 }}
+                      className="mx-auto flex h-16 w-16 items-center justify-center rounded-full bg-success-bg"
+                    >
+                      <Check className="h-8 w-8 text-primary" />
+                    </motion.div>
+                  </ClientOnly>
+                  <p className="font-display text-xl text-text">{PUBLIC_REVIEW.thanks}</p>
+                  <div className="alert-success text-left">
+                    <p className="font-semibold">Owner notified & text copied.</p>
                     {!isLowRating && business.google_review_url && (
                       <p className="mt-1">Paste your review on Google in the tab that opened.</p>
                     )}
                     {isLowRating && (
-                      <p className="mt-1">The business owner received your feedback on their dashboard.</p>
+                      <p className="mt-1">Saved privately for the owner — use the button below if you still want Google.</p>
                     )}
                   </div>
                   {isLowRating && business.google_review_url && (
@@ -393,14 +419,14 @@ export function ReviewForm({ business, prompts }: Props) {
                     type="button"
                     onClick={handleFinish}
                     disabled={submitting || !draft.trim()}
-                    className="btn-dark w-full py-3.5 disabled:opacity-60"
+                    className="btn-gold w-full py-3.5 disabled:opacity-60"
                   >
                     {submitting
                       ? "Saving…"
                       : isLowRating
-                        ? "Copy & notify owner"
+                        ? "Save private feedback & copy text"
                         : business.google_review_url
-                          ? "Copy, notify owner & open Google"
+                          ? PUBLIC_REVIEW.openGoogle
                           : "Copy & notify owner"}
                   </button>
                 </>

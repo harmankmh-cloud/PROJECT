@@ -2,21 +2,27 @@
 
 import { useEffect, useState } from "react";
 import { MaterialIcon } from "@/components/MaterialIcon";
+import { DashboardListSkeleton } from "@/components/ui/DashboardPageSkeleton";
+import { useToast } from "@/components/providers/ToastProvider";
 import type { Contact } from "@/lib/types";
 import { apiFetch } from "@/lib/api-client";
 
 export default function ContactsPage() {
+  const { showError } = useToast();
   const [contacts, setContacts] = useState<Contact[]>([]);
   const [loading, setLoading] = useState(true);
-  const [error, setError] = useState("");
 
   useEffect(() => {
     apiFetch<{ contacts: Contact[] }>("/api/contacts").then((res) => {
       if (res.ok) setContacts(res.data.contacts || []);
-      else setError(res.error);
+      else showError(res.error);
       setLoading(false);
     });
   }, []);
+
+  if (loading) {
+    return <DashboardListSkeleton />;
+  }
 
   return (
     <div className="dashboard-container pb-8">
@@ -27,11 +33,7 @@ export default function ContactsPage() {
         </p>
       </header>
 
-      {error && <p className="mb-4 text-sm text-error">{error}</p>}
-
-      {loading ? (
-        <p className="text-slate-text">Loading contacts…</p>
-      ) : contacts.length === 0 ? (
+      {contacts.length === 0 ? (
         <div className="surface-card p-10 text-center">
           <MaterialIcon name="contacts" className="mb-4 text-5xl text-slate-text" />
           <p className="text-on-surface-variant">No contacts yet. They appear after live calls complete.</p>

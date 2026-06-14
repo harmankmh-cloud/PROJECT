@@ -1,70 +1,100 @@
 "use client";
 
 import Link from "next/link";
-import { usePathname, useRouter } from "next/navigation";
+import { usePathname } from "next/navigation";
+import {
+  BarChart3,
+  Bell,
+  BookOpen,
+  Calendar,
+  ChevronDown,
+  Code,
+  Contact,
+  CreditCard,
+  FlaskConical,
+  GitBranch,
+  HelpCircle,
+  History,
+  LayoutDashboard,
+  ListChecks,
+  Megaphone,
+  MessageSquare,
+  Phone,
+  PhoneCall,
+  Radio,
+  Rocket,
+  Settings,
+  Shield,
+  Sparkles,
+  Users,
+  Workflow,
+} from "lucide-react";
 import { useState } from "react";
-import { createClient } from "@/lib/supabase/client";
-import { MaterialIcon } from "@/components/MaterialIcon";
+import { SignOutButton } from "@/components/SignOutButton";
 import { DashboardFooter } from "@/components/dashboard/DashboardFooter";
+import { useUiStore } from "@/stores/ui";
 import { BRAND } from "@/lib/brand";
 
-const NAV = [
-  { href: "/dashboard", label: "Overview", icon: "home" },
-  { href: "/dashboard/setup", label: "Go Live", icon: "rocket_launch" },
-  { href: "/dashboard/agents", label: "Agents", icon: "smart_toy" },
-  { href: "/dashboard/phone-numbers", label: "Phone Numbers", icon: "call" },
-  { href: "/dashboard/knowledge", label: "Knowledge", icon: "menu_book" },
-  { href: "/dashboard/calls", label: "Calls", icon: "call_log" },
-  { href: "/dashboard/contacts", label: "Contacts", icon: "contacts" },
-  { href: "/dashboard/analytics", label: "Analytics", icon: "bar_chart" },
-  { href: "/dashboard/sandbox", label: "Sandbox", icon: "science" },
-  { href: "/dashboard/flows", label: "Flows", icon: "account_tree" },
-  { href: "/dashboard/campaigns", label: "Campaigns", icon: "campaign" },
-  { href: "/dashboard/integrations", label: "Integrations", icon: "hub" },
-  { href: "/dashboard/compliance", label: "Compliance", icon: "shield" },
-  { href: "/dashboard/channels", label: "Channels", icon: "forum" },
-  { href: "/dashboard/billing", label: "Billing", icon: "payments" },
-  { href: "/dashboard/team", label: "Team", icon: "group" },
-  { href: "/dashboard/developer", label: "Developer", icon: "code" },
-  { href: "/dashboard/audit", label: "Audit", icon: "history" },
-  { href: "/dashboard/settings", label: "Settings", icon: "settings" },
-  { href: "/dashboard/help", label: "Help", icon: "help" },
+const PRIMARY_NAV = [
+  { href: "/dashboard", label: "Dashboard", icon: LayoutDashboard, demoHref: "/demo" },
+  { href: "/dashboard/calls", label: "Call Logs", icon: PhoneCall, demoHref: "/demo#recent-calls" },
+  { href: "/dashboard/tasks", label: "Tasks", icon: ListChecks, demoHref: "/demo" },
+  { href: "/dashboard/appointments", label: "Appointments", icon: Calendar, demoHref: "/demo#appointments" },
+  { href: "/dashboard/messages", label: "Messages", icon: MessageSquare, demoHref: "/demo#messages" },
+  { href: "/dashboard/settings", label: "Settings", icon: Settings, demoHref: "/signup" },
+  { href: "/dashboard/billing", label: "Billing", icon: CreditCard, demoHref: "/signup?plan=growth" },
 ] as const;
 
-const MOBILE_NAV = [
-  { href: "/dashboard", label: "Home", icon: "home" },
-  { href: "/dashboard/agents", label: "Agents", icon: "smart_toy" },
-  { href: "/dashboard/analytics", label: "Analytics", icon: "bar_chart" },
-  { href: "/dashboard/settings", label: "Settings", icon: "settings" },
+const MORE_NAV = [
+  { href: "/dashboard/live", label: "Live calls", icon: Radio },
+  { href: "/dashboard/setup", label: "Setup wizard", icon: Rocket },
+  { href: "/dashboard/agents", label: "Agents", icon: Sparkles },
+  { href: "/dashboard/phone-numbers", label: "Phone Numbers", icon: Phone },
+  { href: "/dashboard/knowledge", label: "Knowledge", icon: BookOpen },
+  { href: "/dashboard/flows", label: "Flows", icon: Workflow },
+  { href: "/dashboard/campaigns", label: "Campaigns", icon: Megaphone },
+  { href: "/dashboard/contacts", label: "Contacts", icon: Contact },
+  { href: "/dashboard/channels", label: "Channels", icon: Radio },
+  { href: "/dashboard/sandbox", label: "Sandbox", icon: FlaskConical },
+  { href: "/dashboard/integrations", label: "Integrations", icon: GitBranch },
+  { href: "/dashboard/team", label: "Team", icon: Users },
+  { href: "/dashboard/developer", label: "Developer", icon: Code },
+  { href: "/dashboard/compliance", label: "Compliance", icon: Shield },
+  { href: "/dashboard/audit", label: "Audit", icon: History },
+  { href: "/dashboard/analytics", label: "Analytics", icon: BarChart3 },
+  { href: "/dashboard/help", label: "Help", icon: HelpCircle },
 ] as const;
 
 function userInitials(email?: string) {
   if (!email) return "?";
-  const local = email.split("@")[0] || "";
-  return local.slice(0, 2).toUpperCase();
+  return (email.split("@")[0] || "").slice(0, 2).toUpperCase();
 }
 
-function NavLink({
-  item,
+function NavItem({
+  href,
+  label,
+  icon: Icon,
   active,
   onClick,
-  compact,
 }: {
-  item: (typeof NAV)[number];
+  href: string;
+  label: string;
+  icon: React.ComponentType<{ className?: string }>;
   active: boolean;
   onClick?: () => void;
-  compact?: boolean;
 }) {
   return (
     <Link
-      href={item.href}
+      href={href}
       onClick={onClick}
-      className={`flex items-center gap-3 rounded-xl px-3 py-2.5 text-sm font-medium transition ${
-        active ? "nav-item-active" : "nav-item"
-      } ${compact ? "px-2.5" : ""}`}
+      className={`flex items-center gap-3 rounded-lg px-3 py-2.5 text-sm font-medium transition ${
+        active
+          ? "nav-item-active bg-violet-500/10 text-text shadow-[inset_3px_0_0_var(--color-primary)]"
+          : "nav-item hover:bg-white/5"
+      }`}
     >
-      <MaterialIcon name={item.icon} className="text-[20px]" filled={active} />
-      {!compact && item.label}
+      <Icon className="h-4 w-4 shrink-0" />
+      {label}
     </Link>
   );
 }
@@ -74,211 +104,137 @@ export function DashboardShell({
   userEmail,
   isPlatformAdmin,
   children,
+  isDemo = false,
 }: {
   orgName?: string;
   userEmail?: string;
   isPlatformAdmin?: boolean;
   children: React.ReactNode;
+  isDemo?: boolean;
 }) {
   const pathname = usePathname();
-  const router = useRouter();
-  const [menuOpen, setMenuOpen] = useState(false);
-  const [loggingOut, setLoggingOut] = useState(false);
-
-  async function handleLogout() {
-    setLoggingOut(true);
-    try {
-      const supabase = createClient();
-      await supabase.auth.signOut();
-      router.push("/login");
-      router.refresh();
-    } catch {
-      router.push("/login");
-    } finally {
-      setLoggingOut(false);
-    }
-  }
+  const menuOpen = useUiStore((s) => s.sidebarOpen);
+  const setMenuOpen = useUiStore((s) => s.setSidebarOpen);
+  const [moreOpen, setMoreOpen] = useState(false);
 
   const isActive = (href: string) =>
     pathname === href || (href !== "/dashboard" && pathname.startsWith(href));
 
-  return (
-    <div className="dark-mesh-bg grid-pattern min-h-screen text-on-surface">
-      {/* Desktop sidebar */}
-      <aside className="sidebar-shell fixed left-0 top-0 z-40 hidden h-screen w-64 flex-col lg:flex">
-        <div className="flex h-20 items-center gap-3 border-b border-glass-border-subtle px-5">
-          <Link href="/dashboard" className="flex items-center gap-3">
-            <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-gradient-to-br from-violet-500/30 to-electric-cyan/30">
-              <MaterialIcon name="smart_toy" filled className="text-primary" />
-            </div>
-            <div>
-              <span className="font-display block text-lg font-bold tracking-tight text-ghost-white">
-                {BRAND.name}
-              </span>
-              {orgName && (
-                <span className="block truncate text-[10px] text-on-surface-variant">{orgName}</span>
-              )}
-            </div>
-          </Link>
+  const sidebar = (
+    <>
+      <div className="flex h-16 items-center gap-2 border-b border-border px-4">
+        <Sparkles className="h-5 w-5 text-primary-glow" />
+        <div className="min-w-0">
+          <span className="font-display block truncate text-sm font-bold text-text">{BRAND.name}</span>
+          {orgName && <span className="block truncate text-[10px] text-muted">{orgName}</span>}
         </div>
+      </div>
 
-        <nav className="flex-1 space-y-0.5 overflow-y-auto p-3">
-          {NAV.map((item) => (
-            <NavLink key={item.href} item={item} active={isActive(item.href)} />
+      <nav className="flex-1 space-y-0.5 overflow-y-auto p-3">
+        {PRIMARY_NAV.map((item) => (
+          <NavItem
+            key={item.href}
+            href={isDemo ? item.demoHref : item.href}
+            label={item.label}
+            icon={item.icon}
+            active={!isDemo && isActive(item.href)}
+            onClick={() => setMenuOpen(false)}
+          />
+        ))}
+
+        <button
+          type="button"
+          onClick={() => setMoreOpen((v) => !v)}
+          className="nav-item mt-2 flex w-full items-center justify-between"
+        >
+          <span className="flex items-center gap-3">
+            <ChevronDown className={`h-4 w-4 transition ${moreOpen ? "rotate-180" : ""}`} />
+            More
+          </span>
+        </button>
+        {moreOpen &&
+          MORE_NAV.map((item) => (
+            <NavItem
+              key={item.href}
+              {...item}
+              active={isActive(item.href)}
+              onClick={() => setMenuOpen(false)}
+            />
           ))}
-        </nav>
+      </nav>
 
-        <div className="space-y-2 border-t border-glass-border-subtle p-3">
-          {isPlatformAdmin && (
-            <Link
-              href="/admin"
-              className="flex items-center gap-2 rounded-xl bg-violet-500/15 px-3 py-2.5 text-sm font-semibold text-vivid-violet"
-            >
-              <MaterialIcon name="admin_panel_settings" />
-              Platform panel
-            </Link>
-          )}
+      <div className="space-y-2 border-t border-border p-3">
+        <div className="rounded-lg border border-primary/20 bg-primary/10 p-3">
+          <p className="text-xs font-semibold text-text">Upgrade to Pro</p>
+          <p className="mt-1 text-[10px] text-muted">900 min + calendar sync</p>
           <Link
-            href="/"
-            target="_blank"
-            rel="noreferrer"
-            className="nav-item"
+            href={isDemo ? "/signup?plan=pro" : "/dashboard/billing"}
+            className="mt-2 block text-xs font-medium text-primary-glow hover:underline"
           >
-            <MaterialIcon name="open_in_new" className="text-[20px]" />
-            View site
+            View plans →
           </Link>
-          <button
-            type="button"
-            onClick={handleLogout}
-            disabled={loggingOut}
-            className="nav-item w-full text-left disabled:opacity-50"
-          >
-            <MaterialIcon name="logout" className="text-[20px]" />
-            {loggingOut ? "Signing out…" : "Sign out"}
-          </button>
         </div>
+        {isPlatformAdmin && (
+          <Link href="/admin" className="nav-item text-primary-glow">
+            Platform panel
+          </Link>
+        )}
+        {!isDemo && <SignOutButton className="nav-item w-full text-left" />}
+      </div>
+    </>
+  );
+
+  return (
+    <div className="min-h-screen bg-bg text-text">
+      <aside className="sidebar-shell fixed left-0 top-0 z-40 hidden h-screen w-60 flex-col lg:flex">
+        {sidebar}
       </aside>
 
-      {/* Mobile top bar */}
-      <header className="fixed top-0 z-50 flex h-16 w-full items-center justify-between border-b border-glass-border-subtle bg-obsidian/90 px-4 backdrop-blur-xl lg:left-64 lg:w-[calc(100%-16rem)]">
-        <div className="flex items-center gap-3">
-          <button
-            type="button"
-            className="flex h-10 w-10 items-center justify-center rounded-lg bg-surface-container lg:hidden"
-            aria-label="Open menu"
-            onClick={() => setMenuOpen(true)}
-          >
-            <MaterialIcon name="menu" />
+      <header className="fixed top-0 z-50 flex h-16 w-full items-center justify-between border-b border-border bg-bg/80 px-4 backdrop-blur-xl lg:left-60 lg:w-[calc(100%-15rem)]">
+        <button
+          type="button"
+          className="rounded-lg border border-border p-2 lg:hidden"
+          aria-label="Open menu"
+          onClick={() => setMenuOpen(true)}
+        >
+          <LayoutDashboard className="h-5 w-5" />
+        </button>
+        <p className="hidden text-sm text-muted lg:block">
+          {orgName || BRAND.name}
+        </p>
+        <div className="flex items-center gap-2">
+          <button type="button" className="rounded-lg p-2 text-muted hover:bg-white/5" aria-label="Notifications">
+            <Bell className="h-5 w-5" />
           </button>
-          <Link href="/dashboard" className="flex items-center gap-2 lg:hidden">
-            <MaterialIcon name="smart_toy" filled className="text-primary" />
-            <span className="font-display font-bold">{BRAND.name}</span>
-          </Link>
-        </div>
-        <div className="flex items-center gap-3">
-          <button
-            type="button"
-            className="flex h-9 w-9 items-center justify-center rounded-full bg-surface-container transition-colors hover:bg-surface-container-high"
-            aria-label="Notifications"
-          >
-            <MaterialIcon name="notifications" className="text-on-surface-variant text-[20px]" />
-          </button>
-          <Link
-            href="/dashboard/settings"
-            className="flex h-9 w-9 items-center justify-center overflow-hidden rounded-full border-2 border-primary/40 bg-surface-container text-xs font-bold"
-            title={userEmail || "Account"}
-          >
-            {userInitials(userEmail)}
-          </Link>
+          {!isDemo && (
+            <Link
+              href="/dashboard/settings"
+              className="flex h-9 w-9 items-center justify-center rounded-full border border-primary/30 bg-surface text-xs font-bold"
+            >
+              {userInitials(userEmail)}
+            </Link>
+          )}
         </div>
       </header>
 
-      {/* Mobile drawer */}
       {menuOpen && (
         <div className="fixed inset-0 z-[60] lg:hidden">
           <button
             type="button"
-            className="absolute inset-0 bg-obsidian/80 backdrop-blur-sm"
+            className="absolute inset-0 bg-bg/80 backdrop-blur-sm"
             aria-label="Close menu"
             onClick={() => setMenuOpen(false)}
           />
-          <aside className="sidebar-shell absolute left-0 top-0 flex h-full w-72 max-w-[85vw] flex-col shadow-2xl">
-            <div className="flex items-center justify-between border-b border-glass-border-subtle px-5 py-5">
-              <div>
-                <p className="font-semibold text-ghost-white">{orgName || BRAND.name}</p>
-                <p className="text-xs text-on-surface-variant">{userEmail}</p>
-              </div>
-              <button type="button" onClick={() => setMenuOpen(false)} aria-label="Close">
-                <MaterialIcon name="close" />
-              </button>
-            </div>
-            <nav className="flex-1 space-y-0.5 overflow-y-auto p-3">
-              {NAV.map((item) => (
-                <NavLink
-                  key={item.href}
-                  item={item}
-                  active={isActive(item.href)}
-                  onClick={() => setMenuOpen(false)}
-                />
-              ))}
-            </nav>
-            <div className="border-t border-glass-border-subtle p-3">
-              <button
-                type="button"
-                onClick={handleLogout}
-                disabled={loggingOut}
-                className="nav-item w-full text-left disabled:opacity-50"
-              >
-                {loggingOut ? "Signing out…" : "Sign out"}
-              </button>
-            </div>
+          <aside className="sidebar-shell absolute left-0 top-0 flex h-full w-72 flex-col shadow-2xl">
+            {sidebar}
           </aside>
         </div>
       )}
 
-      <div className="flex min-h-screen flex-col pt-16 lg:ml-64">
-        <div className="flex-1 pb-24 lg:pb-8">{children}</div>
-        <DashboardFooter />
+      <div className="flex min-h-screen flex-col pt-16 lg:ml-60">
+        <div className="flex-1">{children}</div>
+        {!isDemo && <DashboardFooter />}
       </div>
-
-      {/* Mobile bottom nav */}
-      <nav className="fixed bottom-0 z-50 flex h-20 w-full items-center justify-around border-t border-glass-border-subtle bg-obsidian/95 px-4 backdrop-blur-2xl lg:hidden">
-        {MOBILE_NAV.slice(0, 2).map((item) => {
-          const active = isActive(item.href);
-          return (
-            <Link
-              key={item.href}
-              href={item.href}
-              className={`flex flex-col items-center gap-1 ${active ? "text-primary" : "text-on-surface-variant"}`}
-            >
-              <MaterialIcon name={item.icon} filled={active} />
-              <span className="text-[10px] font-semibold">{item.label}</span>
-            </Link>
-          );
-        })}
-        <div className="relative -top-8">
-          <Link
-            href="/dashboard/agents/new"
-            className="flex h-14 w-14 items-center justify-center rounded-full bg-gradient-to-r from-violet-500 to-electric-cyan text-ghost-white shadow-lg shadow-primary/30 transition-transform hover:scale-105 active:scale-95"
-            aria-label="Create agent"
-          >
-            <MaterialIcon name="add" className="text-3xl" />
-          </Link>
-        </div>
-        {MOBILE_NAV.slice(2).map((item) => {
-          const active = isActive(item.href);
-          return (
-            <Link
-              key={item.href}
-              href={item.href}
-              className={`flex flex-col items-center gap-1 ${active ? "text-primary" : "text-on-surface-variant"}`}
-            >
-              <MaterialIcon name={item.icon} filled={active} />
-              <span className="text-[10px] font-semibold">{item.label}</span>
-            </Link>
-          );
-        })}
-      </nav>
     </div>
   );
 }

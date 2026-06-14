@@ -40,6 +40,7 @@ export default function PrivacyPage() {
         <ul className="list-disc space-y-2 pl-5 text-sm leading-relaxed text-slate-600">
           <li>To create and manage your account and dashboard.</li>
           <li>To match job requests with local service providers.</li>
+          <li>When you post a job, your name, phone number, email (if provided), address or neighbourhood, and job description may be shared with matched service providers so they can contact you directly.</li>
           <li>To display and moderate business listings and reviews.</li>
           <li>To send transactional emails (confirmations, password resets) via our email provider.</li>
           <li>To improve the platform and respond to support requests.</li>
@@ -68,6 +69,17 @@ export default function PrivacyPage() {
         <p className="text-sm leading-relaxed text-slate-600">
           We only send promotional email if you opt in. Transactional messages (account confirmation, job
           updates) are not marketing. Unsubscribe links are included on promotional messages.
+        </p>
+      </section>
+
+      <section className="space-y-3">
+        <h2 className="text-lg font-semibold text-brand-950">Data export &amp; deletion</h2>
+        <p className="text-sm leading-relaxed text-slate-600">
+          Signed-in homeowners can export a JSON copy of profile, jobs, and bookings from{" "}
+          <Link href="/dashboard/settings" className="font-semibold text-teal-600 hover:underline">
+            Dashboard → Settings
+          </Link>
+          , or submit an account deletion request there. We process deletion requests within 30 days under PIPEDA.
         </p>
       </section>
 
