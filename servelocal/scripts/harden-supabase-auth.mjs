@@ -7,11 +7,11 @@
  *   SUPABASE_ACCESS_TOKEN=sbp_... node servelocal/scripts/harden-supabase-auth.mjs
  *
  * Optional:
- *   SUPABASE_PROJECT_REF — defaults to otnddwopphhxstteqizw
+ *   SUPABASE_PROJECT_REF — defaults to avytxgfkncpacqewnrvz
  *   AUTH_DB_CONN_PERCENTAGE — defaults to 15 (percentage of Postgres max_connections)
  */
 
-const ref = process.env.SUPABASE_PROJECT_REF || "otnddwopphhxstteqizw";
+const ref = process.env.SUPABASE_PROJECT_REF || "avytxgfkncpacqewnrvz";
 const token = process.env.SUPABASE_ACCESS_TOKEN;
 const connPct = Number(process.env.AUTH_DB_CONN_PERCENTAGE || "15");
 

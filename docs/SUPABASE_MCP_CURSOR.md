@@ -1,6 +1,7 @@
 # Connect Supabase MCP in Cursor (Option A)
 
-Project ref: **`otnddwopphhxstteqizw`** (shared RateLocal + ServeLocal)
+**ServeLocal** project ref: **`avytxgfkncpacqewnrvz`**  
+(RateLocal uses a separate project: `otnddwopphhxstteqizw`)
 
 Once connected, the agent can run SQL, check auth config, read logs, and apply fixes **without** you running scripts manually.
 
@@ -8,8 +9,8 @@ Once connected, the agent can run SQL, check auth config, read logs, and apply f
 
 ## Fastest path (recommended)
 
-1. Open Supabase dashboard MCP connect page for your project:  
-   https://supabase.com/dashboard/project/otnddwopphhxstteqizw?showConnect=true&tab=mcp
+1. Open Supabase dashboard MCP connect page:  
+   https://supabase.com/dashboard/project/avytxgfkncpacqewnrvz?showConnect=true&tab=mcp
 
 2. Click **Add to Cursor** (or copy the config shown there).
 
@@ -31,126 +32,72 @@ This repo includes Supabase in `.cursor/mcp.json`:
 
 ```json
 "supabase": {
-  "url": "https://mcp.supabase.com/mcp?project_ref=otnddwopphhxstteqizw"
+  "url": "https://mcp.supabase.com/mcp?project_ref=avytxgfkncpacqewnrvz"
 }
 ```
 
-**Important:** include `project_ref` in the URL. Without it, Cursor’s OAuth handshake can fail or open an incomplete authorize URL.
+**Important:** use the `project_ref` from **your** Supabase dashboard MCP tab. Without it, OAuth can fail.
 
-If it’s missing in your Cursor UI, paste the block above via **Settings → MCP → Add custom MCP**.
+---
+
+## Agent skills (optional, installed in repo)
+
+```bash
+npx skills add supabase/agent-skills
+```
+
+Adds:
+
+- `.agents/skills/supabase` — Supabase workflows (auth, RLS, MCP, migrations)
+- `.agents/skills/supabase-postgres-best-practices` — Postgres tuning
+
+Symlinked into `.cursor/skills/` for Cursor. Re-run the command above to update.
 
 ---
 
 ## Error: `client_id: Required, response_type: Required, redirect_uri: Required`
 
-This JSON means the browser hit Supabase’s OAuth authorize endpoint **without query parameters** — not a wrong password.
-
-Common causes:
-
-1. **Bare URL opened** — e.g. `https://api.supabase.com/v1/oauth/authorize` with no `?client_id=...&response_type=...&redirect_uri=...`
-2. **Stale MCP session** — Cursor cached a broken OAuth attempt
-3. **Missing `project_ref`** in the MCP URL (fixed in this repo’s `.cursor/mcp.json`)
+This JSON means the browser hit Supabase’s OAuth authorize endpoint **without query parameters**.
 
 ### Fix (try in order)
 
-1. **Reload Cursor** after pulling the updated `.cursor/mcp.json` (must include `project_ref=otnddwopphhxstteqizw`).
+1. **Reload Cursor** after pulling `.cursor/mcp.json` (must include `project_ref=avytxgfkncpacqewnrvz`).
 
-2. **Disconnect and reconnect:**
-   - Settings → Tools & MCP → Supabase → **Disconnect** (or remove server)
-   - Add again using the dashboard link above, or paste the config from this doc
-   - Click **Connect** once — wait for the full OAuth URL
+2. **Disconnect and reconnect** in Settings → Tools & MCP.
 
-3. **Use the full URL from logs** (not a truncated one):
-   - **View → Output** → dropdown → **MCP: Supabase** (or **Cursor MCP**)
-   - Click **Connect** again
-   - Copy the URL that starts with:  
-     `https://api.supabase.com/v1/oauth/authorize?client_id=...&response_type=code&redirect_uri=...`
-   - Paste into **Chrome/Safari** (not the embedded Cursor browser)
-   - Complete login → approve
-
-4. Click the **“Needs authentication”** text under Supabase (not only the Connect button).
+3. **View → Output → MCP: Supabase** → copy the **full** authorize URL (with `client_id`, `response_type`, `redirect_uri`) → open in Chrome/Safari.
 
 ---
 
 ## Option B — PAT header (when OAuth keeps failing)
 
-Cursor supports custom headers on HTTP MCP servers. Use a **Personal Access Token** instead of OAuth:
+1. Create a token: https://supabase.com/dashboard/account/tokens
 
-1. Create a token: https://supabase.com/dashboard/account/tokens  
-   Name it e.g. `Cursor MCP` (never commit the token).
-
-2. Replace the Supabase block in `.cursor/mcp.json` (or add via Settings):
+2. In `.cursor/mcp.json`:
 
 ```json
 "supabase": {
-  "url": "https://mcp.supabase.com/mcp?project_ref=otnddwopphhxstteqizw",
+  "url": "https://mcp.supabase.com/mcp?project_ref=avytxgfkncpacqewnrvz",
   "headers": {
     "Authorization": "Bearer sbp_YOUR_TOKEN_HERE"
   }
 }
 ```
 
-3. Save → restart Cursor → Supabase should show green without a browser OAuth step.
-
-Optional: add `&read_only=true` to the URL if you only want read-only SQL.
-
----
-
-## Option C — npx stdio server (alternative)
-
-From [Supabase docs](https://supabase.com/docs/guides/ai-tools/mcp):
-
-```json
-"supabase": {
-  "command": "npx",
-  "args": [
-    "-y",
-    "@supabase/mcp-server-supabase@latest",
-    "--project-ref=otnddwopphhxstteqizw"
-  ],
-  "env": {
-    "SUPABASE_ACCESS_TOKEN": "sbp_YOUR_TOKEN_HERE"
-  }
-}
-```
-
-Use this if the HTTP + OAuth path is unreliable in your Cursor version.
-
----
-
-## If OAuth fails (“authorization request does not exist”)
-
-Same as above — use the full authorize URL from **View → Output → MCP: Supabase**, or switch to **Option B (PAT)**.
+3. Save → restart Cursor.
 
 ---
 
 ## Verify it worked
 
-In a **new** chat, ask the agent:
+In a **new** chat:
 
-> List Supabase MCP tools / run SQL: `select email, email_confirmed_at, last_sign_in_at from auth.users order by created_at desc limit 5`
+> Run SQL: `select email, email_confirmed_at, last_sign_in_at from auth.users order by created_at desc limit 5`
 
-If Supabase is connected, you’ll get real rows — not “needsAuth”.
+You should get real rows — not “needsAuth”.
 
 ---
 
 ## Cloud agents
 
-Cloud agents use **your** Cursor MCP auth. After you connect Supabase in Cursor Desktop on your account, **new cloud agent runs** should see Supabase as ready.
-
-If a cloud run still says `needsAuth`:
-
-- Re-authorize in Desktop Settings → MCP (or use PAT in `.cursor/mcp.json`)
-- Start a **fresh** cloud agent task (don’t resume an old one)
-
----
-
-## What the agent will do after connect
-
-1. Run `006_auth_db_hardening.sql` checks / apply missing pieces  
-2. Enable leaked password protection + percentage DB conn via Management API  
-3. Verify auth redirect URLs for ServeLocal  
-4. Inspect `user_repeated_signup` / verify errors in auth logs  
-5. Confirm RLS vs grants for any remaining 403s  
-
-No merge PRs — direct Supabase + code fixes.
+After Supabase is green in **Cursor Desktop**, start a **fresh** cloud agent task so it inherits your MCP auth.

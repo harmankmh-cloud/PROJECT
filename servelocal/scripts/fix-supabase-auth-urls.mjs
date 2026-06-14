@@ -12,7 +12,7 @@
  *   SUPABASE_ACCESS_TOKEN=sbp_... node servelocal/scripts/fix-supabase-auth-urls.mjs
  */
 
-const ref = process.env.SUPABASE_PROJECT_REF || "otnddwopphhxstteqizw";
+const ref = process.env.SUPABASE_PROJECT_REF || "avytxgfkncpacqewnrvz";
 const token = process.env.SUPABASE_ACCESS_TOKEN;
 
 if (!token) {

@@ -21,6 +21,7 @@ Vercel team: `harmankmh-1059s-projects`
 |-----|-------------|-------------|
 | **GreetQ** | `lrihhjjxmxixppmrzvva` | `https://lrihhjjxmxixppmrzvva.supabase.co` |
 | **RateLocal** | `otnddwopphhxstteqizw` | `https://otnddwopphhxstteqizw.supabase.co` |
+| **ServeLocal** | `avytxgfkncpacqewnrvz` | `https://avytxgfkncpacqewnrvz.supabase.co` |
 
 Required env vars (each Vercel project): `NEXT_PUBLIC_SUPABASE_URL`, `NEXT_PUBLIC_SUPABASE_ANON_KEY`, `SUPABASE_SERVICE_ROLE_KEY`.
 
