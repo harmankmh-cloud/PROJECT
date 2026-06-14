@@ -42,12 +42,15 @@ async function executeSignUp(
   authLog("signup.start", { email: email.trim() });
   authMetric("signup.network");
 
+  const role = metadata.role;
+  const asRole = role === "pro" || role === "homeowner" ? role : undefined;
+
   const { data, error } = await supabase.auth.signUp({
     email: email.trim(),
     password,
     options: {
       data: metadata,
-      emailRedirectTo: authConfirmUrl(fallbackOrigin),
+      emailRedirectTo: authConfirmUrl(fallbackOrigin, { as: asRole }),
     },
   });
 
