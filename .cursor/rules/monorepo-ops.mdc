@@ -21,8 +21,20 @@ Vercel team: `harmankmh-1059s-projects`
 |-----|-------------|-------------|
 | **GreetQ** | `lrihhjjxmxixppmrzvva` | `https://lrihhjjxmxixppmrzvva.supabase.co` |
 | **RateLocal** | `otnddwopphhxstteqizw` | `https://otnddwopphhxstteqizw.supabase.co` |
+| **ServeLocal** | **same as RateLocal** | same URL/keys as RateLocal |
 
 Required env vars (each Vercel project): `NEXT_PUBLIC_SUPABASE_URL`, `NEXT_PUBLIC_SUPABASE_ANON_KEY`, `SUPABASE_SERVICE_ROLE_KEY`.
+
+## Supabase MCP (Cursor Cloud Agents)
+
+Two MCP entries — one per Supabase **project** (not per app). Add each separately in **Settings → Tools & MCP → Cloud** (one server per modal; do not paste both in one box).
+
+| MCP name | Covers | `project_ref` |
+|----------|--------|---------------|
+| `supabase-greetq` | GreetQ | `lrihhjjxmxixppmrzvva` |
+| `supabase-ratelocal` | RateLocal + ServeLocal | `otnddwopphhxstteqizw` |
+
+Config shape per entry: `{ "url": "https://mcp.supabase.com/mcp?project_ref=<ref>" }`. Repo copy: `.cursor/mcp.json`. Sign in to Supabase when Cursor prompts. Optional: append `&read_only=true` for safer dev queries.
 
 Verify Supabase works by hitting production APIs — do not assume broken if Vercel UI glitches.
 
