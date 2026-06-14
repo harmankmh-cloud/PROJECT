@@ -15,7 +15,7 @@ export function friendlyAuthError(message: string): string {
   }
 
   if (lower.includes("password") && lower.includes("least")) {
-    return "Password must be at least 6 characters.";
+    return "Password must be at least 8 characters.";
   }
 
   if (lower.includes("signup is disabled")) {

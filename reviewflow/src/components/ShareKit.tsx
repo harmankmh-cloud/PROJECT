@@ -1,6 +1,6 @@
 "use client";
 
-import { useMemo, useState } from "react";
+import { useEffect, useState } from "react";
 import { copyToClipboard } from "@/lib/copy";
 import { resolvePublicReviewUrl } from "@/lib/app-url";
 
@@ -34,7 +34,12 @@ const templates = (businessName: string, reviewUrl: string) => [
 export function ShareKit({ businessName, reviewUrl, slug }: Props) {
   const [copied, setCopied] = useState<string | null>(null);
   const [error, setError] = useState("");
-  const liveReviewUrl = useMemo(() => resolvePublicReviewUrl(reviewUrl, slug), [reviewUrl, slug]);
+  const [liveReviewUrl, setLiveReviewUrl] = useState(reviewUrl);
+
+  useEffect(() => {
+    setLiveReviewUrl(resolvePublicReviewUrl(reviewUrl, slug));
+  }, [reviewUrl, slug]);
+
   const items = templates(businessName, liveReviewUrl);
 
   async function copy(id: string, text: string) {

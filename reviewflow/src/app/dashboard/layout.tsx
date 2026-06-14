@@ -1,7 +1,8 @@
 import { redirect } from "next/navigation";
-import { createClient } from "@/lib/supabase/server";
-import { isPlatformAdmin } from "@/lib/admin-auth";
+import { DatadogInit } from "@/components/DatadogInit";
 import { DashboardShell } from "@/components/DashboardShell";
+import { isPlatformAdmin } from "@/lib/admin-auth";
+import { createClient } from "@/lib/supabase/server";
 
 export default async function DashboardLayout({
   children,
@@ -17,17 +18,24 @@ export default async function DashboardLayout({
 
   const { data: business } = await supabase
     .from("businesses")
-    .select("name, slug")
+    .select("name, slug, plan")
     .eq("user_id", user.id)
     .maybeSingle();
 
+  const planLabel =
+    business?.plan === "active" ? "Pro" : business?.plan === "trial" ? "Free Trial" : "Free";
+
   return (
-    <DashboardShell
-      businessName={business?.name}
-      reviewSlug={business?.slug}
-      isPlatformAdmin={isPlatformAdmin(user.email)}
-    >
-      {children}
-    </DashboardShell>
+    <>
+      <DatadogInit />
+      <DashboardShell
+        businessName={business?.name}
+        reviewSlug={business?.slug}
+        planLabel={planLabel}
+        isPlatformAdmin={isPlatformAdmin(user.email)}
+      >
+        {children}
+      </DashboardShell>
+    </>
   );
 }

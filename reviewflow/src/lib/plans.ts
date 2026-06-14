@@ -10,11 +10,16 @@ export const PLAN_LIMITS: Record<PlanId, { label: string; monthlyReviews: number
 };
 
 export const PRICING = {
-  setupUsd: 99,
+  // Setup fee waived by default to remove signup friction. Set setupUsd/setupCents
+  // back above 0 (and provide STRIPE_PRICE_SETUP) to re-enable a one-time charge.
+  setupUsd: 0,
   monthlyUsd: 39,
-  setupCents: 9900,
+  setupCents: 0,
   monthlyCents: 3900,
 };
+
+/** Whether a one-time setup fee is charged at checkout. */
+export const SETUP_FEE_ENABLED = PRICING.setupCents > 0;
 
 export function planFromSubscriptionStatus(
   status: string | null | undefined,
@@ -32,5 +37,7 @@ export function monthlyLimitForPlan(plan: PlanId): number {
 }
 
 export function pricingLabel() {
-  return `$${PRICING.setupUsd} setup + $${PRICING.monthlyUsd}/mo`;
+  return SETUP_FEE_ENABLED
+    ? `$${PRICING.setupUsd} setup + $${PRICING.monthlyUsd}/mo`
+    : `$${PRICING.monthlyUsd}/mo · no setup fee`;
 }

@@ -48,7 +48,7 @@ export function UsageMeter({ usage }: { usage: UsageSummary }) {
                   <Link href="/dashboard/billing" className="font-semibold text-gold-600 hover:underline">
                     Go Pro
                   </Link>{" "}
-                  for {PRICING.setupUsd} setup + ${PRICING.monthlyUsd}/mo.
+                  for ${PRICING.monthlyUsd}/mo — no setup fee.
                 </>
               )}
             </>

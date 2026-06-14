@@ -1,0 +1,8 @@
+leads.csv
+leads-batch.csv
+seeds/fraser-valley-discovered.txt
+discover.log
+yp-discover.log
+scrape.log
+.batch-tmp/
+node_modules/

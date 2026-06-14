@@ -54,8 +54,12 @@ export async function middleware(request: NextRequest) {
     return NextResponse.redirect(new URL("/dashboard", request.url));
   }
 
-  if (pathname.startsWith("/dashboard") && !user) {
+  if ((pathname.startsWith("/dashboard") || pathname.startsWith("/onboarding")) && !user) {
     return NextResponse.redirect(new URL("/login", request.url));
+  }
+
+  if (pathname.startsWith("/business/dashboard")) {
+    return NextResponse.redirect(new URL("/dashboard", request.url));
   }
 
   if ((pathname === "/login" || pathname === "/signup") && user) {
@@ -69,5 +73,18 @@ export async function middleware(request: NextRequest) {
 }
 
 export const config = {
-  matcher: ["/dashboard/:path*", "/admin/:path*", "/login", "/signup"],
+  matcher: [
+    "/dashboard/:path*",
+    "/business/dashboard/:path*",
+    "/onboarding",
+    "/admin/:path*",
+    "/login",
+    "/signup",
+    "/discover",
+    "/search",
+    "/blog/:path*",
+    "/widgets",
+    "/claim-business",
+    "/user/:path*",
+  ],
 };

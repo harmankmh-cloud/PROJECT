@@ -1,0 +1,6 @@
+node_modules
+App.js
+expo-entry.js
+app.json
+package.json
+package-lock.json

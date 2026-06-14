@@ -1,0 +1,17 @@
+---
+description: Use monorepo RAG before cross-project or Supabase/auth work
+globs:
+alwaysApply: true
+---
+
+# Project knowledge (RAG)
+
+This monorepo includes **RateLocal** (`reviewflow/`), **ServeLocal** (`servelocal/`), and shared tooling.
+
+Before non-trivial work (auth, Supabase SQL, env vars, multi-app features):
+
+1. Use MCP **`rag_search`** or run `python -m project_rag search "<topic>"`.
+2. Read cited paths in the results — do not guess file locations.
+3. After large code changes on the branch, run **`rag_reindex`** or `python -m project_rag index`.
+
+Setup: `docs/PROJECT_RAG.md`

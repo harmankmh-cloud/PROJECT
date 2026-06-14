@@ -2,6 +2,7 @@ import { NextResponse } from "next/server";
 import { createClient } from "@/lib/supabase/server";
 import { getAppUrl } from "@/lib/app-url-server";
 import { getStripe, isStripeConfigured } from "@/lib/stripe";
+import { ensureBillingPortalConfiguration } from "@/lib/stripe-portal";
 
 export async function GET(request: Request) {
   return NextResponse.redirect(new URL("/dashboard/billing", request.url));
@@ -38,6 +39,8 @@ export async function POST() {
     }
 
     const appUrl = await getAppUrl();
+
+    await ensureBillingPortalConfiguration(stripe);
 
     const session = await stripe.billingPortal.sessions.create({
       customer: business.stripe_customer_id,

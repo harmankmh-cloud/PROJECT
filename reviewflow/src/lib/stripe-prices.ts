@@ -22,7 +22,7 @@ export async function validateCheckoutPrices(
 
     if (setup.type !== "one_time") {
       errors.push(
-        "STRIPE_PRICE_SETUP must be a one-time price ($99 setup). In Stripe → Product catalog → open Setup → price must say One time, not Recurring."
+        "STRIPE_PRICE_SETUP must be a one-time price. In Stripe → Product catalog → open Setup → price must say One time, not Recurring."
       );
     }
 

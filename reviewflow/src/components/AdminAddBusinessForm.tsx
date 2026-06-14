@@ -4,6 +4,7 @@ import { useState } from "react";
 import { useRouter } from "next/navigation";
 import Link from "next/link";
 import { IndustryPicker } from "@/components/IndustryPicker";
+import { validateGoogleReviewUrl } from "@/lib/google-review-url";
 
 export function AdminAddBusinessForm() {
   const router = useRouter();
@@ -19,6 +20,15 @@ export function AdminAddBusinessForm() {
     e.preventDefault();
     setLoading(true);
     setError("");
+
+    if (googleReviewUrl.trim()) {
+      const validated = validateGoogleReviewUrl(googleReviewUrl);
+      if (!validated.ok) {
+        setError(validated.error);
+        setLoading(false);
+        return;
+      }
+    }
 
     try {
       const response = await fetch("/api/admin/businesses", {

@@ -1,22 +1,25 @@
 # Stripe setup for ReviewFlow
 
-Pricing: **$99 one-time setup + $39/month**
+Pricing: **$39/month — no setup fee** (annual: $390/yr, 2 months free)
+
+> The one-time setup fee is waived by default (`SETUP_FEE_ENABLED` in
+> `src/lib/plans.ts`). You only need the monthly price below. To re-enable a
+> setup fee, set `setupCents` > 0 in `plans.ts` and add `STRIPE_PRICE_SETUP`.
 
 ## 1. Create Stripe account
 
 1. Go to https://dashboard.stripe.com/register
 2. Keep **Test mode** ON (top-right toggle) while testing on your Mac
 
-## 2. Create two prices
+## 2. Create the monthly price
 
 **Product catalog → Add product**
 
 | Product | Price | Billing |
 |---------|-------|---------|
-| ReviewFlow Setup | $99 | One time |
 | ReviewFlow Pro | $39 | Recurring → Monthly |
 
-Copy each **Price ID** (`price_...`).
+Copy the **Price ID** (`price_...`) into `STRIPE_PRICE_MONTHLY`.
 
 ## 3. Add keys to `.env.local`
 
@@ -30,8 +33,8 @@ Paste:
 
 ```bash
 STRIPE_SECRET_KEY=sk_test_...
-STRIPE_PRICE_SETUP=price_...
 STRIPE_PRICE_MONTHLY=price_...
+# STRIPE_PRICE_SETUP=price_...   # only needed if you re-enable a setup fee
 ```
 
 Get secret key: Stripe Dashboard → Developers → API keys
