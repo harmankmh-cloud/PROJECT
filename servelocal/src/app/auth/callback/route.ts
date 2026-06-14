@@ -9,30 +9,36 @@ export async function GET(request: Request) {
   const next = searchParams.get("next");
 
   if (!isSupabaseConfigured()) {
-    return NextResponse.redirect(`${origin}/login`);
+    return NextResponse.redirect(`${origin}/login?error=not_configured`);
   }
 
-  if (code) {
-    const supabase = await createClient();
-    if (supabase) {
-      const { error } = await supabase.auth.exchangeCodeForSession(code);
-      if (!error) {
-        if (next && next.startsWith("/") && !next.startsWith("//")) {
-          return NextResponse.redirect(`${origin}${next}`);
-        }
-
-        const {
-          data: { user },
-        } = await supabase.auth.getUser();
-
-        if (user && isPlatformAdmin(user.email)) {
-          return NextResponse.redirect(`${origin}/admin`);
-        }
-
-        return NextResponse.redirect(`${origin}/auth/after-login`);
-      }
-    }
+  if (!code) {
+    return NextResponse.redirect(`${origin}/login?error=missing_code`);
   }
 
-  return NextResponse.redirect(`${origin}/login`);
+  const supabase = await createClient();
+  if (!supabase) {
+    return NextResponse.redirect(`${origin}/login?error=auth_failed`);
+  }
+
+  const { error } = await supabase.auth.exchangeCodeForSession(code);
+  if (error) {
+    console.error("[auth/callback] exchangeCodeForSession failed:", error.message);
+    return NextResponse.redirect(`${origin}/login?error=auth_failed`);
+  }
+
+  const {
+    data: { user },
+  } = await supabase.auth.getUser();
+
+  if (user && isPlatformAdmin(user.email)) {
+    return NextResponse.redirect(`${origin}/admin`);
+  }
+
+  const afterLoginUrl = new URL("/auth/after-login", origin);
+  if (next && next.startsWith("/") && !next.startsWith("//")) {
+    afterLoginUrl.searchParams.set("next", next);
+  }
+
+  return NextResponse.redirect(afterLoginUrl.toString());
 }

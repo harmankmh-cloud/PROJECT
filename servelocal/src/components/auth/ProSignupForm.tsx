@@ -2,8 +2,8 @@
 
 import { zodResolver } from "@hookform/resolvers/zod";
 import Link from "next/link";
-import { useRouter } from "next/navigation";
 import { useState } from "react";
+import { redirectAfterAuth } from "@/lib/auth/client-redirect";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
 import { Button } from "@/components/ui/Button";
@@ -17,7 +17,6 @@ const proSignupSchema = homeownerSignupSchema;
 type ProSignupData = z.infer<typeof proSignupSchema>;
 
 export function ProSignupForm() {
-  const router = useRouter();
   const [error, setError] = useState<string | null>(null);
   const [info, setInfo] = useState<string | null>(null);
 
@@ -43,7 +42,7 @@ export function ProSignupForm() {
       password: data.password,
       options: {
         data: { role: "pro", display_name: data.name, city: data.city },
-        emailRedirectTo: `${window.location.origin}/auth/callback?next=/onboarding`,
+        emailRedirectTo: `${window.location.origin}/auth/callback`,
       },
     });
 
@@ -63,8 +62,7 @@ export function ProSignupForm() {
       body: JSON.stringify({ role: "pro", display_name: data.name }),
     });
 
-    router.push("/onboarding");
-    router.refresh();
+    await redirectAfterAuth("/auth/after-login");
   }
 
   return (

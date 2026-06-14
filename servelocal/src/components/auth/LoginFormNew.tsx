@@ -2,18 +2,17 @@
 
 import { zodResolver } from "@hookform/resolvers/zod";
 import Link from "next/link";
-import { useRouter } from "next/navigation";
 import { useState } from "react";
 import { useForm } from "react-hook-form";
 import { Button } from "@/components/ui/Button";
 import { Input } from "@/components/ui/Input";
+import { redirectAfterAuth } from "@/lib/auth/client-redirect";
 import { loginSchema, type LoginData } from "@/lib/schemas/auth";
 import { createClient } from "@/lib/supabase/client";
 import { isSupabaseConfigured } from "@/lib/supabase/config";
 
-export function LoginFormNew() {
-  const router = useRouter();
-  const [error, setError] = useState<string | null>(null);
+export function LoginFormNew({ initialError }: { initialError?: string | null }) {
+  const [error, setError] = useState<string | null>(initialError ?? null);
   const [resetSent, setResetSent] = useState(false);
 
   const {
@@ -40,8 +39,7 @@ export function LoginFormNew() {
       return;
     }
 
-    router.push("/auth/after-login");
-    router.refresh();
+    await redirectAfterAuth("/auth/after-login");
   }
 
   async function handleForgot() {

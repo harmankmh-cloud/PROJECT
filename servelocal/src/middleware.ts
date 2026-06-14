@@ -1,15 +1,6 @@
 import { createServerClient } from "@supabase/ssr";
 import { NextResponse, type NextRequest } from "next/server";
-
-function isAdminEmail(email: string | undefined) {
-  if (!email) return false;
-  const raw = process.env.ADMIN_EMAILS || process.env.ADMIN_EMAIL || "";
-  return raw
-    .split(",")
-    .map((item) => item.trim().toLowerCase())
-    .filter(Boolean)
-    .includes(email.toLowerCase());
-}
+import { isPlatformAdmin } from "@/lib/admin-auth";
 
 export async function middleware(request: NextRequest) {
   let response = NextResponse.next({
@@ -50,7 +41,7 @@ export async function middleware(request: NextRequest) {
     return NextResponse.redirect(new URL("/login", request.url));
   }
 
-  if (pathname.startsWith("/admin") && user && !isAdminEmail(user.email)) {
+  if (pathname.startsWith("/admin") && user && !isPlatformAdmin(user.email)) {
     return NextResponse.redirect(new URL("/dashboard", request.url));
   }
 
