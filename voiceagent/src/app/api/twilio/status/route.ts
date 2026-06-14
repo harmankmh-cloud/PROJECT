@@ -4,7 +4,7 @@ import { validateTwilioWebhook } from "@/lib/twilio-webhook";
 import { analyzeCall } from "@/lib/intelligence";
 import { intelligenceToCallUpdate } from "@/lib/call-intelligence-persist";
 import { dispatchCallWebhook } from "@/lib/outbound-webhook";
-import { deductTrialMinutes, type TrialOrg } from "@/lib/trial";
+import { recordCallUsage } from "@/lib/usage-metering";
 
 export async function POST(request: NextRequest) {
   const formData = await request.formData();
@@ -57,23 +57,12 @@ export async function POST(request: NextRequest) {
       })
       .eq("id", call.id);
 
-    await admin.from("va_usage_events").insert({
-      org_id: call.org_id,
-      call_id: call.id,
-      event_type: "voice_minute",
-      quantity: minutes,
+    await recordCallUsage(admin, {
+      orgId: call.org_id,
+      callId: call.id,
+      minutes,
+      isSandbox: Boolean(call.is_sandbox),
     });
-
-    if (!call.is_sandbox) {
-      const { data: orgRow } = await admin
-        .from("va_organizations")
-        .select("plan, stripe_subscription_id, trial_minutes_remaining")
-        .eq("id", call.org_id)
-        .maybeSingle();
-      if (orgRow) {
-        await deductTrialMinutes(admin, call.org_id, orgRow as TrialOrg, minutes);
-      }
-    }
 
     await dispatchCallWebhook(call.org_id, {
       event: "call.completed",

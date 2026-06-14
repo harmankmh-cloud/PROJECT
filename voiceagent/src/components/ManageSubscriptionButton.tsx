@@ -29,7 +29,7 @@ export function ManageSubscriptionButton({ hasCustomer }: { hasCustomer: boolean
         type="button"
         onClick={openPortal}
         disabled={loading}
-        className="btn-secondary w-full sm:w-auto disabled:opacity-60"
+        className="btn-secondary w-full sm:w-auto disabled:cursor-not-allowed disabled:opacity-60"
       >
         {loading ? "Opening…" : "Manage subscription"}
       </button>

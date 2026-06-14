@@ -1,7 +1,7 @@
 import type { Metadata } from "next";
 import Link from "next/link";
-import { SiteFooter } from "@/components/SiteFooter";
-import { SiteHeader } from "@/components/SiteHeader";
+import { MarketingPageShell } from "@/components/layout/MarketingPageShell";
+import { ShimmerButton } from "@/components/ui/ShimmerButton";
 import { pageMetadata } from "@/lib/seo";
 import { SITE_FAQS } from "@/lib/site-content";
 
@@ -24,14 +24,13 @@ export default function FaqPage() {
   };
 
   return (
-    <main className="mesh-bg min-h-screen">
-      <SiteHeader compact />
+    <MarketingPageShell>
       <div className="mx-auto max-w-3xl px-4 py-12 sm:px-8">
-        <p className="section-eyebrow">FAQ</p>
-        <h1 className="font-display mt-2 text-4xl text-brand-950">Common questions</h1>
-        <p className="mt-3 text-slate-600">
+        <p className="font-label text-primary">FAQ</p>
+        <h1 className="font-display mt-2 text-4xl font-black text-foreground">Common questions</h1>
+        <p className="mt-3 text-muted">
           Homeowners and tradies — quick answers. Still stuck?{" "}
-          <Link href="/contact" className="font-semibold text-teal-600 hover:underline">
+          <Link href="/contact" className="font-semibold text-primary hover:underline">
             Contact us
           </Link>
           .
@@ -39,26 +38,25 @@ export default function FaqPage() {
 
         <dl className="mt-10 space-y-6">
           {SITE_FAQS.map((faq) => (
-            <div key={faq.q} className="surface-card p-6">
-              <dt className="font-semibold text-brand-950">{faq.q}</dt>
-              <dd className="mt-2 text-sm leading-relaxed text-slate-600">{faq.a}</dd>
+            <div key={faq.q} className="rounded-[14px] border border-border bg-surface p-6">
+              <dt className="font-semibold text-foreground">{faq.q}</dt>
+              <dd className="mt-2 text-sm leading-relaxed text-muted">{faq.a}</dd>
             </div>
           ))}
         </dl>
 
         <div className="mt-10 flex flex-wrap gap-3">
-          <Link href="/request" className="btn-gold px-6 py-3">
-            Post a job
-          </Link>
-          <Link href="/join" className="btn-ghost px-6 py-3">
+          <ShimmerButton href="/request">Post a job</ShimmerButton>
+          <Link
+            href="/join"
+            className="inline-flex items-center justify-center rounded-full border border-border px-6 py-3 text-sm font-semibold text-foreground hover:border-amber-400/50"
+          >
             Get listed
           </Link>
         </div>
       </div>
 
       <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(faqJsonLd) }} />
-
-      <SiteFooter />
-    </main>
+    </MarketingPageShell>
   );
 }

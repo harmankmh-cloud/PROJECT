@@ -1,6 +1,8 @@
 "use client";
 
 import { useEffect, useState } from "react";
+import { Skeleton } from "@/components/ui/Skeleton";
+import { useToast } from "@/components/providers/ToastProvider";
 import { apiFetch } from "@/lib/api-client";
 
 const CHANNEL_META = [
@@ -10,15 +12,15 @@ const CHANNEL_META = [
 ] as const;
 
 export default function ChannelsPage() {
+  const { showError } = useToast();
   const [enabled, setEnabled] = useState<Record<string, boolean>>({});
   const [loading, setLoading] = useState(true);
-  const [error, setError] = useState("");
   const [saving, setSaving] = useState<string | null>(null);
-  const [webhookUrl, setWebhookUrl] = useState("/api/omnichannel/inbound");
-
-  useEffect(() => {
-    setWebhookUrl(`${window.location.origin}/api/omnichannel/inbound`);
-  }, []);
+  const [webhookUrl] = useState(() =>
+    typeof window !== "undefined"
+      ? `${window.location.origin}/api/omnichannel/inbound`
+      : "/api/omnichannel/inbound"
+  );
 
   useEffect(() => {
     apiFetch<{ channels: Array<{ channel_type: string; is_active: boolean }> }>("/api/channels").then(
@@ -30,7 +32,7 @@ export default function ChannelsPage() {
           });
           setEnabled(map);
         } else {
-          setError(res.error);
+          showError(res.error);
         }
         setLoading(false);
       }
@@ -40,7 +42,6 @@ export default function ChannelsPage() {
   async function toggleChannel(channel: string) {
     const next = !enabled[channel];
     setSaving(channel);
-    setError("");
 
     const res = await apiFetch("/api/channels", {
       method: "PATCH",
@@ -52,7 +53,7 @@ export default function ChannelsPage() {
     if (res.ok) {
       setEnabled((prev) => ({ ...prev, [channel]: next }));
     } else {
-      setError(res.error);
+      showError(res.error);
     }
   }
 
@@ -61,9 +62,13 @@ export default function ChannelsPage() {
       <h1 className="text-2xl font-bold text-ghost-white">Omnichannel</h1>
       <p className="mt-1 text-on-surface-variant">Enable SMS, WhatsApp, and web chat for your agents.</p>
 
-      {error && <p className="mt-4 text-sm text-error">{error}</p>}
-      {loading && <p className="mt-4 text-sm text-slate-text">Loading channels…</p>}
-
+      {loading ? (
+        <div className="mt-8 grid animate-pulse gap-4 md:grid-cols-3">
+          {Array.from({ length: 3 }).map((_, i) => (
+            <Skeleton key={i} className="h-40 rounded-2xl" />
+          ))}
+        </div>
+      ) : (
       <div className="mt-8 grid gap-4 md:grid-cols-3">
         {CHANNEL_META.map((ch) => (
           <div key={ch.id} className="surface-card p-6">
@@ -86,6 +91,7 @@ export default function ChannelsPage() {
           </div>
         ))}
       </div>
+      )}
 
       <div className="mt-8 surface-card p-6 text-sm text-on-surface-variant">
         <p className="font-medium text-ghost-white">Webhook setup</p>

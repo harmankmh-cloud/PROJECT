@@ -7,11 +7,12 @@ import { createClient } from "@/lib/supabase/client";
 import { signupSchema, type SignupFormData } from "@/lib/schemas/auth";
 import { AuthLayout } from "@/components/auth/AuthLayout";
 import { GoogleAuthButton, isGoogleAuthEnabled } from "@/components/auth/GoogleAuthButton";
-import { Button } from "@/components/ui/Button";
+import { GlowButton } from "@/components/ui/GlowButton";
 import { Input } from "@/components/ui/Input";
-import { BRAND } from "@/lib/brand";
+import { PhoneInput } from "@/components/ui/PhoneInput";
 import { markOnboardingPending } from "@/lib/onboarding";
 import type { PlanKey } from "@/lib/plans";
+import { normalizeNanpPhone } from "@/lib/phone";
 import { TRIAL_MARKETING } from "@/lib/trial";
 
 export function SignupForm({
@@ -37,6 +38,7 @@ export function SignupForm({
       phone: "",
       email: initialEmail,
       password: "",
+      confirmPassword: "",
       acceptedTerms: undefined,
     },
   });
@@ -59,7 +61,7 @@ export function SignupForm({
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({
         businessName: data.businessName?.trim() || undefined,
-        phone: data.phone.trim(),
+        phone: normalizeNanpPhone(data.phone),
       }),
     });
     if (!setupRes.ok) {
@@ -90,13 +92,13 @@ export function SignupForm({
   const termsAccepted = watch("acceptedTerms") === true;
 
   return (
-    <AuthLayout panelFooter={TRIAL_MARKETING.exploreLong}>
+    <AuthLayout panelFooter={TRIAL_MARKETING.authPanel}>
       <div className="auth-card">
         <h1 className="font-display text-3xl text-text">Create your account</h1>
         <p className="mt-2 text-sm text-muted">
           {initialPlan
             ? `Set up your org, then continue to ${initialPlan} checkout (${TRIAL_MARKETING.goLiveShort}).`
-            : `${TRIAL_MARKETING.exploreLong} ${TRIAL_MARKETING.goLiveLong}`}
+            : TRIAL_MARKETING.authPanel}
         </p>
 
         <form onSubmit={handleSubmit(onSubmit)} className="mt-8 space-y-4" noValidate>
@@ -106,13 +108,17 @@ export function SignupForm({
             error={errors.businessName?.message}
             {...register("businessName")}
           />
-          <Input
-            label="Business phone"
-            type="tel"
-            autoComplete="tel"
-            placeholder="(604) 555-0100"
-            error={errors.phone?.message}
-            {...register("phone")}
+          <Controller
+            name="phone"
+            control={control}
+            render={({ field }) => (
+              <PhoneInput
+                label="Business phone"
+                error={errors.phone?.message}
+                value={field.value}
+                onChange={field.onChange}
+              />
+            )}
           />
           <Input
             label="Email"
@@ -142,9 +148,16 @@ export function SignupForm({
               </div>
             )}
             <p className="mt-1 text-xs text-muted">
-              Use 8+ characters with uppercase and a number for a strong password.
+              Use 8+ characters with uppercase and a number.
             </p>
           </div>
+          <Input
+            label="Confirm password"
+            type="password"
+            autoComplete="new-password"
+            error={errors.confirmPassword?.message}
+            {...register("confirmPassword")}
+          />
           <Controller
             name="acceptedTerms"
             control={control}
@@ -177,9 +190,9 @@ export function SignupForm({
               {errors.root.message}
             </p>
           )}
-          <Button type="submit" className="w-full" loading={isSubmitting}>
+          <GlowButton type="submit" className="w-full justify-center" loading={isSubmitting}>
             {TRIAL_MARKETING.cta}
-          </Button>
+          </GlowButton>
         </form>
 
         {isGoogleAuthEnabled && (

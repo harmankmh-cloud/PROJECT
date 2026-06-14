@@ -1,8 +1,8 @@
 import type { Metadata } from "next";
 import Link from "next/link";
-import { ServiceRequestForm } from "@/components/ServiceRequestForm";
-import { SiteFooter } from "@/components/SiteFooter";
-import { SiteHeader } from "@/components/SiteHeader";
+import { MarketingPageShell } from "@/components/layout/MarketingPageShell";
+import { RequestWizard } from "@/components/request/RequestWizard";
+import { FadeUp } from "@/components/motion/FadeUp";
 import { getServiceCategories } from "@/lib/data";
 import { pageMetadata } from "@/lib/seo";
 import { createClient } from "@/lib/supabase/server";
@@ -11,20 +11,28 @@ import { isSupabaseConfigured } from "@/lib/supabase/config";
 export const metadata: Metadata = pageMetadata({
   title: "Get Free Quotes from Local Pros",
   description:
-    "Post your job in under 2 minutes. Describe what you need, pick your city and service, and connect with BC trades direct — no lead fees.",
+    "Post your job in 6 easy steps. Get matched with up to 5 verified Canadian contractors — fast, free, no stress.",
   path: "/request",
 });
 
 export default async function RequestPage({
   searchParams,
 }: {
-  searchParams: Promise<{ city?: string; category?: string }>;
+  searchParams: Promise<{
+    city?: string;
+    category?: string;
+    pro?: string;
+    name?: string;
+    email?: string;
+    desc?: string;
+    date?: string;
+  }>;
 }) {
   const params = await searchParams;
   const categories = await getServiceCategories();
 
-  let defaultEmail = "";
-  let defaultName = "";
+  let defaultEmail = params.email ?? "";
+  let defaultName = params.name ?? "";
   let isLoggedIn = false;
 
   if (isSupabaseConfigured()) {
@@ -35,40 +43,45 @@ export default async function RequestPage({
       } = await supabase.auth.getUser();
       if (user) {
         isLoggedIn = true;
-        defaultEmail = user.email ?? "";
+        defaultEmail = defaultEmail || (user.email ?? "");
         const meta = user.user_metadata as { full_name?: string; name?: string } | undefined;
-        defaultName = meta?.full_name || meta?.name || "";
+        defaultName = defaultName || meta?.full_name || meta?.name || "";
       }
     }
   }
 
   return (
-    <main className="mesh-bg min-h-screen">
-      <SiteHeader compact />
-      <div className="mx-auto max-w-lg px-4 py-10 sm:px-8">
-        <h1 className="font-display text-3xl text-brand-950">Get free quotes</h1>
-        <p className="mt-2 text-slate-600">
-          Pick your service type, describe your job, and see matching local pros you can call direct. No lead fees.
-        </p>
-        {!isLoggedIn && (
-          <p className="mt-3 text-sm text-slate-500">
-            <Link href="/signup" className="font-semibold text-teal-600 hover:underline">
-              Create a free account
-            </Link>{" "}
-            to track your requests — or post as a guest below.
+    <MarketingPageShell>
+      <div className="mx-auto max-w-3xl px-4 py-10 sm:px-8">
+        <FadeUp>
+          <h1 className="font-display text-3xl font-black text-foreground sm:text-4xl">
+            Get free quotes
+          </h1>
+          <p className="mt-2 text-muted">
+            We&apos;ll match your job with up to 5 verified local pros. Takes under 3 minutes.
           </p>
-        )}
-        <div className="mt-8">
-          <ServiceRequestForm
+          {!isLoggedIn && (
+            <p className="mt-3 text-sm text-muted">
+              <Link href="/signup" className="font-semibold text-primary hover:underline">
+                Create a free account
+              </Link>{" "}
+              to track your requests — or continue as a guest.
+            </p>
+          )}
+        </FadeUp>
+        <div className="mt-10 rounded-[14px] border border-border bg-surface p-6 sm:p-8">
+          <RequestWizard
             categories={categories}
             defaultCity={params.city}
             defaultCategory={params.category}
+            defaultPro={params.pro}
             defaultName={defaultName}
             defaultEmail={defaultEmail}
+            defaultDescription={params.desc ?? ""}
+            defaultPreferredDate={params.date ?? ""}
           />
         </div>
       </div>
-      <SiteFooter />
-    </main>
+    </MarketingPageShell>
   );
 }

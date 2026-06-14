@@ -6,6 +6,7 @@ import { useEffect, useState } from "react";
 import { BusinessHoursEditor } from "@/components/BusinessHoursEditor";
 import { Button } from "@/components/ui/Button";
 import { Skeleton } from "@/components/ui/Skeleton";
+import { useToast } from "@/components/providers/ToastProvider";
 import { DEFAULT_BUSINESS_HOURS, type BusinessHours } from "@/lib/business-hours";
 import { apiFetch } from "@/lib/api-client";
 
@@ -22,21 +23,22 @@ type Settings = {
 };
 
 const TAB_LIST = [
-  { value: "general", label: "General" },
-  { value: "greeting", label: "AI Greeting" },
-  { value: "routing", label: "Call Routing" },
-  { value: "notifications", label: "Notifications" },
+  { value: "profile", label: "Profile" },
+  { value: "call-handling", label: "Call handling" },
+  { value: "greetings", label: "Greetings" },
+  { value: "integrations", label: "Integrations" },
   { value: "team", label: "Team" },
   { value: "billing", label: "Billing" },
+  { value: "notifications", label: "Notifications" },
+  { value: "danger", label: "Danger zone" },
 ] as const;
 
 export function SettingsTabs() {
+  const { showError, showSuccess } = useToast();
   const [settings, setSettings] = useState<Settings | null>(null);
   const [greeting, setGreeting] = useState("");
   const [loading, setLoading] = useState(true);
   const [saving, setSaving] = useState(false);
-  const [message, setMessage] = useState("");
-  const [error, setError] = useState("");
   const [notifyEmail, setNotifyEmail] = useState(true);
   const [notifySms, setNotifySms] = useState(false);
 
@@ -46,7 +48,7 @@ export function SettingsTabs() {
       apiFetch<{ agents: Array<{ system_prompt: string; welcome_greeting: string }> }>("/api/agents"),
     ]).then(([settingsRes, agentsRes]) => {
       if (settingsRes.ok) setSettings(settingsRes.data.settings);
-      else setError(settingsRes.error);
+      else showError(settingsRes.error);
       if (agentsRes.ok && agentsRes.data.agents[0]) {
         setGreeting(agentsRes.data.agents[0].welcome_greeting || agentsRes.data.agents[0].system_prompt);
       }
@@ -57,8 +59,6 @@ export function SettingsTabs() {
   async function saveSettings(patch: Partial<Settings>) {
     if (!settings) return;
     setSaving(true);
-    setError("");
-    setMessage("");
     const merged = { ...settings, ...patch };
     const res = await apiFetch("/api/settings", {
       method: "PATCH",
@@ -68,8 +68,8 @@ export function SettingsTabs() {
     setSaving(false);
     if (res.ok) {
       setSettings(merged);
-      setMessage("Settings saved.");
-    } else setError(res.error);
+      showSuccess("Settings saved.");
+    } else showError(res.error);
   }
 
   if (loading) {
@@ -82,7 +82,7 @@ export function SettingsTabs() {
   }
 
   if (!settings) {
-    return <p className="p-8 text-danger">{error || "Could not load settings."}</p>;
+    return <p className="p-8 text-danger">Could not load settings.</p>;
   }
 
   return (
@@ -90,23 +90,24 @@ export function SettingsTabs() {
       <h1 className="font-display text-2xl text-text">Settings</h1>
       <p className="mt-1 text-sm text-muted">Manage your GreetQ configuration</p>
 
-      {message && <p className="mt-4 text-sm text-success">{message}</p>}
-      {error && <p className="mt-4 text-sm text-danger">{error}</p>}
-
-      <Tabs.Root defaultValue="general" className="mt-8">
+      <Tabs.Root defaultValue="profile" className="mt-8">
         <Tabs.List className="flex flex-wrap gap-1 border-b border-border pb-px">
           {TAB_LIST.map((tab) => (
             <Tabs.Trigger
               key={tab.value}
               value={tab.value}
-              className="rounded-t-lg px-4 py-2.5 text-sm font-medium text-muted transition data-[state=active]:border-b-2 data-[state=active]:border-primary data-[state=active]:text-text"
+              className={`rounded-t-lg px-4 py-2.5 text-sm font-medium transition data-[state=active]:border-b-2 data-[state=active]:text-text ${
+                tab.value === "danger"
+                  ? "text-danger data-[state=active]:border-danger"
+                  : "text-muted data-[state=active]:border-[var(--color-primary)]"
+              }`}
             >
               {tab.label}
             </Tabs.Trigger>
           ))}
         </Tabs.List>
 
-        <Tabs.Content value="general" className="mt-6 space-y-4">
+        <Tabs.Content value="profile" className="mt-6 space-y-4">
           <CardSection title="Organization">
             <input
               className="input-field"
@@ -128,7 +129,7 @@ export function SettingsTabs() {
           </CardSection>
         </Tabs.Content>
 
-        <Tabs.Content value="greeting" className="mt-6">
+        <Tabs.Content value="greetings" className="mt-6">
           <CardSection title="Custom greeting script">
             <textarea
               className="input-field min-h-[120px] font-mono text-sm"
@@ -143,7 +144,7 @@ export function SettingsTabs() {
           </CardSection>
         </Tabs.Content>
 
-        <Tabs.Content value="routing" className="mt-6 space-y-4">
+        <Tabs.Content value="call-handling" className="mt-6 space-y-4">
           <CardSection title="Call routing">
             <label className="flex items-center justify-between rounded-lg border border-border p-4">
               <span className="text-sm text-text">Forward to mobile</span>
@@ -182,7 +183,7 @@ export function SettingsTabs() {
               <input type="checkbox" checked={notifySms} onChange={(e) => setNotifySms(e.target.checked)} className="accent-primary" />
               SMS summaries to your phone
             </label>
-            <Button onClick={() => setMessage("Notification preferences saved.")}>Save</Button>
+            <Button onClick={() => showSuccess("Notification preferences saved.")}>Save</Button>
           </CardSection>
         </Tabs.Content>
 
@@ -195,12 +196,38 @@ export function SettingsTabs() {
           </CardSection>
         </Tabs.Content>
 
+        <Tabs.Content value="integrations" className="mt-6">
+          <CardSection title="Integrations">
+            <p className="text-sm text-muted">
+              Connect Google Calendar, Calendly, HubSpot, and more to automate bookings and CRM updates.
+            </p>
+            <Link href="/dashboard/integrations" className="btn-primary inline-flex mt-4">
+              Manage integrations →
+            </Link>
+          </CardSection>
+        </Tabs.Content>
+
         <Tabs.Content value="billing" className="mt-6">
           <CardSection title="Billing">
             <p className="text-sm text-muted">View usage, invoices, and upgrade your plan.</p>
             <Link href="/dashboard/billing" className="btn-primary inline-flex mt-4">
               Open billing →
             </Link>
+          </CardSection>
+        </Tabs.Content>
+
+        <Tabs.Content value="danger" className="mt-6">
+          <CardSection title="Danger zone">
+            <p className="text-sm text-muted">
+              Permanently delete your organization and all call data. This cannot be undone.
+            </p>
+            <Button
+              variant="outline"
+              className="mt-4 border-danger/50 text-danger hover:bg-danger/10"
+              onClick={() => showError("Contact support to delete your account — hello@greetq.com")}
+            >
+              Request account deletion
+            </Button>
           </CardSection>
         </Tabs.Content>
       </Tabs.Root>

@@ -1,8 +1,8 @@
 import type { Metadata } from "next";
 import Link from "next/link";
 import { notFound } from "next/navigation";
-import { SiteFooter } from "@/components/SiteFooter";
-import { SiteHeader } from "@/components/SiteHeader";
+import { MarketingPageShell } from "@/components/layout/MarketingPageShell";
+import { ShimmerButton } from "@/components/ui/ShimmerButton";
 import { ProviderCard } from "@/components/ProviderCard";
 import { COST_GUIDES, SERVE_LOCAL } from "@/lib/constants";
 import { getGuideExtended } from "@/lib/marketing-content";
@@ -66,96 +66,95 @@ export default async function GuideCategoryPage({ params }: { params: Promise<{ 
       : null;
 
   return (
-    <main className="mesh-bg min-h-screen">
-      <SiteHeader compact />
+    <MarketingPageShell>
       <div className="mx-auto max-w-6xl px-4 py-12 sm:px-8">
-        <Link href="/guides" className="text-sm font-semibold text-teal-600 hover:underline">
+        <Link href="/guides" className="text-sm font-semibold text-primary hover:underline">
           ← All guides
         </Link>
-        <h1 className="font-display mt-4 text-4xl text-brand-950">
+        <h1 className="font-display mt-4 text-4xl font-black text-foreground">
           {cat.icon} {cat.name} costs in BC
         </h1>
-        {extended && <p className="mt-4 max-w-3xl leading-relaxed text-slate-600">{extended.intro}</p>}
+        {extended && <p className="mt-4 max-w-3xl leading-relaxed text-muted">{extended.intro}</p>}
 
         {guide ? (
           <div className="mt-8 grid gap-6 lg:grid-cols-2">
-            <div className="surface-card p-6">
-              <h2 className="font-semibold text-brand-950">Typical pricing</h2>
+            <div className="rounded-[14px] border border-border bg-surface p-6">
+              <h2 className="font-semibold text-foreground">Typical pricing</h2>
               {guide.low > 0 ? (
-                <p className="font-display mt-2 text-3xl text-teal-600">
-                  ${guide.low}–${guide.high} <span className="text-base text-slate-500">{guide.unit}</span>
+                <p className="font-display mt-2 text-3xl text-primary">
+                  ${guide.low}–${guide.high} <span className="text-base text-muted">{guide.unit}</span>
                 </p>
               ) : (
-                <p className="mt-2 text-slate-600">Project-based — get multiple quotes</p>
+                <p className="mt-2 text-muted">Project-based — get multiple quotes</p>
               )}
-              <h3 className="mt-6 font-semibold text-brand-950">Common jobs</h3>
+              <h3 className="mt-6 font-semibold text-foreground">Common jobs</h3>
               <ul className="mt-3 space-y-2 text-sm">
                 {guide.commonJobs.map((job) => (
-                  <li key={job.name} className="flex justify-between border-b border-slate-100 pb-2">
+                  <li key={job.name} className="flex justify-between border-b border-border pb-2">
                     <span>{job.name}</span>
-                    <span className="font-medium text-brand-950">{job.range}</span>
+                    <span className="font-medium text-foreground">{job.range}</span>
                   </li>
                 ))}
               </ul>
             </div>
-            <div className="surface-card p-6">
-              <h2 className="font-semibold text-brand-950">Tips before you hire</h2>
-              <ul className="mt-4 space-y-3 text-sm text-slate-700">
+            <div className="rounded-[14px] border border-border bg-surface p-6">
+              <h2 className="font-semibold text-foreground">Tips before you hire</h2>
+              <ul className="mt-4 space-y-3 text-sm text-muted">
                 {guide.tips.map((tip) => (
                   <li key={tip} className="flex gap-2">
-                    <span className="text-teal-500">•</span>
+                    <span className="text-primary">•</span>
                     {tip}
                   </li>
                 ))}
               </ul>
-              <Link href={`/request?category=${category}`} className="btn-gold mt-6 inline-flex px-6 py-3">
+              <ShimmerButton href={`/request?category=${category}`} className="mt-6">
                 Get quotes for {cat.name}
-              </Link>
+              </ShimmerButton>
             </div>
           </div>
         ) : (
-          <div className="surface-card mt-8 p-8 text-center">
-            <p className="text-slate-600">Pricing guide coming soon for this service.</p>
-            <Link href={`/request?category=${category}`} className="btn-gold mt-6 inline-flex px-6 py-3">
+          <div className="mt-8 rounded-[14px] border border-border bg-surface p-8 text-center">
+            <p className="text-muted">Pricing guide coming soon for this service.</p>
+            <ShimmerButton href={`/request?category=${category}`} className="mt-6">
               Get quotes for {cat.name}
-            </Link>
+            </ShimmerButton>
           </div>
         )}
 
         {extended && (
           <div className="mt-10 grid gap-6 lg:grid-cols-2">
-            <div className="surface-card p-6">
-              <h2 className="font-semibold text-brand-950">What affects price</h2>
-              <ul className="mt-4 space-y-2 text-sm text-slate-700">
+            <div className="rounded-[14px] border border-border bg-surface p-6">
+              <h2 className="font-semibold text-foreground">What affects price</h2>
+              <ul className="mt-4 space-y-2 text-sm text-muted">
                 {extended.factors.map((factor) => (
                   <li key={factor} className="flex gap-2">
-                    <span className="text-teal-500">•</span>
+                    <span className="text-primary">•</span>
                     {factor}
                   </li>
                 ))}
               </ul>
-              <p className="mt-6 text-sm text-slate-600">
-                <strong>Typical timeline:</strong> {extended.timeline}
+              <p className="mt-6 text-sm text-muted">
+                <strong className="text-foreground">Typical timeline:</strong> {extended.timeline}
               </p>
             </div>
-            <div className="surface-card p-6">
-              <h2 className="font-semibold text-brand-950">Before you hire</h2>
-              <ul className="mt-4 space-y-2 text-sm text-slate-700">
+            <div className="rounded-[14px] border border-border bg-surface p-6">
+              <h2 className="font-semibold text-foreground">Before you hire</h2>
+              <ul className="mt-4 space-y-2 text-sm text-muted">
                 {extended.hiring.map((item) => (
                   <li key={item} className="flex gap-2">
-                    <span className="text-teal-500">✓</span>
+                    <span className="text-primary">✓</span>
                     {item}
                   </li>
                 ))}
               </ul>
             </div>
-            <div className="surface-card p-6 lg:col-span-2">
-              <h2 className="font-semibold text-brand-950">FAQ</h2>
+            <div className="rounded-[14px] border border-border bg-surface p-6 lg:col-span-2">
+              <h2 className="font-semibold text-foreground">FAQ</h2>
               <dl className="mt-4 space-y-4">
                 {extended.faqs.map((faq) => (
                   <div key={faq.q}>
-                    <dt className="font-medium text-brand-950">{faq.q}</dt>
-                    <dd className="mt-1 text-sm text-slate-600">{faq.a}</dd>
+                    <dt className="font-medium text-foreground">{faq.q}</dt>
+                    <dd className="mt-1 text-sm text-muted">{faq.a}</dd>
                   </div>
                 ))}
               </dl>
@@ -165,7 +164,7 @@ export default async function GuideCategoryPage({ params }: { params: Promise<{ 
 
         {pros.length > 0 && (
           <div className="mt-12">
-            <h2 className="font-display text-2xl text-brand-950">Top-rated {cat.name.toLowerCase()} pros</h2>
+            <h2 className="font-display text-2xl font-bold text-foreground">Top-rated {cat.name.toLowerCase()} pros</h2>
             <div className="mt-6 grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
               {pros.slice(0, 6).map((p) => (
                 <ProviderCard key={p.id} provider={p} categoryName={cat.name} />
@@ -174,15 +173,15 @@ export default async function GuideCategoryPage({ params }: { params: Promise<{ 
           </div>
         )}
 
-        <section className="hero-dark mt-12 rounded-3xl px-6 py-10 sm:px-10">
-          <div className="mx-auto max-w-2xl text-center text-white">
+        <section className="mt-12 rounded-[14px] bg-foreground px-6 py-10 text-background sm:px-10">
+          <div className="mx-auto max-w-2xl text-center">
             <h2 className="font-display text-2xl font-bold">Get 3 free quotes</h2>
-            <p className="mt-2 text-white/60">
+            <p className="mt-2 text-background/60">
               Post your {cat.name.toLowerCase()} job — compare local pros and call direct. No lead fees.
             </p>
-            <Link href={`/request?category=${category}`} className="btn-gold mt-6 inline-flex px-8 py-3">
+            <ShimmerButton href={`/request?category=${category}`} className="mt-6">
               Post your job
-            </Link>
+            </ShimmerButton>
           </div>
         </section>
       </div>
@@ -191,8 +190,6 @@ export default async function GuideCategoryPage({ params }: { params: Promise<{ 
       {faqJsonLd && (
         <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(faqJsonLd) }} />
       )}
-
-      <SiteFooter />
-    </main>
+    </MarketingPageShell>
   );
 }

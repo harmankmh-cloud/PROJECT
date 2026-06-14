@@ -58,6 +58,10 @@ export async function middleware(request: NextRequest) {
     return NextResponse.redirect(new URL("/login", request.url));
   }
 
+  if (pathname.startsWith("/business/dashboard")) {
+    return NextResponse.redirect(new URL("/dashboard", request.url));
+  }
+
   if ((pathname === "/login" || pathname === "/signup") && user) {
     if (isAdminEmail(user.email)) {
       return NextResponse.redirect(new URL("/admin", request.url));
@@ -69,5 +73,18 @@ export async function middleware(request: NextRequest) {
 }
 
 export const config = {
-  matcher: ["/dashboard/:path*", "/onboarding", "/admin/:path*", "/login", "/signup"],
+  matcher: [
+    "/dashboard/:path*",
+    "/business/dashboard/:path*",
+    "/onboarding",
+    "/admin/:path*",
+    "/login",
+    "/signup",
+    "/discover",
+    "/search",
+    "/blog/:path*",
+    "/widgets",
+    "/claim-business",
+    "/user/:path*",
+  ],
 };

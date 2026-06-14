@@ -1,36 +1,59 @@
-# GreetQ lead email scraper
+# GreetQ outreach pipeline (scrape 1000 → send 100/day)
 
-Find emails on local business websites for cold outreach.
+## What went wrong (fixed)
 
-## Tool location
+The scraper was built but **never connected** to the daily send flow. Activepieces used a **hardcoded list of 10 businesses** and re-emailed them every day.
 
-`tools/greetq-lead-scraper/` — Node CLI, no extra dependencies.
-
-## Cursor one-liner
+## Correct pipeline
 
 ```
-cd tools/greetq-lead-scraper && npm run scrape:abbotsford
+discover URLs → scrape emails → import to Supabase → daily job sends 100 NEW pending leads → mark sent
 ```
 
-Reads `abbotsford-no-email.txt` (10 leads missing emails) and writes `leads.csv`.
+| Step | Tool |
+|------|------|
+| 1. Find businesses | `npm run discover` (Nominatim + Yellow Pages) or add to `seeds/fraser-valley-curated.txt` |
+| 2. Scrape emails | `node scrape-batch.mjs --input seeds/... --output leads-batch.csv` |
+| 3. Import pool | `node import-leads.mjs --input leads-batch.csv --mark-sent sent-yesterday.txt` |
+| 4. Daily send | Activepieces **11am weekdays** → `POST /api/make/outreach/daily` with `limit: 5` per batch (20 batches = 100/day) |
 
-## Workflow
+## Daily send rules
 
-1. **Scrape** — `node scrape.mjs --input urls.txt --output leads.csv`
-2. **Review** — open `leads.csv`, fix any wrong picks manually
-3. **Import** — update **Activepieces → Abbotsford Outreach Leads** or add new rows
-4. **Send** — existing flow `Abbotsford - Send every 3 days 11am` + `POST /api/make/outreach`
+- **Max 100 emails per run** (20 Activepieces batches × 5 emails — avoids Vercel 504 timeouts)
+- Only `status = pending` with a valid email
+- After send → `status = sent` (never emailed again)
+- **1.5s delay** between sends (spam-safe; each API batch capped at 5)
+- Sequence: `morning_call` (configurable)
 
-## Compared to external repos
+## Apply database migration (once)
 
-| Repo | Fit for GreetQ |
-| ---- | -------------- |
-| MailGrab | Works, but Python 3.9 + separate clone |
-| AdrianTomin/email-scraper | Python, generic output |
-| web-scraping-tools/email-scraper | TypeScript + Playwright — use if sites block this tool |
+Run on GreetQ Supabase:
 
-This in-repo scraper is the default: zero install, CSV matches your outreach table.
+```bash
+# voiceagent/supabase/migrations/007_outreach_leads.sql
+```
 
-## Target product
+Or Supabase dashboard SQL editor.
 
-**GreetQ first** — Fraser Valley businesses that miss calls (dental, clinics, insurance, strata PM, HVAC/electrical). Your Activepieces table already has 20 Abbotsford leads; 10 still need emails from their websites.
+## Scrape toward 1000
+
+```bash
+cd tools/greetq-lead-scraper
+npm run discover          # OSM websites (Fraser Valley)
+npm run scrape:batch      # batch scrape with delay
+GREETQ_URL=https://greetq.com npm run import
+```
+
+Repeat scrape batches with `--offset 200 --limit 200` until pool ≥ 1000 pending emails.
+
+## Activepieces flow
+
+**Abbotsford - Send every 3 days 11am** now calls:
+
+`POST https://greetq.com/api/make/outreach/daily` with `{ limit: 5, sequence: "morning_call" }` (Activepieces loops 20×)
+
+No hardcoded lead list.
+
+## Already-emailed (do not resend)
+
+The 10 businesses emailed Jun 8–9 are in `sent-yesterday.txt` and marked `sent` in Activepieces.

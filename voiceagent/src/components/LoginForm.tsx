@@ -1,17 +1,19 @@
 "use client";
 
 import Link from "next/link";
+import { useRouter } from "next/navigation";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
 import { createClient } from "@/lib/supabase/client";
 import { loginSchema, type LoginFormData } from "@/lib/schemas/auth";
 import { AuthLayout } from "@/components/auth/AuthLayout";
 import { GoogleAuthButton, isGoogleAuthEnabled } from "@/components/auth/GoogleAuthButton";
-import { Button } from "@/components/ui/Button";
+import { GlowButton } from "@/components/ui/GlowButton";
 import { Input } from "@/components/ui/Input";
 import { TRIAL_MARKETING } from "@/lib/trial";
 
 export function LoginForm({ initialError = "" }: { initialError?: string }) {
+  const router = useRouter();
   const {
     register,
     handleSubmit,
@@ -39,14 +41,17 @@ export function LoginForm({ initialError = "" }: { initialError?: string }) {
       });
       return;
     }
-    window.location.href = "/dashboard";
+    router.push("/dashboard");
+    router.refresh();
   }
 
   return (
-    <AuthLayout panelFooter={TRIAL_MARKETING.exploreLong}>
+    <AuthLayout panelFooter={TRIAL_MARKETING.authPanel}>
       <div className="auth-card">
         <h1 className="font-display text-3xl text-text">Welcome back</h1>
-        <p className="mt-2 text-sm text-muted">Sign in to manage your AI receptionist.</p>
+        <p className="mt-2 text-sm text-muted">
+          Sign in to your {TRIAL_MARKETING.exploreShort.toLowerCase()} workspace.
+        </p>
 
         <form onSubmit={handleSubmit(onSubmit)} className="mt-8 space-y-4" noValidate>
           <Input
@@ -68,9 +73,9 @@ export function LoginForm({ initialError = "" }: { initialError?: string }) {
               {errors.root?.message || initialError}
             </p>
           )}
-          <Button type="submit" className="w-full" loading={isSubmitting}>
+          <GlowButton type="submit" className="w-full justify-center" loading={isSubmitting}>
             Sign In
-          </Button>
+          </GlowButton>
         </form>
 
         {isGoogleAuthEnabled && (

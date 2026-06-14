@@ -2,24 +2,25 @@
 
 import { useQuery } from "@tanstack/react-query";
 import { apiFetch } from "@/lib/api-client";
-
-type AnalyticsResponse = {
-  todayCalls: number;
-  volumeDelta: number | null;
-  sparkline: number[];
-  activeAgents: number;
-};
+import { extractBookingsFromCalls } from "@/lib/call-bookings";
 
 export function useDashboardStats() {
   return useQuery({
     queryKey: ["dashboard-stats"],
     queryFn: async () => {
-      const [callsRes, agentsRes] = await Promise.all([
-        apiFetch<{ calls: Array<{ created_at: string; status: string; duration_seconds: number }> }>(
-          "/api/calls"
-        ),
-        apiFetch<{ agents: Array<{ is_active: boolean }> }>("/api/agents"),
-      ]);
+      const callsRes = await apiFetch<{
+        calls: Array<{
+          id: string;
+          created_at: string;
+          status: string;
+          duration_seconds: number;
+          summary?: string | null;
+          intent?: string | null;
+          from_number?: string | null;
+          started_at?: string | null;
+        }>;
+      }>("/api/calls");
+      const agentsRes = await apiFetch<{ agents: Array<{ is_active: boolean }> }>("/api/agents");
 
       const calls = callsRes.ok ? callsRes.data.calls : [];
       const today = new Date().toISOString().slice(0, 10);
@@ -30,9 +31,13 @@ export function useDashboardStats() {
       const mins = Math.floor(avgSeconds / 60);
       const secs = avgSeconds % 60;
 
+      const todayBookings = extractBookingsFromCalls(calls).filter((b) =>
+        b.when.startsWith(today)
+      );
+
       return {
         callsToday: todayCalls.length,
-        appointmentsBooked: todayCalls.filter((c) => c.status === "completed").length,
+        appointmentsBooked: todayBookings.length,
         missedCalls: missed.length,
         avgDuration: `${mins}:${secs.toString().padStart(2, "0")}`,
         activeAgents: agentsRes.ok

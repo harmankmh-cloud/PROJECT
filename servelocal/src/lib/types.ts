@@ -90,6 +90,29 @@ export type SiteSuggestion = {
   created_at: string;
 };
 
+export type BookingStatus = "pending" | "confirmed" | "in_progress" | "completed" | "cancelled";
+export type PaymentStatus = "held" | "released" | "refunded" | "failed";
+
+export type Booking = {
+  id: string;
+  provider_id: string;
+  customer_name: string;
+  customer_email: string;
+  customer_phone: string | null;
+  service_description: string;
+  scheduled_at: string | null;
+  status: BookingStatus;
+  base_amount_cents: number;
+  addons_cents: number;
+  platform_fee_cents: number;
+  tax_cents: number;
+  total_cents: number;
+  payment_status: PaymentStatus;
+  user_id: string | null;
+  created_at: string;
+  updated_at: string;
+};
+
 export type SavedSearch = {
   id: string;
   user_id: string;

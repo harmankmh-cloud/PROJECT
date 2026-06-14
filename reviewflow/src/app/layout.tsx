@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import localFont from "next/font/local";
 import { Inter, Plus_Jakarta_Sans } from "next/font/google";
 import { AppProviders } from "@/components/providers/AppProviders";
 import { Toaster } from "@/components/ui/Toast";
@@ -9,6 +10,17 @@ const jakarta = Plus_Jakarta_Sans({
   variable: "--font-jakarta",
   subsets: ["latin"],
   weight: ["600", "700", "800"],
+});
+
+const satoshi = localFont({
+  src: [
+    { path: "../../public/fonts/Satoshi-Regular.woff2", weight: "400", style: "normal" },
+    { path: "../../public/fonts/Satoshi-Medium.woff2", weight: "500", style: "normal" },
+    { path: "../../public/fonts/Satoshi-Bold.woff2", weight: "700", style: "normal" },
+    { path: "../../public/fonts/Satoshi-Black.woff2", weight: "900", style: "normal" },
+  ],
+  variable: "--font-satoshi",
+  display: "swap",
 });
 
 const inter = Inter({
@@ -61,7 +73,10 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="en-CA" className={`${jakarta.variable} ${inter.variable} h-full`}>
+    <html
+      lang="en-CA"
+      className={`${jakarta.variable} ${satoshi.variable} ${inter.variable} h-full`}
+    >
       <body className="min-h-full font-sans antialiased">
         <AppProviders>
           {children}

@@ -2,28 +2,29 @@
 
 @theme inline {
   --font-sans: var(--font-inter);
-  --font-display: var(--font-jakarta);
+  --font-display: var(--font-geist-sans);
   --font-mono: var(--font-geist-mono);
 
-  /* Spec palette */
-  --color-bg: #09090b;
-  --color-surface: #18181b;
-  --color-border: #27272a;
-  --color-primary: #6366f1;
-  --color-primary-glow: #818cf8;
-  --color-accent: #22d3ee;
+  /* Premium palette — violet + teal on #0a0a0a */
+  --color-bg: #0a0a0a;
+  --color-surface: #141414;
+  --color-border: #262626;
+  --color-primary: #7c3aed;
+  --color-primary-glow: #a78bfa;
+  --color-accent: #0d9488;
   --color-success: #4ade80;
   --color-warning: #facc15;
   --color-danger: #f87171;
   --color-text: #fafafa;
-  --color-muted: #71717a;
+  /* WCAG AA on #0a0a0a / #141414 — was #71717a (~4.2:1, failed Lighthouse) */
+  --color-muted: #a1a1aa;
 
   /* Legacy aliases (dashboard compat) */
-  --color-obsidian: #09090b;
-  --color-brand-950: #09090b;
-  --color-brand-900: #18181b;
-  --color-brand-800: #27272a;
-  --color-surface-dim: #09090b;
+  --color-obsidian: #0a0a0a;
+  --color-brand-950: #0a0a0a;
+  --color-brand-900: #141414;
+  --color-brand-800: #262626;
+  --color-surface-dim: #0a0a0a;
   --color-surface-charcoal: #27272a;
   --color-surface-container-lowest: #09090b;
   --color-surface-container-low: #18181b;
@@ -33,15 +34,15 @@
   --color-on-surface: #fafafa;
   --color-on-surface-variant: #a1a1aa;
   --color-ghost-white: #fafafa;
-  --color-slate-text: #71717a;
-  --color-electric-cyan: #22d3ee;
-  --color-electric-blue: #818cf8;
-  --color-violet-500: #818cf8;
-  --color-vivid-violet: #a5b4fc;
-  --color-secondary: #818cf8;
+  --color-slate-text: #a1a1aa;
+  --color-electric-cyan: #14b8a6;
+  --color-electric-blue: #a78bfa;
+  --color-violet-500: #7c3aed;
+  --color-vivid-violet: #c4b5fd;
+  --color-secondary: #a78bfa;
   --color-outline: #27272a;
   --color-outline-variant: #27272a;
-  --color-glass-border: rgba(99, 102, 241, 0.12);
+  --color-glass-border: rgba(124, 58, 237, 0.15);
   --color-glass-border-subtle: rgba(255, 255, 255, 0.06);
   --color-error: #f87171;
   --color-gold-500: #facc15;
@@ -109,8 +110,8 @@ select {
 
 @layer components {
   .font-display {
-    font-family: var(--font-jakarta), system-ui, sans-serif;
-    font-weight: 800;
+    font-family: var(--font-geist-sans), system-ui, sans-serif;
+    font-weight: 700;
     letter-spacing: -0.03em;
   }
 
@@ -120,13 +121,30 @@ select {
 
   .dark-mesh-bg,
   .mesh-bg,
-  .hero-mesh,
   .aurora-bg {
-    background-color: #09090b;
+    background-color: #0a0a0a;
     background-image:
-      radial-gradient(ellipse 80% 50% at 50% -20%, rgba(99, 102, 241, 0.15) 0, transparent 50%),
-      radial-gradient(ellipse 60% 40% at 80% 50%, rgba(34, 211, 238, 0.08) 0, transparent 50%),
-      radial-gradient(ellipse 50% 30% at 20% 80%, rgba(129, 140, 248, 0.06) 0, transparent 50%);
+      radial-gradient(ellipse 80% 50% at 50% -20%, rgba(124, 58, 237, 0.12) 0, transparent 50%),
+      radial-gradient(ellipse 60% 40% at 80% 50%, rgba(13, 148, 136, 0.08) 0, transparent 50%),
+      radial-gradient(ellipse 50% 30% at 20% 80%, rgba(167, 139, 250, 0.06) 0, transparent 50%);
+  }
+
+  .hero-mesh {
+    background-color: #0a0a0a;
+    background-image:
+      radial-gradient(ellipse 90% 60% at 30% -10%, rgba(124, 58, 237, 0.18) 0, transparent 55%),
+      radial-gradient(ellipse 70% 50% at 90% 20%, rgba(13, 148, 136, 0.1) 0, transparent 50%),
+      radial-gradient(ellipse 50% 40% at 10% 90%, rgba(124, 58, 237, 0.08) 0, transparent 50%);
+    animation: hero-mesh-shift 12s ease-in-out infinite alternate;
+  }
+
+  @keyframes hero-mesh-shift {
+    0% {
+      background-position: 0% 0%, 100% 0%, 0% 100%;
+    }
+    100% {
+      background-position: 5% 3%, 95% 5%, 3% 95%;
+    }
   }
 
   .grid-pattern {
@@ -140,12 +158,21 @@ select {
     @apply pointer-events-none absolute rounded-full blur-3xl;
   }
 
-  .card-glow {
+  .card-glow,
+  .card-glow-hover {
     background: var(--color-surface);
     border-radius: 12px;
     box-shadow:
-      0 0 0 1px rgba(99, 102, 241, 0.08),
-      0 4px 24px rgba(0, 0, 0, 0.4);
+      0 0 0 1px rgba(124, 58, 237, 0.1),
+      0 4px 24px rgba(0, 0, 0, 0.45);
+    transition: box-shadow 0.2s ease, border-color 0.2s ease, transform 0.2s ease;
+  }
+
+  .card-glow-hover:hover {
+    border-color: rgba(124, 58, 237, 0.35);
+    box-shadow:
+      0 0 32px rgba(124, 58, 237, 0.2),
+      0 8px 32px rgba(0, 0, 0, 0.5);
   }
 
   .glass-card,
@@ -178,12 +205,30 @@ select {
   }
 
   .btn-primary {
-    @apply inline-flex items-center justify-center rounded-lg bg-primary px-4 py-2.5 text-sm font-semibold text-white transition;
-    box-shadow: 0 0 0 1px rgba(99, 102, 241, 0.2);
+    @apply relative inline-flex items-center justify-center overflow-hidden rounded-lg bg-primary px-4 py-2.5 text-sm font-semibold text-white transition;
+    box-shadow: 0 0 0 1px rgba(124, 58, 237, 0.3);
   }
 
   .btn-primary:hover {
-    box-shadow: 0 0 24px rgba(99, 102, 241, 0.3);
+    box-shadow: 0 0 28px rgba(124, 58, 237, 0.45);
+  }
+
+  .btn-shimmer {
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(
+      105deg,
+      transparent 40%,
+      rgba(255, 255, 255, 0.12) 50%,
+      transparent 60%
+    );
+    transform: translateX(-100%);
+    transition: transform 0.6s ease;
+  }
+
+  .btn-primary:hover .btn-shimmer,
+  a:hover .btn-shimmer {
+    transform: translateX(100%);
   }
 
   .btn-secondary {
@@ -199,7 +244,7 @@ select {
   }
 
   .input-field {
-    @apply w-full rounded-lg border border-border bg-zinc-800 px-4 py-3 text-sm text-text outline-none transition placeholder:text-muted focus:border-primary focus:ring-2 focus:ring-primary/50;
+    @apply w-full rounded-lg border border-border bg-zinc-900 px-4 py-3 text-sm text-text outline-none transition placeholder:text-muted focus:border-accent focus:ring-2 focus:ring-teal-500/40;
   }
 
   .page-eyebrow,
@@ -219,6 +264,11 @@ select {
 
   .link-accent {
     @apply font-semibold text-primary-glow transition hover:text-accent;
+  }
+
+  /** Muted links that remain distinguishable without relying on color alone (Lighthouse a11y). */
+  .link-subtle {
+    @apply text-muted underline decoration-muted/50 underline-offset-2 transition hover:text-text hover:decoration-text/60;
   }
 
   .nav-item {
@@ -297,10 +347,19 @@ select {
 
   @supports ((-webkit-background-clip: text) or (background-clip: text)) {
     .gradient-text {
-      @apply bg-gradient-to-r from-indigo-400 to-cyan-400 bg-clip-text;
+      @apply bg-gradient-to-r from-violet-400 to-teal-400 bg-clip-text;
       -webkit-text-fill-color: transparent;
       color: transparent;
     }
+  }
+
+  .perf-below-fold {
+    content-visibility: auto;
+    contain-intrinsic-size: auto 480px;
+  }
+
+  .marquee-pause:hover .animate-marquee {
+    animation-play-state: paused;
   }
 
   .blink-cursor::after {
@@ -359,6 +418,68 @@ select {
   .waveform-bar {
     height: 40%;
     animation: waveform-bar 1.2s ease-in-out infinite;
+  }
+
+  @keyframes hero-pulse {
+    0%,
+    100% {
+      transform: scale(1);
+      opacity: 0.5;
+    }
+    50% {
+      transform: scale(1.12);
+      opacity: 0.2;
+    }
+  }
+
+  .hero-pulse-ring {
+    animation: hero-pulse 2.5s ease-in-out infinite;
+  }
+
+  .hero-pulse-ring-delayed {
+    animation: hero-pulse 2.5s ease-in-out infinite;
+    animation-delay: 0.3s;
+  }
+
+  @keyframes hero-phone-enter {
+    from {
+      opacity: 0;
+      transform: translateY(24px);
+    }
+    to {
+      opacity: 1;
+      transform: translateY(0);
+    }
+  }
+
+  .hero-phone-enter {
+    animation: hero-phone-enter 0.6s ease-out 0.15s both;
+  }
+
+  @keyframes word-swap-in {
+    from {
+      opacity: 0;
+      transform: translateY(16px);
+    }
+    to {
+      opacity: 1;
+      transform: translateY(0);
+    }
+  }
+
+  .word-swap-in {
+    animation: word-swap-in 0.35s ease-out;
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .hero-pulse-ring,
+    .hero-pulse-ring-delayed,
+    .hero-phone-enter,
+    .word-swap-in,
+    .waveform-bar,
+    .animate-marquee {
+      animation: none !important;
+    }
   }
 
   .material-symbols-outlined {

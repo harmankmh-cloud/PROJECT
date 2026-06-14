@@ -1,33 +1,58 @@
 @import "tailwindcss";
 
+@custom-variant dark (&:where(.dark, .dark *));
+
 @theme inline {
   --font-sans: var(--font-inter);
   --font-display: var(--font-jakarta);
   --font-mono: var(--font-geist-mono);
-  --color-background: #0f172a;
-  --color-surface: #1e293b;
-  --color-border: #334155;
-  --color-primary: #f97316;
-  --color-primary-light: #fb923c;
-  --color-secondary: #3b82f6;
+  --color-background: var(--bg);
+  --color-surface: var(--surface);
+  --color-border: var(--border-color);
+  --color-foreground: var(--fg);
+  --color-muted: var(--fg-muted);
+  --color-primary: #f59e0b;
+  --color-primary-light: #fbbf24;
+  --color-secondary: #0ea5e9;
   --color-success: #22c55e;
-  --color-text: #f8fafc;
-  --color-text-muted: #94a3b8;
-  --color-brand-950: #0f172a;
-  --color-brand-900: #0f172a;
-  --color-brand-800: #1e293b;
-  --color-brand-700: #334155;
-  --color-gold-400: #fb923c;
-  --color-gold-500: #f97316;
-  --color-gold-600: #ea580c;
+  --color-text: var(--fg);
+  --color-text-muted: var(--fg-muted);
+  --color-brand-950: #0f0f0f;
+  --color-brand-900: #171717;
+  --color-brand-800: #262626;
+  --color-brand-700: #404040;
+  --color-gold-400: #fbbf24;
+  --color-gold-500: #f59e0b;
+  --color-gold-600: #d97706;
   --color-mint-400: #4ade80;
   --color-mint-500: #22c55e;
-  --color-teal-400: #fb923c;
-  --color-teal-500: #f97316;
-  --color-teal-600: #ea580c;
-  --color-teal-700: #c2410c;
-  --color-cream: #f8fafc;
-  --color-cream-dark: #e2e8f0;
+  --color-teal-400: #38bdf8;
+  --color-teal-500: #0ea5e9;
+  --color-teal-600: #0284c7;
+  --color-teal-700: #0369a1;
+  --color-cream: #fafafa;
+  --color-cream-dark: #e5e5e5;
+  --color-accent-amber: #f59e0b;
+  --color-accent-sky: #0ea5e9;
+  --radius-card: 14px;
+}
+
+:root {
+  --bg: #ffffff;
+  --surface: #fafafa;
+  --border-color: #e5e5e5;
+  --fg: #0f0f0f;
+  --fg-muted: #737373;
+  --accent-amber: #f59e0b;
+  --accent-sky: #0ea5e9;
+}
+
+.dark {
+  --bg: #0f0f0f;
+  --surface: #1a1a1a;
+  --border-color: #2e2e2e;
+  --fg: #fafafa;
+  --fg-muted: #a3a3a3;
 }
 
 * {
@@ -40,8 +65,8 @@ html {
 
 body {
   margin: 0;
-  background: #0f172a;
-  color: #f8fafc;
+  background: var(--bg);
+  color: var(--fg);
   font-size: 15px;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
@@ -307,5 +332,61 @@ select {
 
   .animate-marquee {
     animation: marquee 40s linear infinite;
+  }
+
+  .card-glow {
+    @apply transition duration-300;
+  }
+
+  .card-glow:hover {
+    box-shadow:
+      0 8px 32px -8px rgba(245, 158, 11, 0.2),
+      0 0 0 1px rgba(245, 158, 11, 0.15);
+  }
+
+  .dark .card-glow:hover {
+    box-shadow:
+      0 8px 32px -8px rgba(245, 158, 11, 0.25),
+      0 0 0 1px rgba(245, 158, 11, 0.2);
+  }
+
+  .btn-shimmer::before {
+    content: "";
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(
+      105deg,
+      transparent 40%,
+      rgba(255, 255, 255, 0.35) 50%,
+      transparent 60%
+    );
+    background-size: 200% 100%;
+    animation: shimmer 2.5s ease-in-out infinite;
+  }
+
+  .input-focus-glow:focus {
+    @apply border-amber-400/60 ring-4 ring-amber-400/15 outline-none;
+  }
+
+  .marketing-grid-bg-light {
+    background-image:
+      linear-gradient(rgba(0, 0, 0, 0.04) 1px, transparent 1px),
+      linear-gradient(90deg, rgba(0, 0, 0, 0.04) 1px, transparent 1px);
+    background-size: 48px 48px;
+  }
+
+  .dark .marketing-grid-bg-light {
+    background-image:
+      linear-gradient(rgba(255, 255, 255, 0.04) 1px, transparent 1px),
+      linear-gradient(90deg, rgba(255, 255, 255, 0.04) 1px, transparent 1px);
+  }
+}
+
+@keyframes shimmer {
+  0% {
+    background-position: 200% 0;
+  }
+  100% {
+    background-position: -200% 0;
   }
 }

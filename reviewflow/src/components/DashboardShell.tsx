@@ -8,7 +8,7 @@ import {
   LayoutDashboard,
   LogOut,
   Menu,
-  MessageSquare,
+  Phone,
   QrCode,
   Send,
   Settings,
@@ -22,6 +22,7 @@ const ownerLinks = [
   { href: "/dashboard/share", label: "Review Requests", icon: Send },
   { href: "/dashboard/reviews", label: "Reviews", icon: Star },
   { href: "/dashboard/share", label: "QR Codes", icon: QrCode },
+  { href: "/dashboard/calls", label: "CallLocal", icon: Phone },
   { href: "/dashboard/settings", label: "Settings", icon: Settings },
   { href: "/dashboard/billing", label: "Billing", icon: CreditCard },
 ];

@@ -24,6 +24,19 @@ Open [http://localhost:3001](http://localhost:3001).
 4. Run `supabase/suggestions.sql` for the feedback button
 5. Run `supabase/guest-access.sql` for database permissions (public browse/post without login)
 6. Run `supabase/user-accounts.sql` so logged-in users can track job requests on `/dashboard`
+7. Run `supabase/bookings.sql` for escrow-style bookings
+8. Run `supabase/complete-features.sql` for messaging, saved pros, Q&A, review helpful votes, availability
+9. Optional legacy scripts: `pro-dashboard.sql`, `saved-searches.sql`, `extended-categories.sql`
+10. Apply numbered migrations in `supabase/migrations/` (002+ for RLS fix and onboarding columns)
+
+**Shortcut (steps 6–7):** if `user_profiles` or `bookings` is missing, run `supabase/bootstrap-homeowner-dashboard.sql` once (after steps 1–5). It is idempotent.
+
+**Security migrations (after bootstrap):** run `supabase/migrations/004_schema_baseline.sql` then `005_pro_job_leads_rls.sql`. Verify bookings RLS with:
+
+```sql
+select policyname, qual from pg_policies where tablename = 'bookings';
+-- qual must be (auth.uid() = user_id)
+```
 
 ## Email / auth (same as RateLocal — Resend SMTP)
 
@@ -38,6 +51,9 @@ Full steps: **`SMTP_SETUP.md`** (this folder) and **`reviewflow/SMTP_SETUP.md`**
 Add redirect URLs in Supabase for ServeLocal:
 
 ```
+https://www.servelocal.ca/auth/confirm
+https://servelocal.ca/auth/confirm
+http://localhost:3001/auth/confirm
 https://www.servelocal.ca/auth/callback
 https://servelocal.ca/auth/callback
 http://localhost:3001/auth/callback

@@ -24,14 +24,29 @@ export function HelpHub() {
   return (
     <div className="space-y-8">
       <div className="flex flex-col gap-4 sm:flex-row">
-        <input
-          type="search"
-          placeholder="Search articles…"
-          value={query}
-          onChange={(e) => setQuery(e.target.value)}
-          className="input-field flex-1"
-          aria-label="Search help articles"
-        />
+        <div className="flex flex-1 gap-2">
+          <input
+            type="search"
+            placeholder="Search articles…"
+            value={query}
+            onChange={(e) => setQuery(e.target.value)}
+            onKeyDown={(e) => {
+              if (e.key === "Enter") e.currentTarget.blur();
+            }}
+            className="input-field min-w-0 flex-1"
+            aria-label="Search help articles"
+          />
+          <button
+            type="button"
+            className="shrink-0 rounded-lg border border-border bg-surface px-4 py-2 text-sm font-medium text-text transition hover:border-primary/40"
+            onClick={() => {
+              const el = document.querySelector<HTMLInputElement>('input[aria-label="Search help articles"]');
+              el?.blur();
+            }}
+          >
+            Search
+          </button>
+        </div>
         <select
           value={category}
           onChange={(e) => setCategory(e.target.value)}

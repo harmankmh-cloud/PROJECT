@@ -1,7 +1,7 @@
 import type { Metadata } from "next";
 import Link from "next/link";
-import { MarketingFooterNew } from "@/components/marketing/MarketingFooterNew";
-import { MarketingNavbar } from "@/components/marketing/MarketingNavbar";
+import { LandingFooter } from "@/components/landing/LandingFooter";
+import { LandingNavbar } from "@/components/landing/LandingNavbar";
 import { SkipToContent } from "@/components/SkipToContent";
 import { BLOG_POSTS } from "@/lib/blog-posts";
 
@@ -15,7 +15,7 @@ export default function BlogPage() {
   return (
     <div className="dark-mesh-bg grid-pattern flex min-h-screen flex-col">
       <SkipToContent />
-      <MarketingNavbar />
+      <LandingNavbar />
       <main id="main-content" className="flex-1 pb-16 pt-24">
         <div className="marketing-container mx-auto max-w-3xl">
           <h1 className="font-display text-4xl text-ghost-white">Blog</h1>
@@ -38,7 +38,7 @@ export default function BlogPage() {
           </div>
         </div>
       </main>
-      <MarketingFooterNew />
+      <LandingFooter />
     </div>
   );
 }

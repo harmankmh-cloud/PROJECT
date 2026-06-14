@@ -64,7 +64,7 @@ function DemoSequence() {
                       animate={{ scale: 1 }}
                       transition={{ delay: n * 0.15, type: "spring" }}
                     >
-                      <Star className="h-8 w-8 fill-accent text-accent" />
+                      <Star className="h-8 w-8 fill-star text-star" />
                     </motion.div>
                   ))}
                 </div>

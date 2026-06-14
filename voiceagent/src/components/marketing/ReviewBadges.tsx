@@ -20,14 +20,9 @@ export function ReviewBadges() {
 
   return (
     <div className="text-center">
-      <p className="text-sm text-muted">
-        Early adopter program — independent reviews coming soon.
-      </p>
-      <Link
-        href="/help?intent=review"
-        className="mt-2 inline-block text-sm text-primary-glow hover:underline"
-      >
-        Share your experience
+      <p className="text-sm text-muted">Independent review profiles are not linked yet.</p>
+      <Link href="/contact" className="mt-2 inline-block text-sm text-primary-glow hover:underline">
+        Share your experience with us
       </Link>
     </div>
   );

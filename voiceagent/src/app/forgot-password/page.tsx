@@ -7,7 +7,7 @@ import { useForm } from "react-hook-form";
 import { createClient } from "@/lib/supabase/client";
 import { forgotPasswordSchema, type ForgotPasswordFormData } from "@/lib/schemas/auth";
 import { AuthLayout } from "@/components/auth/AuthLayout";
-import { Button } from "@/components/ui/Button";
+import { GlowButton } from "@/components/ui/GlowButton";
 import { Input } from "@/components/ui/Input";
 import { BRAND } from "@/lib/brand";
 
@@ -25,11 +25,8 @@ export default function ForgotPasswordPage() {
   async function onSubmit(data: ForgotPasswordFormData) {
     const supabase = createClient();
     const redirectTo = `${window.location.origin}/auth/callback?next=/reset-password`;
-    const { error } = await supabase.auth.resetPasswordForEmail(data.email, { redirectTo });
-    if (error) {
-      setFormError("root", { message: error.message });
-      return;
-    }
+    await supabase.auth.resetPasswordForEmail(data.email, { redirectTo });
+    // Always show success — avoids account enumeration regardless of API response.
     setSent(true);
   }
 
@@ -45,12 +42,12 @@ export default function ForgotPasswordPage() {
           <div className="mt-8 space-y-4">
             <h2 className="text-lg font-semibold text-text">Check your email</h2>
             <p className="text-sm text-success">
-              We sent a password reset link. It may take a few minutes to arrive — check spam if you
-              don&apos;t see it.
+              If an account exists for that email, we sent a password reset link. It may take a few
+              minutes to arrive — check spam if you don&apos;t see it.
             </p>
-            <Button type="button" variant="outline" className="w-full" onClick={() => setSent(false)}>
+            <GlowButton type="button" variant="outline" className="w-full" onClick={() => setSent(false)}>
               Send another link
-            </Button>
+            </GlowButton>
           </div>
         ) : (
           <form onSubmit={handleSubmit(onSubmit)} className="mt-8 space-y-4" noValidate>
@@ -66,9 +63,9 @@ export default function ForgotPasswordPage() {
                 {errors.root.message}
               </p>
             )}
-            <Button type="submit" className="w-full" loading={isSubmitting}>
-              Send reset link
-            </Button>
+            <GlowButton type="submit" className="w-full" disabled={isSubmitting}>
+              {isSubmitting ? "Sending…" : "Send reset link"}
+            </GlowButton>
           </form>
         )}
 

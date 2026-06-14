@@ -1,6 +1,13 @@
 import { NextRequest, NextResponse } from "next/server";
 import { createClient } from "@/lib/supabase/server";
 import { getUserOrg } from "@/lib/auth";
+import {
+  flowCreateSchema,
+  flowDeleteSchema,
+  flowPatchSchema,
+} from "@/lib/api-schemas";
+import { isApiSession, requireApiSession } from "@/lib/api-session";
+import { parseJsonBody, readJsonBody } from "@/lib/parse-json-body";
 import { FlowEngine, DEFAULT_FLOW_EDGES, DEFAULT_FLOW_NODES } from "@/lib/flow-engine";
 import { logAudit } from "@/lib/compliance/audit";
 import { denyUnlessCanOperate } from "@/lib/require-org-access";
@@ -25,21 +32,21 @@ export async function GET() {
 }
 
 export async function POST(request: NextRequest) {
-  const supabase = await createClient();
-  const {
-    data: { user },
-  } = await supabase.auth.getUser();
-  if (!user) return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+  const session = await requireApiSession();
+  if (!isApiSession(session)) return session;
 
-  const org = await getUserOrg(user.id);
+  const org = await getUserOrg(session.user.id);
   if (!org) return NextResponse.json({ error: "No organization" }, { status: 400 });
 
-  const denied = await denyUnlessCanOperate(org.id, user.id);
+  const denied = await denyUnlessCanOperate(org.id, session.user.id);
   if (denied) return denied;
 
-  const body = await request.json();
-  const nodes = body.nodes || DEFAULT_FLOW_NODES;
-  const edges = body.edges || DEFAULT_FLOW_EDGES;
+  const parsed = parseJsonBody(await readJsonBody(request), flowCreateSchema);
+  if (!parsed.ok) return parsed.response;
+
+  const body = parsed.data;
+  const nodes = (body.nodes || DEFAULT_FLOW_NODES) as typeof DEFAULT_FLOW_NODES;
+  const edges = (body.edges || DEFAULT_FLOW_EDGES) as typeof DEFAULT_FLOW_EDGES;
 
   const engine = new FlowEngine(nodes, edges);
   const errors = engine.validate();
@@ -47,7 +54,7 @@ export async function POST(request: NextRequest) {
     return NextResponse.json({ error: errors.join("; ") }, { status: 400 });
   }
 
-  const { data, error } = await supabase
+  const { data, error } = await session.supabase
     .from("va_flows")
     .insert({
       org_id: org.id,
@@ -64,7 +71,7 @@ export async function POST(request: NextRequest) {
 
   await logAudit({
     orgId: org.id,
-    userId: user.id,
+    userId: session.user.id,
     action: "flow.created",
     resourceType: "flow",
     resourceId: data.id,
@@ -110,28 +117,25 @@ export async function PATCH(request: NextRequest) {
 }
 
 export async function DELETE(request: NextRequest) {
-  const supabase = await createClient();
-  const {
-    data: { user },
-  } = await supabase.auth.getUser();
-  if (!user) return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+  const session = await requireApiSession();
+  if (!isApiSession(session)) return session;
 
-  const org = await getUserOrg(user.id);
+  const org = await getUserOrg(session.user.id);
   if (!org) return NextResponse.json({ error: "No organization" }, { status: 400 });
 
-  const denied = await denyUnlessCanOperate(org.id, user.id);
+  const denied = await denyUnlessCanOperate(org.id, session.user.id);
   if (denied) return denied;
 
-  const body = await request.json().catch(() => ({}));
-  const id = body.id as string | undefined;
-  if (!id) return NextResponse.json({ error: "Flow id required" }, { status: 400 });
+  const parsed = parseJsonBody(await readJsonBody(request), flowDeleteSchema);
+  if (!parsed.ok) return parsed.response;
 
-  const { error } = await supabase.from("va_flows").delete().eq("id", id).eq("org_id", org.id);
+  const { id } = parsed.data;
+  const { error } = await session.supabase.from("va_flows").delete().eq("id", id).eq("org_id", org.id);
   if (error) return NextResponse.json({ error: error.message }, { status: 400 });
 
   await logAudit({
     orgId: org.id,
-    userId: user.id,
+    userId: session.user.id,
     action: "flow.deleted",
     resourceType: "flow",
     resourceId: id,

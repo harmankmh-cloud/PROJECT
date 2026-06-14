@@ -9,15 +9,20 @@ import {
   Calendar,
   ChevronDown,
   Code,
+  Contact,
   CreditCard,
   FlaskConical,
   GitBranch,
   HelpCircle,
   History,
   LayoutDashboard,
+  ListChecks,
+  Megaphone,
   MessageSquare,
   Phone,
   PhoneCall,
+  Radio,
+  Rocket,
   Settings,
   Shield,
   Sparkles,
@@ -33,6 +38,7 @@ import { BRAND } from "@/lib/brand";
 const PRIMARY_NAV = [
   { href: "/dashboard", label: "Dashboard", icon: LayoutDashboard, demoHref: "/demo" },
   { href: "/dashboard/calls", label: "Call Logs", icon: PhoneCall, demoHref: "/demo#recent-calls" },
+  { href: "/dashboard/tasks", label: "Tasks", icon: ListChecks, demoHref: "/demo" },
   { href: "/dashboard/appointments", label: "Appointments", icon: Calendar, demoHref: "/demo#appointments" },
   { href: "/dashboard/messages", label: "Messages", icon: MessageSquare, demoHref: "/demo#messages" },
   { href: "/dashboard/settings", label: "Settings", icon: Settings, demoHref: "/signup" },
@@ -40,10 +46,15 @@ const PRIMARY_NAV = [
 ] as const;
 
 const MORE_NAV = [
+  { href: "/dashboard/live", label: "Live calls", icon: Radio },
+  { href: "/dashboard/setup", label: "Setup wizard", icon: Rocket },
   { href: "/dashboard/agents", label: "Agents", icon: Sparkles },
   { href: "/dashboard/phone-numbers", label: "Phone Numbers", icon: Phone },
   { href: "/dashboard/knowledge", label: "Knowledge", icon: BookOpen },
   { href: "/dashboard/flows", label: "Flows", icon: Workflow },
+  { href: "/dashboard/campaigns", label: "Campaigns", icon: Megaphone },
+  { href: "/dashboard/contacts", label: "Contacts", icon: Contact },
+  { href: "/dashboard/channels", label: "Channels", icon: Radio },
   { href: "/dashboard/sandbox", label: "Sandbox", icon: FlaskConical },
   { href: "/dashboard/integrations", label: "Integrations", icon: GitBranch },
   { href: "/dashboard/team", label: "Team", icon: Users },
@@ -77,7 +88,9 @@ function NavItem({
       href={href}
       onClick={onClick}
       className={`flex items-center gap-3 rounded-lg px-3 py-2.5 text-sm font-medium transition ${
-        active ? "nav-item-active" : "nav-item"
+        active
+          ? "nav-item-active bg-violet-500/10 text-text shadow-[inset_3px_0_0_var(--color-primary)]"
+          : "nav-item hover:bg-white/5"
       }`}
     >
       <Icon className="h-4 w-4 shrink-0" />

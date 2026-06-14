@@ -19,10 +19,11 @@ export default function TestimonialsPage() {
         <div className="marketing-container">
           <p className="section-eyebrow mb-3 text-center">Testimonials</p>
           <h1 className="font-display text-center text-4xl text-ghost-white">
-            Trusted by local businesses
+            Operator feedback
           </h1>
           <p className="mx-auto mt-4 max-w-xl text-center text-sm text-on-surface-variant">
-            Early adopter feedback from Canadian operators using GreetQ for call answering and booking.
+            Notes from Canadian teams testing GreetQ for call answering and booking. Names are
+            abbreviated for privacy.
           </p>
           <TestimonialsGrid />
         </div>

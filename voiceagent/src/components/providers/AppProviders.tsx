@@ -4,6 +4,7 @@ import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { MotionConfig } from "framer-motion";
 import { useState } from "react";
 import { MaterialSymbolsLoader } from "@/components/dashboard/MaterialSymbolsLoader";
+import { ToastProvider } from "@/components/providers/ToastProvider";
 
 /** Dashboard-only providers — keeps react-query and framer-motion off marketing pages. */
 export function DashboardProviders({ children }: { children: React.ReactNode }) {
@@ -21,10 +22,12 @@ export function DashboardProviders({ children }: { children: React.ReactNode }) 
 
   return (
     <QueryClientProvider client={queryClient}>
-      <MotionConfig reducedMotion="user">
-        <MaterialSymbolsLoader />
-        {children}
-      </MotionConfig>
+      <ToastProvider>
+        <MotionConfig reducedMotion="user">
+          <MaterialSymbolsLoader />
+          {children}
+        </MotionConfig>
+      </ToastProvider>
     </QueryClientProvider>
   );
 }

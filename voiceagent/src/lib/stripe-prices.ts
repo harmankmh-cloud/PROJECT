@@ -83,7 +83,7 @@ export async function resolveStripePriceIds(): Promise<ResolvedStripePrices> {
     }
   }
 
-  const stillMissing = (["starter", "pro", "enterprise"] as PlanKey[]).filter(
+  const stillMissing = (["starter", "growth", "pro", "enterprise"] as PlanKey[]).filter(
     (p) => !resolved[p]?.startsWith("price_")
   );
 

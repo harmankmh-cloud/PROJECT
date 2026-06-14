@@ -13,129 +13,126 @@ export type OutreachInput = {
 
 export type OutreachDraft = { subject: string; body: string };
 
+const SIGN_OFF = `Best,\nHarman\nFounder, ${BRAND.name}`;
+
 const VERTICAL_PAIN: Record<string, string> = {
-  dental: "after-hours booking demand and front-desk capacity during chair time",
-  clinic: "scheduling volume that competes with in-room patient care",
-  hvac: "emergency calls that arrive when dispatch is unavailable",
-  plumbing: "high-intent emergency leads lost while crews are in the field",
-  salon: "inbound demand during service hours when staff cannot answer",
-  spa: "evening and weekend booking intent with no coverage at the desk",
-  legal: "intake calls that require screening, logging, and timely response",
-  home_services: "qualification and scheduling before committing a truck roll",
-  insurance:
-    "ICBC renewals, quote requests, and policy questions stacking up while your team is already on live calls",
-  property_mgmt:
-    "tenant maintenance, showing requests, and after-hours issues converging on a small ops team",
+  dental: "missed calls and after-hours voicemails when the front desk is with patients",
+  clinic: "scheduling calls that go to voicemail while staff are in appointments",
+  hvac: "emergency calls that hit voicemail when dispatch is tied up",
+  plumbing: "urgent leads lost when crews are on jobs and nobody picks up",
+  salon: "booking calls missed during busy service hours",
+  spa: "evening and weekend calls that go unanswered",
+  legal: "intake calls that need a quick response but stack up at the desk",
+  home_services: "quote requests that go to voicemail before you can call back",
+  insurance: "renewal and quote calls piling up while your team is on live lines",
+  property_mgmt: "tenant and showing calls converging on a small office team",
 };
 
-const MARKETING_VOICE = `You are Harman, founder of ${BRAND.name} (${BRAND.domain}), writing as a Harvard-trained marketing strategist who runs the company — not a sales rep blasting a list.
+const MARKETING_VOICE = `You are Harman, founder of ${BRAND.name} (${BRAND.domain}), writing a short plain-text cold email to a local business owner.
 
-Voice & craft:
-- Strategic, precise, respectful of the reader's intelligence. Every sentence earns its place.
-- Lead with insight or observed behavior, then implication, then solution. No throat-clearing.
-- Use concrete business language (capacity, conversion, coverage, response time, opportunity cost) — never buzzword soup or "hope this finds you well."
-- Sound like a peer who has done the homework on their vertical — not a vendor pitching features.
-- One clear CTA. Low friction: reply YES, book 15 minutes, or try the sandbox. No pressure tactics.
-- 160–220 words. Plain text. Sign as "Harman" only (footer added separately).
-- Subject: specific to business + city; curiosity or relevance, never spammy ALL CAPS or fake RE: threads.`;
+Style (standard B2B cold email — like Lemlist, Apollo, or a founder sending manually):
+- Conversational and direct. No jargon, no "hope this finds you well," no consultant voice.
+- 90–130 words total. Short paragraphs (1–3 sentences each). Blank line between paragraphs.
+- Structure: greeting → hook → problem → what we do → one CTA.
+- Sign off exactly: "Best,\\nHarman\\nFounder, ${BRAND.name}" (footer added separately — do not include unsubscribe line).
+- Subject: short, specific to business name; natural, not salesy or ALL CAPS.
+
+CTA options: reply YES, try free demo at ${BRAND.domain}, or ${BRAND.contact.email}. Pick one.`;
 
 function templateDraft(input: OutreachInput): OutreachDraft {
   const who = input.contactName?.trim() || "there";
   const pain =
     input.painNote?.trim() ||
     VERTICAL_PAIN[input.vertical.toLowerCase()] ||
-    "inbound calls you cannot answer when the team is with customers or closed";
+    "calls going to voicemail when your team is busy or closed";
   const biz = input.businessName.trim();
   const city = input.city.trim();
 
   if (input.sequence === "morning_call") {
     return {
-      subject: `${biz} — could not reach your line this morning`,
+      subject: `Quick question — ${biz}`,
       body: `Hi ${who},
 
-I called ${biz} earlier today. Busy signal, then voicemail. That pattern usually signals one of two things: high demand (good) or a coverage gap at the moment of intent (expensive).
+I tried calling ${biz} earlier today and got voicemail.
 
-For ${input.vertical} businesses in ${city}, the cost shows up as ${pain}. Every unanswered ring is a lead, renewal, or appointment that may not come back.
+When the team's with customers, those calls add up — especially for ${input.vertical} businesses in ${city}. That's usually ${pain}.
 
-${BRAND.name} is the AI phone layer we built in BC for exactly this — coverage without adding headcount. It answers 24/7, handles routine inquiries, books into your calendar, and warm-transfers priority calls with a full transcript so your team only steps in when judgment matters.
+${BRAND.name} is an AI phone agent we built in BC. It answers 24/7, books appointments, and sends your team a transcript so you only jump in when needed.
 
-We work with Fraser Valley operators who want enterprise-grade response without enterprise sales theater. Sandbox is free at ${BRAND.domain}.
+Open to a quick look? Reply YES or try the free demo at ${BRAND.domain}.
 
-If worth exploring: reply YES or book 15 minutes — ${BRAND.contact.email}.
-
-Harman${emailFooter()}`,
+${SIGN_OFF}${emailFooter()}`,
     };
   }
 
   if (input.sequence === "followup_1") {
     return {
-      subject: `Re: ${biz} — response coverage`,
+      subject: `Re: ${biz}`,
       body: `Hi ${who},
 
-Following up once. The issue we see repeatedly in ${city} ${input.vertical} shops: ${pain}. It is less about missed calls and more about missed moments of intent — when a prospect is ready to act.
+Following up once — wanted to make sure this didn't get buried.
 
-${BRAND.name} closes that gap: always-on answering, appointment capture, structured handoff to your team. BC-built, no long contract, free sandbox at ${BRAND.domain}.
+A lot of ${input.vertical} shops in ${city} deal with ${pain}. ${BRAND.name} handles the calls you're missing: answers, books, and hands off to your team with context.
 
-Worth a look? Reply YES and I will send access.
+Free to try at ${BRAND.domain}. Reply YES if you want me to send setup details.
 
-Harman${emailFooter()}`,
+${SIGN_OFF}${emailFooter()}`,
     };
   }
 
   if (input.sequence === "followup_2") {
     return {
-      subject: `Closing the loop — ${BRAND.name}`,
+      subject: `Last note — ${biz}`,
       body: `Hi ${who},
 
-Last note from me. If ${pain} is a real constraint for ${biz}, ${BRAND.name} may be worth 15 minutes of your time.
+Last email from me on this.
 
-We deploy an AI phone agent that answers, books, and transfers with context — built for local operators, not call-center scale. Try the sandbox at ${BRAND.domain}, or reply YES for setup help.
+If ${pain} is an issue for ${biz}, ${BRAND.name} might be worth 10 minutes. It answers calls, books appointments, and keeps your team in the loop.
 
-Harman${emailFooter()}`,
+Demo is free at ${BRAND.domain}, or reply YES and I'll help you set it up.
+
+${SIGN_OFF}${emailFooter()}`,
     };
   }
 
   return {
-    subject: `${biz} — inbound call coverage in ${city}`,
+    subject: `Missed calls at ${biz}?`,
     body: `Hi ${who},
 
-I lead ${BRAND.name} (${BRAND.domain}) — we build AI phone infrastructure for BC service businesses.
+I run ${BRAND.name} — we help local businesses in ${city} stop losing calls when the desk is busy or you're closed.
 
-For ${biz}, the pattern in ${input.vertical} is familiar: ${pain}. The fix is not "more staff on the phone" but better coverage at peak intent — after hours, lunch rush, or when multiple lines ring at once.
+For ${biz}, the common issue in ${input.vertical} is ${pain}.
 
-${BRAND.name} answers every call, books appointments, captures lead detail, and warm-transfers with transcript. Your team stays focused on work that requires a human.
+Our AI agent answers every call, books appointments, and sends your team a summary. No extra hire needed.
 
-Sandbox is free. If you want a walkthrough: reply YES or ${BRAND.contact.email}.
+Want to see it? Reply YES or try the free demo at ${BRAND.domain}.
 
-Harman${emailFooter()}`,
+${SIGN_OFF}${emailFooter()}`,
   };
 }
 
 export async function generateOutreachEmail(input: OutreachInput): Promise<OutreachDraft> {
+  // Templates only — predictable standard cold-email copy (AI was drifting off-product).
+  if (process.env.OUTREACH_USE_AI !== "true") {
+    return templateDraft(input);
+  }
+
   const ai = await chatCompletion({
     jsonMode: true,
-    max_tokens: 1000,
-    temperature: 0.55,
+    max_tokens: 800,
+    temperature: 0.45,
     messages: [
       {
         role: "system",
         content: `${MARKETING_VOICE}
 
-Structure:
-1. Subject — specific, professional, tied to their business and city
-2. Opening — one sharp observation (for morning_call: you called earlier, could not reach them; frame as market signal, not complaint)
-3. Problem — vertical-specific pain in business terms (capacity, conversion, coverage)
-4. Solution — what ${BRAND.name} does in 2–3 sentences: 24/7 answer, booking, warm-transfer with transcript
-5. Positioning — BC-built, Fraser Valley, no enterprise pitch; strategic infrastructure not a gadget
-6. CTA — single, low-friction (reply YES, sandbox at ${BRAND.domain}, or ${BRAND.contact.email})
-
 Sequence notes:
-- morning_call: open with the call attempt; diagnose coverage gap; authoritative but not salesy
-- followup_1: one bump; emphasize opportunity cost of missed intent
-- followup_2: final courteous close; respect their time
-- initial: direct value prop without the call hook
+- morning_call: open with trying to call them earlier and getting voicemail
+- followup_1: one polite bump
+- followup_2: final short note, no pressure
+- initial: direct pitch without the call hook
 
-Return JSON only: {"subject":"...","body":"..."}. Body is plain text, no HTML.`,
+Return JSON only: {"subject":"...","body":"..."}. Body is plain text with blank lines between paragraphs. End body with the sign-off lines (Best, Harman, Founder, ${BRAND.name}).`,
       },
       {
         role: "user",
@@ -155,9 +152,13 @@ Return JSON only: {"subject":"...","body":"..."}. Body is plain text, no HTML.`,
     try {
       const parsed = JSON.parse(ai) as { subject?: string; body?: string };
       if (parsed.subject?.trim() && parsed.body?.trim()) {
+        let body = parsed.body.trim();
+        if (!body.includes("Best,")) {
+          body += `\n\n${SIGN_OFF}`;
+        }
         return {
           subject: parsed.subject.trim(),
-          body: parsed.body.trim() + emailFooter(),
+          body: body + emailFooter(),
         };
       }
     } catch {
