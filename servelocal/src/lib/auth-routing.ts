@@ -99,9 +99,5 @@ export async function resolvePostLoginPath(
     return next ?? "/dashboard/pro";
   }
 
-  if (!profile?.onboarding_completed_at) {
-    return next ?? "/onboarding/homeowner";
-  }
-
   return next ?? "/dashboard";
 }
