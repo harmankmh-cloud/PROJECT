@@ -27,6 +27,8 @@ Open [http://localhost:3001](http://localhost:3001).
 7. Run `supabase/bookings.sql` for escrow-style bookings
 8. Run `supabase/complete-features.sql` for messaging, saved pros, Q&A, review helpful votes, availability
 
+**Shortcut (steps 6–7):** if `user_profiles` or `bookings` is missing, run `supabase/bootstrap-homeowner-dashboard.sql` once (after steps 1–5). It is idempotent.
+
 ## Email / auth (same as RateLocal — Resend SMTP)
 
 Supabase’s built-in email hits **~2–4 emails/hour**. RateLocal signup was fixed with **Resend SMTP** in Supabase (not in Vercel).
