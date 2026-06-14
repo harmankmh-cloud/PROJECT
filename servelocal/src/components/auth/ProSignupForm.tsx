@@ -4,6 +4,7 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import Link from "next/link";
 import { useState } from "react";
 import { friendlyAuthError } from "@/lib/auth-errors";
+import { authConfirmUrl } from "@/lib/auth/redirect-origin";
 import { redirectAfterAuth } from "@/lib/auth/client-redirect";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
@@ -43,7 +44,7 @@ export function ProSignupForm() {
       password: data.password,
       options: {
         data: { role: "pro", display_name: data.name, city: data.city },
-        emailRedirectTo: `${window.location.origin}/auth/confirm`,
+        emailRedirectTo: authConfirmUrl(typeof window !== "undefined" ? window.location.origin : undefined),
       },
     });
 

@@ -7,6 +7,7 @@ import { useForm } from "react-hook-form";
 import { Button } from "@/components/ui/Button";
 import { Input } from "@/components/ui/Input";
 import { friendlyAuthError } from "@/lib/auth-errors";
+import { authConfirmUrl } from "@/lib/auth/redirect-origin";
 import { redirectAfterAuth } from "@/lib/auth/client-redirect";
 import { loginSchema, type LoginData } from "@/lib/schemas/auth";
 import { createClient } from "@/lib/supabase/client";
@@ -70,8 +71,9 @@ export function LoginFormNew({ initialError }: { initialError?: string | null })
     setError(null);
     setResetState("sending");
     const supabase = createClient();
+    const confirmUrl = authConfirmUrl(window.location.origin);
     const { error: resetError } = await supabase.auth.resetPasswordForEmail(email, {
-      redirectTo: `${window.location.origin}/auth/confirm?next=/dashboard/settings`,
+      redirectTo: `${confirmUrl}?next=/dashboard/settings`,
     });
 
     if (resetError) {
@@ -99,7 +101,7 @@ export function LoginFormNew({ initialError }: { initialError?: string | null })
       type: "signup",
       email,
       options: {
-        emailRedirectTo: `${window.location.origin}/auth/confirm`,
+        emailRedirectTo: authConfirmUrl(window.location.origin),
       },
     });
 
