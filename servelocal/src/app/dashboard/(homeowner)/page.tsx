@@ -11,8 +11,8 @@ export default async function HomeownerOverviewPage() {
   } = supabase ? await supabase.auth.getUser() : { data: { user: null } };
 
   const [counts, requests] = await Promise.all([
-    user ? getHomeownerDashboardCounts(user.id, user.email ?? undefined) : null,
-    user ? getUserServiceRequests(user.id, user.email ?? undefined) : [],
+    user ? getHomeownerDashboardCounts(user.id) : null,
+    user ? getUserServiceRequests(user.id) : [],
   ]);
 
   const latestJob = requests[0];

@@ -34,9 +34,9 @@ export default async function JobDetailPage({ params }: { params: Promise<{ id: 
   if (!user) notFound();
 
   const [request, categories, bookings] = await Promise.all([
-    getServiceRequestById(id, user.id, user.email ?? undefined),
+    getServiceRequestById(id, user.id),
     getServiceCategories(),
-    getUserBookings(user.id, user.email ?? undefined),
+    getUserBookings(user.id),
   ]);
 
   if (!request) notFound();

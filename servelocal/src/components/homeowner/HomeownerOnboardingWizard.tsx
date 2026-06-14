@@ -1,7 +1,7 @@
 "use client";
 
-import { useRouter } from "next/navigation";
 import { useState } from "react";
+import { redirectAfterAuth } from "@/lib/auth/client-redirect";
 import { Button } from "@/components/ui/Button";
 import { Input } from "@/components/ui/Input";
 import { TRADE_CITIES } from "@/lib/constants";
@@ -9,7 +9,6 @@ import { TRADE_CITIES } from "@/lib/constants";
 const STEPS = ["Location", "First job", "Notifications"] as const;
 
 export function HomeownerOnboardingWizard({ defaultCity }: { defaultCity?: string }) {
-  const router = useRouter();
   const [step, setStep] = useState(0);
   const [city, setCity] = useState(defaultCity || TRADE_CITIES[0]?.slug || "surrey");
   const [intent, setIntent] = useState("");
@@ -29,8 +28,7 @@ export function HomeownerOnboardingWizard({ defaultCity }: { defaultCity?: strin
       }),
     });
     setLoading(false);
-    router.push(intent.trim() ? "/request" : "/dashboard");
-    router.refresh();
+    await redirectAfterAuth(intent.trim() ? "/request" : "/dashboard");
   }
 
   return (

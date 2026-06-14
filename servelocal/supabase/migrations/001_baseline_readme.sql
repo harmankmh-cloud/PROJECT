@@ -16,5 +16,10 @@
 -- Numbered migrations (deltas / new environments):
 --   002_bookings_rls_fix.sql
 --   003_user_profiles_onboarding.sql
+--   004_schema_baseline.sql
+--   005_pro_job_leads_rls.sql
+--
+-- Verify bookings RLS after apply:
+--   select policyname, qual from pg_policies where tablename = 'bookings';
 
 select 1;
