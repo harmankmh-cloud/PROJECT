@@ -2,7 +2,7 @@ import type { Metadata } from "next";
 import Link from "next/link";
 import { redirect } from "next/navigation";
 import { AuthLayout } from "@/components/auth/AuthLayout";
-import { LoginRolePicker } from "@/components/auth/LoginRolePicker";
+import { LoginFormNew } from "@/components/auth/LoginFormNew";
 import { authErrorMessage } from "@/lib/auth-login-messages";
 import { pageMetadata } from "@/lib/seo";
 import { createClient } from "@/lib/supabase/server";
@@ -40,9 +40,8 @@ export default async function LoginPage({
   }
 
   return (
-    <AuthLayout title="Welcome back" subtitle="Choose how you use ServeLocal, then sign in.">
-      {authError ? <p className="mb-4 text-sm text-red-400">{authError}</p> : null}
-      <LoginRolePicker />
+    <AuthLayout title="Welcome back" subtitle="Sign in — we route you to the right dashboard automatically.">
+      <LoginFormNew initialError={authError} />
       <p className="mt-6 text-center text-sm text-slate-500">
         <Link href="/" className="hover:text-primary hover:underline">
           ← Back to ServeLocal

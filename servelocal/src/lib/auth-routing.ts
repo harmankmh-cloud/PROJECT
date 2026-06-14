@@ -60,14 +60,14 @@ function safeNextPath(next: string | null | undefined, role: UserRole) {
 /** Where to send the user immediately after password/OAuth login. */
 export async function resolvePostLoginPath(
   user: User,
-  options?: { next?: string | null; intent?: UserRole | null }
+  options?: { next?: string | null }
 ): Promise<string> {
   let profile = await getUserProfile(user.id);
   if (!profile) {
-    profile = await ensureUserProfileFromMetadata(user, options?.intent ?? undefined);
+    profile = await ensureUserProfileFromMetadata(user);
   }
 
-  let role = profile?.role ?? (await resolveUserRole(user)) ?? options?.intent ?? undefined;
+  let role = profile?.role ?? (await resolveUserRole(user));
 
   if (!role) {
     return "/signup?notice=choose_account_type";

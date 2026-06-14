@@ -50,17 +50,14 @@ async function userOwnsProviderListings(userId: string): Promise<boolean> {
  * Create user_profiles from auth metadata on first login (e.g. after email confirmation).
  * Uses the authenticated client so RLS insert policy applies.
  */
-export async function ensureUserProfileFromMetadata(
-  user: User,
-  intent?: UserRole
-): Promise<UserProfile | null> {
+export async function ensureUserProfileFromMetadata(user: User): Promise<UserProfile | null> {
   const existing = await getAuthUserProfile(user.id);
   if (existing) return existing;
 
   const existingAdmin = await getUserProfile(user.id);
   if (existingAdmin) return existingAdmin;
 
-  let role = roleFromMetadata(user) ?? intent;
+  let role = roleFromMetadata(user);
   if (!role && (await userOwnsProviderListings(user.id))) {
     role = "pro";
   }

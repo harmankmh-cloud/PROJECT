@@ -3,6 +3,7 @@
 import { zodResolver } from "@hookform/resolvers/zod";
 import Link from "next/link";
 import { useState } from "react";
+import { friendlyAuthError } from "@/lib/auth-errors";
 import { redirectAfterAuth } from "@/lib/auth/client-redirect";
 import { useForm } from "react-hook-form";
 import { Button } from "@/components/ui/Button";
@@ -44,7 +45,7 @@ export function HomeownerSignupForm() {
     });
 
     if (signUpError) {
-      setError(signUpError.message);
+      setError(friendlyAuthError(signUpError.message));
       return;
     }
 
