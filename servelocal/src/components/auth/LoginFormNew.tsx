@@ -6,22 +6,24 @@ import { useState } from "react";
 import { useForm } from "react-hook-form";
 import { Button } from "@/components/ui/Button";
 import { Input } from "@/components/ui/Input";
+import { friendlyAuthError } from "@/lib/auth-errors";
 import { redirectAfterAuth } from "@/lib/auth/client-redirect";
 import { loginSchema, type LoginData } from "@/lib/schemas/auth";
 import { createClient } from "@/lib/supabase/client";
 import { isSupabaseConfigured } from "@/lib/supabase/config";
 
-import type { UserRole } from "@/lib/user-profiles";
+type EmailActionState = "idle" | "sending" | "sent";
 
-export function LoginFormNew({
-  initialError,
-  intent,
-}: {
-  initialError?: string | null;
-  intent?: UserRole;
-}) {
+function isUnconfirmedEmailError(message: string) {
+  const lower = message.toLowerCase();
+  return lower.includes("email not confirmed") || lower.includes("not confirmed");
+}
+
+export function LoginFormNew({ initialError }: { initialError?: string | null }) {
   const [error, setError] = useState<string | null>(initialError ?? null);
-  const [resetSent, setResetSent] = useState(false);
+  const [pendingEmail, setPendingEmail] = useState<string | null>(null);
+  const [resetState, setResetState] = useState<EmailActionState>("idle");
+  const [confirmState, setConfirmState] = useState<EmailActionState>("idle");
 
   const {
     register,
@@ -36,6 +38,8 @@ export function LoginFormNew({
 
   async function onSubmit(data: LoginData) {
     setError(null);
+    setPendingEmail(null);
+    setConfirmState("idle");
     const supabase = createClient();
     const { error: signInError } = await supabase.auth.signInWithPassword({
       email: data.email,
@@ -43,28 +47,74 @@ export function LoginFormNew({
     });
 
     if (signInError) {
-      setError(signInError.message);
+      const message = friendlyAuthError(signInError.message);
+      setError(message);
+      if (isUnconfirmedEmailError(signInError.message)) {
+        setPendingEmail(data.email.trim());
+      }
       return;
     }
 
-    const afterLogin = intent
-      ? `/auth/after-login?intent=${intent}`
-      : "/auth/after-login";
-    await redirectAfterAuth(afterLogin);
+    await redirectAfterAuth("/auth/after-login");
   }
 
   async function handleForgot() {
-    const email = getValues("email");
+    if (resetState !== "idle") return;
+
+    const email = getValues("email")?.trim();
     if (!email) {
       setError("Enter your email first, then tap forgot password.");
       return;
     }
+
+    setError(null);
+    setResetState("sending");
     const supabase = createClient();
-    await supabase.auth.resetPasswordForEmail(email, {
+    const { error: resetError } = await supabase.auth.resetPasswordForEmail(email, {
       redirectTo: `${window.location.origin}/auth/confirm?next=/dashboard/settings`,
     });
-    setResetSent(true);
+
+    if (resetError) {
+      setError(friendlyAuthError(resetError.message));
+      setResetState("idle");
+      return;
+    }
+
+    setResetState("sent");
   }
+
+  async function handleResendConfirmation() {
+    if (confirmState !== "idle") return;
+
+    const email = (pendingEmail ?? getValues("email"))?.trim();
+    if (!email) {
+      setError("Enter your email, then request a confirmation link.");
+      return;
+    }
+
+    setError(null);
+    setConfirmState("sending");
+    const supabase = createClient();
+    const { error: resendError } = await supabase.auth.resend({
+      type: "signup",
+      email,
+      options: {
+        emailRedirectTo: `${window.location.origin}/auth/confirm`,
+      },
+    });
+
+    if (resendError) {
+      setError(friendlyAuthError(resendError.message));
+      setConfirmState("idle");
+      return;
+    }
+
+    setPendingEmail(email);
+    setConfirmState("sent");
+  }
+
+  const showResendConfirmation =
+    pendingEmail !== null || initialError?.includes("confirmation") || initialError?.includes("verification");
 
   return (
     <form onSubmit={handleSubmit(onSubmit)} className="space-y-4">
@@ -79,19 +129,40 @@ export function LoginFormNew({
         {errors.password && <p className="mt-1 text-xs text-red-400">{errors.password.message}</p>}
       </div>
       {error && <p className="text-sm text-red-400">{error}</p>}
-      {resetSent && <p className="text-sm text-green-400">Password reset email sent.</p>}
+      {resetState === "sent" && (
+        <p className="text-sm text-green-400">Password reset email sent — check your inbox once.</p>
+      )}
+      {confirmState === "sent" && (
+        <p className="text-sm text-green-400">Confirmation email sent — check your inbox once.</p>
+      )}
       <Button type="submit" className="w-full" loading={isSubmitting} pill>
         Sign in
       </Button>
-      <button type="button" onClick={handleForgot} className="w-full text-center text-xs text-slate-500 hover:text-primary">
-        Forgot password?
+      <button
+        type="button"
+        onClick={handleForgot}
+        disabled={resetState === "sending" || resetState === "sent"}
+        className="w-full text-center text-xs text-slate-500 hover:text-primary disabled:opacity-60"
+      >
+        {resetState === "sent" ? "Reset email sent" : resetState === "sending" ? "Sending…" : "Forgot password?"}
       </button>
+      {showResendConfirmation && (
+        <button
+          type="button"
+          onClick={handleResendConfirmation}
+          disabled={confirmState === "sending" || confirmState === "sent"}
+          className="w-full text-center text-xs text-slate-500 hover:text-primary disabled:opacity-60"
+        >
+          {confirmState === "sent"
+            ? "Confirmation sent"
+            : confirmState === "sending"
+              ? "Sending…"
+              : "Resend confirmation email"}
+        </button>
+      )}
       <p className="text-center text-sm text-slate-500">
         New here?{" "}
-        <Link
-          href={intent === "pro" ? "/signup/pro" : intent === "homeowner" ? "/signup/homeowner" : "/signup"}
-          className="font-semibold text-primary hover:underline"
-        >
+        <Link href="/signup" className="font-semibold text-primary hover:underline">
           Create account
         </Link>
       </p>
