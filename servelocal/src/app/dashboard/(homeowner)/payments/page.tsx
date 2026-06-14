@@ -1,7 +1,21 @@
 import Link from "next/link";
 import { Badge } from "@/components/ui/Badge";
-import { getUserBookings } from "@/lib/features-data";
+import { getUserBookings, isPaidBooking } from "@/lib/data/bookings";
+import type { PaymentStatus } from "@/lib/types";
 import { createClient } from "@/lib/supabase/server";
+
+function paymentLabel(status: PaymentStatus) {
+  if (status === "released") return "Paid";
+  if (status === "held") return "In escrow";
+  if (status === "refunded") return "Refunded";
+  return status;
+}
+
+function paymentVariant(status: PaymentStatus): "success" | "orange" | "default" {
+  if (status === "released") return "success";
+  if (status === "held") return "orange";
+  return "default";
+}
 
 export default async function PaymentsPage() {
   const supabase = await createClient();
@@ -10,9 +24,7 @@ export default async function PaymentsPage() {
   } = supabase ? await supabase.auth.getUser() : { data: { user: null } };
 
   const bookings = user ? await getUserBookings(user.id) : [];
-  const paidBookings = bookings.filter(
-    (b: Record<string, unknown>) => b.payment_status === "paid" || b.payment_status === "held"
-  );
+  const paidBookings = bookings.filter(isPaidBooking);
 
   return (
     <div>
@@ -38,21 +50,17 @@ export default async function PaymentsPage() {
               </tr>
             </thead>
             <tbody>
-              {paidBookings.map((b: Record<string, unknown>) => {
-                const pro = b.service_providers as { display_name?: string } | null;
-                const total = ((b.total_cents as number) ?? 0) / 100;
-                const date = b.created_at
-                  ? new Date(b.created_at as string).toLocaleDateString("en-CA")
-                  : "—";
-                const status = (b.payment_status as string) ?? "pending";
+              {paidBookings.map((b) => {
+                const total = b.total_cents / 100;
+                const date = new Date(b.created_at).toLocaleDateString("en-CA");
                 return (
-                  <tr key={b.id as string} className="border-b border-border last:border-0">
+                  <tr key={b.id} className="border-b border-border last:border-0">
                     <td className="px-4 py-3 text-foreground">{date}</td>
-                    <td className="px-4 py-3 text-foreground">{pro?.display_name ?? "Pro"}</td>
+                    <td className="px-4 py-3 text-foreground">{b.service_providers?.display_name ?? "Pro"}</td>
                     <td className="px-4 py-3 font-semibold text-foreground">${total.toFixed(2)}</td>
                     <td className="px-4 py-3">
-                      <Badge variant={status === "paid" ? "success" : "orange"} className="capitalize">
-                        {status}
+                      <Badge variant={paymentVariant(b.payment_status)} className="capitalize">
+                        {paymentLabel(b.payment_status)}
                       </Badge>
                     </td>
                   </tr>

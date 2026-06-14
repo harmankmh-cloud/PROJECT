@@ -1,0 +1,334 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Route Max — Unlimited Multi-Stop Route Planner</title>
+    <meta
+      name="description"
+      content="Route Max plans unlimited multi-stop driving routes with optimization, ETAs, time windows, CSV import, map view, and local privacy — no subscription."
+    />
+    <meta property="og:title" content="Route Max — Unlimited Multi-Stop Route Planner" />
+    <meta
+      property="og:description"
+      content="Plan smarter delivery routes with unlimited stops, fuel analytics, CSV import/export, and Google Maps handoff."
+    />
+    <meta property="og:type" content="website" />
+    <link rel="icon" href="favicon.svg" type="image/svg+xml" />
+    <link rel="stylesheet" href="styles.css" />
+  </head>
+  <body>
+    <div id="toast" class="toast" hidden role="status" aria-live="polite"></div>
+
+    <header class="hero">
+      <nav class="nav" aria-label="Primary">
+        <a class="brand" href="#top" aria-label="Route Max home">
+          <span class="brand__mark">RM</span>
+          <span>Route Max</span>
+        </a>
+        <div class="nav__links">
+          <a href="#planner">Planner</a>
+          <a href="#route">Route</a>
+          <a href="#map">Map</a>
+          <a href="#library">Library</a>
+          <a href="#checklist">Checklist</a>
+        </div>
+      </nav>
+
+      <section id="top" class="hero__content">
+        <p class="eyebrow">Unlimited stops. No paywall.</p>
+        <h1>Faster routes, cleaner ETAs, fewer missed stops.</h1>
+        <p class="hero__copy">
+          Route Max beats basic planners with unlimited stops, fuel analytics, CSV import,
+          time windows, map view, voice entry, and proof-of-delivery — all stored locally on your device.
+        </p>
+        <div class="hero__actions">
+          <a class="button button--primary" href="#planner">Start planning</a>
+          <a class="button button--ghost" href="#route">View route board</a>
+        </div>
+      </section>
+    </header>
+
+    <main>
+      <section class="section stats" aria-label="Trip summary">
+        <article class="stat-card">
+          <span class="stat-card__label">Total miles</span>
+          <strong id="summaryMiles">0</strong>
+        </article>
+        <article class="stat-card">
+          <span class="stat-card__label">Drive time</span>
+          <strong id="summaryTime">0h</strong>
+        </article>
+        <article class="stat-card">
+          <span class="stat-card__label">Fuel estimate</span>
+          <strong id="summaryFuel">$0</strong>
+        </article>
+        <article class="stat-card">
+          <span class="stat-card__label">Route progress</span>
+          <strong id="summaryProgress">0%</strong>
+        </article>
+        <article class="stat-card">
+          <span class="stat-card__label">Cost / stop</span>
+          <strong id="summaryCostPerStop">$0</strong>
+        </article>
+        <article class="stat-card">
+          <span class="stat-card__label">Finish ETA</span>
+          <strong id="summaryFinish">--</strong>
+        </article>
+        <article class="stat-card">
+          <span class="stat-card__label">Efficiency</span>
+          <strong id="summaryEfficiency">0</strong>
+        </article>
+      </section>
+
+      <section id="library" class="section panel">
+        <div class="section-heading section-heading--inline">
+          <div>
+            <p class="eyebrow">Route library</p>
+            <h2>Saved routes</h2>
+          </div>
+          <div class="button-group">
+            <button id="newRoute" class="button button--ghost" type="button">New route</button>
+            <button id="exportJson" class="button button--ghost" type="button">Backup JSON</button>
+            <label class="button button--ghost file-button">
+              Restore JSON
+              <input id="importJson" type="file" accept="application/json,.json" hidden />
+            </label>
+          </div>
+        </div>
+        <div id="routeLibrary" class="route-library"></div>
+      </section>
+
+      <section id="planner" class="section layout-grid">
+        <article class="panel">
+          <div class="section-heading">
+            <p class="eyebrow">Trip settings</p>
+            <h2>Build your road plan</h2>
+            <p>Enter route basics once. Route Max keeps estimates, stop order, status, and exports in sync.</p>
+          </div>
+
+          <form id="tripForm" class="form">
+            <label>
+              Trip name
+              <input id="tripName" name="tripName" type="text" value="Morning delivery route" />
+            </label>
+            <div class="form__row">
+              <label>
+                Start
+                <input id="startCity" name="startCity" type="text" value="Warehouse" />
+              </label>
+              <label>
+                Destination
+                <input id="endCity" name="endCity" type="text" value="Home base" />
+              </label>
+            </div>
+            <div class="form__row">
+              <label>
+                Miles
+                <input id="totalMiles" name="totalMiles" type="number" min="0" step="1" value="168" />
+              </label>
+              <label>
+                Avg speed
+                <input id="avgSpeed" name="avgSpeed" type="number" min="1" step="1" value="38" />
+              </label>
+            </div>
+            <div class="form__row">
+              <label>
+                MPG
+                <input id="mpg" name="mpg" type="number" min="1" step="0.1" value="24" />
+              </label>
+              <label>
+                Gas price
+                <input id="gasPrice" name="gasPrice" type="number" min="0" step="0.01" value="3.69" />
+              </label>
+            </div>
+            <div class="form__row">
+              <label>
+                Start time
+                <input id="startTime" name="startTime" type="time" value="08:00" />
+              </label>
+              <label>
+                Buffer per stop
+                <input id="bufferMinutes" name="bufferMinutes" type="number" min="0" step="1" value="5" />
+              </label>
+            </div>
+            <button class="button button--primary" type="submit">Update trip</button>
+          </form>
+        </article>
+
+        <aside class="panel trip-card" aria-live="polite">
+          <p class="eyebrow">Current plan</p>
+          <h2 id="displayTripName">Morning delivery route</h2>
+          <p id="displayRoute">Warehouse to Home base</p>
+          <dl>
+            <div>
+              <dt>Fuel needed</dt>
+              <dd id="fuelGallons">0 gal</dd>
+            </div>
+            <div>
+              <dt>Rest windows</dt>
+              <dd id="restWindows">0 suggested</dd>
+            </div>
+            <div>
+              <dt>Budget per mile</dt>
+              <dd id="costPerMile">$0.00</dd>
+            </div>
+            <div>
+              <dt>Service time</dt>
+              <dd id="serviceMinutes">0m</dd>
+            </div>
+            <div>
+              <dt>Route health</dt>
+              <dd id="routeHealth">Ready</dd>
+            </div>
+          </dl>
+          <a id="openMaps" class="button button--ghost full-width" href="#" target="_blank" rel="noreferrer">Open in Google Maps</a>
+        </aside>
+      </section>
+
+      <section id="route" class="section layout-grid">
+        <article class="panel">
+          <div class="section-heading">
+            <p class="eyebrow">Route board</p>
+            <h2>Add stops</h2>
+          </div>
+          <form id="stopForm" class="form">
+            <label>
+              Stop name
+              <input id="stopName" name="stopName" type="text" placeholder="Customer, fuel, pickup..." required />
+            </label>
+            <label>
+              Address (optional)
+              <input id="stopAddress" name="stopAddress" type="text" placeholder="123 Main St, Abbotsford BC" />
+            </label>
+            <div class="form__row">
+              <label>
+                Mile marker
+                <input id="stopMile" name="stopMile" type="number" min="0" step="1" placeholder="24" required />
+              </label>
+              <label>
+                Service minutes
+                <input id="serviceMinutesInput" name="serviceMinutes" type="number" min="0" step="1" value="8" />
+              </label>
+            </div>
+            <div class="form__row">
+              <label>
+                Window start
+                <input id="windowStart" name="windowStart" type="time" />
+              </label>
+              <label>
+                Window end
+                <input id="windowEnd" name="windowEnd" type="time" />
+              </label>
+            </div>
+            <div class="form__row">
+              <label>
+                Type
+                <select id="stopType" name="stopType">
+                  <option value="Delivery">Delivery</option>
+                  <option value="Pickup">Pickup</option>
+                  <option value="Fuel">Fuel</option>
+                  <option value="Food">Food</option>
+                  <option value="Rest">Rest</option>
+                  <option value="Hotel">Hotel</option>
+                </select>
+              </label>
+              <label>
+                Priority
+                <select id="stopPriority" name="stopPriority">
+                  <option value="Normal">Normal</option>
+                  <option value="High">High</option>
+                  <option value="Low">Low</option>
+                </select>
+              </label>
+            </div>
+            <label>
+              Notes / POD
+              <textarea id="stopNotes" name="stopNotes" rows="2" placeholder="Gate code, apartment, delivery instructions"></textarea>
+            </label>
+            <label class="file-button">
+              POD photo (optional)
+              <input id="stopPhoto" type="file" accept="image/*" />
+            </label>
+            <div class="button-group">
+              <button class="button button--primary" type="submit">Add stop</button>
+              <button id="voiceStop" class="button button--ghost" type="button">Voice add</button>
+            </div>
+          </form>
+
+          <div class="import-box">
+            <p class="eyebrow">Bulk import</p>
+            <p class="muted">Import CSV columns: name, address, mile, type, priority, serviceMinutes, windowStart, windowEnd, notes</p>
+            <div class="button-group">
+              <label class="button button--ghost file-button">
+                Import CSV
+                <input id="importCsv" type="file" accept=".csv,text/csv" hidden />
+              </label>
+              <button id="replaceCsv" class="button button--ghost" type="button">Replace with CSV</button>
+            </div>
+          </div>
+        </article>
+
+        <article class="panel">
+          <div class="section-heading section-heading--inline">
+            <div>
+              <p class="eyebrow">Next up</p>
+              <h2>Planned stops</h2>
+            </div>
+            <div class="button-group">
+              <button id="optimizeStops" class="button button--primary" type="button">Optimize</button>
+              <button id="exportRoute" class="button button--ghost" type="button">Export CSV</button>
+              <button id="clearStops" class="button button--ghost" type="button">Clear</button>
+            </div>
+          </div>
+          <div id="routeWarnings" class="notice" hidden></div>
+          <ol id="stopList" class="stop-list"></ol>
+          <p id="emptyStops" class="empty-state">No stops yet. Add one to build the route.</p>
+        </article>
+      </section>
+
+      <section id="map" class="section panel">
+        <div class="section-heading section-heading--inline">
+          <div>
+            <p class="eyebrow">Map board</p>
+            <h2>Visual route</h2>
+          </div>
+          <button id="refreshMap" class="button button--ghost" type="button">Refresh map</button>
+        </div>
+        <div id="routeMap" class="route-map" aria-label="Route map"></div>
+        <p id="mapHint" class="muted">Add addresses and geocode stops to see pins. Mile-only stops stay on the timeline.</p>
+      </section>
+
+      <section id="dispatch" class="section panel">
+        <div class="section-heading section-heading--inline">
+          <div>
+            <p class="eyebrow">Dispatch view</p>
+            <h2>Route timeline</h2>
+          </div>
+          <span id="routeSummaryPill" class="pill">0 stops</span>
+        </div>
+        <div id="routeTimeline" class="timeline"></div>
+      </section>
+
+      <section id="checklist" class="section panel">
+        <div class="section-heading section-heading--inline">
+          <div>
+            <p class="eyebrow">Before you roll</p>
+            <h2>Route Max checklist</h2>
+          </div>
+          <span id="checklistProgress" class="pill">0 / 0 ready</span>
+        </div>
+        <div id="checklistItems" class="checklist"></div>
+      </section>
+    </main>
+
+    <footer class="footer">
+      <p>Route Max — unlimited stops, local privacy, no subscription. Data stays on your device.</p>
+    </footer>
+
+    <script src="lib/route-engine.js"></script>
+    <script src="lib/storage.js"></script>
+    <script src="lib/geocode.js"></script>
+    <script src="planner.js" defer></script>
+  </body>
+</html>

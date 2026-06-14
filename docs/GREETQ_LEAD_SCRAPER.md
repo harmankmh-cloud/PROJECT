@@ -15,14 +15,14 @@ discover URLs → scrape emails → import to Supabase → daily job sends 100 N
 | 1. Find businesses | `npm run discover` (Nominatim + Yellow Pages) or add to `seeds/fraser-valley-curated.txt` |
 | 2. Scrape emails | `node scrape-batch.mjs --input seeds/... --output leads-batch.csv` |
 | 3. Import pool | `node import-leads.mjs --input leads-batch.csv --mark-sent sent-yesterday.txt` |
-| 4. Daily send | Activepieces **11am weekdays** → `POST /api/make/outreach/daily` with `limit: 100` |
+| 4. Daily send | Activepieces **11am weekdays** → `POST /api/make/outreach/daily` with `limit: 5` per batch (20 batches = 100/day) |
 
 ## Daily send rules
 
-- **Max 100 emails per run** (hard cap in API)
+- **Max 100 emails per run** (20 Activepieces batches × 5 emails — avoids Vercel 504 timeouts)
 - Only `status = pending` with a valid email
 - After send → `status = sent` (never emailed again)
-- **45s delay** between sends (spam-safe)
+- **1.5s delay** between sends (spam-safe; each API batch capped at 5)
 - Sequence: `morning_call` (configurable)
 
 ## Apply database migration (once)
@@ -50,7 +50,7 @@ Repeat scrape batches with `--offset 200 --limit 200` until pool ≥ 1000 pendin
 
 **Abbotsford - Send every 3 days 11am** now calls:
 
-`POST https://greetq.com/api/make/outreach/daily` with `{ limit: 100, sequence: "morning_call" }`
+`POST https://greetq.com/api/make/outreach/daily` with `{ limit: 5, sequence: "morning_call" }` (Activepieces loops 20×)
 
 No hardcoded lead list.
 

@@ -24,6 +24,8 @@ export default async function RequestPage({
     pro?: string;
     name?: string;
     email?: string;
+    desc?: string;
+    date?: string;
   }>;
 }) {
   const params = await searchParams;
@@ -75,6 +77,8 @@ export default async function RequestPage({
             defaultPro={params.pro}
             defaultName={defaultName}
             defaultEmail={defaultEmail}
+            defaultDescription={params.desc ?? ""}
+            defaultPreferredDate={params.date ?? ""}
           />
         </div>
       </div>

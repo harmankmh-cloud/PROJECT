@@ -47,6 +47,26 @@ export function isValidCitySlug(slug: string | undefined): slug is CitySlug {
   return Boolean(slug && TRADE_CITIES.some((c) => c.slug === slug));
 }
 
+/** Adjacent cities for directory fallback when a market has zero listings. */
+export const NEARBY_CITIES: Record<string, string[]> = {
+  surrey: ["langley", "delta", "burnaby", "richmond"],
+  langley: ["surrey", "abbotsford", "maple-ridge", "mission"],
+  abbotsford: ["chilliwack", "langley", "mission"],
+  chilliwack: ["abbotsford", "mission", "langley"],
+  mission: ["abbotsford", "chilliwack", "maple-ridge", "langley"],
+  delta: ["surrey", "burnaby", "richmond", "vancouver"],
+  burnaby: ["vancouver", "coquitlam", "surrey", "delta"],
+  vancouver: ["burnaby", "richmond", "coquitlam", "delta"],
+  richmond: ["vancouver", "delta", "burnaby", "surrey"],
+  coquitlam: ["burnaby", "maple-ridge", "vancouver"],
+  "maple-ridge": ["coquitlam", "langley", "mission", "burnaby"],
+  kelowna: [],
+};
+
+export function nearbyCitySlugs(citySlug: string): string[] {
+  return NEARBY_CITIES[citySlug] ?? [];
+}
+
 export const HOW_IT_WORKS = [
   {
     step: "1",

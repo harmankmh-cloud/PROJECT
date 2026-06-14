@@ -151,7 +151,7 @@ export function SupportForm({
 
       {error && <p className="text-sm text-rose-600">{error}</p>}
 
-      <button type="submit" disabled={loading} className="btn-gold w-full py-3.5 disabled:opacity-60">
+      <button type="submit" disabled={loading} className="btn-gold w-full py-3.5 disabled:cursor-not-allowed disabled:opacity-60">
         {loading ? "Sending…" : "Send message"}
       </button>
     </form>

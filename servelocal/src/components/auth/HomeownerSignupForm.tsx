@@ -2,8 +2,8 @@
 
 import { zodResolver } from "@hookform/resolvers/zod";
 import Link from "next/link";
-import { useRouter } from "next/navigation";
 import { useState } from "react";
+import { redirectAfterAuth } from "@/lib/auth/client-redirect";
 import { useForm } from "react-hook-form";
 import { Button } from "@/components/ui/Button";
 import { Input } from "@/components/ui/Input";
@@ -13,7 +13,6 @@ import { createClient } from "@/lib/supabase/client";
 import { isSupabaseConfigured } from "@/lib/supabase/config";
 
 export function HomeownerSignupForm() {
-  const router = useRouter();
   const [error, setError] = useState<string | null>(null);
   const [info, setInfo] = useState<string | null>(null);
 
@@ -40,7 +39,7 @@ export function HomeownerSignupForm() {
       password: data.password,
       options: {
         data: { role: "homeowner", display_name: data.name, city: data.city },
-        emailRedirectTo: `${window.location.origin}/auth/callback?next=/dashboard`,
+        emailRedirectTo: `${window.location.origin}/auth/confirm`,
       },
     });
 
@@ -60,8 +59,7 @@ export function HomeownerSignupForm() {
       body: JSON.stringify({ role: "homeowner", display_name: data.name, phone: null }),
     });
 
-    router.push("/dashboard");
-    router.refresh();
+    await redirectAfterAuth("/auth/after-login");
   }
 
   return (

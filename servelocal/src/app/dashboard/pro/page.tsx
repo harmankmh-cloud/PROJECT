@@ -16,7 +16,7 @@ export default async function ProOverviewPage() {
   } = supabase ? await supabase.auth.getUser() : { data: { user: null } };
   if (!user) redirect("/login");
 
-  const listings = await getProvidersForUser(user.id, user.email ?? undefined);
+  const listings = await getProvidersForUser(user.id);
   if (listings.length === 0) {
     return (
       <div className="mx-auto max-w-lg py-10 text-center">

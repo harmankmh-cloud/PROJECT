@@ -14,6 +14,7 @@ import {
 } from "lucide-react";
 import { SignOutButton } from "@/components/SignOutButton";
 import { MobileTabBar } from "@/components/dashboard/MobileTabBar";
+import { NotificationBell } from "@/components/dashboard/NotificationBell";
 import { ThemeToggle } from "@/components/ui/ThemeToggle";
 import { cn } from "@/lib/utils";
 
@@ -32,9 +33,11 @@ const NAV = [
 export function ProShell({
   children,
   businessName,
+  notificationCount = 0,
 }: {
   children: React.ReactNode;
   businessName?: string;
+  notificationCount?: number;
 }) {
   const pathname = usePathname();
 
@@ -75,7 +78,8 @@ export function ProShell({
       </aside>
 
       <div className="flex flex-1 flex-col pb-20 md:pb-0">
-        <header className="flex items-center justify-end border-b border-border px-4 py-3 md:px-8">
+        <header className="flex items-center justify-end gap-2 border-b border-border px-4 py-3 md:px-8">
+          <NotificationBell count={notificationCount} href="/dashboard/pro/messages" />
           <ThemeToggle />
         </header>
         <main className="flex-1 px-4 py-6 md:px-8">{children}</main>

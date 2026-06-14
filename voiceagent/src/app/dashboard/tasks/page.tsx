@@ -1,8 +1,10 @@
 "use client";
 
 import Link from "next/link";
-import { CheckCircle2, Circle, PhoneCall, RefreshCw } from "lucide-react";
+import { CheckCircle2, Circle, PhoneCall } from "lucide-react";
 import { useCallback, useEffect, useMemo, useState } from "react";
+import { Skeleton } from "@/components/ui/Skeleton";
+import { useToast } from "@/components/providers/ToastProvider";
 import type { Call } from "@/lib/types";
 import { apiFetch } from "@/lib/api-client";
 
@@ -32,9 +34,9 @@ function saveLocalDone(done: Set<string>) {
 }
 
 export default function TasksPage() {
+  const { showError } = useToast();
   const [calls, setCalls] = useState<Call[]>([]);
   const [loading, setLoading] = useState(true);
-  const [error, setError] = useState("");
   const [done, setDone] = useState<Set<string>>(() => loadLocalDone());
   const [filter, setFilter] = useState<"open" | "all">("open");
 
@@ -68,7 +70,7 @@ export default function TasksPage() {
       apiFetch<{ calls: Call[] }>("/api/calls").then((res) => {
         if (!active) return;
         if (res.ok) setCalls(res.data.calls || []);
-        else setError(res.error);
+        else showError(res.error);
         setLoading(false);
       });
     };
@@ -166,11 +168,12 @@ export default function TasksPage() {
         </div>
       ) : null}
 
-      {error ? <p className="mt-6 text-sm text-error">{error}</p> : null}
       {loading ? (
-        <p className="mt-6 flex items-center gap-2 text-sm text-muted">
-          <RefreshCw className="h-4 w-4 animate-spin" /> Loading tasks…
-        </p>
+        <div className="mt-8 animate-pulse space-y-3">
+          {Array.from({ length: 5 }).map((_, i) => (
+            <Skeleton key={i} className="h-16 w-full rounded-xl" />
+          ))}
+        </div>
       ) : null}
 
       {!loading && visible.length === 0 ? (

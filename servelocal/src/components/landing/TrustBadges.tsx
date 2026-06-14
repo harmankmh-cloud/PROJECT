@@ -2,7 +2,7 @@ import { BadgeCheck, Shield, Star } from "lucide-react";
 import { FadeUp } from "@/components/motion/FadeUp";
 
 const BADGES = [
-  { icon: BadgeCheck, label: "Background Checked" },
+  { icon: BadgeCheck, label: "Credential Reviewed" },
   { icon: Shield, label: "Insured" },
   { icon: Star, label: "5-Star Rated" },
 ] as const;

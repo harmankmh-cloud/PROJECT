@@ -1,11 +1,24 @@
 import "server-only";
-import { createClient } from "@supabase/supabase-js";
+import { createClient, type SupabaseClient } from "@supabase/supabase-js";
+import { getSupabaseServiceRoleKey, getSupabaseUrl } from "@/lib/supabase/env";
 
-export function createAdminClient() {
-  const url = process.env.NEXT_PUBLIC_SUPABASE_URL;
-  const key = process.env.SUPABASE_SERVICE_ROLE_KEY;
-  if (!url || !key) {
-    throw new Error("Supabase admin is not configured");
+const globalForSupabase = globalThis as typeof globalThis & {
+  __greetqAdminClient?: SupabaseClient;
+};
+
+/** Singleton service-role client — reused across serverless invocations. */
+export function createAdminClient(): SupabaseClient {
+  if (!globalForSupabase.__greetqAdminClient) {
+    globalForSupabase.__greetqAdminClient = createClient(
+      getSupabaseUrl(),
+      getSupabaseServiceRoleKey(),
+      {
+        auth: {
+          autoRefreshToken: false,
+          persistSession: false,
+        },
+      }
+    );
   }
-  return createClient(url, key);
+  return globalForSupabase.__greetqAdminClient;
 }

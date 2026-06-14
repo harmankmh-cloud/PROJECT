@@ -1,6 +1,7 @@
 import { NextResponse } from "next/server";
 import { z } from "zod";
 import { createServiceClient } from "@/lib/supabase/admin";
+import { createClient } from "@/lib/supabase/server";
 import { isSupabaseConfigured } from "@/lib/supabase/config";
 
 const schema = z.object({
@@ -19,19 +20,31 @@ export async function POST(request: Request) {
     return NextResponse.json({ error: "Database not configured" }, { status: 503 });
   }
 
+  const supabase = await createClient();
+  const {
+    data: { user },
+  } = supabase ? await supabase.auth.getUser() : { data: { user: null } };
+
+  if (!user) {
+    return NextResponse.json({ error: "Sign in required" }, { status: 401 });
+  }
+
   try {
     const body = schema.parse(await request.json());
+
+    if (body.customerEmail.toLowerCase() !== (user.email ?? "").toLowerCase()) {
+      return NextResponse.json({ error: "Booking email must match your account email" }, { status: 403 });
+    }
+
     const platformFee = Math.round(body.baseAmountCents * 0.1);
     const tax = Math.round((body.baseAmountCents + body.addonsCents + platformFee) * 0.12);
     const total = body.baseAmountCents + body.addonsCents + platformFee + tax;
 
     const admin = createServiceClient();
     if (!admin) {
-      const platformFee = Math.round(body.baseAmountCents * 0.1);
-      const tax = Math.round((body.baseAmountCents + body.addonsCents + platformFee) * 0.12);
-      const total = body.baseAmountCents + body.addonsCents + platformFee + tax;
       return NextResponse.json({ id: `demo-${Date.now()}`, totalCents: total, demo: true });
     }
+
     const { data, error } = await admin
       .from("bookings")
       .insert({
@@ -48,12 +61,12 @@ export async function POST(request: Request) {
         total_cents: total,
         payment_status: "held",
         status: "confirmed",
+        user_id: user.id,
       })
       .select("id")
       .single();
 
     if (error) {
-      // Table may not exist yet — return mock ID for UI demo
       if (error.code === "42P01") {
         return NextResponse.json({
           id: `demo-${Date.now()}`,

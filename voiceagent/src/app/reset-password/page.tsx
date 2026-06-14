@@ -1,6 +1,7 @@
 "use client";
 
 import Link from "next/link";
+import type { Session } from "@supabase/supabase-js";
 import { useEffect, useState } from "react";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
@@ -25,7 +26,7 @@ export default function ResetPasswordPage() {
 
   useEffect(() => {
     const supabase = createClient();
-    supabase.auth.getSession().then(({ data: { session } }) => {
+    supabase.auth.getSession().then(({ data: { session } }: { data: { session: Session | null } }) => {
       setReady(Boolean(session));
       if (!session) {
         setFormError("root", {

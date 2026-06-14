@@ -1,6 +1,8 @@
 import { NextResponse } from "next/server";
 import { z } from "zod";
+import { getBookingById } from "@/lib/data/bookings";
 import { createServiceClient } from "@/lib/supabase/admin";
+import { createClient } from "@/lib/supabase/server";
 import { getStripe, isStripeConfigured } from "@/lib/stripe";
 
 const schema = z.object({
@@ -22,8 +24,22 @@ export async function POST(request: Request) {
   const stripe = getStripe();
   if (!stripe) return NextResponse.json({ error: "Stripe unavailable" }, { status: 503 });
 
+  const supabase = await createClient();
+  const {
+    data: { user },
+  } = supabase ? await supabase.auth.getUser() : { data: { user: null } };
+
+  if (!user) {
+    return NextResponse.json({ error: "Sign in required" }, { status: 401 });
+  }
+
   try {
     const body = schema.parse(await request.json());
+
+    if (body.customerEmail.toLowerCase() !== (user.email ?? "").toLowerCase()) {
+      return NextResponse.json({ error: "Booking email must match your account email" }, { status: 403 });
+    }
+
     const platformFee = Math.round(body.baseAmountCents * 0.1);
     const tax = Math.round((body.baseAmountCents + body.addonsCents + platformFee) * 0.12);
     const total = body.baseAmountCents + body.addonsCents + platformFee + tax;
@@ -48,6 +64,7 @@ export async function POST(request: Request) {
           total_cents: total,
           payment_status: "held",
           status: "pending",
+          user_id: user.id,
         })
         .select("id")
         .single();
@@ -87,11 +104,11 @@ export async function POST(request: Request) {
       },
     });
 
-    if (admin && session.id) {
-      await admin
-        .from("bookings")
-        .update({ stripe_session_id: session.id })
-        .eq("id", bookingId);
+    if (admin && session.id && !bookingId.startsWith("demo-")) {
+      const owned = await getBookingById(bookingId, user.id);
+      if (owned) {
+        await admin.from("bookings").update({ stripe_session_id: session.id }).eq("id", bookingId);
+      }
     }
 
     return NextResponse.json({ url: session.url, bookingId });

@@ -59,6 +59,7 @@ export async function POST(request: Request) {
         categoryName,
         citySlug: body.citySlug,
         matchCount: result.matches?.length ?? 0,
+        isGuest: !user,
       });
       await sendTransactionalEmail({ to: email, subject, html, template: "job_posted" });
     }

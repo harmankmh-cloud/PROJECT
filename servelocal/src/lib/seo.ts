@@ -1,8 +1,25 @@
 import type { Metadata } from "next";
-import { SERVE_LOCAL } from "@/lib/constants";
+import { tradeSeoPlural } from "@/lib/category-copy";
+import { SERVE_LOCAL, cityName } from "@/lib/constants";
 
 const appUrl =
   process.env.NEXT_PUBLIC_APP_URL?.replace(/\/$/, "") || "https://www.servelocal.ca";
+
+export function tradeListingTitle({
+  trade,
+  tradeSlug,
+  citySlug,
+}: {
+  trade: string;
+  tradeSlug?: string;
+  citySlug?: string;
+}) {
+  const label = tradeSeoPlural(tradeSlug, trade);
+  if (citySlug) {
+    return `Best ${label} in ${cityName(citySlug)}, BC | Get Free Quotes | ServeLocal`;
+  }
+  return `${trade} Services in Canada | Free Quotes | ServeLocal`;
+}
 
 export function pageMetadata({
   title,
