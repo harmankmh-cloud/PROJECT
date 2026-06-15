@@ -31,8 +31,9 @@ export default async function LoginPage({
       const user = await getServerAuthUser();
       if (user) {
         const role = await resolveUserRole(user);
-        if (role) redirect("/auth/after-login");
-        redirect("/auth/choose-role");
+        const asQuery = asRole ? `?as=${asRole}` : role ? `?as=${role}` : "";
+        if (role) redirect(`/auth/after-login${asQuery}`);
+        redirect(`/auth/choose-role`);
       }
     } catch {
       // Render login form

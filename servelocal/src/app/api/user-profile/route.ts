@@ -35,6 +35,8 @@ export async function POST(request: Request) {
 
   const existing = await getUserProfile(user.id);
   const fields = { ...parsed.data };
+  const newRole = fields.role;
+  const assigningRole = !existing?.role && newRole;
 
   if (!existing?.role && fields.role) {
     // First-time role assignment (legacy accounts, choose-role flow).
@@ -49,6 +51,18 @@ export async function POST(request: Request) {
   const result = await upsertUserProfile(user.id, fields);
   if (!result.ok) {
     return NextResponse.json({ error: result.error }, { status: 500 });
+  }
+
+  if (assigningRole && newRole) {
+    await supabase.auth.updateUser({
+      data: {
+        role: newRole,
+        display_name:
+          (user.user_metadata?.display_name as string | undefined)?.trim() ||
+          user.email?.split("@")[0] ||
+          undefined,
+      },
+    });
   }
 
   return NextResponse.json({ ok: true });

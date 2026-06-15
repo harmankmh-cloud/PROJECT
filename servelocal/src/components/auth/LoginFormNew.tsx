@@ -84,9 +84,12 @@ export function LoginFormNew({
     setError(null);
     setResetState("sending");
     const supabase = createClient();
-    const confirmUrl = authConfirmUrl(window.location.origin);
+    const role = selectedRole ?? asRole;
     const { error: resetError } = await supabase.auth.resetPasswordForEmail(email, {
-      redirectTo: `${confirmUrl}?next=/dashboard/settings`,
+      redirectTo: authConfirmUrl(window.location.origin, {
+        as: role,
+        next: "/reset-password",
+      }),
     });
 
     if (resetError) {
@@ -110,11 +113,12 @@ export function LoginFormNew({
     setError(null);
     setConfirmState("sending");
     const supabase = createClient();
+    const role = selectedRole ?? asRole;
     const { error: resendError } = await supabase.auth.resend({
       type: "signup",
       email,
       options: {
-        emailRedirectTo: authConfirmUrl(window.location.origin),
+        emailRedirectTo: authConfirmUrl(window.location.origin, { as: role }),
       },
     });
 

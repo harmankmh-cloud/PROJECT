@@ -100,7 +100,10 @@ export async function middleware(request: NextRequest) {
   }
 
   if ((pathname === "/login" || pathname.startsWith("/login/") || pathname === "/signup" || pathname.startsWith("/signup/")) && user) {
-    return NextResponse.redirect(new URL("/auth/after-login", request.url));
+    const as = request.nextUrl.searchParams.get("as");
+    const target =
+      as === "pro" || as === "homeowner" ? `/auth/after-login?as=${as}` : "/auth/after-login";
+    return NextResponse.redirect(new URL(target, request.url));
   }
 
   return response;
