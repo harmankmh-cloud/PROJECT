@@ -96,7 +96,7 @@ export const LISTING_PLANS = [
     features: [
       "Basic listing in one city",
       "Phone & WhatsApp on profile",
-      "Manual admin approval",
+      "Job lead previews in dashboard",
       "Standard search placement",
     ],
   },
@@ -106,10 +106,10 @@ export const LISTING_PLANS = [
     priceLabel: "$29/mo",
     strikePrice: "$49/mo",
     setupLabel: "Founding Pro",
-    monthlyLabel: "First 6 months · then $49/mo · cancel anytime",
+    monthlyLabel: "Founding rate · cancel anytime",
     highlight: true,
     features: [
-      "Job alerts when homeowners post in your trade + city",
+      "Job alerts with homeowner phone & email",
       "Top placement in search & category pages",
       "Homepage featured spot",
       "Verified badge review by our team",

@@ -70,13 +70,17 @@ export function jobLeadForProEmail(input: {
     : "";
   const budgetLine = input.budgetLabel ? `<p><strong>Budget:</strong> ${input.budgetLabel}</p>` : "";
   const subject = `New ${input.categoryName} job in ${cityName(input.citySlug)} — ServeLocal`;
+  const contactBlock = input.isFeatured
+    ? `<p><strong>${input.customerName}</strong><br/>Phone: <a href="tel:${input.customerPhone}">${input.customerPhone}</a></p>`
+    : `<p><strong>${input.customerName}</strong><br/>Phone: <em>Upgrade to Featured to unlock contact details</em></p>
+<p><a href="${appUrl}/dashboard/pro/subscription" style="display:inline-block;background:#ea580c;color:#fff;padding:10px 16px;border-radius:8px;text-decoration:none;font-weight:600;font-size:14px">Upgrade — ${FOUNDING_PRO.featuredPrice}</a></p>`;
   const html = layout(`
 <p>Hi ${input.proName},</p>
 <p>A homeowner just posted a job that matches your listing${input.isFeatured ? " <strong>(Featured — priority alert)</strong>" : ""}:</p>
 <p><strong>${input.categoryName}</strong> · ${cityName(input.citySlug)}</p>
 ${urgencyLine}
 ${budgetLine}
-<p><strong>${input.customerName}</strong><br/>Phone: <a href="tel:${input.customerPhone}">${input.customerPhone}</a></p>
+${contactBlock}
 <p style="background:#f8fafc;padding:12px;border-radius:8px;font-size:14px">${input.description.slice(0, 500)}${input.description.length > 500 ? "…" : ""}</p>
 <p>Call or text them direct — the homeowner chose pros from ServeLocal, not a shared lead auction.</p>
 <p><a href="${appUrl}/dashboard/pro" style="display:inline-block;background:#0f766e;color:#fff;padding:12px 20px;border-radius:8px;text-decoration:none;font-weight:600">Pro dashboard</a></p>
