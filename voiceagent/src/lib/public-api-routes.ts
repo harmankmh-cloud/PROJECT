@@ -4,6 +4,7 @@ export const PUBLIC_API_PREFIXES = [
   "/api/twilio/",
   "/api/telnyx/",
   "/api/make/outreach",
+  "/api/ai/",
   "/api/auth/",
   "/api/leads/capture",
   "/api/demo/call",
