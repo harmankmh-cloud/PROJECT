@@ -109,10 +109,10 @@ export const LISTING_PLANS = [
     monthlyLabel: "Founding rate · cancel anytime",
     highlight: true,
     features: [
-      "Job alerts with homeowner phone & email",
+      "Job alert emails (preview — contact on Featured)",
       "Top placement in search & category pages",
       "Homepage featured spot",
-      "Verified badge review by our team",
+      "Verified badge after licence review",
       "Up to 3 portfolio photos",
       "No per-lead fees — ever",
     ],

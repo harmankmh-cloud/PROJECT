@@ -15,6 +15,7 @@ const patchSchema = z.object({
   minCalloutFee: z.string().max(40).optional(),
   businessHours: z.string().max(120).optional(),
   emergencyAvailable: z.boolean().optional(),
+  portfolioUrls: z.array(z.string().url()).max(10).optional(),
 });
 
 export async function PATCH(request: Request, { params }: { params: Promise<{ id: string }> }) {
@@ -42,6 +43,24 @@ export async function PATCH(request: Request, { params }: { params: Promise<{ id
     if (body.minCalloutFee !== undefined) patch.min_callout_fee = body.minCalloutFee;
     if (body.businessHours !== undefined) patch.business_hours = body.businessHours;
     if (body.emergencyAvailable !== undefined) patch.emergency_available = body.emergencyAvailable;
+
+    if (body.portfolioUrls !== undefined) {
+      const { data: row } = await (supabase
+        ? supabase.from("service_providers").select("listing_tier, featured").eq("id", id).maybeSingle()
+        : { data: null });
+      const tier = (row as { listing_tier?: string; featured?: boolean } | null)?.listing_tier;
+      const featured = (row as { featured?: boolean } | null)?.featured;
+      const { portfolioLimitForTier } = await import("@/lib/plan-benefits");
+      const { isFeaturedTier } = await import("@/lib/schemas/db/normalize");
+      const limit = isFeaturedTier(tier) || featured ? portfolioLimitForTier(tier as "free" | "featured" | "premium") : 0;
+      if (limit === 0 && body.portfolioUrls.length > 0) {
+        return NextResponse.json(
+          { error: "Upgrade to Featured to add portfolio photos" },
+          { status: 403 }
+        );
+      }
+      patch.portfolio_urls = body.portfolioUrls.slice(0, limit);
+    }
 
     const result = await updateProviderOwner(id, user.id, patch);
     if (!result.ok) {
