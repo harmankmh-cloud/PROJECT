@@ -40,15 +40,15 @@ select policyname, qual from pg_policies where tablename = 'bookings';
 -- qual must be (auth.uid() = user_id)
 ```
 
-## Email / auth (same as RateLocal — Resend SMTP)
+## Email / auth (separate Supabase from RateLocal)
 
-Supabase’s built-in email hits **~2–4 emails/hour**. RateLocal signup was fixed with **Resend SMTP** in Supabase (not in Vercel).
+ServeLocal uses Supabase project **`avytxgfkncpacqewnrvz`** (TRADELOCAL) — **not** RateLocal’s database.
 
-- **Same Supabase project** → if Resend SMTP is already on for RateLocal, ServeLocal uses it too.
-- **Homeowners & tradies** can sign up at `/signup` (optional — guests can still post jobs).
-- **Admin** uses the same `/login`; admins are redirected to `/admin` via `ADMIN_EMAILS`.
+- Configure **Resend SMTP** on the TRADELOCAL project (see **`SMTP_SETUP.md`**).
+- Homeowners & pros sign up at `/signup` or `/signup/pro` (guests can still post jobs without login).
+- Admin uses `/login`; admins go to `/admin` via `ADMIN_EMAILS`.
 
-Full steps: **`SMTP_SETUP.md`** (this folder) and **`reviewflow/SMTP_SETUP.md`** (RateLocal — same Resend setup).
+Ops map: **`docs/SERVELOCAL_SUPABASE_SPLIT.md`**
 
 Add redirect URLs in Supabase for ServeLocal:
 

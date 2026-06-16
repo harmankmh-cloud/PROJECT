@@ -7,8 +7,10 @@
  *   SUPABASE_ACCESS_TOKEN=sbp_... node servelocal/scripts/harden-supabase-auth.mjs
  *
  * Optional:
- *   SUPABASE_PROJECT_REF — defaults to avytxgfkncpacqewnrvz (ServeLocal TRADELOCAL)
- *   SUPABASE_SITE_URL — defaults to https://www.servelocal.ca (use https://greetq.com for GreetQ)
+ *   SUPABASE_PROJECT_REF — defaults to avytxgfkncpacqewnrvz (ServeLocal TRADELOCAL only)
+ *   SUPABASE_SITE_URL — defaults to https://www.servelocal.ca
+ *
+ * Never run with RateLocal ref unless SUPABASE_SITE_URL=https://ratelocal.ca and RateLocal-only redirects.
  *   AUTH_DB_CONN_PERCENTAGE — defaults to 15 (percentage of Postgres max_connections)
  */
 

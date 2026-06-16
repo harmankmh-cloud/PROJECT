@@ -27,3 +27,4 @@ tools/**/*.log
 routemax/node_modules/
 routemax/dist/
 routemax/tsconfig.tsbuildinfo
+.vercel
