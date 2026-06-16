@@ -6,10 +6,13 @@ import { createClient } from "@/lib/supabase/server";
 export async function GET(request: Request) {
   const { searchParams, origin } = new URL(request.url);
   const code = searchParams.get("code");
+  const tokenHash = searchParams.get("token_hash");
+  const type = searchParams.get("type");
   const next = searchParams.get("next") || "/dashboard";
 
+  const supabase = await createClient();
+
   if (code) {
-    const supabase = await createClient();
     const { data, error } = await supabase.auth.exchangeCodeForSession(code);
     if (!error && data.user) {
       try {
@@ -26,6 +29,13 @@ export async function GET(request: Request) {
         );
       }
       return NextResponse.redirect(`${origin}${next}`);
+    }
+  }
+
+  if (tokenHash && type === "signup") {
+    const { error } = await supabase.auth.verifyOtp({ type: "signup", token_hash: tokenHash });
+    if (!error) {
+      return NextResponse.redirect(`${origin}/login?confirmed=1`);
     }
   }
 

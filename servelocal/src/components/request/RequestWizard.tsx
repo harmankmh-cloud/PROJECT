@@ -26,6 +26,15 @@ const STEPS = [
   "Quotes incoming!",
 ] as const;
 
+const STEP_HINTS = [
+  "Pick the trade you need — plumber, electrician, cleaner, etc.",
+  "A few details help pros quote accurately. Include size, materials, or urgency.",
+  "We match pros in your city. Address helps them know travel time.",
+  "Optional — pros will reach out to confirm timing.",
+  "Pros may call or text you. Email is optional but helps you track the request.",
+  "",
+] as const;
+
 const URGENCY_OPTIONS = [
   { value: "asap", label: "ASAP" },
   { value: "this_week", label: "This week" },
@@ -41,6 +50,7 @@ type Props = {
   defaultEmail?: string;
   defaultDescription?: string;
   defaultPreferredDate?: string;
+  isLoggedIn?: boolean;
 };
 
 export function RequestWizard({
@@ -52,6 +62,7 @@ export function RequestWizard({
   defaultEmail = "",
   defaultDescription = "",
   defaultPreferredDate = "",
+  isLoggedIn = false,
 }: Props) {
   const safeCategories = useMemo(() => resolveCategories(categories), [categories]);
   const [step, setStep] = useState(0);
@@ -153,6 +164,9 @@ export function RequestWizard({
           />
         </div>
         <p className="mt-2 text-sm font-medium text-foreground">{STEPS[step]}</p>
+        {step < 5 && STEP_HINTS[step] && (
+          <p className="mt-1 text-xs text-muted">{STEP_HINTS[step]}</p>
+        )}
       </div>
 
       <AnimatePresence mode="wait">
@@ -259,6 +273,22 @@ export function RequestWizard({
 
           {step === 4 && (
             <div className="space-y-4">
+              <div className="rounded-xl border border-border bg-background/50 p-4 text-sm">
+                <p className="font-semibold text-foreground">Review your request</p>
+                <ul className="mt-2 space-y-1 text-muted">
+                  <li>
+                    <span className="text-foreground">Service:</span>{" "}
+                    {safeCategories.find((c) => c.slug === categorySlug)?.name || categorySlug}
+                  </li>
+                  <li>
+                    <span className="text-foreground">City:</span> {cityName(citySlug)}
+                  </li>
+                  <li>
+                    <span className="text-foreground">Urgency:</span>{" "}
+                    {URGENCY_OPTIONS.find((o) => o.value === urgency)?.label}
+                  </li>
+                </ul>
+              </div>
               <input
                 value={customerName}
                 onChange={(e) => setCustomerName(e.target.value)}
@@ -324,6 +354,11 @@ export function RequestWizard({
                       </p>
                     </div>
                   )}
+                  <ol className="mx-auto mt-6 max-w-sm list-decimal space-y-2 pl-5 text-left text-sm text-muted">
+                    <li>Keep your phone nearby — pros usually respond within a few hours.</li>
+                    <li>Compare quotes and ask about licence, timeline, and warranty.</li>
+                    <li>Agree on price direct with the pro you choose — no platform fees.</li>
+                  </ol>
                   {matches.length > 0 && (
                     <ul className="mt-6 space-y-3 text-left">
                       {matches.map((p) => (
@@ -348,6 +383,22 @@ export function RequestWizard({
                       browse top-rated pros
                     </Link>
                   </p>
+                  {isLoggedIn ? (
+                    <div className="mt-6 flex flex-col gap-3 sm:flex-row sm:justify-center">
+                      <Link
+                        href="/dashboard/jobs"
+                        className="inline-flex items-center justify-center rounded-full bg-primary px-6 py-3 text-sm font-semibold text-white"
+                      >
+                        View my jobs
+                      </Link>
+                      <Link
+                        href="/dashboard"
+                        className="inline-flex items-center justify-center rounded-full border border-border px-6 py-3 text-sm font-semibold text-foreground"
+                      >
+                        Go to dashboard
+                      </Link>
+                    </div>
+                  ) : null}
                 </>
               )}
             </div>

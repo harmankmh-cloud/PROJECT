@@ -9,6 +9,7 @@ import {
   proDisplayPrice,
   RATELOCAL_CHECKOUT_NOTE,
   RATELOCAL_PRO_ANNUAL_PER_MONTH,
+  RATELOCAL_PRO_MONTHLY,
 } from "@/lib/pricing-display";
 import { PRICING as BILLING } from "@/lib/plans";
 
@@ -18,7 +19,7 @@ const TIERS = [
     monthly: 0,
     annual: 0,
     description: "Perfect for new businesses",
-    features: ["Claim your listing", "Respond to reviews", "Basic analytics"],
+    features: ["Claim your listing", "Respond to reviews", "Basic analytics (page views + conversion)"],
     cta: "Start Free",
     href: "/signup",
     popular: false,
@@ -31,7 +32,8 @@ const TIERS = [
     features: [
       "AI review response suggestions",
       "Review request campaigns (500/mo)",
-      "Advanced analytics + competitor tracking",
+      "Advanced analytics (30-day trends)",
+      "AI owner response drafts",
       "Remove ads from profile",
       "Priority listing in search",
     ],
@@ -67,7 +69,7 @@ export function PricingPageContent() {
           Simple pricing for local businesses
         </h1>
         <p className="mx-auto mt-4 max-w-xl text-muted">
-          Join 150,000+ businesses building trust on RateLocal
+          Simple pricing for BC local businesses — Pro is ${RATELOCAL_PRO_MONTHLY}/mo
         </p>
         <div className="mt-8 inline-flex items-center gap-3 rounded-full border border-border bg-surface p-1">
           <button

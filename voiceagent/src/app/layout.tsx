@@ -61,6 +61,19 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
       lang="en"
       className={`${GeistSans.variable} ${inter.variable} ${GeistMono.variable} scroll-smooth`}
     >
+      <head>
+        <style
+          dangerouslySetInnerHTML={{
+            __html: `
+              html, body { background:#0a0a0a !important; color:#fafafa !important; }
+              h1, h2, h3, h4, p, a, button, li, span, label { color: inherit; }
+              .text-text, h1, h2 { color: #fafafa; }
+              .text-muted { color: #a1a1aa; }
+              .gradient-text { color: #0d9488; }
+            `,
+          }}
+        />
+      </head>
       <body className="min-h-full bg-bg font-sans text-text antialiased">
         <MarketingProviders>
           {children}

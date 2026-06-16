@@ -39,7 +39,7 @@ export async function POST(request: NextRequest) {
       contained: false,
     })
     .eq("twilio_call_sid", callSid)
-    .select("id")
+    .select("id, to_number")
     .maybeSingle();
 
   if (call?.id && transcripts?.length) {
@@ -54,13 +54,14 @@ export async function POST(request: NextRequest) {
   const client = getTwilioClient();
   if (client && transferPhone && callSid) {
     const appUrl = getPublicAppUrl(request);
-    const safeFrom = escapeXml(String(from || ""));
+    const callerId = call?.to_number || process.env.TWILIO_PHONE_NUMBER || from;
+    const safeCallerId = escapeXml(String(callerId || ""));
     const safePhone = escapeXml(String(transferPhone));
     const statusUrl = escapeXml(`${appUrl}/api/twilio/status`);
     const twiml = `<?xml version="1.0" encoding="UTF-8"?>
 <Response>
   <Say voice="Polly.Joanna">Please hold while I connect you.</Say>
-  <Dial callerId="${safeFrom}" action="${statusUrl}">
+  <Dial callerId="${safeCallerId}" action="${statusUrl}">
     <Number>${safePhone}</Number>
   </Dial>
 </Response>`;

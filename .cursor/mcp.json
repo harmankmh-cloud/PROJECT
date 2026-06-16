@@ -11,6 +11,15 @@
     "datadog": {
       "url": "https://mcp.datadoghq.com/api/unstable/mcp-server/mcp?referrer_ide=cursor-project&toolsets=core,visualizations"
     },
+    "supabase-greetq": {
+      "url": "https://mcp.supabase.com/mcp?project_ref=lrihhjjxmxixppmrzvva"
+    },
+    "supabase-ratelocal": {
+      "url": "https://mcp.supabase.com/mcp?project_ref=otnddwopphhxstteqizw"
+    },
+    "supabase-servelocal": {
+      "url": "https://mcp.supabase.com/mcp?project_ref=avytxgfkncpacqewnrvz"
+    },
     "supabase": {
       "command": "npx",
       "args": [

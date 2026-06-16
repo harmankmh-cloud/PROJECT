@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import { redirect } from "next/navigation";
 import { AuthLayout } from "@/components/auth/AuthLayout";
 import { RolePicker } from "@/components/auth/RolePicker";
+import { resolveUserRole } from "@/lib/auth-routing";
 import { pageMetadata } from "@/lib/seo";
 import { getServerAuthUser } from "@/lib/supabase/get-server-user";
 import { isSupabaseConfigured } from "@/lib/supabase/config";
@@ -15,21 +16,15 @@ export const metadata: Metadata = {
   robots: { index: false, follow: false },
 };
 
-export default async function SignupPage({
-  searchParams,
-}: {
-  searchParams: Promise<{ notice?: string }>;
-}) {
-  const params = await searchParams;
-  const chooseTypeNotice =
-    params.notice === "choose_account_type"
-      ? "We could not tell if this account is a homeowner or pro. Pick the right signup path below."
-      : null;
-
+export default async function SignupPage() {
   if (isSupabaseConfigured()) {
     try {
       const user = await getServerAuthUser();
-      if (user) redirect("/auth/after-login");
+      if (user) {
+        const role = await resolveUserRole(user);
+        if (role) redirect("/auth/after-login");
+        redirect("/auth/choose-role");
+      }
     } catch {
       // Render signup form
     }
@@ -40,11 +35,6 @@ export default async function SignupPage({
       title="Join ServeLocal"
       subtitle="Choose how you'll use the platform — homeowner or contractor."
     >
-      {chooseTypeNotice ? (
-        <p className="mb-4 rounded-xl border border-amber-500/30 bg-amber-500/10 px-4 py-3 text-sm text-amber-100">
-          {chooseTypeNotice}
-        </p>
-      ) : null}
       <RolePicker />
     </AuthLayout>
   );

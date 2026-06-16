@@ -11,7 +11,7 @@ alwaysApply: true
 |---------|-------------|----------------|-------------------|
 | **GreetQ** | `voiceagent/` | `voiceagent` | https://greetq.com |
 | **RateLocal** | `reviewflow/` | `project` | https://ratelocal.ca |
-| **ServeLocal** | `servelocal/` | (separate) | https://www.servelocal.ca |
+| **ServeLocal** | `servelocal/` | `project-pqhe` | https://www.servelocal.ca |
 
 Vercel team: `harmankmh-1059s-projects`
 
@@ -21,8 +21,21 @@ Vercel team: `harmankmh-1059s-projects`
 |-----|-------------|-------------|
 | **GreetQ** | `lrihhjjxmxixppmrzvva` | `https://lrihhjjxmxixppmrzvva.supabase.co` |
 | **RateLocal** | `otnddwopphhxstteqizw` | `https://otnddwopphhxstteqizw.supabase.co` |
+| **ServeLocal** | `avytxgfkncpacqewnrvz` (TRADELOCAL) | `https://avytxgfkncpacqewnrvz.supabase.co` |
 
 Required env vars (each Vercel project): `NEXT_PUBLIC_SUPABASE_URL`, `NEXT_PUBLIC_SUPABASE_ANON_KEY`, `SUPABASE_SERVICE_ROLE_KEY`.
+
+## Supabase MCP (Cursor Cloud Agents)
+
+Two MCP entries — one per Supabase **project** (not per app). Add each separately in **Settings → Tools & MCP → Cloud** (one server per modal; do not paste both in one box).
+
+| MCP name | Covers | `project_ref` |
+|----------|--------|---------------|
+| `supabase-greetq` | GreetQ | `lrihhjjxmxixppmrzvva` |
+| `supabase-ratelocal` | RateLocal | `otnddwopphhxstteqizw` |
+| `supabase-servelocal` | ServeLocal (TRADELOCAL) | `avytxgfkncpacqewnrvz` |
+
+Config shape per entry: `{ "url": "https://mcp.supabase.com/mcp?project_ref=<ref>" }`. Repo copy: `.cursor/mcp.json`. Sign in to Supabase when Cursor prompts. Optional: append `&read_only=true` for safer dev queries.
 
 Verify Supabase works by hitting production APIs — do not assume broken if Vercel UI glitches.
 
@@ -30,8 +43,8 @@ Verify Supabase works by hitting production APIs — do not assume broken if Ver
 
 Daily sends are **not** configured in Vercel UI. Activepieces calls:
 
-- GreetQ: `POST https://greetq.com/api/make/outreach/daily` — header `X-GreetQ-Secret: greetq-marketing-webhook-2026`
-- RateLocal: `POST https://ratelocal.ca/api/make/outreach/daily` — header `X-RateLocal-Secret: ratelocal-marketing-webhook-2026`
+- GreetQ: `POST https://greetq.com/api/make/outreach/daily` — header `X-GreetQ-Secret: <ACTIVEPIECES_MARKETING_WEBHOOK_SECRET>`
+- RateLocal: `POST https://ratelocal.ca/api/make/outreach/daily` — header `X-RateLocal-Secret: <ACTIVEPIECES_MARKETING_WEBHOOK_SECRET>`
 
 Schedule (Pacific, weekdays): GreetQ **11:00**, RateLocal **14:00**.
 

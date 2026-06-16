@@ -20,11 +20,18 @@ function isUnconfirmedEmailError(message: string) {
   return lower.includes("email not confirmed") || lower.includes("not confirmed");
 }
 
-export function LoginFormNew({ initialError }: { initialError?: string | null }) {
+export function LoginFormNew({
+  initialError,
+  asRole,
+}: {
+  initialError?: string | null;
+  asRole?: "homeowner" | "pro";
+}) {
   const [error, setError] = useState<string | null>(initialError ?? null);
   const [pendingEmail, setPendingEmail] = useState<string | null>(null);
   const [resetState, setResetState] = useState<EmailActionState>("idle");
   const [confirmState, setConfirmState] = useState<EmailActionState>("idle");
+  const [selectedRole, setSelectedRole] = useState<"homeowner" | "pro" | null>(asRole ?? null);
 
   const {
     register,
@@ -37,7 +44,13 @@ export function LoginFormNew({ initialError }: { initialError?: string | null })
     return <p className="text-sm text-red-400">Add Supabase keys to .env.local and restart.</p>;
   }
 
-  async function onSubmit(data: LoginData) {
+  async function onSubmit(data: LoginData, roleOverride?: "homeowner" | "pro") {
+    const role = roleOverride ?? selectedRole ?? asRole;
+    if (!role) {
+      setError("Choose homeowner or pro before signing in.");
+      return;
+    }
+
     setError(null);
     setPendingEmail(null);
     setConfirmState("idle");
@@ -56,7 +69,7 @@ export function LoginFormNew({ initialError }: { initialError?: string | null })
       return;
     }
 
-    await redirectAfterAuth("/auth/after-login");
+    await redirectAfterAuth(`/auth/after-login?as=${role}`);
   }
 
   async function handleForgot() {
@@ -71,9 +84,12 @@ export function LoginFormNew({ initialError }: { initialError?: string | null })
     setError(null);
     setResetState("sending");
     const supabase = createClient();
-    const confirmUrl = authConfirmUrl(window.location.origin);
+    const role = selectedRole ?? asRole;
     const { error: resetError } = await supabase.auth.resetPasswordForEmail(email, {
-      redirectTo: `${confirmUrl}?next=/dashboard/settings`,
+      redirectTo: authConfirmUrl(window.location.origin, {
+        as: role,
+        next: "/reset-password",
+      }),
     });
 
     if (resetError) {
@@ -97,11 +113,12 @@ export function LoginFormNew({ initialError }: { initialError?: string | null })
     setError(null);
     setConfirmState("sending");
     const supabase = createClient();
+    const role = selectedRole ?? asRole;
     const { error: resendError } = await supabase.auth.resend({
       type: "signup",
       email,
       options: {
-        emailRedirectTo: authConfirmUrl(window.location.origin),
+        emailRedirectTo: authConfirmUrl(window.location.origin, { as: role }),
       },
     });
 
@@ -123,7 +140,35 @@ export function LoginFormNew({ initialError }: { initialError?: string | null })
     initialError?.includes("expired");
 
   return (
-    <form onSubmit={handleSubmit(onSubmit)} className="space-y-4">
+    <form onSubmit={handleSubmit((data) => onSubmit(data))} className="space-y-4">
+      {!asRole ? (
+        <div className="grid grid-cols-2 gap-3">
+          <button
+            type="button"
+            onClick={() => setSelectedRole("homeowner")}
+            className={`rounded-xl border px-3 py-3 text-left text-sm ${
+              selectedRole === "homeowner"
+                ? "border-primary bg-primary/10 text-slate-50"
+                : "border-slate-700 text-slate-400"
+            }`}
+          >
+            <span className="block font-semibold text-slate-50">Homeowner</span>
+            <span className="mt-1 block text-xs">Post jobs &amp; track quotes</span>
+          </button>
+          <button
+            type="button"
+            onClick={() => setSelectedRole("pro")}
+            className={`rounded-xl border px-3 py-3 text-left text-sm ${
+              selectedRole === "pro"
+                ? "border-primary bg-primary/10 text-slate-50"
+                : "border-slate-700 text-slate-400"
+            }`}
+          >
+            <span className="block font-semibold text-slate-50">Pro</span>
+            <span className="mt-1 block text-xs">Contractor dashboard</span>
+          </button>
+        </div>
+      ) : null}
       <div>
         <label className="font-label mb-1.5 block text-slate-400">Email</label>
         <Input type="email" {...register("email")} autoComplete="email" />
@@ -142,7 +187,7 @@ export function LoginFormNew({ initialError }: { initialError?: string | null })
         <p className="text-sm text-green-400">Confirmation email sent — check your inbox once.</p>
       )}
       <Button type="submit" className="w-full" loading={isSubmitting} pill>
-        Sign in
+        {selectedRole === "pro" || asRole === "pro" ? "Sign in as pro" : selectedRole === "homeowner" || asRole === "homeowner" ? "Sign in as homeowner" : "Sign in"}
       </Button>
       <button
         type="button"

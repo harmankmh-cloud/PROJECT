@@ -33,8 +33,6 @@ Audit: `cd voiceagent && node scripts/dns-audit.mjs --skip-vercel`
 
 SSL/TLS mode: **Full (strict)**.
 
-SSL/TLS mode: **Full (strict)**.
-
 ## Supabase Auth
 
 Dashboard → Authentication → URL Configuration:

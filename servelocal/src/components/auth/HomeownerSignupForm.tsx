@@ -75,7 +75,7 @@ export function HomeownerSignupForm() {
         body: JSON.stringify({ role: "homeowner", display_name: data.name, phone: null }),
       });
 
-      await redirectAfterAuth("/auth/after-login");
+      await redirectAfterAuth("/auth/after-login?as=homeowner");
     });
 
     if (ran === "skipped") return;

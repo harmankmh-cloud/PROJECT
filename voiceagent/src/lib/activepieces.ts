@@ -1,4 +1,5 @@
 import type { CallIntelligence } from "./intelligence";
+import { envSecret } from "@/lib/webhook-secrets";
 
 type WebhookPayload = Record<string, unknown>;
 
@@ -37,8 +38,8 @@ export type SupportLeadPayload = {
 };
 
 export async function notifyActivepiecesSupportLead(payload: SupportLeadPayload): Promise<void> {
-  const secret =
-    process.env.ACTIVEPIECES_SUPPORT_WEBHOOK_SECRET?.trim() || "greetq-support-webhook-2026";
+  const secret = envSecret("ACTIVEPIECES_SUPPORT_WEBHOOK_SECRET");
+  if (!secret) return;
 
   await postActivepiecesWebhook(process.env.ACTIVEPIECES_SUPPORT_WEBHOOK_URL, secret, {
     ...payload,
@@ -54,8 +55,8 @@ export type SignupPayload = {
 };
 
 export async function notifyActivepiecesSignup(payload: SignupPayload): Promise<void> {
-  const secret =
-    process.env.ACTIVEPIECES_SIGNUP_WEBHOOK_SECRET?.trim() || "greetq-signup-webhook-2026";
+  const secret = envSecret("ACTIVEPIECES_SIGNUP_WEBHOOK_SECRET");
+  if (!secret) return;
 
   await postActivepiecesWebhook(process.env.ACTIVEPIECES_SIGNUP_WEBHOOK_URL, secret, {
     ...payload,
@@ -74,8 +75,8 @@ export type CallCompletedPayload = {
 export async function notifyActivepiecesCallCompleted(
   payload: CallCompletedPayload
 ): Promise<void> {
-  const secret =
-    process.env.ACTIVEPIECES_CALL_WEBHOOK_SECRET?.trim() || "greetq-call-webhook-2026";
+  const secret = envSecret("ACTIVEPIECES_CALL_WEBHOOK_SECRET");
+  if (!secret) return;
 
   await postActivepiecesWebhook(process.env.ACTIVEPIECES_CALL_WEBHOOK_URL, secret, {
     ...payload,
@@ -90,8 +91,8 @@ export type MarketingLeadPayload = {
 };
 
 export async function notifyActivepiecesMarketingLead(payload: MarketingLeadPayload): Promise<void> {
-  const secret =
-    process.env.ACTIVEPIECES_MARKETING_WEBHOOK_SECRET?.trim() || "greetq-marketing-webhook-2026";
+  const secret = envSecret("ACTIVEPIECES_MARKETING_WEBHOOK_SECRET");
+  if (!secret) return;
 
   await postActivepiecesWebhook(process.env.ACTIVEPIECES_MARKETING_WEBHOOK_URL, secret, {
     ...payload,

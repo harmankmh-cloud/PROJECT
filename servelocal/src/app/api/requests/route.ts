@@ -5,6 +5,19 @@ import { normalizePhone, zodFieldError } from "@/lib/form-utils";
 import { createServiceRequest, getServiceCategories, notifyProsForJobRequest } from "@/lib/data";
 import { createClient } from "@/lib/supabase/server";
 
+const rateLimit = new Map<string, number[]>();
+const MAX_REQUESTS_PER_HOUR = 5;
+
+function isRateLimited(ip: string): boolean {
+  const now = Date.now();
+  const windowMs = 60 * 60 * 1000;
+  const hits = (rateLimit.get(ip) ?? []).filter((t) => now - t < windowMs);
+  if (hits.length >= MAX_REQUESTS_PER_HOUR) return true;
+  hits.push(now);
+  rateLimit.set(ip, hits);
+  return false;
+}
+
 const citySlugs = TRADE_CITIES.map((c) => c.slug);
 
 const bodySchema = z.object({
@@ -21,6 +34,11 @@ const bodySchema = z.object({
 
 export async function POST(request: Request) {
   try {
+    const ip = request.headers.get("x-forwarded-for")?.split(",")[0]?.trim() || "unknown";
+    if (isRateLimited(ip)) {
+      return NextResponse.json({ error: "Too many requests. Try again in an hour." }, { status: 429 });
+    }
+
     const body = bodySchema.parse(await request.json());
     const categories = await getServiceCategories();
     if (!categories.some((c) => c.slug === body.categorySlug)) {
