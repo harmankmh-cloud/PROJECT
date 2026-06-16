@@ -42,9 +42,9 @@ For `CRON_SECRET`: run `openssl rand -hex 32`, add to Vercel. Vercel cron sends 
 
 ## Supabase auth email (signup / password reset)
 
-**Separate from above.** If RateLocal signup emails already work, you’re done — same Supabase project.
+Configure on **TRADELOCAL** (`avytxgfkncpacqewnrvz`) — not RateLocal’s Supabase.
 
-If not: Supabase → **Authentication** → **SMTP** → use `smtp.resend.com`, user `resend`, password = same `re_...` key.
+Supabase → **Authentication** → **SMTP** → `smtp.resend.com`, user `resend`, password = your `re_...` key.
 
 Full steps: `SMTP_SETUP.md`
 

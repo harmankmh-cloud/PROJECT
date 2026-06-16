@@ -1,5 +1,5 @@
--- ServeLocal — local service directory (IndiaMART-style contacts for BC)
--- Run in Supabase SQL Editor (can use same project as RateLocal)
+-- ServeLocal — local service directory (BC trades)
+-- Run in Supabase SQL Editor on TRADELOCAL only (`avytxgfkncpacqewnrvz`) — NOT RateLocal
 
 create table if not exists service_categories (
   id uuid primary key default gen_random_uuid(),

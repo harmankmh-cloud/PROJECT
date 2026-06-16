@@ -62,7 +62,9 @@ Manual (one real browser session):
 
 See `docs/AUTH_QA.md` for full checklist.
 
-## Supabase (TRADELOCAL `avytxgfkncpacqewnrvz`)
+## Supabase (TRADELOCAL `avytxgfkncpacqewnrvz` only)
+
+**Split from RateLocal (2026-06-16):** ServeLocal must **not** use RateLocal’s project (`otnddwopphhxstteqizw`). See `docs/SERVELOCAL_SUPABASE_SPLIT.md`.
 
 - `site_url`: `https://www.servelocal.ca`  
 - Redirect allowlist: confirm, callback, after-login (www + apex + localhost:3001)  

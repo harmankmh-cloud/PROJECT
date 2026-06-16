@@ -42,7 +42,7 @@
 | Stuck after confirm | Supabase redirect allowlist must include `/auth/confirm`, `/auth/callback`, `/auth/after-login` |
 | Pro can't see job PII | By design after migration 006 — leads via server API with tier masking |
 | Premium checkout blocked | Premium is waitlist; Featured tier only |
-| Wrong Supabase project | ServeLocal must use `avytxgfkncpacqewnrvz`, not RateLocal ref |
+| Wrong Supabase project | ServeLocal **must** use `avytxgfkncpacqewnrvz` (TRADELOCAL), **never** RateLocal `otnddwopphhxstteqizw` — see `docs/SERVELOCAL_SUPABASE_SPLIT.md` |
 
 Auth checklist: `servelocal/docs/AUTH_QA.md` · Smoke: `node servelocal/scripts/auth-e2e-smoke.mjs`
 

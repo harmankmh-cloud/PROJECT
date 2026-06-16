@@ -28,7 +28,13 @@ GreetQ can share a Supabase project with RateLocal or use its own.
 
 ## ServeLocal (servelocal)
 
-**Must be a separate project.** Run in order:
+**Must be TRADELOCAL (`avytxgfkncpacqewnrvz`).** Do not run ServeLocal SQL on RateLocal.
+
+If tables were leaked onto RateLocal, apply `reviewflow/supabase/migrations/20260616193000_remove_servelocal_leak.sql`.
+
+Split runbook: `docs/SERVELOCAL_SUPABASE_SPLIT.md`
+
+Run in order on **TRADELOCAL**:
 
 1. `servelocal.sql` → `premium.sql` → `suggestions.sql` → `guest-access.sql`
 2. `user-accounts.sql` → `bookings.sql` → `complete-features.sql`
