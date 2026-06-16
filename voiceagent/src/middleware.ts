@@ -12,8 +12,38 @@ function redirectLogin(request: NextRequest) {
   return NextResponse.redirect(new URL("/login", request.url));
 }
 
+/** Pin first page load to this deployment — reduces server-action skew after deploys. */
+function pinDeploymentVersion(request: NextRequest, response: NextResponse) {
+  const deploymentId = process.env.VERCEL_DEPLOYMENT_ID;
+  if (!deploymentId || request.cookies.get("__vdpl")) return;
+
+  response.cookies.set("__vdpl", deploymentId, {
+    path: "/",
+    httpOnly: true,
+    sameSite: "strict",
+    secure: process.env.NODE_ENV === "production",
+  });
+}
+
+function needsAuthMiddleware(pathname: string) {
+  return (
+    pathname.startsWith("/dashboard") ||
+    pathname.startsWith("/admin") ||
+    AUTH_PATHS.some((p) => pathname.startsWith(p)) ||
+    pathname.startsWith("/api/") ||
+    PUBLIC_PATHS.includes(pathname) ||
+    PUBLIC_ANY_USER.includes(pathname)
+  );
+}
+
 export async function middleware(request: NextRequest) {
   let response = NextResponse.next({ request: { headers: request.headers } });
+  pinDeploymentVersion(request, response);
+
+  const pathname = request.nextUrl.pathname;
+  if (!needsAuthMiddleware(pathname)) {
+    return response;
+  }
 
   let url: string;
   let key: string;
@@ -21,7 +51,6 @@ export async function middleware(request: NextRequest) {
     url = getSupabaseUrl();
     key = getSupabaseAnonKey();
   } catch {
-    const pathname = request.nextUrl.pathname;
     if (pathname.startsWith("/api/internal/")) {
       if (!authorizedInternalEdge(request)) {
         return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
@@ -52,6 +81,7 @@ export async function middleware(request: NextRequest) {
         cookiesToSet.forEach(({ name, value, options }) =>
           response.cookies.set(name, value, options)
         );
+        pinDeploymentVersion(request, response);
       },
     },
   });
@@ -59,8 +89,6 @@ export async function middleware(request: NextRequest) {
   const {
     data: { user },
   } = await supabase.auth.getUser();
-
-  const pathname = request.nextUrl.pathname;
 
   if (pathname.startsWith("/api/internal/")) {
     if (!authorizedInternalEdge(request)) {
@@ -111,14 +139,6 @@ export async function middleware(request: NextRequest) {
 
 export const config = {
   matcher: [
-    "/dashboard/:path*",
-    "/admin/:path*",
-    "/onboarding",
-    "/demo",
-    "/login",
-    "/signup",
-    "/forgot-password",
-    "/reset-password",
-    "/api/:path*",
+    "/((?!_next/static|_next/image|favicon.ico|icon|opengraph-image|monitoring|.*\\.(?:svg|png|jpg|jpeg|gif|webp|ico)$).*)",
   ],
 };

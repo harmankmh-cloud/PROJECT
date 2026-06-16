@@ -1,4 +1,3 @@
-import type { Metadata } from "next";
 import Link from "next/link";
 import { LandingFooter } from "@/components/landing/LandingFooter";
 import { LandingNavbar } from "@/components/landing/LandingNavbar";
@@ -9,13 +8,14 @@ import { JsonLd } from "@/components/seo/JsonLd";
 import { FAQ_ITEMS } from "@/lib/marketing-content";
 import { PLANS } from "@/lib/plans";
 import { BRAND } from "@/lib/brand";
+import { marketingMetadata } from "@/lib/seo/marketing-metadata";
 
-export const metadata: Metadata = {
+export const metadata = marketingMetadata({
   title: "Pricing",
   description:
     "GreetQ pricing: Starter $79, Growth $199, Pro $399, and Enterprise AI phone agent plans. Flat monthly with minutes included.",
-  alternates: { canonical: "/pricing" },
-};
+  path: "/pricing",
+});
 
 function pricingJsonLd() {
   const siteUrl = `https://${BRAND.domain}`;

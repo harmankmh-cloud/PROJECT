@@ -5,7 +5,7 @@ export const LANDING_COPY = {
   hero: {
     eyebrow: "Your receptionist never calls in sick",
     headline: "Canadian AI phone agents",
-    wordSwap: ["that book appointments.", "while you work.", "24/7 — no missed calls."] as const,
+    wordSwap: ["that book appointments.", " while you work.", " 24/7 — no missed calls."] as const,
     subhead:
       "GreetQ answers calls, books appointments, and greets every customer like a pro — so you don't have to.",
     ctaPrimary: "Start free trial",

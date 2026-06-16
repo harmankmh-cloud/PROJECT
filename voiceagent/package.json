@@ -7,6 +7,7 @@
     "build": "next build",
     "start": "next start -p 3002",
     "lint": "eslint",
+    "validate:css": "node scripts/validate-css.mjs",
     "orchestrator": "cd orchestrator && npm run dev",
     "orchestrator:build": "cd orchestrator && npm run build",
     "dev:proxy": "node scripts/dev-proxy.mjs",

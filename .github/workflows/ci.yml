@@ -20,6 +20,7 @@ jobs:
           cache: npm
           cache-dependency-path: voiceagent/package-lock.json
       - run: npm ci
+      - run: npm run validate:css
       - run: npm run lint --if-present
       - run: npm run build
       - name: Orchestrator build
