@@ -77,3 +77,11 @@ SSL/TLS mode: **Full (strict)**.
 1. Wait for propagation (usually minutes; up to 48h globally).
 2. Re-run audits — misconfigured domains should flip to OK.
 3. For GreetQ, confirm `NEXT_PUBLIC_APP_URL=https://greetq.com` in Vercel env (see `voiceagent/docs/GREETQ-DEPLOY.md`).
+
+## Vercel API (optional)
+
+With `VERCEL_TOKEN`, domains and redirects can be managed via API (already applied for GreetQ):
+
+- Add domain to team: `POST /v5/domains`
+- Attach to project: `POST /v10/projects/{id}/domains`
+- Set redirect: `PATCH /v9/projects/{id}/domains/{name}` with `redirect` + `redirectStatusCode: 308`
