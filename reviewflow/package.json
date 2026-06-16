@@ -9,6 +9,8 @@
     "build": "next build",
     "start": "next start -p 3000",
     "lint": "eslint",
+    "test": "vitest run",
+    "test:watch": "vitest",
     "stripe:setup": "node scripts/stripe-setup.mjs",
     "stripe:check": "bash scripts/stripe-check.sh",
     "stripe:webhook": "bash scripts/stripe-webhook.sh",
@@ -51,6 +53,7 @@
     "eslint": "^9",
     "eslint-config-next": "16.2.6",
     "tailwindcss": "^4",
-    "typescript": "^5"
+    "typescript": "^5",
+    "vitest": "^3.2.6"
   }
 }

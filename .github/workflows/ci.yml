@@ -21,12 +21,15 @@ jobs:
           cache-dependency-path: voiceagent/package-lock.json
       - run: npm ci
       - run: npm run validate:css
+      - run: npx tsc --noEmit
       - run: npm run lint --if-present
+      - run: npm test
       - run: npm run build
-      - name: Orchestrator build
+      - name: Orchestrator type-check and build
         working-directory: voiceagent/orchestrator
         run: |
           npm ci
+          npx tsc --noEmit
           npm run build
 
   ratelocal:
@@ -43,7 +46,9 @@ jobs:
           cache: npm
           cache-dependency-path: reviewflow/package-lock.json
       - run: npm ci
+      - run: npx tsc --noEmit
       - run: npm run lint --if-present
+      - run: npm test
       - run: npm run build
 
   servelocal:
@@ -60,5 +65,7 @@ jobs:
           cache: npm
           cache-dependency-path: servelocal/package-lock.json
       - run: npm ci
+      - run: npx tsc --noEmit
       - run: npm run lint --if-present
+      - run: npm test
       - run: npm run build

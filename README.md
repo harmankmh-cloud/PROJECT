@@ -196,7 +196,7 @@ npm run start:static
 
 ```bash
 # RateLocal schema
-Suabase > SQL Editor > Run reviewflow/supabase/schema.sql
+Supabase > SQL Editor > Run reviewflow/supabase/schema.sql
 
 # GreetQ schema
 Supabase > SQL Editor > Run voiceagent/supabase/schema.sql

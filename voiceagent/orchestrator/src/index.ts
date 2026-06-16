@@ -42,9 +42,21 @@ function getWssValidationUrls(req: http.IncomingMessage, wsPath: string): string
 }
 
 function validateTwilioSignature(req: http.IncomingMessage, urls: string[]): boolean {
-  if (process.env.ORCHESTRATOR_SKIP_TWILIO_SIGNATURE === "true") {
+  if (
+    process.env.ORCHESTRATOR_SKIP_TWILIO_SIGNATURE === "true" &&
+    process.env.NODE_ENV !== "production"
+  ) {
     console.warn("ORCHESTRATOR_SKIP_TWILIO_SIGNATURE=true — skipping Twilio signature check");
     return true;
+  }
+
+  if (
+    process.env.ORCHESTRATOR_SKIP_TWILIO_SIGNATURE === "true" &&
+    process.env.NODE_ENV === "production"
+  ) {
+    console.error(
+      "ORCHESTRATOR_SKIP_TWILIO_SIGNATURE is set but ignored in production — verifying signature"
+    );
   }
 
   const authToken = process.env.TWILIO_AUTH_TOKEN;
