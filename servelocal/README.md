@@ -18,7 +18,9 @@ Open [http://localhost:3001](http://localhost:3001).
 
 ## Database setup
 
-1. Open your Supabase project SQL Editor
+**Supabase project:** ServeLocal uses its **own** project (`avytxgfkncpacqewnrvz` / TradeLocal) — not the RateLocal or GreetQ database.
+
+1. Open your ServeLocal Supabase project SQL Editor
 2. Run `supabase/servelocal.sql`
 3. Run `supabase/premium.sql` for reviews, verified badges, and paid tiers
 4. Run `supabase/suggestions.sql` for the feedback button
@@ -31,7 +33,7 @@ Open [http://localhost:3001](http://localhost:3001).
 
 **Shortcut (steps 6–7):** if `user_profiles` or `bookings` is missing, run `supabase/bootstrap-homeowner-dashboard.sql` once (after steps 1–5). It is idempotent.
 
-**Security migrations (after bootstrap):** run `supabase/migrations/004_schema_baseline.sql` then `005_pro_job_leads_rls.sql`. Verify bookings RLS with:
+**Security migrations (after bootstrap):** run `supabase/migrations/004_schema_baseline.sql`, `005_pro_job_leads_rls.sql`, then `006_remove_pro_job_pii_rls.sql`. Verify bookings RLS with:
 
 ```sql
 select policyname, qual from pg_policies where tablename = 'bookings';

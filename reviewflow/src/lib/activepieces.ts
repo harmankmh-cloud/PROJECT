@@ -14,8 +14,8 @@ export async function notifyActivepiecesReview(payload: ReviewWebhookPayload): P
   const url = process.env.ACTIVEPIECES_REVIEW_WEBHOOK_URL?.trim();
   if (!url) return;
 
-  const secret =
-    process.env.ACTIVEPIECES_WEBHOOK_SECRET?.trim() || "ratelocal-review-webhook-2026";
+  const secret = process.env.ACTIVEPIECES_WEBHOOK_SECRET?.trim();
+  if (!secret) return;
 
   try {
     const response = await fetch(url, {

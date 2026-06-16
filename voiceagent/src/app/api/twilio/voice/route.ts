@@ -1,4 +1,3 @@
-import { after } from "next/server";
 import { NextRequest } from "next/server";
 import {
   buildConversationRelayTwiml,
@@ -81,14 +80,12 @@ export async function POST(request: NextRequest) {
       }
     }
 
-    after(async () => {
-      await ensureCallRecord({
-        callSid,
-        orgId: ctx.orgId,
-        agentId: ctx.agentId,
-        from,
-        to,
-      });
+    await ensureCallRecord({
+      callSid,
+      orgId: ctx.orgId,
+      agentId: ctx.agentId,
+      from,
+      to,
     });
 
     const appUrl = getPublicAppUrl(request);

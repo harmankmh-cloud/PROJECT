@@ -1,17 +1,24 @@
-/** Shared secret check for Make / Activepieces marketing webhooks. */
+import { envSecret } from "@/lib/webhook-secrets";
+
+/** Shared secret check for Make / Activepieces marketing webhooks. Fails closed if unset. */
 export function checkOutreachSecret(request: Request): boolean {
-  const makeSecret = process.env.MAKE_WEBHOOK_SECRET?.trim();
-  const marketingSecret =
-    process.env.ACTIVEPIECES_MARKETING_WEBHOOK_SECRET?.trim() || "greetq-marketing-webhook-2026";
+  const makeSecret = envSecret("MAKE_WEBHOOK_SECRET");
+  const marketingSecret = envSecret("ACTIVEPIECES_MARKETING_WEBHOOK_SECRET");
 
-  const auth = request.headers.get("authorization");
-  if (makeSecret && auth === `Bearer ${makeSecret}`) return true;
+  if (!makeSecret && !marketingSecret) return false;
 
-  const makeHeader = request.headers.get("x-make-secret");
-  if (makeSecret && makeHeader === makeSecret) return true;
+  if (makeSecret) {
+    const auth = request.headers.get("authorization");
+    if (auth === `Bearer ${makeSecret}`) return true;
 
-  const greetqHeader = request.headers.get("x-greetq-secret");
-  if (greetqHeader === marketingSecret) return true;
+    const makeHeader = request.headers.get("x-make-secret");
+    if (makeHeader === makeSecret) return true;
+  }
+
+  if (marketingSecret) {
+    const greetqHeader = request.headers.get("x-greetq-secret");
+    if (greetqHeader === marketingSecret) return true;
+  }
 
   return false;
 }

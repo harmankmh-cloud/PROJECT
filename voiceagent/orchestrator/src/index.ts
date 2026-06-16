@@ -22,12 +22,20 @@ let activeConnections = 0;
 function getWssValidationUrls(req: http.IncomingMessage, wsPath: string): string[] {
   const urls = new Set<string>();
   const configured = process.env.ORCHESTRATOR_WSS_URL?.trim();
-  if (configured) urls.add(configured);
+  const pathWithQuery = req.url?.startsWith("/") ? req.url : `/${req.url || wsPath}`;
+
+  if (configured) {
+    urls.add(configured);
+    if (pathWithQuery.startsWith("/stream")) {
+      const base = configured.replace(/\/ws\/?$/, "");
+      urls.add(`${base}${pathWithQuery}`);
+    }
+  }
 
   const host = req.headers.host;
   if (host) {
-    urls.add(`wss://${host}${wsPath}`);
-    if (wsPath === "/ws") urls.add(`wss://${host}`);
+    urls.add(`wss://${host}${pathWithQuery}`);
+    if (wsPath === "/ws") urls.add(`wss://${host}/ws`);
   }
 
   return [...urls];

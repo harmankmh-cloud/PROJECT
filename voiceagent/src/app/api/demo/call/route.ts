@@ -16,6 +16,13 @@ function isRateLimited(ip: string): boolean {
 }
 
 export async function POST(request: NextRequest) {
+  if (process.env.NODE_ENV === "production" && process.env.DEMO_CALL_ENABLED !== "true") {
+    return NextResponse.json(
+      { error: "Live demo calls are disabled. Book a demo at /help?intent=demo." },
+      { status: 503 }
+    );
+  }
+
   const ip = request.headers.get("x-forwarded-for")?.split(",")[0]?.trim() || "unknown";
   if (isRateLimited(ip)) {
     return NextResponse.json(
