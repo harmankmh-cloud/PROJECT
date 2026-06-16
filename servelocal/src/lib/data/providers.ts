@@ -202,19 +202,28 @@ export async function getPlatformStats() {
 }
 
 export async function incrementContactClicks(providerId: string) {
-  const admin = createDbClient();
+  // Prefer service role; anon UPDATE only works when 006_contact policy is applied
+  const admin = createServiceClient() ?? createDbClient();
   if (!admin) return;
 
-  const { data } = await admin.from("service_providers").select("contact_clicks").eq("id", providerId).single();
-  if (!data) return;
+  const { data, error: readError } = await admin
+    .from("service_providers")
+    .select("contact_clicks")
+    .eq("id", providerId)
+    .single();
+  if (readError || !data) return;
 
-  await admin
+  const { error: writeError } = await admin
     .from("service_providers")
     .update({
       contact_clicks: (data.contact_clicks || 0) + 1,
       updated_at: new Date().toISOString(),
     })
     .eq("id", providerId);
+
+  if (writeError && process.env.NODE_ENV !== "production") {
+    console.warn("[incrementContactClicks]", writeError.message);
+  }
 }
 
 export async function createProviderApplication(input: {
@@ -286,6 +295,7 @@ export async function updateProviderOwner(
       | "min_callout_fee"
       | "emergency_available"
       | "whatsapp"
+      | "portfolio_urls"
     >
   >
 ) {

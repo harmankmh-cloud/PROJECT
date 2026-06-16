@@ -19,3 +19,11 @@ voiceagent/orchestrator/dist/
 voiceagent/.env.local
 voiceagent/.env.sentry-build-plugin
 route-max/node_modules/
+# Lead scraper PII — never commit
+tools/**/*.csv
+tools/**/output/
+tools/**/storage/
+tools/**/*.log
+routemax/node_modules/
+routemax/dist/
+routemax/tsconfig.tsbuildinfo

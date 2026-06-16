@@ -4,6 +4,12 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import Link from "next/link";
 import { useState } from "react";
 import { redirectAfterAuth } from "@/lib/auth/client-redirect";
+import {
+  SIGNUP_ALREADY_REGISTERED_MESSAGE,
+  SIGNUP_CONFIRM_EMAIL_MESSAGE,
+  signUpAccount,
+} from "@/lib/auth/signup-client";
+import { useSubmitGuard } from "@/lib/auth/submit-guard";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
 import { Button } from "@/components/ui/Button";
@@ -19,6 +25,8 @@ type ProSignupData = z.infer<typeof proSignupSchema>;
 export function ProSignupForm() {
   const [error, setError] = useState<string | null>(null);
   const [info, setInfo] = useState<string | null>(null);
+  const [completed, setCompleted] = useState(false);
+  const guardSubmit = useSubmitGuard();
 
   const {
     register,
@@ -33,36 +41,47 @@ export function ProSignupForm() {
   }
 
   async function onSubmit(data: ProSignupData) {
-    setError(null);
-    setInfo(null);
-    const supabase = createClient();
+    if (completed) return;
 
-    const { data: authData, error: signUpError } = await supabase.auth.signUp({
-      email: data.email,
-      password: data.password,
-      options: {
-        data: { role: "pro", display_name: data.name, city: data.city },
-        emailRedirectTo: `${window.location.origin}/auth/confirm`,
-      },
+    const ran = await guardSubmit(async () => {
+      setError(null);
+      setInfo(null);
+      const supabase = createClient();
+
+      const result = await signUpAccount(supabase, {
+        email: data.email,
+        password: data.password,
+        metadata: { role: "pro", display_name: data.name, city: data.city },
+        fallbackOrigin: typeof window !== "undefined" ? window.location.origin : undefined,
+      });
+
+      if (result.status === "error") {
+        setError(result.message);
+        return;
+      }
+
+      if (result.status === "already_registered") {
+        setCompleted(true);
+        setInfo(SIGNUP_ALREADY_REGISTERED_MESSAGE);
+        return;
+      }
+
+      if (result.status === "confirm_email") {
+        setCompleted(true);
+        setInfo(SIGNUP_CONFIRM_EMAIL_MESSAGE);
+        return;
+      }
+
+      await fetch("/api/user-profile", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ role: "pro", display_name: data.name }),
+      });
+
+      await redirectAfterAuth("/auth/after-login?as=pro");
     });
 
-    if (signUpError) {
-      setError(signUpError.message);
-      return;
-    }
-
-    if (authData.user && !authData.session) {
-      setInfo("Check your email to confirm, then continue onboarding.");
-      return;
-    }
-
-    await fetch("/api/user-profile", {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ role: "pro", display_name: data.name }),
-    });
-
-    await redirectAfterAuth("/auth/after-login");
+    if (ran === "skipped") return;
   }
 
   return (
@@ -85,7 +104,7 @@ export function ProSignupForm() {
       <input type="hidden" {...register("city")} value="surrey" />
       {error && <p className="text-sm text-red-400">{error}</p>}
       {info && <p className="text-sm text-green-400">{info}</p>}
-      <Button type="submit" className="w-full" loading={isSubmitting} pill>
+      <Button type="submit" className="w-full" loading={isSubmitting} disabled={completed} pill>
         Continue to pro setup
       </Button>
       <p className="text-center text-xs text-slate-500">

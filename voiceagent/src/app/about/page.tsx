@@ -13,7 +13,7 @@ export const metadata: Metadata = {
 
 export default function AboutPage() {
   return (
-    <div className="dark-mesh-bg grid-pattern flex min-h-screen flex-col">
+    <div className="page-shell flex min-h-screen flex-col">
       <SkipToContent />
       <LandingNavbar />
       <main id="main-content" className="mx-auto max-w-3xl flex-1 px-6 pb-16 pt-24">

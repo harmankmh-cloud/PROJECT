@@ -2,15 +2,24 @@
 
 import { useState } from "react";
 import { TermsConsent } from "@/components/TermsConsent";
-import { redirectAfterAuth } from "@/lib/auth/client-redirect";
-import { createClient, isSupabaseConfigured } from "@/lib/supabase/client";
 import { friendlyAuthError } from "@/lib/auth-errors";
+import { authConfirmUrl } from "@/lib/auth/redirect-origin";
+import { redirectAfterAuth } from "@/lib/auth/client-redirect";
+import {
+  SIGNUP_ALREADY_REGISTERED_MESSAGE,
+  SIGNUP_CONFIRM_EMAIL_MESSAGE,
+  signUpAccount,
+} from "@/lib/auth/signup-client";
+import { useSubmitGuard } from "@/lib/auth/submit-guard";
+import { createClient, isSupabaseConfigured } from "@/lib/supabase/client";
 
 export function AuthForm({ mode }: { mode: "login" | "signup" }) {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [termsAccepted, setTermsAccepted] = useState(false);
   const [loading, setLoading] = useState(false);
+  const [completed, setCompleted] = useState(false);
+  const guardSubmit = useSubmitGuard();
   const [error, setError] = useState("");
   const [info, setInfo] = useState("");
 
@@ -24,56 +33,69 @@ export function AuthForm({ mode }: { mode: "login" | "signup" }) {
 
   async function handleSubmit(e: React.FormEvent) {
     e.preventDefault();
-    setLoading(true);
-    setError("");
-    setInfo("");
+    if (completed) return;
 
-    if (mode === "signup" && !termsAccepted) {
-      setError("Please accept the Terms and Privacy Policy to continue.");
-      setLoading(false);
-      return;
-    }
+    const ran = await guardSubmit(async () => {
+      setLoading(true);
+      setError("");
+      setInfo("");
 
-    if (password.length < 8) {
-      setError("Password must be at least 8 characters.");
-      setLoading(false);
-      return;
-    }
-
-    try {
-      const supabase = createClient();
-
-      if (mode === "signup") {
-        const result = await supabase.auth.signUp({
-          email: email.trim(),
-          password,
-          options: {
-            emailRedirectTo: `${window.location.origin}/auth/confirm`,
-          },
-        });
-        if (result.error) throw result.error;
-
-        if (!result.data.session) {
-          setInfo("Check your email and tap Confirm — then you can track jobs in your dashboard.");
-          return;
-        }
-
-        await redirectAfterAuth("/auth/after-login");
+      if (mode === "signup" && !termsAccepted) {
+        setError("Please accept the Terms and Privacy Policy to continue.");
         return;
       }
 
-      const result = await supabase.auth.signInWithPassword({
-        email: email.trim(),
-        password,
-      });
-      if (result.error) throw result.error;
+      if (password.length < 8) {
+        setError("Password must be at least 8 characters.");
+        return;
+      }
 
-      await redirectAfterAuth("/auth/after-login");
-    } catch (err) {
-      setError(friendlyAuthError(err instanceof Error ? err.message : "Authentication failed"));
-    } finally {
-      setLoading(false);
-    }
+      try {
+        const supabase = createClient();
+
+        if (mode === "signup") {
+          const result = await signUpAccount(supabase, {
+            email: email.trim(),
+            password,
+            metadata: {},
+            fallbackOrigin: typeof window !== "undefined" ? window.location.origin : undefined,
+          });
+
+          if (result.status === "error") {
+            throw new Error(result.message);
+          }
+
+          if (result.status === "already_registered") {
+            setCompleted(true);
+            setInfo(SIGNUP_ALREADY_REGISTERED_MESSAGE);
+            return;
+          }
+
+          if (result.status === "confirm_email") {
+            setCompleted(true);
+            setInfo(SIGNUP_CONFIRM_EMAIL_MESSAGE);
+            return;
+          }
+
+          await redirectAfterAuth("/auth/after-login");
+          return;
+        }
+
+        const result = await supabase.auth.signInWithPassword({
+          email: email.trim(),
+          password,
+        });
+        if (result.error) throw result.error;
+
+        await redirectAfterAuth("/auth/after-login");
+      } catch (err) {
+        setError(friendlyAuthError(err instanceof Error ? err.message : "Authentication failed"));
+      } finally {
+        setLoading(false);
+      }
+    });
+
+    if (ran === "skipped") return;
   }
 
   async function handleForgotPassword() {
@@ -86,7 +108,7 @@ export function AuthForm({ mode }: { mode: "login" | "signup" }) {
     try {
       const supabase = createClient();
       const { error: resetError } = await supabase.auth.resetPasswordForEmail(email.trim(), {
-        redirectTo: `${window.location.origin}/auth/confirm?next=/dashboard`,
+        redirectTo: `${authConfirmUrl(window.location.origin)}?next=/dashboard`,
       });
       if (resetError) throw resetError;
       setInfo("Password reset email sent. Check your inbox.");
@@ -142,7 +164,7 @@ export function AuthForm({ mode }: { mode: "login" | "signup" }) {
           {info}
         </p>
       )}
-      <button type="submit" disabled={loading} className="btn-gold w-full py-3.5 disabled:opacity-60">
+      <button type="submit" disabled={loading || completed} className="btn-gold w-full py-3.5 disabled:opacity-60">
         {loading ? "Please wait…" : mode === "signup" ? "Create account" : "Sign in"}
       </button>
     </form>

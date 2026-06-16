@@ -3,12 +3,11 @@ import { Badge } from "@/components/ui/Badge";
 import { QuoteActions } from "@/components/homeowner/QuoteActions";
 import { getUserBookings } from "@/lib/data/bookings";
 import { createClient } from "@/lib/supabase/server";
+import { getServerAuthUser } from "@/lib/supabase/get-server-user";
 
 export default async function QuotesPage() {
   const supabase = await createClient();
-  const {
-    data: { user },
-  } = supabase ? await supabase.auth.getUser() : { data: { user: null } };
+  const user = await getServerAuthUser();
 
   const bookings = user ? await getUserBookings(user.id) : [];
 

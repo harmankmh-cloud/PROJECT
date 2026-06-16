@@ -31,7 +31,7 @@ Run `reviewflow/supabase/migrations/20260609210000_outreach_leads.sql` on the **
 
 ```json
 POST https://ratelocal.ca/api/make/outreach/daily
-Headers: X-RateLocal-Secret: ratelocal-marketing-webhook-2026
+Headers: X-RateLocal-Secret: <ACTIVEPIECES_MARKETING_WEBHOOK_SECRET>
 Body: { "limit": 5, "sequence": "initial", "delay_ms": 1500 }
 ```
 

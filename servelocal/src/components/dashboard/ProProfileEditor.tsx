@@ -3,11 +3,18 @@
 import { useState } from "react";
 import { useRouter } from "next/navigation";
 import type { ServiceProvider } from "@/lib/types";
+import { portfolioLimitForTier } from "@/lib/plan-benefits";
+import { isFeaturedTier } from "@/lib/schemas/db/normalize";
 
 export function ProProfileEditor({ listing }: { listing: ServiceProvider }) {
   const router = useRouter();
+  const tier = listing.listing_tier ?? "free";
+  const portfolioLimit = isFeaturedTier(tier) || listing.featured ? portfolioLimitForTier(tier) : 0;
   const [saving, setSaving] = useState(false);
   const [message, setMessage] = useState<string | null>(null);
+  const [portfolioInput, setPortfolioInput] = useState(
+    (listing.portfolio_urls ?? []).join("\n")
+  );
   const [form, setForm] = useState({
     displayName: listing.display_name,
     phone: listing.phone,
@@ -26,6 +33,11 @@ export function ProProfileEditor({ listing }: { listing: ServiceProvider }) {
     setSaving(true);
     setMessage(null);
 
+    const portfolioUrls = portfolioInput
+      .split("\n")
+      .map((s) => s.trim())
+      .filter(Boolean);
+
     const res = await fetch(`/api/providers/${listing.id}`, {
       method: "PATCH",
       headers: { "Content-Type": "application/json" },
@@ -40,6 +52,7 @@ export function ProProfileEditor({ listing }: { listing: ServiceProvider }) {
         minCalloutFee: form.minCalloutFee || undefined,
         businessHours: form.businessHours || undefined,
         emergencyAvailable: form.emergencyAvailable,
+        portfolioUrls: portfolioLimit > 0 ? portfolioUrls.slice(0, portfolioLimit) : [],
       }),
     });
 
@@ -153,6 +166,24 @@ export function ProProfileEditor({ listing }: { listing: ServiceProvider }) {
         />
         Available for emergency calls
       </label>
+      <div>
+        <label className="text-xs font-medium text-muted">
+          Portfolio photo URLs {portfolioLimit > 0 ? `(up to ${portfolioLimit})` : ""}
+        </label>
+        {portfolioLimit > 0 ? (
+          <textarea
+            className="mt-1 w-full rounded-lg border border-border bg-background px-3 py-2 text-sm text-foreground"
+            rows={3}
+            value={portfolioInput}
+            onChange={(e) => setPortfolioInput(e.target.value)}
+            placeholder={"https://example.com/photo1.jpg\nhttps://example.com/photo2.jpg"}
+          />
+        ) : (
+          <p className="mt-1 text-xs text-muted">
+            Upgrade to Featured to add portfolio photos on your public profile.
+          </p>
+        )}
+      </div>
       <div className="flex items-center gap-3 pt-2">
         <button
           type="submit"

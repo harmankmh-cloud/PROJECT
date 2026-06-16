@@ -2,13 +2,12 @@ import { redirect } from "next/navigation";
 import { HomeownerShell } from "@/components/dashboard/HomeownerShell";
 import { getHomeownerDashboardCounts } from "@/lib/data/bookings";
 import { createClient } from "@/lib/supabase/server";
+import { getServerAuthUser } from "@/lib/supabase/get-server-user";
 import { resolveUserRole } from "@/lib/auth-routing";
 
 export default async function HomeownerDashboardLayout({ children }: { children: React.ReactNode }) {
   const supabase = await createClient();
-  const {
-    data: { user },
-  } = supabase ? await supabase.auth.getUser() : { data: { user: null } };
+  const user = await getServerAuthUser();
 
   if (user) {
     const role = await resolveUserRole(user);

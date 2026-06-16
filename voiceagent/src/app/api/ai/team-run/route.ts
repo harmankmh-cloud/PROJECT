@@ -17,8 +17,8 @@ function unauthorized() {
 }
 
 function checkSecret(request: Request): boolean {
-  const secret =
-    process.env.AI_TEAM_WEBHOOK_SECRET?.trim() || "greetq-ai-team-2026";
+  const secret = process.env.AI_TEAM_WEBHOOK_SECRET?.trim();
+  if (!secret) return false;
 
   const auth = request.headers.get("authorization");
   if (auth === `Bearer ${secret}`) return true;
@@ -52,7 +52,10 @@ export async function POST(request: Request) {
   if (!checkSecret(request)) return unauthorized();
 
   try {
-    const body = bodySchema.parse(await request.json());
+    const raw = await request.json();
+    const payload =
+      raw && typeof raw === "object" && raw.data && typeof raw.data === "object" ? raw.data : raw;
+    const body = bodySchema.parse(payload);
     const result = await runAiTeam(body);
 
     if (!result.ok) {

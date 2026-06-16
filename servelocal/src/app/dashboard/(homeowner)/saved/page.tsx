@@ -2,12 +2,11 @@ import { SavedProsList } from "@/components/homeowner/SavedProsList";
 import { SavedSearchesList } from "@/components/SavedSearchesList";
 import { getUserSavedSearches } from "@/lib/data";
 import { createClient } from "@/lib/supabase/server";
+import { getServerAuthUser } from "@/lib/supabase/get-server-user";
 
 export default async function SavedPage() {
   const supabase = await createClient();
-  const {
-    data: { user },
-  } = supabase ? await supabase.auth.getUser() : { data: { user: null } };
+  const user = await getServerAuthUser();
 
   const savedSearches = user ? await getUserSavedSearches(user.id) : [];
 

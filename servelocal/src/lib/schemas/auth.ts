@@ -30,6 +30,17 @@ export const onboardingStep5Schema = z.object({
   wcbNumber: z.string().optional(),
 });
 
+export const resetPasswordSchema = z
+  .object({
+    password: z.string().min(8, "Password must be at least 8 characters"),
+    confirm: z.string().min(8, "Confirm your password"),
+  })
+  .refine((data) => data.password === data.confirm, {
+    message: "Passwords do not match",
+    path: ["confirm"],
+  });
+
 export type LoginData = z.infer<typeof loginSchema>;
+export type ResetPasswordData = z.infer<typeof resetPasswordSchema>;
 export type HomeownerSignupData = z.infer<typeof homeownerSignupSchema>;
 export type OnboardingStep1Data = z.infer<typeof onboardingStep1Schema>;

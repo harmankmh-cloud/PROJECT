@@ -21,8 +21,8 @@ import { cn } from "@/lib/utils";
 const NAV = [
   { href: "/dashboard/pro", label: "Overview", icon: LayoutDashboard },
   { href: "/dashboard/pro/leads", label: "Leads", icon: ClipboardList },
-  { href: "/dashboard/pro/jobs", label: "Jobs", icon: ClipboardList },
-  { href: "/dashboard/pro/earnings", label: "Earnings", icon: DollarSign },
+  { href: "/dashboard/pro/jobs", label: "Inquiries", icon: ClipboardList },
+  { href: "/dashboard/pro/earnings", label: "Performance", icon: DollarSign },
   { href: "/dashboard/pro/reviews", label: "Reviews", icon: Star },
   { href: "/dashboard/pro/profile", label: "Profile", icon: User },
   { href: "/dashboard/pro/subscription", label: "Subscription", icon: CreditCard },

@@ -7,6 +7,7 @@ import { getUserBookings } from "@/lib/data/bookings";
 import { getServiceCategories, getApprovedProviders } from "@/lib/data";
 import { getServiceRequestById } from "@/lib/data/requests";
 import { createClient } from "@/lib/supabase/server";
+import { getServerAuthUser } from "@/lib/supabase/get-server-user";
 
 const TIMELINE = [
   { key: "posted", label: "Posted" },
@@ -27,9 +28,7 @@ function timelineStep(status: string) {
 export default async function JobDetailPage({ params }: { params: Promise<{ id: string }> }) {
   const { id } = await params;
   const supabase = await createClient();
-  const {
-    data: { user },
-  } = supabase ? await supabase.auth.getUser() : { data: { user: null } };
+  const user = await getServerAuthUser();
 
   if (!user) notFound();
 

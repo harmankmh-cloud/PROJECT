@@ -2,12 +2,11 @@ import { HomeownerSettingsForm } from "@/components/homeowner/HomeownerSettingsF
 import { DataPrivacyActions } from "@/components/homeowner/DataPrivacyActions";
 import { getUserProfile } from "@/lib/user-profiles";
 import { createClient } from "@/lib/supabase/server";
+import { getServerAuthUser } from "@/lib/supabase/get-server-user";
 
 export default async function SettingsPage() {
   const supabase = await createClient();
-  const {
-    data: { user },
-  } = supabase ? await supabase.auth.getUser() : { data: { user: null } };
+  const user = await getServerAuthUser();
 
   const profile = user ? await getUserProfile(user.id) : null;
 

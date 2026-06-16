@@ -3,12 +3,11 @@ import { ReviewList } from "@/components/ReviewList";
 import { StarRating } from "@/components/StarRating";
 import { getProviderReviewsForProvider, getProvidersForUser } from "@/lib/data";
 import { createClient } from "@/lib/supabase/server";
+import { getServerAuthUser } from "@/lib/supabase/get-server-user";
 
 export default async function ProReviewsPage() {
   const supabase = await createClient();
-  const {
-    data: { user },
-  } = supabase ? await supabase.auth.getUser() : { data: { user: null } };
+  const user = await getServerAuthUser();
   if (!user) redirect("/login");
 
   const listings = await getProvidersForUser(user.id);

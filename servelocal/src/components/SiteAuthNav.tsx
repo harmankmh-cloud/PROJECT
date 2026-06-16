@@ -5,6 +5,11 @@ import { useEffect, useState } from "react";
 import { createClient, isSupabaseConfigured } from "@/lib/supabase/client";
 import type { User } from "@supabase/supabase-js";
 
+type SessionInfo = {
+  user: User | null;
+  dashboardPath: string;
+};
+
 export function SiteAuthNav({
   compact,
   accountHref,
@@ -14,19 +19,41 @@ export function SiteAuthNav({
   accountHref?: string | null;
   accountLabel?: string | null;
 }) {
-  const [user, setUser] = useState<User | null>(null);
+  const [session, setSession] = useState<SessionInfo>({ user: null, dashboardPath: "/dashboard" });
 
   useEffect(() => {
     if (!isSupabaseConfigured()) return;
 
     const supabase = createClient();
 
-    supabase.auth.getUser().then(({ data }) => setUser(data.user ?? null));
+    async function applySession(user: User | null) {
+      if (!user) {
+        setSession({ user: null, dashboardPath: "/dashboard" });
+        return;
+      }
+
+      try {
+        const res = await fetch("/api/auth/me", { cache: "no-store" });
+        if (res.ok) {
+          const payload = (await res.json()) as { dashboardPath?: string };
+          setSession({ user, dashboardPath: payload.dashboardPath ?? "/dashboard" });
+          return;
+        }
+      } catch {
+        // Fall back to generic dashboard link
+      }
+
+      setSession({ user, dashboardPath: "/auth/after-login" });
+    }
+
+    void supabase.auth.getSession().then(({ data }) => {
+      void applySession(data.session?.user ?? null);
+    });
 
     const {
       data: { subscription },
-    } = supabase.auth.onAuthStateChange((_event, session) => {
-      setUser(session?.user ?? null);
+    } = supabase.auth.onAuthStateChange((_event, authSession) => {
+      void applySession(authSession?.user ?? null);
     });
 
     return () => subscription.unsubscribe();
@@ -34,9 +61,9 @@ export function SiteAuthNav({
 
   if (!isSupabaseConfigured()) return null;
 
-  if (user) {
-    const href = accountHref || "/dashboard";
-    const label = accountLabel || "My account";
+  if (session.user) {
+    const href = accountHref || session.dashboardPath;
+    const label = accountLabel || (session.dashboardPath.includes("/pro") ? "Pro dashboard" : "My account");
 
     return (
       <Link

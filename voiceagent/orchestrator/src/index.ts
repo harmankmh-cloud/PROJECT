@@ -2,70 +2,46 @@ import dotenv from "dotenv";
 import path from "path";
 import { fileURLToPath } from "url";
 import http from "http";
+import { WebSocketServer, type WebSocket } from "ws";
+import twilio from "twilio";
+import { fetchAgentConfig, getAppUrl } from "./agent-config.js";
+import { CallSession } from "./session.js";
+import { RealtimeSession } from "./realtime-session.js";
 
 const orchestratorDir = path.dirname(fileURLToPath(import.meta.url));
 dotenv.config({ path: path.resolve(orchestratorDir, "../../.env.local") });
 dotenv.config({ path: path.resolve(orchestratorDir, "../../.env") });
-import { WebSocketServer, type WebSocket } from "ws";
-import twilio from "twilio";
-import type { AgentConfig } from "./types.js";
-import { CallSession } from "./session.js";
 
 const PORT = Number(process.env.PORT || process.env.ORCHESTRATOR_PORT || 8080);
-const sessions = new Map<WebSocket, CallSession>();
+const MAX_CONCURRENT = Number(process.env.MAX_CONCURRENT_CALLS || 500);
 
-function getAppUrl() {
-  return (
-    process.env.ORCHESTRATOR_APP_URL ||
-    process.env.NEXT_PUBLIC_APP_URL ||
-    "http://127.0.0.1:3002"
-  );
-}
+const relaySessions = new Map<WebSocket, CallSession>();
+const realtimeSessions = new Map<WebSocket, RealtimeSession>();
+let activeConnections = 0;
 
-async function fetchAgentConfig(orgId: string, agentId: string): Promise<AgentConfig> {
-  const apiUrl = getAppUrl();
-  const apiKey = process.env.ORCHESTRATOR_API_KEY || "";
-
-  try {
-    const res = await fetch(
-      `${apiUrl}/api/orchestrator/config?orgId=${orgId}&agentId=${agentId}`,
-      { headers: { "x-orchestrator-key": apiKey }, signal: AbortSignal.timeout(3000) }
-    );
-    if (res.ok) return (await res.json()) as AgentConfig;
-    console.warn("Config fetch failed", { status: res.status, orgId, agentId });
-  } catch (err) {
-    console.warn("Config fetch error:", err);
-  }
-
-  return {
-    orgId,
-    agentId,
-    systemPrompt:
-      process.env.DEFAULT_SYSTEM_PROMPT ||
-      "You are a helpful phone assistant for a local business. Answer questions, book appointments, and transfer to a human when needed.",
-    welcomeGreeting: "Hello! How can I help you today?",
-    escalationPhone: process.env.DEFAULT_ESCALATION_PHONE,
-  };
-}
-
-function getWssValidationUrls(req: http.IncomingMessage): string[] {
+function getWssValidationUrls(req: http.IncomingMessage, wsPath: string): string[] {
   const urls = new Set<string>();
   const configured = process.env.ORCHESTRATOR_WSS_URL?.trim();
-  if (configured) urls.add(configured);
+  const pathWithQuery = req.url?.startsWith("/") ? req.url : `/${req.url || wsPath}`;
+
+  if (configured) {
+    urls.add(configured);
+    if (pathWithQuery.startsWith("/stream")) {
+      const base = configured.replace(/\/ws\/?$/, "");
+      urls.add(`${base}${pathWithQuery}`);
+    }
+  }
 
   const host = req.headers.host;
   if (host) {
-    urls.add(`wss://${host}/ws`);
-    urls.add(`wss://${host}`);
+    urls.add(`wss://${host}${pathWithQuery}`);
+    if (wsPath === "/ws") urls.add(`wss://${host}/ws`);
   }
 
   return [...urls];
 }
 
-function validateTwilioSignature(
-  req: http.IncomingMessage,
-  urls: string[]
-): boolean {
+function validateTwilioSignature(req: http.IncomingMessage, urls: string[]): boolean {
   if (process.env.ORCHESTRATOR_SKIP_TWILIO_SIGNATURE === "true") {
     console.warn("ORCHESTRATOR_SKIP_TWILIO_SIGNATURE=true — skipping Twilio signature check");
     return true;
@@ -91,24 +67,47 @@ function validateTwilioSignature(
   return false;
 }
 
-const server = http.createServer((_req, res) => {
+function rejectIfOverCapacity(ws: WebSocket): boolean {
+  if (activeConnections >= MAX_CONCURRENT) {
+    console.warn("Connection rejected: at capacity", { activeConnections, MAX_CONCURRENT });
+    ws.close(1013, "At capacity");
+    return true;
+  }
+  activeConnections += 1;
+  return false;
+}
+
+function releaseConnection() {
+  activeConnections = Math.max(0, activeConnections - 1);
+}
+
+const server = http.createServer((req, res) => {
+  if (req.url === "/health") {
+    res.writeHead(200, { "Content-Type": "text/plain" });
+    res.end("OK");
+    return;
+  }
+
   res.writeHead(200, { "Content-Type": "text/plain" });
-  res.end("VoiceAgent orchestrator running");
+  res.end(`GreetQ orchestrator — active: ${activeConnections}`);
 });
 
-const wss = new WebSocketServer({ server, path: "/ws" });
+const wssRelay = new WebSocketServer({ server, path: "/ws" });
+const wssStream = new WebSocketServer({ server, path: "/stream" });
 
-wss.on("connection", async (ws, req) => {
-  const validationUrls = getWssValidationUrls(req);
+wssRelay.on("connection", async (ws, req) => {
+  if (rejectIfOverCapacity(ws)) return;
+
+  const validationUrls = getWssValidationUrls(req, "/ws");
   const isDev = process.env.NODE_ENV !== "production";
 
   if (!isDev && !validateTwilioSignature(req, validationUrls)) {
-    console.warn("WebSocket connection rejected: invalid Twilio signature");
+    releaseConnection();
     ws.close(1008, "Invalid signature");
     return;
   }
 
-  console.log("WebSocket connected from Twilio");
+  console.log("Relay WebSocket connected", { active: activeConnections });
 
   let session: CallSession | null = null;
 
@@ -119,11 +118,13 @@ wss.on("connection", async (ws, req) => {
       if (!session) {
         const msg = JSON.parse(raw);
         if (msg.type === "setup") {
-          const orgId = msg.customParameters?.orgId || process.env.DEFAULT_ORG_ID || "default";
-          const agentId = msg.customParameters?.agentId || process.env.DEFAULT_AGENT_ID || "default";
+          const orgId =
+            msg.customParameters?.orgId || process.env.DEFAULT_ORG_ID || "default";
+          const agentId =
+            msg.customParameters?.agentId || process.env.DEFAULT_AGENT_ID || "default";
           const config = await fetchAgentConfig(orgId, agentId);
           session = new CallSession(ws, config);
-          sessions.set(ws, session);
+          relaySessions.set(ws, session);
         }
       }
 
@@ -131,19 +132,75 @@ wss.on("connection", async (ws, req) => {
         await session.handleMessage(raw);
       }
     } catch (err) {
-      console.error("WebSocket message error:", err);
+      console.error("Relay message error:", err);
     }
   });
 
   ws.on("close", () => {
+    releaseConnection();
     if (session) {
-      sessions.delete(ws);
-      notifyCallEnd(session);
+      session.destroy();
+      relaySessions.delete(ws);
+      notifyRelayCallEnd(session);
     }
+    ws.removeAllListeners();
+    console.log("Relay WebSocket closed", { active: activeConnections });
+  });
+
+  ws.on("error", () => {
+    releaseConnection();
+    session?.destroy();
+    relaySessions.delete(ws);
+    ws.removeAllListeners();
   });
 });
 
-async function notifyCallEnd(session: CallSession) {
+wssStream.on("connection", async (ws, req) => {
+  if (rejectIfOverCapacity(ws)) return;
+
+  const validationUrls = getWssValidationUrls(req, "/stream");
+  const isDev = process.env.NODE_ENV !== "production";
+
+  if (!isDev && !validateTwilioSignature(req, validationUrls)) {
+    releaseConnection();
+    ws.close(1008, "Invalid signature");
+    return;
+  }
+
+  const url = new URL(req.url || "/", "http://localhost");
+  const orgId = url.searchParams.get("orgId") || process.env.DEFAULT_ORG_ID || "default";
+  const agentId = url.searchParams.get("agentId") || process.env.DEFAULT_AGENT_ID || "default";
+  const callSid = url.searchParams.get("callSid");
+
+  console.log("Realtime WebSocket connected", { orgId, agentId, callSid, active: activeConnections });
+
+  const config = await fetchAgentConfig(orgId, agentId);
+  const session = new RealtimeSession(ws, config, callSid);
+  realtimeSessions.set(ws, session);
+  session.startOpenAi();
+
+  ws.on("message", (data) => {
+    session.handleTwilioMessage(data.toString());
+  });
+
+  ws.on("close", async () => {
+    releaseConnection();
+    session.destroy();
+    realtimeSessions.delete(ws);
+    ws.removeAllListeners();
+    await notifyRealtimeCallEnd(session);
+    console.log("Realtime WebSocket closed", { active: activeConnections });
+  });
+
+  ws.on("error", () => {
+    releaseConnection();
+    session.destroy();
+    realtimeSessions.delete(ws);
+    ws.removeAllListeners();
+  });
+});
+
+async function notifyRelayCallEnd(session: CallSession) {
   const callSid = session.getCallSid();
   if (!callSid) return;
 
@@ -167,18 +224,24 @@ async function notifyCallEnd(session: CallSession) {
   }
 }
 
+async function notifyRealtimeCallEnd(session: RealtimeSession) {
+  await session.notifyCallEnd();
+}
+
 server.listen(PORT, () => {
-  console.log(`VoiceAgent orchestrator listening on :${PORT}/ws`);
+  console.log(`GreetQ orchestrator listening on :${PORT}`);
+  console.log(`  Relay:    wss://host/ws (ConversationRelay)`);
+  console.log(`  Realtime: wss://host/stream (OpenAI g711_ulaw)`);
+  console.log(`  Health:   http://host:${PORT}/health`);
   console.log(`WSS URL: ${process.env.ORCHESTRATOR_WSS_URL || "(not set)"}`);
   console.log(`App URL: ${getAppUrl()}`);
   console.log(
     `Twilio auth: ${process.env.TWILIO_AUTH_TOKEN ? "configured" : "MISSING — WebSocket will fail in production"}`
   );
   console.log(
-    `OpenRouter: ${process.env.OPENROUTER_API_KEY ? "configured" : "MISSING — add OPENROUTER_API_KEY"}`
+    `OpenRouter (relay): ${process.env.OPENROUTER_API_KEY ? "configured" : "MISSING"}`
   );
-  const model =
-    process.env.OPENROUTER_MODEL?.trim().replace(/^OPENROUTER_MODEL=/i, "") ||
-    "google/gemini-2.5-flash";
-  console.log(`Model: ${model} (+ fallbacks)`);
+  console.log(
+    `OpenAI (realtime): ${process.env.OPENAI_API_KEY ? "configured" : "MISSING — realtime mode needs OPENAI_API_KEY"}`
+  );
 });

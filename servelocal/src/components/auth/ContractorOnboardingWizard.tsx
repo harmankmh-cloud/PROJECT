@@ -133,6 +133,9 @@ export function ContractorOnboardingWizard({
     const previewSlug = (data.businessName || data.name).toLowerCase().replace(/[^a-z0-9]+/g, "-");
     setSlug(previewSlug);
     setDone(true);
+    window.setTimeout(() => {
+      window.location.href = "/dashboard/pro";
+    }, 1500);
     void fetch("/api/user-profile", {
       method: "POST",
       headers: { "Content-Type": "application/json" },

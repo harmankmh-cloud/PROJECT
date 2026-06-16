@@ -1,12 +1,15 @@
 import type { Metadata } from "next";
 import Link from "next/link";
+import { redirect } from "next/navigation";
 import { MarketingPageShell } from "@/components/layout/MarketingPageShell";
 import { RequestWizard } from "@/components/request/RequestWizard";
 import { FadeUp } from "@/components/motion/FadeUp";
 import { getServiceCategories } from "@/lib/data";
 import { pageMetadata } from "@/lib/seo";
 import { createClient } from "@/lib/supabase/server";
+import { getServerAuthUser } from "@/lib/supabase/get-server-user";
 import { isSupabaseConfigured } from "@/lib/supabase/config";
+import { resolveUserRole } from "@/lib/auth-routing";
 
 export const metadata: Metadata = pageMetadata({
   title: "Get Free Quotes from Local Pros",
@@ -38,10 +41,10 @@ export default async function RequestPage({
   if (isSupabaseConfigured()) {
     const supabase = await createClient();
     if (supabase) {
-      const {
-        data: { user },
-      } = await supabase.auth.getUser();
+      const user = await getServerAuthUser();
       if (user) {
+        const role = await resolveUserRole(user);
+        if (role === "pro") redirect("/dashboard/pro");
         isLoggedIn = true;
         defaultEmail = defaultEmail || (user.email ?? "");
         const meta = user.user_metadata as { full_name?: string; name?: string } | undefined;
@@ -79,6 +82,7 @@ export default async function RequestPage({
             defaultEmail={defaultEmail}
             defaultDescription={params.desc ?? ""}
             defaultPreferredDate={params.date ?? ""}
+            isLoggedIn={isLoggedIn}
           />
         </div>
       </div>

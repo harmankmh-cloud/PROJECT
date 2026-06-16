@@ -15,6 +15,17 @@ const nextConfig: NextConfig = {
   turbopack: {
     root: path.resolve(__dirname),
   },
+  async redirects() {
+    return [
+      // Legacy / marketing URLs → canonical category slugs
+      { source: "/services/plumbing", destination: "/services/plumber", permanent: true },
+      { source: "/services/electrical", destination: "/services/electrician", permanent: true },
+      { source: "/services/cleaning", destination: "/services/cleaner", permanent: true },
+      { source: "/services/landscaping", destination: "/services/landscaper", permanent: true },
+      { source: "/services/painting", destination: "/services/painter", permanent: true },
+      { source: "/services/roofing", destination: "/services/roofer", permanent: true },
+    ];
+  },
   async headers() {
     return [
       {

@@ -4,7 +4,9 @@ import { ContractorOnboardingWizard } from "@/components/auth/ContractorOnboardi
 import { getServiceCategories } from "@/lib/data";
 import { pageMetadata } from "@/lib/seo";
 import { createClient } from "@/lib/supabase/server";
+import { getServerAuthUser } from "@/lib/supabase/get-server-user";
 import { getUserProfile } from "@/lib/user-profiles";
+import { resolveUserRole } from "@/lib/auth-routing";
 import { isSupabaseConfigured } from "@/lib/supabase/config";
 
 export const metadata: Metadata = pageMetadata({
@@ -19,13 +21,12 @@ export default async function OnboardingPage() {
   const supabase = await createClient();
   if (!supabase) redirect("/login");
 
-  const {
-    data: { user },
-  } = await supabase.auth.getUser();
+  const user = await getServerAuthUser();
   if (!user) redirect("/login");
 
   const profile = await getUserProfile(user.id);
-  if (profile?.role === "homeowner") redirect("/dashboard");
+  const role = await resolveUserRole(user);
+  if (role === "homeowner") redirect("/dashboard");
 
   const categories = await getServiceCategories();
 

@@ -1,19 +1,19 @@
 import Link from "next/link";
 import { redirect } from "next/navigation";
 import { ProJobLeadsFeed } from "@/components/dashboard/ProJobLeadsFeed";
+import { ProPlanStatus } from "@/components/dashboard/ProPlanStatus";
 import { UpgradeCheckoutButton } from "@/components/UpgradeCheckoutButton";
 import { UpgradeSuccessBanner } from "@/components/UpgradeSuccessBanner";
 import { cityName, LISTING_PLANS } from "@/lib/constants";
 import { getJobLeadsForProvider, getProvidersForUser } from "@/lib/data";
 import { FOUNDING_PRO } from "@/lib/tradie-program";
 import { createClient } from "@/lib/supabase/server";
+import { getServerAuthUser } from "@/lib/supabase/get-server-user";
 import { Suspense } from "react";
 
 export default async function ProOverviewPage() {
   const supabase = await createClient();
-  const {
-    data: { user },
-  } = supabase ? await supabase.auth.getUser() : { data: { user: null } };
+  const user = await getServerAuthUser();
   if (!user) redirect("/login");
 
   const listings = await getProvidersForUser(user.id);
@@ -61,8 +61,32 @@ export default async function ProOverviewPage() {
         ))}
       </div>
 
+      <div className="mt-6 grid gap-6 lg:grid-cols-2">
+        <ProPlanStatus listing={listing} />
+        <div className="rounded-2xl border border-slate-200 bg-white p-6">
+          <h2 className="font-semibold text-slate-900">Quick links</h2>
+          <ul className="mt-3 space-y-2 text-sm">
+            <li>
+              <Link href={`/pro/${listing.slug}`} className="font-semibold text-primary hover:underline">
+                View public profile ↗
+              </Link>
+            </li>
+            <li>
+              <Link href="/dashboard/pro/leads" className="font-semibold text-primary hover:underline">
+                All job leads →
+              </Link>
+            </li>
+            <li>
+              <Link href="/dashboard/pro/profile" className="font-semibold text-primary hover:underline">
+                Edit profile & portfolio →
+              </Link>
+            </li>
+          </ul>
+        </div>
+      </div>
+
       {!isPaid && listing.status === "approved" && (
-        <div className="mt-6 rounded-2xl border border-primary/30 bg-orange-50 p-6">
+        <div className="mt-6 rounded-2xl border border-primary/30 bg-orange-50 p-6 lg:hidden">
           <h2 className="font-semibold text-slate-900">Upgrade for full job lead access</h2>
           <p className="mt-2 text-sm text-slate-600">
             Featured plan unlocks homeowner contact info and priority placement — {FOUNDING_PRO.featuredPrice} founding rate.

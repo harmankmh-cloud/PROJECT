@@ -30,6 +30,8 @@ https://servelocal.ca/auth/callback
 http://localhost:3001/auth/callback
 ```
 
+**Site URL** should match your canonical domain (usually `https://www.servelocal.ca`). If confirm links land on the homepage with `?code=` in the URL, add the redirect URLs above — the app forwards those tokens to `/auth/confirm` automatically.
+
 ---
 
 ## Full step-by-step (Resend + Supabase)
