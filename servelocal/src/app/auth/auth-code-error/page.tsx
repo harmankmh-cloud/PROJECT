@@ -35,15 +35,17 @@ function parseReason(raw: string | undefined): AuthCodeErrorReason {
 export default async function AuthCodeErrorPage({
   searchParams,
 }: {
-  searchParams: Promise<{ reason?: string; email?: string }>;
+  searchParams: Promise<{ reason?: string; email?: string; as?: string }>;
 }) {
   const params = await searchParams;
   const reason = parseReason(params.reason);
   const copy = AUTH_CODE_ERROR_COPY[reason];
+  const asRole =
+    params.as === "pro" || params.as === "homeowner" ? params.as : undefined;
 
   return (
     <AuthLayout title={copy.title} subtitle="Email confirmation">
-      <AuthCodeErrorRecovery reason={reason} initialEmail={params.email} />
+      <AuthCodeErrorRecovery reason={reason} initialEmail={params.email} asRole={asRole} />
       <p className="mt-6 text-center text-sm text-slate-500">
         <Link href="/" className="hover:text-primary hover:underline">
           ← Back to ServeLocal

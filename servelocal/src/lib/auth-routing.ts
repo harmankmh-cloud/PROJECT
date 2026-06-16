@@ -22,17 +22,36 @@ export async function userOwnsProviderListings(userId: string): Promise<boolean>
   return (count ?? 0) > 0;
 }
 
-/** Resolve account type from profile, auth metadata, or owned pro listings. */
+/** Resolve account type: DB profile first, then owned listings, then auth metadata. */
 export async function resolveUserRole(user: User): Promise<UserRole | undefined> {
-  const metaRole = user.user_metadata?.role as string | undefined;
-  if (metaRole === "pro" || metaRole === "homeowner") return metaRole;
-
-  if (await userOwnsProviderListings(user.id)) return "pro";
-
   const profile = await getUserProfile(user.id);
   if (profile?.role) return profile.role;
 
+  if (await userOwnsProviderListings(user.id)) return "pro";
+
+  const metaRole = user.user_metadata?.role as string | undefined;
+  if (metaRole === "pro" || metaRole === "homeowner") return metaRole;
+
   return undefined;
+}
+
+/** Keep auth metadata aligned with user_profiles.role (middleware reads metadata). */
+export async function syncAuthRoleMetadata(user: User, role: UserRole): Promise<void> {
+  if (user.user_metadata?.role === role) return;
+
+  const { createClient } = await import("@/lib/supabase/server");
+  const supabase = await createClient();
+  if (!supabase) return;
+
+  await supabase.auth.updateUser({
+    data: {
+      role,
+      display_name:
+        (user.user_metadata?.display_name as string | undefined)?.trim() ||
+        user.email?.split("@")[0] ||
+        undefined,
+    },
+  });
 }
 
 export function isProPath(pathname: string) {
@@ -88,6 +107,8 @@ export async function resolvePostLoginPath(
   if (!role) {
     return "/auth/choose-role";
   }
+
+  await syncAuthRoleMetadata(user, role);
 
   const next = safeNextPath(options?.next ?? null, role);
 

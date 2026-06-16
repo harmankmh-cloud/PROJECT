@@ -22,7 +22,7 @@ export default async function SignupPage() {
       const user = await getServerAuthUser();
       if (user) {
         const role = await resolveUserRole(user);
-        if (role) redirect("/auth/after-login");
+        if (role) redirect(`/auth/after-login?as=${role}`);
         redirect("/auth/choose-role");
       }
     } catch {

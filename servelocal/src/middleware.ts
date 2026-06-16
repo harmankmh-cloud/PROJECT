@@ -5,15 +5,8 @@ import {
   hasAuthCallbackParams,
   isAuthHandlerPath,
 } from "@/lib/auth/catch-auth-tokens";
-import { isHomeownerDashboardPath, isProPath } from "@/lib/auth-routing";
+import { roleHintFromRequest } from "@/lib/auth/role-hint";
 import { isPlatformAdmin } from "@/lib/admin-auth";
-import type { UserRole } from "@/lib/user-profiles";
-
-function roleFromUser(user: { user_metadata?: Record<string, unknown> }): UserRole | undefined {
-  const metaRole = user.user_metadata?.role;
-  if (metaRole === "pro" || metaRole === "homeowner") return metaRole;
-  return undefined;
-}
 
 function pathNeedsSessionCheck(pathname: string) {
   return (
@@ -83,26 +76,27 @@ export async function middleware(request: NextRequest) {
     return NextResponse.redirect(new URL("/dashboard", request.url));
   }
 
-  if ((pathname.startsWith("/dashboard") || pathname.startsWith("/onboarding") || pathname === "/auth/choose-role") && !user) {
+  if (
+    (pathname.startsWith("/dashboard") ||
+      pathname.startsWith("/onboarding") ||
+      pathname === "/auth/choose-role") &&
+    !user
+  ) {
     return NextResponse.redirect(new URL("/login", request.url));
   }
 
-  if (user) {
-    const role = roleFromUser(user);
+  // Role-based dashboard redirects run in pro/homeowner layouts (DB-aware).
+  // Middleware only guards auth — metadata-only role here caused wrong bounces.
 
-    if (role === "pro" && isHomeownerDashboardPath(pathname)) {
-      return NextResponse.redirect(new URL("/dashboard/pro", request.url));
-    }
-
-    if (role === "homeowner" && isProPath(pathname)) {
-      return NextResponse.redirect(new URL("/dashboard", request.url));
-    }
-  }
-
-  if ((pathname === "/login" || pathname.startsWith("/login/") || pathname === "/signup" || pathname.startsWith("/signup/")) && user) {
-    const as = request.nextUrl.searchParams.get("as");
-    const target =
-      as === "pro" || as === "homeowner" ? `/auth/after-login?as=${as}` : "/auth/after-login";
+  if (
+    (pathname === "/login" ||
+      pathname.startsWith("/login/") ||
+      pathname === "/signup" ||
+      pathname.startsWith("/signup/")) &&
+    user
+  ) {
+    const as = roleHintFromRequest(pathname, request.nextUrl.searchParams.get("as"));
+    const target = as ? `/auth/after-login?as=${as}` : "/auth/after-login";
     return NextResponse.redirect(new URL(target, request.url));
   }
 

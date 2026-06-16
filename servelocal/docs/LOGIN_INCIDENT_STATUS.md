@@ -1,54 +1,41 @@
-# Login incident — retest status (2026-06-14)
+# Login incident — status (2026-06-16)
 
 ## Verdict
 
-| Area | Status | Evidence |
-|------|--------|----------|
-| TRADELOCAL DB + listing | **Working** | `harmanamazon666@gmail.com`: confirmed, `role=pro`, `last_sign_in_at` set, listing `harman-plumbing-12170162` approved |
-| Supabase auth config | **Working** | `site_url=https://www.servelocal.ca`, redirect allowlist includes confirm/callback/after-login (www + non-www) |
-| Vercel env | **Working** | `NEXT_PUBLIC_APP_URL` present (sitemap canonical `https://www.servelocal.ca`); Supabase keys configured on `project-pqhe` |
-| Email confirm → pro routing | **Fixed (pending deploy)** | `emailRedirectTo` and `/auth/confirm` now pass `?as=pro\|homeowner` to `resolvePostLoginPath` |
-| Password reset | **Fixed (pending deploy)** | `/reset-password` page; reset email → confirm → `/reset-password` |
-| Choose-role metadata | **Fixed (pending deploy)** | `/api/user-profile` syncs `role` into auth `user_metadata` on first assignment |
-| Logged-out route guards | **Working** | `/onboarding`, `/dashboard/pro` → 307 `/login` |
-| Homepage token catch | **Working** | `/?code=` → 307 `/auth/confirm` |
-| Pro password login (live session) | **Not re-tested** | Account has signed in before; needs browser test at `/login?as=pro` |
+| Area | Status |
+|------|--------|
+| Auth code in `main` | **Fixed** — role routing, confirm `?as=`, reset password, choose-role sync |
+| Production deploy | **Check Vercel** — `project-pqhe` must deploy latest `main` |
+| Root causes (Jun 16 fix) | **DB vs metadata role mismatch**, **apex vs www cookies**, **missing `?as=` on recovery paths** |
 
-## Auth users (TRADELOCAL)
+## What was broken (why login felt "still broken")
 
-| Email | State | Notes |
-|-------|--------|-------|
-| harmanamazon666@gmail.com | Confirmed, signed in 2026-06-14, `role=pro`, approved listing | Should land on `/dashboard/pro` after password login |
-| harmannonu13@gmail.com | Confirmed + signed in, `role=homeowner` | OK |
-| harmankmh@gmail.com | Confirmed + signed in | OK |
+1. **`resolveUserRole` preferred `user_metadata` over DB** — Pro in `user_profiles` with empty/wrong metadata → homeowner dashboard.
+2. **Middleware used metadata-only role** for dashboard redirects — fought with layout guards; wrong bounces.
+3. **`servelocal.ca` vs `www.servelocal.ca`** — confirm email on www, login on apex → "logged out" (different cookies).
+4. **Resend confirmation / auth-code-error** dropped `?as=pro` — confirm → choose-role loop.
+5. **Hash-token callback** used metadata-only `afterLoginPath()` — skipped DB routing.
 
-## Fixes in this retest (PR branch `cursor/deep-audit-auth-fixes-92d4`)
+## Fixes in PR `cursor/servelocal-auth-fix-28c7`
 
-1. **`authConfirmUrl()`** — accepts `{ as, next }` for email and reset links
-2. **`signup-client.ts`** — `emailRedirectTo` includes `?as=pro|homeowner`
-3. **`/auth/confirm`** — reads `as` query param → `resolvePostLoginPath(user, { next, as })`
-4. **`LoginFormNew`** — reset/resend links include role hint
-5. **`/reset-password`** — new page for recovery flow
-6. **`/api/user-profile`** — syncs role to auth metadata on choose-role
-7. **`/login` + middleware** — preserve `?as=` when redirecting logged-in users to after-login
+| Fix | File |
+|-----|------|
+| DB profile → listings → metadata role order | `src/lib/auth-routing.ts` |
+| Sync metadata from DB on every after-login | `syncAuthRoleMetadata()` |
+| Remove metadata-only dashboard redirects from middleware | `src/middleware.ts` |
+| Preserve `?as=` from `/signup/pro`, `/login/pro` paths | `src/lib/auth/role-hint.ts`, middleware |
+| Apex → www permanent redirect | `next.config.ts` |
+| Resend confirm includes role hint | `AuthCodeErrorRecovery.tsx` |
+| Hash callback → `/auth/after-login` (server resolves role) | `AuthCallbackCatch.tsx` |
+| Login signup link preserves role | `LoginFormNew.tsx` |
+| Choose-role / signup redirects include `?as=` | page routes |
+| Metadata sync on profile API when drift | `api/user-profile/route.ts` |
 
-## Prior fixes (already deployed)
+## Test after deploy
 
-| Item | PR / action |
-|------|-------------|
-| Pro signup → onboarding/dashboard not homepage | PR #130 |
-| Signup dedupe, confirm recovery, getUser throttle | PR #125 |
-| TRADELOCAL project mapping | PR #131 |
-| Auth redirect allowlist + 10 approved providers | Supabase harden + seed |
+1. **Pro login:** https://www.servelocal.ca/login?as=pro → `/dashboard/pro` (or `/onboarding` if no listing)
+2. **Apex redirect:** https://servelocal.ca/login → 308 → www
+3. **Logged out guard:** `/dashboard/pro` → `/login`
+4. Run: `node servelocal/scripts/auth-e2e-smoke.mjs`
 
-## What still needs you
-
-One **fresh pro confirm link click** (or throwaway test inbox) to fully close flow **C** — automated smoke cannot open real email links.
-
-After deploy: sign in at **https://www.servelocal.ca/login?as=pro** with `harmanamazon666@gmail.com` — expect **/dashboard/pro**.
-
-## REST 403 (Postgres)
-
-Grants correct per prior check. Anon 403 on `service_requests` / `bookings` is expected RLS.
-
-See `docs/AUTH_QA.md` for checklist and `node servelocal/scripts/auth-e2e-smoke.mjs` for post-deploy smoke.
+See `docs/AUTH_QA.md` for full checklist.
