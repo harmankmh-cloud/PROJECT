@@ -8,6 +8,8 @@ export class CallSession {
   private isSpeaking = false;
   private lastPrompt = "";
   private lastPromptAt = 0;
+  private replyAbort: AbortController | null = null;
+  private destroyed = false;
 
   constructor(
     private ws: WebSocket,
@@ -15,6 +17,8 @@ export class CallSession {
   ) {}
 
   async handleMessage(raw: string) {
+    if (this.destroyed) return;
+
     let msg: InboundMessage;
     try {
       msg = JSON.parse(raw) as InboundMessage;
@@ -33,14 +37,14 @@ export class CallSession {
         case "prompt":
           if (!msg.voicePrompt?.trim()) return;
           if (!msg.last) return;
-          if (this.isSpeaking) return;
+
+          if (this.isSpeaking) {
+            this.cancelReply();
+          }
 
           const normalizedPrompt = msg.voicePrompt.trim().toLowerCase();
           const now = Date.now();
-          if (
-            normalizedPrompt === this.lastPrompt &&
-            now - this.lastPromptAt < 8000
-          ) {
+          if (normalizedPrompt === this.lastPrompt && now - this.lastPromptAt < 8000) {
             console.log("Relay prompt skipped (duplicate)", { callSid: this.callSid });
             return;
           }
@@ -49,13 +53,18 @@ export class CallSession {
 
           console.log("Relay prompt", { callSid: this.callSid, text: msg.voicePrompt });
           this.transcripts.push({ role: "user", content: msg.voicePrompt });
+
+          const controller = new AbortController();
+          this.replyAbort = controller;
           this.isSpeaking = true;
 
-          const reply = await this.fetchReply(msg.voicePrompt);
-          const text = reply.text || "What can I help you with?";
+          const reply = await this.fetchReply(msg.voicePrompt, controller.signal);
+          if (controller.signal.aborted || this.destroyed) return;
 
+          const text = reply.text || "What can I help you with?";
           const parts = text.match(/\S+\s*/g) || [text];
           for (const part of parts) {
+            if (controller.signal.aborted) return;
             this.send({ type: "text", token: part, last: false });
           }
           this.send({ type: "text", token: "", last: true });
@@ -69,10 +78,12 @@ export class CallSession {
           }
 
           this.isSpeaking = false;
+          this.replyAbort = null;
           break;
 
         case "interrupt":
-          this.isSpeaking = false;
+          console.log("Relay interrupt", { callSid: this.callSid });
+          this.cancelReply();
           break;
 
         case "dtmf":
@@ -86,6 +97,7 @@ export class CallSession {
           break;
       }
     } catch (err) {
+      if (err instanceof Error && err.name === "AbortError") return;
       console.error("Relay session error:", err);
       this.send({
         type: "text",
@@ -93,10 +105,17 @@ export class CallSession {
         last: true,
       });
       this.isSpeaking = false;
+      this.replyAbort = null;
     }
   }
 
-  private async fetchReply(userMessage: string) {
+  private cancelReply() {
+    this.replyAbort?.abort();
+    this.replyAbort = null;
+    this.isSpeaking = false;
+  }
+
+  private async fetchReply(userMessage: string, signal: AbortSignal) {
     const apiUrl =
       process.env.ORCHESTRATOR_APP_URL ||
       process.env.NEXT_PUBLIC_APP_URL ||
@@ -116,7 +135,7 @@ export class CallSession {
           agentId: this.config.agentId,
           userMessage,
         }),
-        signal: AbortSignal.timeout(15000),
+        signal,
       });
 
       if (res.ok) {
@@ -128,6 +147,7 @@ export class CallSession {
       }
       console.warn("Reply API failed", { status: res.status });
     } catch (err) {
+      if (err instanceof Error && err.name === "AbortError") throw err;
       console.error("Reply API error:", err);
     }
 
@@ -140,7 +160,7 @@ export class CallSession {
   }
 
   private send(response: TextResponse) {
-    if (this.ws.readyState === this.ws.OPEN) {
+    if (!this.destroyed && this.ws.readyState === this.ws.OPEN) {
       this.ws.send(JSON.stringify(response));
     }
   }
@@ -172,6 +192,13 @@ export class CallSession {
     } catch (err) {
       console.error("Transfer notification failed:", err);
     }
+  }
+
+  destroy() {
+    if (this.destroyed) return;
+    this.destroyed = true;
+    this.cancelReply();
+    this.ws.removeAllListeners();
   }
 
   getCallSid() {

@@ -1,10 +1,14 @@
+import { after } from "next/server";
 import { NextRequest } from "next/server";
 import {
   buildConversationRelayTwiml,
   buildErrorTwiml,
+  buildMediaStreamTwiml,
   buildSimpleVoiceTwiml,
+  getOrchestratorStreamUrl,
   twimlResponse,
   isSimpleTwilioVoiceMode,
+  isRealtimeTwilioVoiceMode,
 } from "@/lib/twilio";
 import { createAdminClient } from "@/lib/supabase/admin";
 import { canAcceptNewCall, type BillingOrg } from "@/lib/billing-gates";
@@ -13,6 +17,23 @@ import { ensureCallRecord, resolveVoiceContext } from "@/lib/twilio-voice-contex
 import { getFlowWelcomeGreeting } from "@/lib/voice-flow-runtime";
 import { getPublicAppUrl } from "@/lib/public-url";
 import { validateTwilioWebhook } from "@/lib/twilio-webhook";
+
+const FLOW_GREETING_BUDGET_MS = 150;
+
+async function resolveWelcomeGreeting(
+  orgId: string,
+  agentId: string,
+  fallback: string
+): Promise<string> {
+  try {
+    return await Promise.race([
+      getFlowWelcomeGreeting(orgId, agentId, fallback),
+      new Promise<string>((resolve) => setTimeout(() => resolve(fallback), FLOW_GREETING_BUDGET_MS)),
+    ]);
+  } catch {
+    return fallback;
+  }
+}
 
 export async function POST(request: NextRequest) {
   try {
@@ -60,28 +81,54 @@ export async function POST(request: NextRequest) {
       }
     }
 
-    const welcomeGreeting = await getFlowWelcomeGreeting(
-      ctx.orgId,
-      ctx.agentId,
-      ctx.welcomeGreeting
-    );
-    await ensureCallRecord({
-      callSid,
-      orgId: ctx.orgId,
-      agentId: ctx.agentId,
-      from,
-      to,
+    after(async () => {
+      await ensureCallRecord({
+        callSid,
+        orgId: ctx.orgId,
+        agentId: ctx.agentId,
+        from,
+        to,
+      });
     });
 
     const appUrl = getPublicAppUrl(request);
 
     if (isSimpleTwilioVoiceMode()) {
+      const welcomeGreeting = await resolveWelcomeGreeting(
+        ctx.orgId,
+        ctx.agentId,
+        ctx.welcomeGreeting
+      );
       const twiml = buildSimpleVoiceTwiml({
         message: welcomeGreeting,
         gatherUrl: `${appUrl}/api/twilio/gather`,
       });
       return twimlResponse(twiml);
     }
+
+    if (isRealtimeTwilioVoiceMode()) {
+      const streamUrl = getOrchestratorStreamUrl({
+        orgId: ctx.orgId,
+        agentId: ctx.agentId,
+        callSid,
+        from,
+      });
+
+      console.info("MediaStream call (realtime)", {
+        callSid,
+        streamUrl: streamUrl.replace(/from=[^&]+/, "from=REDACTED"),
+        orgId: ctx.orgId,
+        agentId: ctx.agentId,
+      });
+
+      return twimlResponse(buildMediaStreamTwiml({ streamUrl }));
+    }
+
+    const welcomeGreeting = await resolveWelcomeGreeting(
+      ctx.orgId,
+      ctx.agentId,
+      ctx.welcomeGreeting
+    );
 
     const twiml = buildConversationRelayTwiml({
       orgId: ctx.orgId,
