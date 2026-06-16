@@ -94,7 +94,7 @@ export function LandingFooter() {
         </div>
 
         <p className="mt-12 text-center text-xs text-muted">
-          © {new Date().getFullYear()} {BRAND.legalName}. All rights reserved.
+          © {new Date().getFullYear()} {BRAND.legalName} All rights reserved.
         </p>
       </div>
       <ConversionWidgets />

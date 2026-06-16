@@ -1,15 +1,15 @@
-import type { Metadata } from "next";
 import Link from "next/link";
 import { MarketingFooterNew } from "@/components/marketing/MarketingFooterNew";
 import { MarketingNavbar } from "@/components/marketing/MarketingNavbar";
 import { SkipToContent } from "@/components/SkipToContent";
 import { BRAND } from "@/lib/brand";
+import { marketingMetadata } from "@/lib/seo/marketing-metadata";
 
-export const metadata: Metadata = {
+export const metadata = marketingMetadata({
   title: "Security & Compliance",
   description: `How ${BRAND.name} handles security, PIPEDA, CASL, audit logging, and optional US HIPAA for AI phone agents.`,
-  alternates: { canonical: "/security" },
-};
+  path: "/security",
+});
 
 const SECTIONS = [
   {
