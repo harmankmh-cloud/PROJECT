@@ -2,43 +2,65 @@
 
 Manual checks after deploy (Supabase logs + browser Network tab filtered to `auth/v1`).
 
-**Last retest:** 2026-06-14 (production `www.servelocal.ca`, TRADELOCAL `avytxgfkncpacqewnrvz`)
+**Last retest:** 2026-06-16 — production `www.servelocal.ca`, Supabase TRADELOCAL `avytxgfkncpacqewnrvz`  
+**Auth fix merged:** PR [#142](https://github.com/harmankmh-cloud/PROJECT/pull/142) (main)
+
+> **Doc note:** Earlier docs (Jun 14) marked several items “working / pending deploy” after PRs #125–#130.  
+> Those PRs shipped **confirm URLs, dedupe, and choose-role** — but **not** the role-resolution bugs fixed in #142.  
+> If login still failed after “fixes,” the cause was logic (metadata vs DB), not missing deploy.
 
 ## Signup
 
-- [x] Single click on **Create account** → exactly **one** `POST /auth/v1/signup` (no burst) — **working** (PR #125 single-flight; code review)
-- [x] Double-click / rapid clicks → still **one** signup request (`signup.deduped` in dev console if metrics on) — **working** (dedupe in `signup-client.ts`)
-- [x] Existing email → UI shows **“Check your email”** / already registered copy (no retry spam) — **working** (code path)
-- [x] Submit button stays disabled after success — **working** (signup forms lock after submit)
+- [x] Single click → one `POST /auth/v1/signup` — **working** (`signup-client.ts` single-flight)
+- [x] Double-click → still one request — **working**
+- [x] Existing email → “Check your email” (no retry spam) — **working**
+- [x] Submit disabled after success — **working**
 
 ## Email confirm
 
-- [x] Fresh confirmation link → lands on `/auth/confirm` → **one** verify/exchange → redirect to dashboard or after-login — **working after PR** (passes `?as=` through confirm → `resolvePostLoginPath`; needs one live inbox click to fully prove)
-- [x] Same link opened again → `/auth/auth-code-error?reason=link_used` with resend UI (no repeated `/verify` from client) — **working** (error page returns 200; invalid confirm → `invalid_link`)
-- [x] Expired/invalid link → recovery page, not silent homepage — **working** (`/auth/confirm` without params → `auth-code-error`)
+- [x] Confirm link → `/auth/confirm` → one verify → dashboard — **working** (`?as=` preserved)
+- [x] Resend / auth-code-error resend includes `?as=` when provided — **working** (#142)
+- [x] Used link → `auth-code-error?reason=link_used` — **working**
+- [x] Invalid link → recovery page — **working** (smoke: 307 → `invalid_link`)
+
+## Login / role routing (#142)
+
+- [x] `resolveUserRole`: DB profile before metadata — **working** (code)
+- [x] After-login syncs metadata from DB — **working** (code)
+- [x] Middleware: auth guard only (no metadata role bounce) — **working** (code)
+- [x] Apex `servelocal.ca` → `www.servelocal.ca` — **working** (308 in prod + `next.config.ts`)
+- [ ] **Pro password login** → `/dashboard/pro` — **verify in browser** after Vercel deploys #142
+- [ ] **Homeowner login** → `/dashboard` — **verify in browser**
 
 ## Session / getUser noise
 
-- [x] Homepage load (logged out) → **no** `/auth/v1/user` from middleware — **working** (middleware skips `/`)
-- [ ] Dashboard page load → at most **one** `/auth/v1/user` per navigation (RSC dedupe via `getServerAuthUser`) — **not re-tested** (needs logged-in browser session)
-- [ ] No burst of `/auth/v1/user` on idle tab (client uses `getSession` + 5s TTL cache) — **not re-tested**
+- [x] Homepage (logged out) → no middleware `getUser` — **working**
+- [ ] Dashboard load → at most one `/auth/v1/user` — not re-tested (needs logged-in session)
+- [ ] No idle-tab burst — not re-tested
 
 ## Security
 
-- [x] No service role key in browser bundle or client components — **working** (service role server-only)
-- [ ] API 403s on `service_requests` / `bookings` only when RLS expects denial (wrong user), not missing grants — **not re-tested** this pass
+- [x] No service role in client bundle — **working**
+- [ ] RLS 403 only when expected — not re-tested
 
-## Production smoke (automated 2026-06-14)
+## Production smoke (automated 2026-06-16)
+
+Run: `node servelocal/scripts/auth-e2e-smoke.mjs`
 
 | Flow | Result |
 |------|--------|
-| G — `/onboarding`, `/dashboard/pro` logged out | 307 → `/login` |
-| E — `/?code=` token catch | 307 → `/auth/confirm` |
-| D — `auth-code-error?reason=link_used` | 200 |
-| A/B/C — signup confirm + password login | **Blocked** — needs real email click or test credentials |
-
-Run `node servelocal/scripts/auth-e2e-smoke.mjs` after deploy.
+| G — `/onboarding`, `/dashboard/pro` logged out | PASS → 307 `/login` |
+| E — `/?code=` token catch | PASS → 307 `/auth/confirm` |
+| D — `auth-code-error?reason=link_used` | PASS |
+| Confirm missing params | PASS → `invalid_link` |
+| `/login?as=pro`, `/signup/pro` | PASS 200 |
+| A/B/C — email confirm + password login | **Manual** — real inbox or test account |
 
 ## Dev metrics (optional)
 
-Set `NEXT_PUBLIC_AUTH_METRICS=1` and watch console for `getUser.deduped`, `signup.deduped` counters via `getAuthMetrics()` in devtools.
+`NEXT_PUBLIC_AUTH_METRICS=1` → console: `getUser.deduped`, `signup.deduped`.
+
+## Related docs
+
+- `docs/LOGIN_INCIDENT_STATUS.md` — incident timeline and root causes
+- `docs/SUPABASE_MCP_CURSOR.md` — MCP setup (ops)
