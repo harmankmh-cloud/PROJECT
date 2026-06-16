@@ -36,9 +36,15 @@
 
 | Symptom | Fix |
 |---------|-----|
+| Login OK on www but “logged out” on servelocal.ca | Use **www** only — apex redirects to www (#142). Set `NEXT_PUBLIC_APP_URL=https://www.servelocal.ca` |
+| Pro lands on homeowner dashboard | Deploy PR #142+ — DB role must win over metadata. Sign in at `/login?as=pro` |
+| Confirm email → choose-role loop | Resend must include `?as=pro` — fixed #142. Check link URL has `?as=` |
+| Stuck after confirm | Supabase redirect allowlist must include `/auth/confirm`, `/auth/callback`, `/auth/after-login` |
 | Pro can't see job PII | By design after migration 006 — leads via server API with tier masking |
 | Premium checkout blocked | Premium is waitlist; Featured tier only |
 | Wrong Supabase project | ServeLocal must use `avytxgfkncpacqewnrvz`, not RateLocal ref |
+
+Auth checklist: `servelocal/docs/AUTH_QA.md` · Smoke: `node servelocal/scripts/auth-e2e-smoke.mjs`
 
 ## Lead import (local scripts)
 
