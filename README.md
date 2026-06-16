@@ -36,8 +36,8 @@ npm run orchestrator     # Terminal 2: WebSocket server
 ### ⭐ **RateLocal** (`reviewflow/`) — QR-Powered Google Reviews
 **Honest review collection for local businesses. $39/month vs $400+ alternatives.**
 
-- **Live:** Business signup, QR codes, customer review flow, AI prompt editor, dashboard, settings, marketing helpers
-- **In Progress:** Review responses, analytics, Zapier integration, review widgets
+- **Live:** Business signup, QR codes, customer review flow, AI prompts, dashboard, review responses, analytics, outreach
+- **In Progress:** Zapier integration, review widgets
 - **Tech:** Next.js 16, Supabase, Stripe (monthly billing), OpenRouter, Vercel
 - **Port:** 3000 (dev)
 - **Deploy:** [ratelocal.ca](https://ratelocal.ca) on Vercel

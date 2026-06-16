@@ -1,5 +1,5 @@
 import { redirect } from "next/navigation";
 
-export default function BusinessDashboardRedirect() {
+export default function BusinessDashboardPage() {
   redirect("/dashboard");
 }

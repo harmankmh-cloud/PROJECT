@@ -1,5 +1,7 @@
-import { redirect } from "next/navigation";
-
-export default function BusinessDashboardLayout() {
-  redirect("/dashboard");
+export default function BusinessDashboardLayout({
+  children,
+}: {
+  children: React.ReactNode;
+}) {
+  return children;
 }
