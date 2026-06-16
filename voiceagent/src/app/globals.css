@@ -53,6 +53,7 @@
 
 html {
   scroll-behavior: smooth;
+  color-scheme: dark;
   font-size: 15px;
   line-height: 1.6;
 }
@@ -460,6 +461,7 @@ select {
     .animate-marquee {
       animation: none !important;
     }
+  }
   }
 
   .material-symbols-outlined {
