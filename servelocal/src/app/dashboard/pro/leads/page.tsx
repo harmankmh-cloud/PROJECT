@@ -1,5 +1,6 @@
 import { redirect } from "next/navigation";
 import { ProJobLeadsFeed } from "@/components/dashboard/ProJobLeadsFeed";
+import { ProPlanStatus } from "@/components/dashboard/ProPlanStatus";
 import { cityName } from "@/lib/constants";
 import { getJobLeadsForProvider, getProvidersForUser } from "@/lib/data";
 import { createClient } from "@/lib/supabase/server";
@@ -22,6 +23,9 @@ export default async function ProLeadsPage() {
       <p className="mt-1 text-sm text-slate-500">
         Homeowner requests in {cityName(listing.city_slug)} matching your trade.
       </p>
+      <div className="mt-6">
+        <ProPlanStatus listing={listing} />
+      </div>
       <div className="mt-6">
         <ProJobLeadsFeed leads={leads} tier={listing.listing_tier ?? "free"} />
       </div>

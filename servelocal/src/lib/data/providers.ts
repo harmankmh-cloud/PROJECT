@@ -295,6 +295,7 @@ export async function updateProviderOwner(
       | "min_callout_fee"
       | "emergency_available"
       | "whatsapp"
+      | "portfolio_urls"
     >
   >
 ) {

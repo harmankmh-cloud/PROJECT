@@ -13,13 +13,38 @@ export function getOrchestratorWssUrl() {
   return process.env.ORCHESTRATOR_WSS_URL || "wss://localhost:8080/ws";
 }
 
+/** Base WSS host for Media Streams (/stream path). */
+export function getOrchestratorStreamUrl(params: {
+  orgId: string;
+  agentId: string;
+  callSid: string;
+  from: string;
+}) {
+  const relayUrl = getOrchestratorWssUrl();
+  const base = relayUrl.replace(/\/ws\/?$/, "");
+  const qs = new URLSearchParams({
+    orgId: params.orgId,
+    agentId: params.agentId,
+    callSid: params.callSid,
+    from: params.from,
+  });
+  return `${base}/stream?${qs.toString()}`;
+}
+
 export function isSimpleTwilioVoiceMode() {
   return (process.env.TWILIO_VOICE_MODE || "relay") === "simple";
 }
 
+export function isRealtimeTwilioVoiceMode() {
+  return (process.env.TWILIO_VOICE_MODE || "relay") === "realtime";
+}
+
 export function twimlResponse(xml: string) {
   return new Response(xml, {
-    headers: { "Content-Type": "text/xml" },
+    headers: {
+      "Content-Type": "text/xml",
+      "Cache-Control": "no-store, max-age=0",
+    },
   });
 }
 
@@ -198,5 +223,14 @@ export function buildConversationRelayTwiml(params: {
   relay.parameter({ name: "orgId", value: params.orgId });
   relay.parameter({ name: "agentId", value: params.agentId });
 
+  return response.toString();
+}
+
+/** Twilio Media Streams → OpenAI Realtime on orchestrator /stream */
+export function buildMediaStreamTwiml(params: { streamUrl: string }) {
+  const VoiceResponse = twilio.twiml.VoiceResponse;
+  const response = new VoiceResponse();
+  const connect = response.connect();
+  connect.stream({ url: params.streamUrl });
   return response.toString();
 }

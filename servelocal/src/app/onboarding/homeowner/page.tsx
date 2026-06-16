@@ -5,6 +5,7 @@ import { pageMetadata } from "@/lib/seo";
 import { createClient } from "@/lib/supabase/server";
 import { getServerAuthUser } from "@/lib/supabase/get-server-user";
 import { getUserProfile } from "@/lib/user-profiles";
+import { resolveUserRole } from "@/lib/auth-routing";
 
 export const metadata: Metadata = pageMetadata({
   title: "Homeowner Setup",
@@ -19,8 +20,9 @@ export default async function HomeownerOnboardingPage() {
   if (!user) redirect("/login");
 
   const profile = await getUserProfile(user.id);
+  const role = await resolveUserRole(user);
   if (profile?.onboarding_completed_at) redirect("/dashboard");
-  if (profile?.role === "pro") redirect("/dashboard/pro");
+  if (role === "pro") redirect("/dashboard/pro");
 
   return (
     <main className="min-h-screen bg-background px-4 py-10 sm:px-8">

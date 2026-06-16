@@ -17,7 +17,7 @@ export function HomeownerOnboardingWizard({ defaultCity }: { defaultCity?: strin
 
   async function finish() {
     setLoading(true);
-    await fetch("/api/user-profile", {
+    const res = await fetch("/api/user-profile", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({
@@ -28,7 +28,15 @@ export function HomeownerOnboardingWizard({ defaultCity }: { defaultCity?: strin
       }),
     });
     setLoading(false);
-    await redirectAfterAuth(intent.trim() ? "/request" : "/dashboard");
+
+    if (!res.ok) {
+      return;
+    }
+
+    const target = intent.trim()
+      ? `/dashboard/jobs?notice=request_ready&intent=${encodeURIComponent(intent.trim())}`
+      : "/dashboard";
+    await redirectAfterAuth(target);
   }
 
   return (

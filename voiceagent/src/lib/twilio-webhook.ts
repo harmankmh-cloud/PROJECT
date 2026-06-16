@@ -24,7 +24,7 @@ export function validateTwilioWebhook(
   const signature = request.headers.get("x-twilio-signature");
   if (!signature) return false;
 
-  const url = `${getPublicAppUrl(request)}${request.nextUrl.pathname}`;
+  const url = `${getPublicAppUrl(request)}${request.nextUrl.pathname}${request.nextUrl.search}`;
   return twilio.validateRequest(authToken, signature, url, formDataToParams(formData));
 }
 

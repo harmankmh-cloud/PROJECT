@@ -1,53 +1,42 @@
-import { Badge } from "@/components/ui/Badge";
+import Link from "next/link";
+import { redirect } from "next/navigation";
+import { ProJobLeadsFeed } from "@/components/dashboard/ProJobLeadsFeed";
+import { cityName } from "@/lib/constants";
+import { getJobLeadsForProvider, getProvidersForUser } from "@/lib/data";
+import { getServerAuthUser } from "@/lib/supabase/get-server-user";
 
-const JOBS = [
-  { id: "1", client: "Sarah M.", service: "Pipe repair", status: "in_progress", step: 3 },
-  { id: "2", client: "James K.", service: "Panel upgrade", status: "quote_sent", step: 1 },
-  { id: "3", client: "Priya R.", service: "Deep clean", status: "completed", step: 4 },
-];
+export default async function ProJobsPage() {
+  const user = await getServerAuthUser();
+  if (!user) redirect("/login");
 
-const STEPS = ["Quote Sent", "Accepted", "In Progress", "Complete"];
+  const listings = await getProvidersForUser(user.id);
+  if (listings.length === 0) redirect("/onboarding");
 
-export default function ProJobsPage() {
+  const listing = listings[0];
+  const leads = listing.status === "approved" ? await getJobLeadsForProvider(listing) : [];
+
   return (
     <div>
-      <h1 className="font-display text-2xl font-black text-foreground">Jobs</h1>
-      <p className="mt-1 text-sm text-muted">Active jobs with status tracker</p>
-
-      <ul className="mt-6 space-y-4">
-        {JOBS.map((job) => (
-          <li key={job.id} className="rounded-[14px] border border-border bg-surface p-5">
-            <div className="flex flex-wrap items-start justify-between gap-2">
-              <div>
-                <p className="font-semibold text-foreground">{job.client}</p>
-                <p className="text-sm text-muted">{job.service}</p>
-              </div>
-              <Badge variant={job.status === "completed" ? "success" : "orange"}>
-                {job.status.replace("_", " ")}
-              </Badge>
-            </div>
-            <div className="mt-4 flex gap-1">
-              {STEPS.map((step, i) => (
-                <div
-                  key={step}
-                  className={`h-1.5 flex-1 rounded-full ${
-                    i < job.step ? "bg-primary" : "bg-border"
-                  }`}
-                />
-              ))}
-            </div>
-            <p className="mt-2 text-xs text-muted">{STEPS[job.step - 1]}</p>
-            {job.status === "in_progress" && (
-              <button
-                type="button"
-                className="mt-4 rounded-full bg-primary px-4 py-2 text-sm font-semibold text-white"
-              >
-                Mark as Complete
-              </button>
-            )}
-          </li>
-        ))}
-      </ul>
+      <h1 className="font-display text-2xl font-black text-foreground">Open inquiries</h1>
+      <p className="mt-1 text-sm text-muted">
+        Homeowner job posts in {cityName(listing.city_slug)} — call or text direct. No middleman fees.
+      </p>
+      <p className="mt-3 rounded-xl border border-amber-400/30 bg-amber-400/10 px-4 py-3 text-sm text-foreground">
+        <strong>How it works:</strong> When a homeowner posts on ServeLocal, matching pros get an alert.
+        Featured pros see full contact info here and in email. Starter pros see previews until they upgrade.
+      </p>
+      <div className="mt-6">
+        <ProJobLeadsFeed leads={leads} tier={listing.listing_tier ?? "free"} />
+      </div>
+      {leads.length === 0 && listing.status === "approved" && (
+        <p className="mt-6 text-sm text-muted">
+          Tip: Complete your profile and ask homeowners to post at{" "}
+          <Link href="/request" className="font-semibold text-primary hover:underline">
+            /request
+          </Link>{" "}
+          to start receiving leads.
+        </p>
+      )}
     </div>
   );
 }

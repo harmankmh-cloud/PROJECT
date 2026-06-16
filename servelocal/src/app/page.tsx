@@ -8,6 +8,7 @@ import { HowItWorks } from "@/components/landing/HowItWorks";
 import { StatsBarSection } from "@/components/landing/StatsBarSection";
 import { TestimonialsCarousel } from "@/components/landing/TestimonialsCarousel";
 import { MarketingPageShell } from "@/components/layout/MarketingPageShell";
+import { EmptyDirectoryState } from "@/components/search/EmptyDirectoryState";
 import { SERVE_LOCAL } from "@/lib/constants";
 import { getApprovedProviders, getServiceCategories } from "@/lib/data";
 import { pageMetadata } from "@/lib/seo";
@@ -60,7 +61,15 @@ export default async function HomePage() {
       <HeroSection />
       <CategoryGrid categories={categories} proCounts={proCounts} />
       <HowItWorks />
-      <FeaturedProsCarousel providers={featured} categories={categories} />
+      {featured.length > 0 ? (
+        <FeaturedProsCarousel providers={featured} categories={categories} />
+      ) : (
+        <section className="border-t border-border px-4 py-16 sm:px-8">
+          <div className="mx-auto max-w-3xl">
+            <EmptyDirectoryState citySlug="abbotsford" />
+          </div>
+        </section>
+      )}
       <StatsBarSection />
       <CategorySpotlight />
       <TestimonialsCarousel />

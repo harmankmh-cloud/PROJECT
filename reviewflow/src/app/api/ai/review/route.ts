@@ -4,7 +4,6 @@ import { generateReviewOptions } from "@/lib/openrouter";
 import { starToExperienceLevel } from "@/lib/defaults";
 import { buildFallbackReviewOptions } from "@/lib/review-fallbacks";
 import { createAnonClient } from "@/lib/supabase/public";
-import { createServiceClient } from "@/lib/supabase/admin";
 
 const bodySchema = z.object({
   businessId: z.string().uuid(),
@@ -12,14 +11,28 @@ const bodySchema = z.object({
   customerNotes: z.string().min(3).max(1000),
 });
 
-function getSupabase() {
-  return createServiceClient() ?? createAnonClient();
+const rateLimit = new Map<string, number[]>();
+const MAX_REQUESTS_PER_HOUR = 20;
+
+function isRateLimited(ip: string): boolean {
+  const now = Date.now();
+  const windowMs = 60 * 60 * 1000;
+  const hits = (rateLimit.get(ip) ?? []).filter((t) => now - t < windowMs);
+  if (hits.length >= MAX_REQUESTS_PER_HOUR) return true;
+  hits.push(now);
+  rateLimit.set(ip, hits);
+  return false;
 }
 
 export async function POST(request: Request) {
   try {
+    const ip = request.headers.get("x-forwarded-for")?.split(",")[0]?.trim() || "unknown";
+    if (isRateLimited(ip)) {
+      return NextResponse.json({ error: "Too many requests. Try again later." }, { status: 429 });
+    }
+
     const body = bodySchema.parse(await request.json());
-    const supabase = getSupabase();
+    const supabase = createAnonClient();
 
     if (!supabase) {
       return NextResponse.json(
@@ -30,8 +43,9 @@ export async function POST(request: Request) {
 
     const { data: business, error: businessError } = await supabase
       .from("businesses")
-      .select("id, name, business_type, tone")
+      .select("id, name, business_type, tone, slug")
       .eq("id", body.businessId)
+      .not("slug", "is", null)
       .single();
 
     if (businessError || !business) {

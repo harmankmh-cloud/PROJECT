@@ -29,6 +29,14 @@ export async function POST(request: Request) {
 
   try {
     const { plan } = bodySchema.parse(await request.json());
+
+    if (plan === "premium") {
+      return NextResponse.json(
+        { error: "Premium is waitlist-only — contact us at /pricing or use Featured for now." },
+        { status: 503 }
+      );
+    }
+
     const priceId = stripePriceForPlan(plan);
     if (!priceId?.startsWith("price_")) {
       return NextResponse.json(

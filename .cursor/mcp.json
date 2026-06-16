@@ -5,14 +5,38 @@
       "args": ["-m", "project_rag.mcp_server"],
       "cwd": "${workspaceFolder}"
     },
-    "supabase": {
-      "url": "https://mcp.supabase.com/mcp?project_ref=avytxgfkncpacqewnrvz"
+    "stitch": {
+      "command": "npx",
+      "args": ["-y", "stitch-mcp-server@latest"],
+      "env": {
+        "STITCH_API_KEY": "${env:STITCH_API_KEY}"
+      }
     },
     "figma": {
       "url": "https://mcp.figma.com/mcp"
     },
     "datadog": {
       "url": "https://mcp.datadoghq.com/api/unstable/mcp-server/mcp?referrer_ide=cursor-project&toolsets=core,visualizations"
+    },
+    "supabase-greetq": {
+      "url": "https://mcp.supabase.com/mcp?project_ref=lrihhjjxmxixppmrzvva"
+    },
+    "supabase-ratelocal": {
+      "url": "https://mcp.supabase.com/mcp?project_ref=otnddwopphhxstteqizw"
+    },
+    "supabase-servelocal": {
+      "url": "https://mcp.supabase.com/mcp?project_ref=avytxgfkncpacqewnrvz"
+    },
+    "supabase": {
+      "command": "npx",
+      "args": [
+        "-y",
+        "@supabase/mcp-server-supabase@latest",
+        "--read-only"
+      ],
+      "env": {
+        "SUPABASE_ACCESS_TOKEN": "${env:SUPABASE_ACCESS_TOKEN}"
+      }
     }
   }
 }

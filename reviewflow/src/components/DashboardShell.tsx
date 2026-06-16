@@ -4,10 +4,12 @@ import Link from "next/link";
 import { usePathname, useRouter } from "next/navigation";
 import { useState } from "react";
 import {
+  BarChart3,
   CreditCard,
   LayoutDashboard,
   LogOut,
   Menu,
+  MessageSquare,
   Phone,
   QrCode,
   Send,
@@ -21,6 +23,8 @@ const ownerLinks = [
   { href: "/dashboard", label: "Dashboard", icon: LayoutDashboard },
   { href: "/dashboard/share", label: "Review Requests", icon: Send },
   { href: "/dashboard/reviews", label: "Reviews", icon: Star },
+  { href: "/dashboard/respond", label: "Respond", icon: MessageSquare },
+  { href: "/dashboard/analytics", label: "Analytics", icon: BarChart3 },
   { href: "/dashboard/share", label: "QR Codes", icon: QrCode },
   { href: "/dashboard/calls", label: "CallLocal", icon: Phone },
   { href: "/dashboard/settings", label: "Settings", icon: Settings },

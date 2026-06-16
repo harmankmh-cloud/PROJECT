@@ -63,11 +63,19 @@ export function ProJobLeadsFeed({
                 <a href={`tel:${job.customer_phone}`} className="btn-orange px-4 py-2 text-sm">
                   Call {formatPhone(job.customer_phone)}
                 </a>
+                {job.customer_email && (
+                  <a
+                    href={`mailto:${job.customer_email}`}
+                    className="inline-flex items-center rounded-full border border-slate-300 px-4 py-2 text-sm font-semibold text-slate-700"
+                  >
+                    Email
+                  </a>
+                )}
                 <a
                   href={`sms:${job.customer_phone}`}
                   className="inline-flex items-center rounded-full border border-slate-300 px-4 py-2 text-sm font-semibold text-slate-700"
                 >
-                  Message
+                  Text
                 </a>
               </div>
             ) : (
@@ -77,10 +85,11 @@ export function ProJobLeadsFeed({
                   <p className="text-sm text-slate-600">Email: ••••@••••.com</p>
                 </div>
                 <div className="absolute inset-0 flex items-center justify-center rounded-xl bg-slate-900/5 backdrop-blur-[2px]">
-                  <div className="text-center">
+                  <div className="text-center px-4">
                     <Lock className="mx-auto h-5 w-5 text-primary" />
-                    <p className="mt-1 text-sm font-semibold text-primary">Upgrade to contact</p>
-                    <a href="/dashboard/pro/subscription" className="mt-2 inline-block text-xs text-slate-600 underline">
+                    <p className="mt-1 text-sm font-semibold text-primary">Featured unlocks contact</p>
+                    <p className="mt-1 text-xs text-slate-600">You can see the job — upgrade to call this homeowner.</p>
+                    <a href="/dashboard/pro/subscription" className="mt-2 inline-block text-xs font-semibold text-primary underline">
                       View plans
                     </a>
                   </div>

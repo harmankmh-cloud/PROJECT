@@ -1,20 +1,25 @@
-/** Shared secret check for Make / Activepieces marketing webhooks. */
+/** Shared secret check for Make / Activepieces marketing webhooks. Fails closed if unset. */
 export function checkOutreachSecret(request: Request): boolean {
-  const makeSecret = process.env.MAKE_WEBHOOK_SECRET?.trim();
-  const marketingSecret =
-    process.env.ACTIVEPIECES_MARKETING_WEBHOOK_SECRET?.trim() || "ratelocal-marketing-webhook-2026";
+  const makeSecret = process.env.MAKE_WEBHOOK_SECRET?.trim() || null;
+  const marketingSecret = process.env.ACTIVEPIECES_MARKETING_WEBHOOK_SECRET?.trim() || null;
 
-  const auth = request.headers.get("authorization");
-  if (makeSecret && auth === `Bearer ${makeSecret}`) return true;
+  if (!makeSecret && !marketingSecret) return false;
 
-  const makeHeader = request.headers.get("x-make-secret");
-  if (makeSecret && makeHeader === makeSecret) return true;
+  if (makeSecret) {
+    const auth = request.headers.get("authorization");
+    if (auth === `Bearer ${makeSecret}`) return true;
 
-  const rlHeader = request.headers.get("x-ratelocal-secret");
-  if (rlHeader === marketingSecret) return true;
+    const makeHeader = request.headers.get("x-make-secret");
+    if (makeHeader === makeSecret) return true;
+  }
 
-  const greetqCompat = request.headers.get("x-greetq-secret");
-  if (greetqCompat === marketingSecret) return true;
+  if (marketingSecret) {
+    const rlHeader = request.headers.get("x-ratelocal-secret");
+    if (rlHeader === marketingSecret) return true;
+
+    const greetqCompat = request.headers.get("x-greetq-secret");
+    if (greetqCompat === marketingSecret) return true;
+  }
 
   return false;
 }

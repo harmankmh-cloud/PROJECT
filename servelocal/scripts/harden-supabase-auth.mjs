@@ -7,7 +7,8 @@
  *   SUPABASE_ACCESS_TOKEN=sbp_... node servelocal/scripts/harden-supabase-auth.mjs
  *
  * Optional:
- *   SUPABASE_PROJECT_REF — defaults to avytxgfkncpacqewnrvz
+ *   SUPABASE_PROJECT_REF — defaults to avytxgfkncpacqewnrvz (ServeLocal TRADELOCAL)
+ *   SUPABASE_SITE_URL — defaults to https://www.servelocal.ca (use https://greetq.com for GreetQ)
  *   AUTH_DB_CONN_PERCENTAGE — defaults to 15 (percentage of Postgres max_connections)
  */
 
@@ -25,8 +26,8 @@ const headers = {
   "Content-Type": "application/json",
 };
 
-const siteUrl = "https://www.servelocal.ca";
-const allowList = [
+const siteUrl = process.env.SUPABASE_SITE_URL || "https://www.servelocal.ca";
+const defaultRedirects = [
   "https://www.servelocal.ca/auth/confirm",
   "https://servelocal.ca/auth/confirm",
   "https://www.servelocal.ca/auth/callback",
@@ -42,7 +43,8 @@ const allowList = [
   "https://ratelocal.ca/auth/confirm",
   "http://localhost:3000/auth/callback",
   "http://localhost:3000/auth/confirm",
-].join(",");
+];
+const allowList = process.env.SUPABASE_AUTH_REDIRECTS ?? defaultRedirects.join(",");
 
 async function patchAuthConfig() {
   const body = {

@@ -12,8 +12,13 @@ export const metadata: Metadata = {
 export default async function LoginPage({
   searchParams,
 }: {
-  searchParams: Promise<{ error?: string }>;
+  searchParams: Promise<{ error?: string; confirmed?: string }>;
 }) {
   const params = await searchParams;
-  return <LoginForm initialError={params.error ?? ""} />;
+  return (
+    <LoginForm
+      initialError={params.error ?? ""}
+      confirmed={params.confirmed === "1"}
+    />
+  );
 }

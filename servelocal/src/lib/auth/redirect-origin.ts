@@ -6,6 +6,14 @@ export function getAuthRedirectOrigin(fallbackOrigin?: string) {
   return "https://www.servelocal.ca";
 }
 
-export function authConfirmUrl(fallbackOrigin?: string) {
-  return `${getAuthRedirectOrigin(fallbackOrigin)}/auth/confirm`;
+export function authConfirmUrl(
+  fallbackOrigin?: string,
+  options?: { as?: "homeowner" | "pro"; next?: string }
+) {
+  const url = new URL("/auth/confirm", getAuthRedirectOrigin(fallbackOrigin));
+  if (options?.as) url.searchParams.set("as", options.as);
+  if (options?.next?.startsWith("/") && !options.next.startsWith("//")) {
+    url.searchParams.set("next", options.next);
+  }
+  return url.toString();
 }

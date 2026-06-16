@@ -1,6 +1,7 @@
 import { NextResponse } from "next/server";
 import { z } from "zod";
 import { createClient } from "@/lib/supabase/server";
+import { getStripe, isStripeConfigured } from "@/lib/stripe";
 
 const bodySchema = z.object({
   confirmName: z.string().min(2).max(80),
@@ -33,6 +34,21 @@ export async function POST(request: Request) {
         { error: "Business name did not match. Type the exact name to confirm." },
         { status: 400 }
       );
+    }
+
+    if (business.stripe_subscription_id && isStripeConfigured()) {
+      const stripe = getStripe();
+      if (stripe) {
+        try {
+          await stripe.subscriptions.cancel(business.stripe_subscription_id);
+        } catch (err) {
+          console.error("[business/delete] Stripe cancel failed:", err);
+          return NextResponse.json(
+            { error: "Could not cancel subscription. Try billing portal or contact support." },
+            { status: 502 }
+          );
+        }
+      }
     }
 
     const { error } = await supabase.from("businesses").delete().eq("id", business.id);

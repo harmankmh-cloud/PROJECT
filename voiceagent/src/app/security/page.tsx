@@ -61,7 +61,7 @@ const SUBPROCESSORS = [
 
 export default function SecurityPage() {
   return (
-    <div className="dark-mesh-bg grid-pattern flex min-h-screen flex-col">
+    <div className="page-shell flex min-h-screen flex-col">
       <SkipToContent />
       <MarketingNavbar />
       <main id="main-content" className="mx-auto max-w-3xl flex-1 px-6 pb-16 pt-24">

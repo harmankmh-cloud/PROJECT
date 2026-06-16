@@ -53,6 +53,7 @@
 
 html {
   scroll-behavior: smooth;
+  color-scheme: dark;
   font-size: 15px;
   line-height: 1.6;
 }
@@ -68,6 +69,14 @@ html {
     animation-duration: 0.01ms !important;
     animation-iteration-count: 1 !important;
     transition-duration: 0.01ms !important;
+  }
+
+  .animate-marquee {
+    animation: none !important;
+  }
+
+  .waveform-bar {
+    animation: none !important;
   }
 
   [data-motion-root] {
@@ -379,6 +388,18 @@ select {
     animation: marquee 30s linear infinite;
   }
 
+  /* Skip layout/paint for below-fold sections until near viewport (mobile TBT/LCP). */
+  .perf-below-fold {
+    content-visibility: auto;
+    contain-intrinsic-size: auto 480px;
+  }
+
+  @media (max-width: 767px) {
+    .animate-marquee {
+      animation-duration: 40s;
+    }
+  }
+
   @keyframes waveform-bar {
     0%,
     100% {
@@ -461,6 +482,7 @@ select {
       animation: none !important;
     }
   }
+  }
 
   .material-symbols-outlined {
     font-family: "Material Symbols Outlined", sans-serif;
@@ -486,5 +508,58 @@ select {
 
   .text-accent {
     color: var(--color-accent);
+  }
+
+  /* Gentle floating motion for hero accents/cards */
+  .animate-float {
+    animation: float 7s ease-in-out infinite;
+  }
+
+  @keyframes float {
+    0%,
+    100% {
+      transform: translateY(0);
+    }
+    50% {
+      transform: translateY(-12px);
+    }
+  }
+
+  /* Slow drifting aurora glow blobs */
+  .animate-aurora {
+    animation: aurora-drift 16s ease-in-out infinite;
+    will-change: transform;
+  }
+
+  @keyframes aurora-drift {
+    0% {
+      transform: translate(0, 0) scale(1);
+    }
+    50% {
+      transform: translate(28px, -22px) scale(1.12);
+    }
+    100% {
+      transform: translate(0, 0) scale(1);
+    }
+  }
+
+  /* Seamless horizontal marquee (used with a duplicated track) */
+  .animate-marquee {
+    animation: marquee 36s linear infinite;
+  }
+
+  @keyframes marquee {
+    from {
+      transform: translateX(0);
+    }
+    to {
+      transform: translateX(-50%);
+    }
+  }
+
+  /* Soft fade mask for marquee edges */
+  .edge-fade-x {
+    -webkit-mask-image: linear-gradient(to right, transparent, #000 10%, #000 90%, transparent);
+    mask-image: linear-gradient(to right, transparent, #000 10%, #000 90%, transparent);
   }
 }

@@ -10,6 +10,13 @@ MANIFEST_PATH = INDEX_DIR / "manifest.json"
 # Projects indexed for agent + developer RAG
 PROJECTS: list[dict[str, object]] = [
     {
+        "id": "voiceagent",
+        "name": "GreetQ",
+        "path": "voiceagent",
+        "url": "https://greetq.com",
+        "extensions": {".md", ".ts", ".tsx", ".sql", ".mjs", ".json"},
+    },
+    {
         "id": "reviewflow",
         "name": "RateLocal",
         "path": "reviewflow",

@@ -4,6 +4,7 @@ import { PricingCards } from "@/components/PricingCards";
 import { FoundingProBanner, TradieBenefits } from "@/components/TradieBenefits";
 import { SERVE_LOCAL } from "@/lib/constants";
 import { pageMetadata } from "@/lib/seo";
+import { FOUNDING_PRO } from "@/lib/tradie-program";
 
 export const metadata: Metadata = pageMetadata({
   title: "Pro Plans — Founding Pro from $29/mo",
@@ -35,15 +36,15 @@ export default function PricingPage() {
         <div className="mt-12 rounded-[14px] border border-border bg-surface p-8">
           <h2 className="font-display text-xl font-bold text-foreground">What every plan includes</h2>
           <ul className="mt-4 grid gap-2 text-sm text-muted sm:grid-cols-2">
-            <li>✓ Phone &amp; WhatsApp on your profile</li>
+            <li>✓ Phone &amp; WhatsApp on your profile (all plans)</li>
             <li>✓ Customer reviews (moderated)</li>
             <li>✓ Listed in city + category pages</li>
-            <li>✓ Job alerts when homeowners post in your trade + city</li>
+            <li>✓ Featured: full job alerts with homeowner contact</li>
             <li>✓ BC-focused Fraser Valley &amp; Metro coverage</li>
             <li>✓ No per-lead fees for customers</li>
           </ul>
           <p className="mt-6 text-xs text-muted">
-            Founding Pro rate for early listings. Pay via card after approval (Stripe) or contact us. Cancel anytime.
+            Founding Featured rate ({FOUNDING_PRO.featuredPrice}) for early listings — regular price {FOUNDING_PRO.featuredRegular} when founding spots fill. Pay via card after approval (Stripe). Cancel anytime.
           </p>
         </div>
       </div>

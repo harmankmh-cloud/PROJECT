@@ -18,6 +18,7 @@ const WEBHOOK_URL = `${APP_URL}/api/stripe/webhook`;
 
 const MONTHLY_CENTS = Number(process.env.MONTHLY_CENTS || 3900);
 const MONTHLY_LOOKUP = "ratelocal_monthly";
+const DEFAULT_LIVE_MONTHLY = "price_1TfmkXDwgNgi4Q9Vl48M1TSE";
 const SETUP_FEE_CENTS = Number(process.env.SETUP_FEE_CENTS || 0);
 const SETUP_LOOKUP = "ratelocal_setup";
 
@@ -118,7 +119,7 @@ async function main() {
 
   console.log("\n=== Add to Vercel env (then redeploy) ===\n");
   console.log(`STRIPE_SECRET_KEY=${key.slice(0, 12)}...`);
-  console.log(`STRIPE_PRICE_MONTHLY=${monthly.id}`);
+  console.log(`STRIPE_PRICE_MONTHLY=${monthly.id || DEFAULT_LIVE_MONTHLY}`);
   if (setup) console.log(`STRIPE_PRICE_SETUP=${setup.id}`);
   if (endpoint.secret) console.log(`STRIPE_WEBHOOK_SECRET=${endpoint.secret}`);
   console.log("");
