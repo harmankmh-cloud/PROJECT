@@ -1,56 +1,58 @@
-<!-- Copy this entire file to: https://github.com/harmankmh-cloud/harmankmh-cloud/README.md -->
-<!-- GitHub shows it on https://github.com/harmankmh-cloud -->
-
 # Harman · Abbotsford, BC 🇨🇦
 
 **Solo founder building AI tools for local businesses in Canada.**
 
-Voice reception · Google reviews · BC trades directory — priced for SMBs, not enterprise sales cycles.
+I run everything from Abbotsford — product, code, outreach, support. No team, no VC pitch deck. Just shipped software that local SMBs can actually afford.
 
 ---
 
-## Live products
+## What I build
 
-| Product | What it does | Link |
-|---------|--------------|------|
-| **GreetQ** | AI phone agent — answers calls, books, transfers | [greetq.com](https://greetq.com) |
-| **RateLocal** | QR → Google reviews with AI drafts · **$39/mo** | [ratelocal.ca](https://ratelocal.ca) |
-| **ServeLocal** | BC trades directory · free listings, $29 Featured | [servelocal.ca](https://servelocal.ca) |
-| **Route Max** | Free unlimited multi-stop route planner | [route-max.vercel.app](https://route-max.vercel.app) |
+| Product | One line | Live |
+|---------|----------|------|
+| **[GreetQ](https://greetq.com)** | AI phone receptionist — answers, books, transfers | [greetq.com](https://greetq.com) |
+| **[RateLocal](https://ratelocal.ca)** | QR → Google reviews with AI drafts · **$39/mo** | [ratelocal.ca](https://ratelocal.ca) |
+| **[ServeLocal](https://servelocal.ca)** | BC trades directory · free listings, $29 Featured | [servelocal.ca](https://servelocal.ca) |
+| **[Route Max](https://route-max.vercel.app)** | Free unlimited multi-stop route planner | [route-max.vercel.app](https://route-max.vercel.app) |
 
-Monorepo: [harmankmh-cloud/PROJECT](https://github.com/harmankmh-cloud/PROJECT)
-
----
-
-## What I'm focused on
-
-- **Canada-first** — PIPEDA/CASL-aware outreach and positioning (not US SaaS copy-paste)
-- **Honest pricing** — RateLocal at ~10× less than Podium for the same core job (Google reviews)
-- **Hyper-local** — Fraser Valley / BC before pretending to be national
-
-**Stack:** Next.js · Supabase · Vercel · Stripe · Telnyx/Twilio · OpenRouter
+All in one monorepo → **[harmankmh-cloud/PROJECT](https://github.com/harmankmh-cloud/PROJECT)**
 
 ---
 
-## Currently shipping
+## Why Canada / BC
 
-- GreetQ voice + RateLocal review collection (production, paying-ready)
-- ServeLocal directory (early — building pro density in Abbotsford + Langley)
-- Cold outreach via Activepieces → daily API sends (GreetQ + RateLocal)
+US tools (Podium, Smith.ai, Thumbtack) are built for US scale and US compliance stories. I'm building for **PIPEDA/CASL**, honest Google review collection, and **Fraser Valley density** before pretending to be national.
+
+- RateLocal: **$39/mo** vs $400+ reputation platforms  
+- GreetQ: **$79–399/mo** vs human receptionist services  
+- ServeLocal: flat **$29/mo** vs pay-per-lead marketplaces  
+
+---
+
+## Stack I ship with
+
+`Next.js` · `Supabase` · `Vercel` · `Stripe` · `Telnyx/Twilio` · `OpenRouter` · `Activepieces`
+
+---
+
+## Right now
+
+- Production on Vercel — GreetQ, RateLocal, ServeLocal all live  
+- Daily cold outreach (Activepieces → own APIs)  
+- Growing BC customer proof — real businesses, honest numbers  
 
 ---
 
 ## Contact
 
-- **Email:** hello@greetq.com
-- **Location:** Abbotsford, BC
+📍 Abbotsford, BC  
+✉️ [hello@greetq.com](mailto:hello@greetq.com)  
 
 ---
 
 <p align="left">
   <a href="https://greetq.com">GreetQ</a> ·
   <a href="https://ratelocal.ca">RateLocal</a> ·
-  <a href="https://servelocal.ca">ServeLocal</a>
+  <a href="https://servelocal.ca">ServeLocal</a> ·
+  <a href="https://github.com/harmankmh-cloud/PROJECT">Code</a>
 </p>
-
-<!-- Optional: add pinned repos in GitHub → Your profile → Customize → Pinned repositories -->
