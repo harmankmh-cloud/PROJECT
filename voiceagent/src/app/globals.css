@@ -71,6 +71,14 @@ html {
     transition-duration: 0.01ms !important;
   }
 
+  .animate-marquee {
+    animation: none !important;
+  }
+
+  .waveform-bar {
+    animation: none !important;
+  }
+
   [data-motion-root] {
     opacity: 1 !important;
     transform: none !important;
@@ -378,6 +386,18 @@ select {
 
   .animate-marquee {
     animation: marquee 30s linear infinite;
+  }
+
+  /* Skip layout/paint for below-fold sections until near viewport (mobile TBT/LCP). */
+  .perf-below-fold {
+    content-visibility: auto;
+    contain-intrinsic-size: auto 480px;
+  }
+
+  @media (max-width: 767px) {
+    .animate-marquee {
+      animation-duration: 40s;
+    }
   }
 
   @keyframes waveform-bar {
