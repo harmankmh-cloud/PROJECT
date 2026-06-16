@@ -140,6 +140,9 @@
   function validateStopInput(stop) {
     const errors = [];
     if (!stop.name) errors.push("Stop name is required.");
+    if (!stop.address && !Number.isFinite(stop.mile)) {
+      errors.push("Add an address or mile marker.");
+    }
     if (stop.mile < 0) errors.push("Mile marker cannot be negative.");
     if (stop.windowStart && stop.windowEnd && parseTime(stop.windowStart) > parseTime(stop.windowEnd)) {
       errors.push("Time window start must be before end.");
@@ -573,6 +576,98 @@
     });
   }
 
+  function looksLikeAddress(text) {
+    const value = String(text || "").trim();
+    if (value.length < 8) return false;
+    const hasNumber = /\d/.test(value);
+    const hasStreetWord =
+      /\b(st|street|ste|ave|avenue|rd|road|dr|drive|blvd|boulevard|way|lane|ln|crt|crescent|cres|hwy|highway|unit|apt|#)\b/i.test(
+        value,
+      );
+    const hasPostal = /\b[A-Z]\d[A-Z]\s?\d[A-Z]\d\b/i.test(value);
+    return (hasNumber && hasStreetWord) || hasPostal || (hasNumber && value.includes(","));
+  }
+
+  function parseScannedLabel(text) {
+    const raw = String(text || "").trim();
+    if (!raw) return null;
+
+    if (raw.startsWith("{")) {
+      try {
+        const payload = JSON.parse(raw);
+        const nested =
+          payload.address ||
+          payload.deliveryAddress ||
+          payload.shippingAddress ||
+          payload.destination ||
+          payload.to?.address;
+        if (typeof nested === "string") {
+          const address = nested;
+          return {
+            name: clampString(payload.name || payload.recipient || address.split(",")[0], 120),
+            address,
+          };
+        }
+        if (nested && typeof nested === "object") {
+          const parts = [
+            nested.line1 || nested.street,
+            nested.line2,
+            nested.city,
+            nested.province || nested.state,
+            nested.postalCode || nested.postal || nested.zip,
+          ].filter(Boolean);
+          if (parts.length) {
+            const address = parts.join(", ");
+            return {
+              name: clampString(payload.name || payload.recipient || parts[0], 120),
+              address,
+            };
+          }
+        }
+      } catch {
+        /* ignore invalid JSON */
+      }
+    }
+
+    if (raw.includes("|")) {
+      const parts = raw
+        .split("|")
+        .map((part) => part.trim())
+        .filter(Boolean);
+      const address = parts.slice(1).join(", ");
+      if (parts.length >= 2 && looksLikeAddress(address)) {
+        return { name: clampString(parts[0], 120), address };
+      }
+    }
+
+    const lines = raw
+      .split(/\r?\n/)
+      .map((line) => line.trim())
+      .filter(Boolean);
+    if (lines.length > 1 && looksLikeAddress(lines.join(", "))) {
+      return { name: clampString(lines[0], 120), address: lines.join(", ") };
+    }
+
+    if (looksLikeAddress(raw)) {
+      return { name: clampString(raw.split(",")[0], 120), address: raw };
+    }
+
+    return { name: clampString(raw, 120), address: "" };
+  }
+
+  function stopFromScannedText(text, defaults = {}) {
+    const parsed = parseScannedLabel(text);
+    if (!parsed) return null;
+    return createStop({
+      name: parsed.name,
+      address: parsed.address,
+      mile: defaults.mile ?? 0,
+      type: defaults.type || "Delivery",
+      priority: defaults.priority || "Normal",
+      serviceMinutes: defaults.serviceMinutes ?? 8,
+    });
+  }
+
   function parseVoiceStop(text) {
     const raw = String(text || "").trim();
     if (!raw) return null;
@@ -673,6 +768,9 @@
     addRoute,
     deleteRoute,
     parseVoiceStop,
+    parseScannedLabel,
+    stopFromScannedText,
+    looksLikeAddress,
     nextStatus,
     statusLabel,
     priorityScore,

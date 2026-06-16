@@ -48,6 +48,8 @@ npm run start:tunnel
 - CSV import/export and JSON backup/restore
 - Leaflet map with geocoded pins (Nominatim / OpenStreetMap)
 - Voice stop entry on supported browsers
+- **Scan package** (QR/barcode on label) and **paste address** from clipboard
+- GPS start point for better map-based route order
 - Proof-of-delivery notes + photo (web file input, Expo image picker)
 - Multi-route library with local persistence
 - Pre-trip checklist

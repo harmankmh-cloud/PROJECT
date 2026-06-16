@@ -77,6 +77,23 @@ test("parseVoiceStop extracts mile marker", () => {
   assert.equal(stop.mile, 42);
 });
 
+test("parseScannedLabel extracts JSON shipping address", () => {
+  const parsed = engine.parseScannedLabel(
+    JSON.stringify({
+      name: "Jane Doe",
+      address: "123 Main St, Abbotsford, BC V2S 1A1",
+    }),
+  );
+  assert.equal(parsed.name, "Jane Doe");
+  assert.match(parsed.address, /123 Main St/i);
+});
+
+test("stopFromScannedText builds delivery stop", () => {
+  const stop = engine.stopFromScannedText("456 Oak Ave, Surrey BC");
+  assert.equal(stop.type, "Delivery");
+  assert.match(stop.address, /456 Oak Ave/i);
+});
+
 test("coordinate optimization prefers nearest neighbor ordering", () => {
   const stops = [
     engine.createStop({ name: "Far", mile: 0, lat: 49.25, lng: -122.95 }),

@@ -45,6 +45,11 @@ const elements = {
   routeHealth: document.querySelector("#routeHealth"),
   openMaps: document.querySelector("#openMaps"),
   voiceStop: document.querySelector("#voiceStop"),
+  scanStop: document.querySelector("#scanStop"),
+  pasteStop: document.querySelector("#pasteStop"),
+  closeScan: document.querySelector("#closeScan"),
+  scanModal: document.querySelector("#scanModal"),
+  useGpsStart: document.querySelector("#useGpsStart"),
   refreshMap: document.querySelector("#refreshMap"),
   routeMap: document.querySelector("#routeMap"),
   mapHint: document.querySelector("#mapHint"),
@@ -329,6 +334,93 @@ async function geocodeStopAddress(stop) {
   }
 }
 
+async function ensureStartCoordinates(state) {
+  if (Number.isFinite(state.startLat) && Number.isFinite(state.startLng)) return state;
+  if (!state.startCity) return state;
+  try {
+    const result = await RouteMax.geocodeAddress(state.startCity);
+    if (!result) return state;
+    return { ...state, startLat: result.lat, startLng: result.lng };
+  } catch {
+    return state;
+  }
+}
+
+async function addStopToRoute(stop, { resetForm = false } = {}) {
+  const errors = engine.validateStopInput(stop);
+  if (errors.length) {
+    showToast(errors[0], true);
+    return false;
+  }
+
+  stop = await geocodeStopAddress(stop);
+  let state = getState();
+  state = await ensureStartCoordinates(state);
+  state.stops.push(stop);
+  state.stops = engine.optimizeStops(state.stops, { trip: state, priorityWithinCluster: true });
+  setState(state);
+
+  if (resetForm) {
+    elements.stopForm.reset();
+    elements.stopForm.elements.serviceMinutes.value = 8;
+  }
+
+  persistAndRender();
+  return true;
+}
+
+function fillStopFormFromParsed(parsed) {
+  if (!parsed) return;
+  elements.stopForm.elements.stopName.value = parsed.name || "";
+  elements.stopForm.elements.stopAddress.value = parsed.address || "";
+}
+
+async function handleScannedText(text) {
+  const stop = engine.stopFromScannedText(text, {
+    serviceMinutes: readNumber(new FormData(elements.stopForm), "serviceMinutes", 8),
+    type: readText(new FormData(elements.stopForm), "stopType", "Delivery"),
+    priority: readText(new FormData(elements.stopForm), "stopPriority", "Normal"),
+  });
+  if (!stop) {
+    showToast("Scan was empty.", true);
+    return;
+  }
+
+  if (!stop.address) {
+    fillStopFormFromParsed(engine.parseScannedLabel(text));
+    showToast("Scanned text added to form — add/fix address if needed.");
+    return;
+  }
+
+  const added = await addStopToRoute(stop);
+  if (added) showToast(`Added ${stop.name} and reordered route.`);
+}
+
+function closeScanner() {
+  elements.scanModal.hidden = true;
+  if (window.RouteMaxScanner) {
+    RouteMaxScanner.stopScan().catch(() => {});
+  }
+}
+
+async function openScanner() {
+  if (!window.RouteMaxScanner) {
+    showToast("Scanner not available.", true);
+    return;
+  }
+
+  elements.scanModal.hidden = false;
+  try {
+    await RouteMaxScanner.startScan("scanRegion", (decoded) => {
+      closeScanner();
+      handleScannedText(decoded);
+    });
+  } catch {
+    closeScanner();
+    showToast("Camera access failed. Paste the address instead.", true);
+  }
+}
+
 function applyCsvImport(text, replace) {
   const result = engine.importCsv(text);
   const state = getState();
@@ -388,29 +480,17 @@ elements.stopForm.addEventListener("submit", async (event) => {
     notes: readText(form, "stopNotes", ""),
   });
 
-  const errors = engine.validateStopInput(stop);
-  if (errors.length) {
-    showToast(errors[0], true);
-    return;
-  }
-
   const photoInput = elements.stopForm.querySelector("#stopPhoto");
   if (photoInput?.files?.[0]) {
     stop.photoDataUrl = await readFileAsDataUrl(photoInput.files[0]);
   }
 
-  stop = await geocodeStopAddress(stop);
-  const state = getState();
-  state.stops.push(stop);
-  state.stops = engine.optimizeStops(state.stops, { trip: state });
-  setState(state);
-  elements.stopForm.reset();
-  elements.stopForm.elements.serviceMinutes.value = 8;
-  persistAndRender();
+  await addStopToRoute(stop, { resetForm: true });
 });
 
-elements.optimizeStops.addEventListener("click", () => {
-  const state = getState();
+elements.optimizeStops.addEventListener("click", async () => {
+  let state = getState();
+  state = await ensureStartCoordinates(state);
   state.stops = engine.optimizeStops(state.stops, { trip: state, priorityWithinCluster: true });
   setState(state);
   persistAndRender();
@@ -562,6 +642,47 @@ elements.voiceStop.addEventListener("click", () => {
   recognition.onerror = () => showToast("Voice capture failed.", true);
   recognition.start();
   showToast("Listening… say stop name and mile marker.");
+});
+
+elements.scanStop.addEventListener("click", () => {
+  openScanner();
+});
+
+elements.closeScan.addEventListener("click", () => {
+  closeScanner();
+});
+
+elements.pasteStop.addEventListener("click", async () => {
+  try {
+    const text = await navigator.clipboard.readText();
+    if (!text.trim()) {
+      showToast("Clipboard is empty.", true);
+      return;
+    }
+    await handleScannedText(text);
+  } catch {
+    showToast("Paste failed. Long-press the address field and paste manually.", true);
+  }
+});
+
+elements.useGpsStart.addEventListener("click", () => {
+  if (!navigator.geolocation) {
+    showToast("GPS not supported on this device.", true);
+    return;
+  }
+  showToast("Getting your location…");
+  navigator.geolocation.getCurrentPosition(
+    (pos) => {
+      const state = getState();
+      state.startCity = "Current location";
+      state.startLat = pos.coords.latitude;
+      state.startLng = pos.coords.longitude;
+      setState(state);
+      persistAndRender();
+      showToast("Start set to your GPS location.");
+    },
+    () => showToast("Could not get GPS. Type your start address instead.", true),
+  );
 });
 
 function restoreHashRoute() {
