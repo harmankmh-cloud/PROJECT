@@ -20,10 +20,10 @@ export const LANDING = {
     categories: ["Restaurants", "Salons", "Auto", "Health", "Services"],
   },
   stats: [
-    { value: 2000000, suffix: "+", label: "Reviews" },
-    { value: 150000, suffix: "+", label: "Businesses" },
-    { value: 98, suffix: "%", label: "Verified Users" },
-    { value: 4.8, suffix: "★", label: "Avg Platform Rating", isDecimal: true },
+    { value: 500, suffix: "+", label: "Reviews helped" },
+    { value: 6, suffix: "+", label: "BC businesses" },
+    { value: 12, suffix: "", label: "BC cities" },
+    { value: 4.9, suffix: "★", label: "Avg generated rating", isDecimal: true },
   ],
   why: [
     {
@@ -59,7 +59,7 @@ export const LANDING = {
   ],
   footer: {
     tagline: "Canada's trusted local review platform.",
-    forBusiness: "Join 150,000+ businesses building trust on RateLocal",
+    forBusiness: "Join BC businesses building trust on RateLocal",
     madeIn: "Made in Canada 🍁",
   },
 } as const;
