@@ -14,8 +14,7 @@ Production voice runs as a **distributed** system: Vercel answers Twilio's first
 
 ```
 Twilio POST → Vercel /api/twilio/voice
-  → sync: signature, phone→org, billing gate
-  → async: va_calls record (after())
+  → sync: signature, phone→org, billing gate, va_calls record
   → TwiML ConversationRelay → wss://orchestrator/ws
 Orchestrator → Vercel /api/orchestrator/reply (OpenRouter)
 Orchestrator → post-call webhook on hangup
