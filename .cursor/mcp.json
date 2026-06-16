@@ -5,13 +5,6 @@
       "args": ["-m", "project_rag.mcp_server"],
       "cwd": "${workspaceFolder}"
     },
-    "stitch": {
-      "command": "npx",
-      "args": ["-y", "stitch-mcp-server@latest"],
-      "env": {
-        "STITCH_API_KEY": "${env:STITCH_API_KEY}"
-      }
-    },
     "figma": {
       "url": "https://mcp.figma.com/mcp"
     },
@@ -26,6 +19,17 @@
     },
     "supabase-servelocal": {
       "url": "https://mcp.supabase.com/mcp?project_ref=avytxgfkncpacqewnrvz"
+    },
+    "supabase": {
+      "command": "npx",
+      "args": [
+        "-y",
+        "@supabase/mcp-server-supabase@latest",
+        "--read-only"
+      ],
+      "env": {
+        "SUPABASE_ACCESS_TOKEN": "${env:SUPABASE_ACCESS_TOKEN}"
+      }
     }
   }
 }
