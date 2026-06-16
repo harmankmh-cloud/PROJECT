@@ -39,10 +39,22 @@ export function DashboardOverview({
       ? Math.round((stats.googleClicks / stats.pageViews) * 100)
       : 0;
 
+  const rated = feedback.filter((f) => f.star_rating && f.star_rating > 0);
+  const avgRating =
+    rated.length > 0
+      ? Math.round((rated.reduce((sum, f) => sum + (f.star_rating ?? 0), 0) / rated.length) * 10) / 10
+      : null;
+
   const statCards = [
     { label: DASHBOARD.stats.totalReviews, value: feedbackTotal, icon: Star },
     { label: DASHBOARD.stats.requestsSent, value: usage?.used ?? 0, icon: Send },
-    { label: DASHBOARD.stats.avgRating, value: 4.8, icon: Star, suffix: " ★", isRating: true },
+    {
+      label: DASHBOARD.stats.avgRating,
+      value: avgRating ?? "—",
+      icon: Star,
+      suffix: avgRating ? " ★" : "",
+      isRating: true,
+    },
     { label: DASHBOARD.stats.conversion, value: conversion, icon: MessageSquare, suffix: "%" },
   ];
 
@@ -72,9 +84,13 @@ export function DashboardOverview({
                 <Icon className={`h-4 w-4 ${card.isRating ? "fill-accent text-accent" : "text-primary"}`} />
               </div>
               <p className="font-display mt-2 text-3xl text-text">
-                <ClientOnly fallback={<span>{card.value}{card.suffix}</span>}>
-                  <CountUp value={card.value} suffix={card.suffix} />
-                </ClientOnly>
+                {typeof card.value === "number" ? (
+                  <ClientOnly fallback={<span>{card.value}{card.suffix}</span>}>
+                    <CountUp value={card.value} suffix={card.suffix} />
+                  </ClientOnly>
+                ) : (
+                  <span>{card.value}{card.suffix}</span>
+                )}
               </p>
             </div>
           );
