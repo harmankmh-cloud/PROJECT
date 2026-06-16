@@ -1,7 +1,7 @@
 import { createServerClient } from "@supabase/ssr";
 import { NextResponse, type NextRequest } from "next/server";
 import { isPublicApiRoute } from "@/lib/public-api-routes";
-import { authorizedInternal } from "@/lib/internal-auth";
+import { authorizedInternalEdge } from "@/lib/internal-auth-edge";
 import { getSupabaseAnonKey, getSupabaseUrl } from "@/lib/supabase/env";
 
 const PUBLIC_PATHS = ["/login", "/signup", "/forgot-password", "/reset-password"];
@@ -23,7 +23,7 @@ export async function middleware(request: NextRequest) {
   } catch {
     const pathname = request.nextUrl.pathname;
     if (pathname.startsWith("/api/internal/")) {
-      if (!authorizedInternal(request)) {
+      if (!authorizedInternalEdge(request)) {
         return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
       }
       return response;
@@ -63,7 +63,7 @@ export async function middleware(request: NextRequest) {
   const pathname = request.nextUrl.pathname;
 
   if (pathname.startsWith("/api/internal/")) {
-    if (!authorizedInternal(request)) {
+    if (!authorizedInternalEdge(request)) {
       return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
     }
     return response;
