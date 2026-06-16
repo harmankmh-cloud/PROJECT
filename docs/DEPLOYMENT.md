@@ -4,7 +4,7 @@ See also [MONOREPO_DEPLOY.md](./MONOREPO_DEPLOY.md) for the env matrix.
 
 ## Pre-deploy
 
-- [ ] All migrations applied in each Supabase project
+- [ ] All migrations applied in each Supabase project (RateLocal public profiles + owner review reads applied 2026-06-16)
 - [ ] Env vars set in Vercel (or `vercel env add` if UI fails)
 - [ ] Stripe webhooks point to production URLs
 - [ ] Google OAuth redirect: `https://<project-ref>.supabase.co/auth/v1/callback`

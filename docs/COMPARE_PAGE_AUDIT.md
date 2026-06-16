@@ -7,7 +7,7 @@ Audit date: June 16, 2026. Goal: honest claims only; name competitors where it h
 | Location | Issue | Status |
 |----------|-------|--------|
 | `content/copy.ts` LANDING.stats | Was "2M reviews / 150k businesses" | **Fixed** → real BC numbers |
-| `PricingPageContent.tsx` | "Join 150,000+ businesses" | **Fixed** → "$39/mo for BC businesses" |
+| `PublicAuthLayout.tsx` | Was "Join 150,000+ businesses" | **Fixed** → trust badge copy |
 | `MARKETING.hero.trustBadges` | "Used by 6+ BC Businesses" | **Keep** — honest |
 | `PricingPageContent` Enterprise tier | $149, white-label, API | **Flag** — not shipped; consider "Contact us" only or remove features list |
 | `PricingPageContent` Pro features | "Competitor tracking" | **Fixed** → analytics + AI responses (actually shipped) |

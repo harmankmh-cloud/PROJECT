@@ -53,7 +53,7 @@ function ReviewResponseCard({
       const data = await res.json();
       if (!res.ok) throw new Error(data.error || "Save failed");
       toast.show("Response published on your RateLocal profile");
-      onSaved(review.id, body);
+      onSaved(review.id);
     } catch (err) {
       toast.show(err instanceof Error ? err.message : "Could not save");
     } finally {

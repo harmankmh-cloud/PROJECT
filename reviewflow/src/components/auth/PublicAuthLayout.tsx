@@ -1,6 +1,7 @@
 import Link from "next/link";
 import { Star } from "lucide-react";
 import { BRAND } from "@/lib/brand";
+import { MARKETING } from "@/content/copy";
 
 export function PublicAuthLayout({
   children,
@@ -26,7 +27,7 @@ export function PublicAuthLayout({
         <div className="mt-8">{children}</div>
       </div>
       <p className="mt-6 text-center text-sm text-muted">
-        Join 150,000+ businesses building trust on RateLocal
+        {MARKETING.hero.trustBadges[1]}
       </p>
     </div>
   );
