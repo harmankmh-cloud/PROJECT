@@ -10,7 +10,11 @@ import { resolve, dirname } from "node:path";
 import { fileURLToPath } from "node:url";
 
 const __dirname = dirname(fileURLToPath(import.meta.url));
-const SECRET = process.env.RATELOCAL_OUTREACH_SECRET || "ratelocal-marketing-webhook-2026";
+const SECRET = process.env.RATELOCAL_OUTREACH_SECRET?.trim();
+if (!SECRET) {
+  console.error("Set RATELOCAL_OUTREACH_SECRET (must match ACTIVEPIECES_MARKETING_WEBHOOK_SECRET on RateLocal).");
+  process.exit(1);
+}
 const BASE = (process.env.RATELOCAL_URL || "https://ratelocal.ca").replace(/\/$/, "");
 
 function parseCsvField(line, start) {

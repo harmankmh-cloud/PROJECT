@@ -1,6 +1,7 @@
 import { createServerClient } from "@supabase/ssr";
 import { NextResponse, type NextRequest } from "next/server";
 import { isPublicApiRoute } from "@/lib/public-api-routes";
+import { authorizedInternal } from "@/lib/internal-auth";
 import { getSupabaseAnonKey, getSupabaseUrl } from "@/lib/supabase/env";
 
 const PUBLIC_PATHS = ["/login", "/signup", "/forgot-password", "/reset-password"];
@@ -21,6 +22,12 @@ export async function middleware(request: NextRequest) {
     key = getSupabaseAnonKey();
   } catch {
     const pathname = request.nextUrl.pathname;
+    if (pathname.startsWith("/api/internal/")) {
+      if (!authorizedInternal(request)) {
+        return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+      }
+      return response;
+    }
     if (
       pathname.startsWith("/dashboard") ||
       pathname.startsWith("/admin") ||
@@ -54,6 +61,13 @@ export async function middleware(request: NextRequest) {
   } = await supabase.auth.getUser();
 
   const pathname = request.nextUrl.pathname;
+
+  if (pathname.startsWith("/api/internal/")) {
+    if (!authorizedInternal(request)) {
+      return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+    }
+    return response;
+  }
 
   if (pathname.startsWith("/api/") && !isPublicApiRoute(pathname) && !user) {
     return NextResponse.json({ error: "Unauthorized" }, { status: 401 });

@@ -17,8 +17,8 @@ function unauthorized() {
 }
 
 function checkSecret(request: Request): boolean {
-  const secret =
-    process.env.AI_TEAM_WEBHOOK_SECRET?.trim() || "greetq-ai-team-2026";
+  const secret = process.env.AI_TEAM_WEBHOOK_SECRET?.trim();
+  if (!secret) return false;
 
   const auth = request.headers.get("authorization");
   if (auth === `Bearer ${secret}`) return true;

@@ -43,8 +43,8 @@ Verify Supabase works by hitting production APIs — do not assume broken if Ver
 
 Daily sends are **not** configured in Vercel UI. Activepieces calls:
 
-- GreetQ: `POST https://greetq.com/api/make/outreach/daily` — header `X-GreetQ-Secret: greetq-marketing-webhook-2026`
-- RateLocal: `POST https://ratelocal.ca/api/make/outreach/daily` — header `X-RateLocal-Secret: ratelocal-marketing-webhook-2026`
+- GreetQ: `POST https://greetq.com/api/make/outreach/daily` — header `X-GreetQ-Secret: <ACTIVEPIECES_MARKETING_WEBHOOK_SECRET>`
+- RateLocal: `POST https://ratelocal.ca/api/make/outreach/daily` — header `X-RateLocal-Secret: <ACTIVEPIECES_MARKETING_WEBHOOK_SECRET>`
 
 Schedule (Pacific, weekdays): GreetQ **11:00**, RateLocal **14:00**.
 

@@ -1,0 +1,63 @@
+name: CI
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+
+jobs:
+  greetq:
+    name: GreetQ
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: voiceagent
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "20"
+          cache: npm
+          cache-dependency-path: voiceagent/package-lock.json
+      - run: npm ci
+      - run: npm run lint --if-present
+      - run: npm run build
+      - name: Orchestrator build
+        working-directory: voiceagent/orchestrator
+        run: |
+          npm ci
+          npm run build
+
+  ratelocal:
+    name: RateLocal
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: reviewflow
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "20"
+          cache: npm
+          cache-dependency-path: reviewflow/package-lock.json
+      - run: npm ci
+      - run: npm run lint --if-present
+      - run: npm run build
+
+  servelocal:
+    name: ServeLocal
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: servelocal
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "20"
+          cache: npm
+          cache-dependency-path: servelocal/package-lock.json
+      - run: npm ci
+      - run: npm run lint --if-present
+      - run: npm run build

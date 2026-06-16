@@ -4,7 +4,7 @@ export const PUBLIC_API_PREFIXES = [
   "/api/twilio/",
   "/api/telnyx/",
   "/api/make/outreach",
-  "/api/ai/",
+  "/api/ai/team-run",
   "/api/auth/",
   "/api/leads/capture",
   "/api/demo/call",
@@ -12,7 +12,6 @@ export const PUBLIC_API_PREFIXES = [
   "/api/voices",
   "/api/omnichannel/inbound",
   "/api/orchestrator/",
-  "/api/internal/",
 ] as const;
 
 export function isPublicApiRoute(pathname: string): boolean {

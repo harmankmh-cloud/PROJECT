@@ -1,4 +1,4 @@
-import { createDbClient } from "@/lib/supabase/admin";
+import { createDbClient, createServiceClient } from "@/lib/supabase/admin";
 import { createUserDbClient } from "@/lib/supabase/user-db";
 import { isFeaturedTier } from "@/lib/schemas/db";
 import { parseServiceRequests } from "@/lib/schemas/db/service-request";
@@ -159,15 +159,18 @@ export async function notifyProsForJobRequest(input: {
   return { sent, matched: withEmail.length };
 }
 
-/** Job leads scoped by RLS — pro must own an approved listing in the same city/category. */
+/** Job leads via service role — PII masked unless pro is on featured tier. */
 export async function getJobLeadsForProvider(provider: ServiceProvider, limit = 10) {
   const ctx = await createUserDbClient();
   if (!ctx || provider.owner_user_id !== ctx.user.id) return [];
 
+  const admin = createServiceClient();
+  if (!admin) return [];
+
   const since = new Date(Date.now() - 30 * 24 * 60 * 60 * 1000).toISOString();
   const showFullPii = isFeaturedTier(provider.listing_tier) || provider.featured;
 
-  const { data, error } = await ctx.supabase
+  const { data, error } = await admin
     .from("service_requests")
     .select("*")
     .eq("category_slug", provider.category_slug)
