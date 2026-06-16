@@ -29,8 +29,8 @@ Manual checks after deploy (Supabase logs + browser Network tab filtered to `aut
 - [x] After-login syncs metadata from DB — **working** (code)
 - [x] Middleware: auth guard only (no metadata role bounce) — **working** (code)
 - [x] Apex `servelocal.ca` → `www.servelocal.ca` — **working** (308 in prod + `next.config.ts`)
-- [ ] **Pro password login** → `/dashboard/pro` — **verify in browser** after Vercel deploys #142
-- [ ] **Homeowner login** → `/dashboard` — **verify in browser**
+- [ ] **Pro password login** → `/dashboard/pro` — **manual browser verify** (#142 deployed; smoke PASS)
+- [ ] **Homeowner login** → `/dashboard` — **manual browser verify**
 
 ## Session / getUser noise
 

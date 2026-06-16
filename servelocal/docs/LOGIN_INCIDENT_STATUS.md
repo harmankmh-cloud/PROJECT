@@ -9,8 +9,9 @@
 |------|--------|
 | Auth logic on `main` | **Fixed** (#142 — role resolution, www redirect, `?as=` on all paths) |
 | Prior PRs (#125–#130, #126) | **Partial** — dedupe, confirm URLs, choose-role shipped; **role bugs remained** |
-| Production smoke (automated) | **Pass** — `node servelocal/scripts/auth-e2e-smoke.mjs` (2026-06-16) |
-| Pro password login (browser) | **Verify after Vercel deploy** — use `/login?as=pro` |
+| #142 on production | **Deployed** — apex 308 → www, smoke PASS (2026-06-16) |
+| Production smoke (automated) | **Pass** — `node servelocal/scripts/auth-e2e-smoke.mjs` |
+| Pro password login (browser) | **Manual verify** — sign in at `/login?as=pro` with pro account |
 
 ## Why docs said “fixed” but login still broke
 
@@ -47,11 +48,16 @@ They did **not** fix:
 | Login → signup link keeps role | `LoginFormNew.tsx` |
 | Profile API syncs metadata when drift | `api/user-profile/route.ts` |
 
-## Verify after Vercel deploy (`project-pqhe`)
+## Production verify (`project-pqhe`)
 
-1. https://www.servelocal.ca/login?as=pro — pro account → `/dashboard/pro` or `/onboarding`  
-2. https://servelocal.ca/login — 308 → www  
-3. `node servelocal/scripts/auth-e2e-smoke.mjs` — all PASS  
+Automated (2026-06-16):
+
+1. https://servelocal.ca/login — **308 → www** ✓  
+2. `node servelocal/scripts/auth-e2e-smoke.mjs` — **all PASS** ✓  
+
+Manual (one real browser session):
+
+3. https://www.servelocal.ca/login?as=pro — pro account → `/dashboard/pro` or `/onboarding`  
 4. One fresh email confirm click with `?as=pro` in link  
 
 See `docs/AUTH_QA.md` for full checklist.
