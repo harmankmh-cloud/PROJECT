@@ -17,6 +17,13 @@ const nextConfig: NextConfig = {
   },
   async redirects() {
     return [
+      // Session cookies must match NEXT_PUBLIC_APP_URL (www) — apex → www
+      {
+        source: "/:path*",
+        has: [{ type: "host", value: "servelocal.ca" }],
+        destination: "https://www.servelocal.ca/:path*",
+        permanent: true,
+      },
       // Legacy / marketing URLs → canonical category slugs
       { source: "/services/plumbing", destination: "/services/plumber", permanent: true },
       { source: "/services/electrical", destination: "/services/electrician", permanent: true },

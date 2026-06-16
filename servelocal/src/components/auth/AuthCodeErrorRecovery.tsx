@@ -13,9 +13,11 @@ import { createClient } from "@/lib/supabase/client";
 export function AuthCodeErrorRecovery({
   reason,
   initialEmail,
+  asRole,
 }: {
   reason: AuthCodeErrorReason;
   initialEmail?: string;
+  asRole?: "homeowner" | "pro" | null;
 }) {
   const copy = AUTH_CODE_ERROR_COPY[reason] ?? AUTH_CODE_ERROR_COPY.verification_failed;
   const [email, setEmail] = useState(initialEmail ?? "");
@@ -35,7 +37,7 @@ export function AuthCodeErrorRecovery({
       const { error: resendError } = await supabase.auth.resend({
         type: "signup",
         email: trimmed,
-        options: { emailRedirectTo: authConfirmUrl(window.location.origin) },
+        options: { emailRedirectTo: authConfirmUrl(window.location.origin, { as: asRole ?? undefined }) },
       });
 
       if (resendError) {
@@ -85,7 +87,7 @@ export function AuthCodeErrorRecovery({
       )}
       <p className="text-center text-sm text-slate-500">
         Already confirmed?{" "}
-        <Link href="/login" className="font-semibold text-primary hover:underline">
+        <Link href={asRole ? `/login?as=${asRole}` : "/login"} className="font-semibold text-primary hover:underline">
           Sign in
         </Link>
       </p>

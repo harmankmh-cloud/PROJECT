@@ -139,6 +139,13 @@ export function LoginFormNew({
     initialError?.includes("already used") ||
     initialError?.includes("expired");
 
+  const signupHref =
+    asRole === "pro"
+      ? "/signup/pro"
+      : asRole === "homeowner"
+        ? "/signup/homeowner"
+        : "/signup";
+
   return (
     <form onSubmit={handleSubmit((data) => onSubmit(data))} className="space-y-4">
       {!asRole ? (
@@ -213,7 +220,7 @@ export function LoginFormNew({
       )}
       <p className="text-center text-sm text-slate-500">
         New here?{" "}
-        <Link href="/signup" className="font-semibold text-primary hover:underline">
+        <Link href={signupHref} className="font-semibold text-primary hover:underline">
           Create account
         </Link>
       </p>

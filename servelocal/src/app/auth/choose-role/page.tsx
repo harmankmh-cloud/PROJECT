@@ -20,7 +20,7 @@ export default async function ChooseRolePage() {
   if (!user) redirect("/login");
 
   const role = await resolveUserRole(user);
-  if (role) redirect("/auth/after-login");
+  if (role) redirect(`/auth/after-login?as=${role}`);
 
   return (
     <AuthLayout
