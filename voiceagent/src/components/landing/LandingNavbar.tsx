@@ -20,36 +20,43 @@ import {
   Wrench,
   X,
 } from "lucide-react";
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useMemo, useRef, useState } from "react";
 import { BRAND } from "@/lib/brand";
 import { TRIAL_MARKETING } from "@/lib/trial";
 import { GlowButton } from "@/components/ui/GlowButton";
 import { LanguageSwitcher } from "@/components/landing/LanguageSwitcher";
-import { MARKETING_CHROME, type MarketingLocale } from "@/lib/marketing-chrome";
+import {
+  getIndustriesMenu,
+  getProductMenu,
+  MARKETING_CHROME,
+  type MarketingLocale,
+  type NavMenuItem,
+} from "@/lib/marketing-chrome";
 
-type MenuItem = { href: string; label: string; desc: string; icon: React.ReactNode };
+type MenuItem = NavMenuItem & { icon: React.ReactNode };
 
-const PRODUCT_MENU: MenuItem[] = [
-  { href: "/features", label: "Features", desc: "Everything your AI receptionist does", icon: <Sparkles className="h-4 w-4" /> },
-  { href: "/integrations", label: "Integrations", desc: "Calendar, CRM, SMS, and webhooks", icon: <Plug className="h-4 w-4" /> },
-  { href: "/docs", label: "Developers & API", desc: "REST API, webhooks, and docs", icon: <Code2 className="h-4 w-4" /> },
-  { href: "/security", label: "Security", desc: "PIPEDA, CASL, and HIPAA controls", icon: <ShieldCheck className="h-4 w-4" /> },
-  { href: "/status", label: "Status", desc: "Live uptime and incident history", icon: <Activity className="h-4 w-4" /> },
-  { href: "/compare", label: "Compare", desc: "GreetQ vs the alternatives", icon: <BookOpen className="h-4 w-4" /> },
-  { href: "/changelog", label: "Changelog", desc: "Product updates and release notes", icon: <Activity className="h-4 w-4" /> },
-  { href: "/resources/buyers-guide", label: "Buyer's guide", desc: "Evaluate AI receptionists — free checklist", icon: <BookOpen className="h-4 w-4" /> },
-];
+const MENU_ICONS: Record<string, React.ReactNode> = {
+  "/features": <Sparkles className="h-4 w-4" />,
+  "/integrations": <Plug className="h-4 w-4" />,
+  "/docs": <Code2 className="h-4 w-4" />,
+  "/security": <ShieldCheck className="h-4 w-4" />,
+  "/status": <Activity className="h-4 w-4" />,
+  "/compare": <BookOpen className="h-4 w-4" />,
+  "/changelog": <Activity className="h-4 w-4" />,
+  "/resources/buyers-guide": <BookOpen className="h-4 w-4" />,
+  "/dental": <Stethoscope className="h-4 w-4" />,
+  "/hvac": <Thermometer className="h-4 w-4" />,
+  "/legal": <Gavel className="h-4 w-4" />,
+  "/contractors": <Wrench className="h-4 w-4" />,
+  "/real-estate": <Home className="h-4 w-4" />,
+  "/salons": <Scissors className="h-4 w-4" />,
+  "/restaurants": <UtensilsCrossed className="h-4 w-4" />,
+  "/property-managers": <Building2 className="h-4 w-4" />,
+};
 
-const INDUSTRIES_MENU: MenuItem[] = [
-  { href: "/dental", label: "Dental & medical", desc: "After-hours booking, privacy-aware intake", icon: <Stethoscope className="h-4 w-4" /> },
-  { href: "/hvac", label: "HVAC", desc: "Qualify and triage before dispatch", icon: <Thermometer className="h-4 w-4" /> },
-  { href: "/legal", label: "Legal", desc: "Screened intake with full audit trail", icon: <Gavel className="h-4 w-4" /> },
-  { href: "/contractors", label: "Contractors", desc: "Capture job details on first ring", icon: <Wrench className="h-4 w-4" /> },
-  { href: "/real-estate", label: "Real estate", desc: "Never miss a listing inquiry", icon: <Home className="h-4 w-4" /> },
-  { href: "/salons", label: "Salons & spas", desc: "Book while stylists stay with clients", icon: <Scissors className="h-4 w-4" /> },
-  { href: "/restaurants", label: "Restaurants", desc: "Reservations and hours, answered", icon: <UtensilsCrossed className="h-4 w-4" /> },
-  { href: "/property-managers", label: "Property managers", desc: "Tenant calls routed and logged", icon: <Building2 className="h-4 w-4" /> },
-];
+function withIcons(items: NavMenuItem[]): MenuItem[] {
+  return items.map((item) => ({ ...item, icon: MENU_ICONS[item.href] ?? <Sparkles className="h-4 w-4" /> }));
+}
 
 function DesktopDropdown({
   label,
@@ -158,6 +165,8 @@ function MobileGroup({
 
 export function LandingNavbar({ locale = "en" }: { locale?: MarketingLocale }) {
   const chrome = MARKETING_CHROME[locale];
+  const productMenu = useMemo(() => withIcons(getProductMenu(locale)), [locale]);
+  const industriesMenu = useMemo(() => withIcons(getIndustriesMenu(locale)), [locale]);
   const topLinks = [
     { href: "/pricing", label: chrome.pricing },
     { href: "/demo", label: chrome.demo },
@@ -187,16 +196,16 @@ export function LandingNavbar({ locale = "en" }: { locale?: MarketingLocale }) {
       }`}
     >
       <div className="marketing-container flex h-16 items-center justify-between">
-        <Link href="/" className="flex items-center gap-2 font-display text-lg text-text">
+        <Link href={locale === "fr" ? "/fr" : "/"} className="flex items-center gap-2 font-display text-lg text-text">
           <span className="flex h-8 w-8 items-center justify-center rounded-lg bg-violet-600/20 ring-1 ring-violet-500/30">
             <Sparkles className="h-4 w-4 text-violet-400" />
           </span>
           {BRAND.name}
         </Link>
 
-        <nav className="hidden items-center gap-7 lg:flex" aria-label="Main">
-          <DesktopDropdown label={chrome.product} items={PRODUCT_MENU} />
-          <DesktopDropdown label={chrome.industries} items={INDUSTRIES_MENU} wide />
+        <nav className="hidden items-center gap-7 lg:flex" aria-label={locale === "fr" ? "Principal" : "Main"}>
+          <DesktopDropdown label={chrome.product} items={productMenu} />
+          <DesktopDropdown label={chrome.industries} items={industriesMenu} wide />
           {topLinks.map((item) => (
             <Link key={item.href} href={item.href} className="text-sm text-muted transition hover:text-text">
               {item.label}
@@ -215,7 +224,7 @@ export function LandingNavbar({ locale = "en" }: { locale?: MarketingLocale }) {
         <button
           type="button"
           className="rounded-lg border border-border p-2 text-muted lg:hidden"
-          aria-label="Open menu"
+          aria-label={locale === "fr" ? "Ouvrir le menu" : "Open menu"}
           aria-expanded={open}
           onClick={() => setOpen(true)}
         >
@@ -227,13 +236,17 @@ export function LandingNavbar({ locale = "en" }: { locale?: MarketingLocale }) {
         <div className="fixed inset-0 z-50 overflow-y-auto bg-bg/97 backdrop-blur-xl lg:hidden">
           <div className="flex items-center justify-between p-5">
             <span className="font-display text-lg text-text">{BRAND.name}</span>
-            <button type="button" aria-label="Close menu" onClick={() => setOpen(false)}>
+            <button
+              type="button"
+              aria-label={locale === "fr" ? "Fermer le menu" : "Close menu"}
+              onClick={() => setOpen(false)}
+            >
               <X className="h-6 w-6 text-text" />
             </button>
           </div>
-          <nav className="flex flex-col px-5 pb-16 pt-4" aria-label="Mobile">
-            <MobileGroup label={chrome.product} items={PRODUCT_MENU} onNavigate={() => setOpen(false)} />
-            <MobileGroup label={chrome.industries} items={INDUSTRIES_MENU} onNavigate={() => setOpen(false)} />
+          <nav className="flex flex-col px-5 pb-16 pt-4" aria-label={locale === "fr" ? "Mobile" : "Mobile"}>
+            <MobileGroup label={chrome.product} items={productMenu} onNavigate={() => setOpen(false)} />
+            <MobileGroup label={chrome.industries} items={industriesMenu} onNavigate={() => setOpen(false)} />
             {topLinks.map((item) => (
               <Link
                 key={item.href}

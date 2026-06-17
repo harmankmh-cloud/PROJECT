@@ -1,27 +1,28 @@
 import Link from "next/link";
 import { Activity, Leaf, MapPin, ShieldCheck } from "lucide-react";
+import { getTrustBadges, type MarketingLocale } from "@/lib/marketing-chrome";
 
-const BADGES = [
-  { icon: <ShieldCheck className="h-4 w-4 text-success" />, label: "PIPEDA-aware", href: "/security" },
-  { icon: <Leaf className="h-4 w-4 text-success" />, label: "CASL tooling built in", href: "/security" },
-  { icon: <MapPin className="h-4 w-4 text-violet-400" />, label: "Canadian-owned · Made in BC", href: "/about" },
-  { icon: <Activity className="h-4 w-4 text-violet-400" />, label: "System status", href: "/status" },
-] as const;
+const TRUST_ICONS = [ShieldCheck, Leaf, MapPin, Activity] as const;
 
 /** Global trust signals — rendered inside the footer so every public page carries them. */
-export function TrustBar() {
+export function TrustBar({ locale = "en" }: { locale?: MarketingLocale }) {
+  const badges = getTrustBadges(locale);
+
   return (
     <div className="flex flex-wrap items-center justify-center gap-x-7 gap-y-3 border-b border-border/60 pb-8">
-      {BADGES.map((badge) => (
-        <Link
-          key={badge.label}
-          href={badge.href}
-          className="flex items-center gap-2 text-sm text-muted transition hover:text-text"
-        >
-          {badge.icon}
-          {badge.label}
-        </Link>
-      ))}
+      {badges.map((badge, i) => {
+        const Icon = TRUST_ICONS[i];
+        return (
+          <Link
+            key={badge.label}
+            href={badge.href}
+            className="flex items-center gap-2 text-sm text-muted transition hover:text-text"
+          >
+            <Icon className={`h-4 w-4 ${i < 2 ? "text-success" : "text-violet-400"}`} />
+            {badge.label}
+          </Link>
+        );
+      })}
     </div>
   );
 }
