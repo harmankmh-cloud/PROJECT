@@ -1,12 +1,12 @@
-import type { Metadata } from "next";
+import { marketingMetadata } from "@/lib/seo/marketing-metadata";
 import { DocsShell } from "@/components/docs/DocsShell";
 import { DOCS_WEBHOOKS } from "@/lib/docs-content";
 
-export const metadata: Metadata = {
+export const metadata = marketingMetadata({
   title: "Webhooks",
   description: "Outbound call.completed webhook events from GreetQ.",
-  alternates: { canonical: "/docs/webhooks" },
-};
+  path: "/docs/webhooks",
+});
 
 export default function DocsWebhooksPage() {
   const doc = DOCS_WEBHOOKS;

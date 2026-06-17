@@ -1,13 +1,14 @@
-import type { Metadata } from "next";
+import { marketingMetadata } from "@/lib/seo/marketing-metadata";
 import { LoginForm } from "@/components/LoginForm";
 import { BRAND } from "@/lib/brand";
 
-export const metadata: Metadata = {
+export const metadata = marketingMetadata({
   title: "Sign in",
   description: `Sign in to your ${BRAND.name} dashboard to manage AI phone agents, calls, and integrations.`,
-  alternates: { canonical: "/login" },
+  path: "/login",
   robots: { index: false, follow: true },
-};
+});
+
 
 export default async function LoginPage({
   searchParams,

@@ -1,11 +1,12 @@
-import type { Metadata } from "next";
+import { marketingMetadata } from "@/lib/seo/marketing-metadata";
 import { BRAND } from "@/lib/brand";
 
-export const metadata: Metadata = {
+export const metadata = marketingMetadata({
   title: "Set new password",
   description: `Choose a new password for your ${BRAND.name} account.`,
-  alternates: { canonical: "/reset-password" },
-};
+  path: "/reset-password",
+  robots: { index: false, follow: false },
+});
 
 export default function ResetPasswordLayout({ children }: { children: React.ReactNode }) {
   return children;

@@ -4,10 +4,10 @@ import { TRIAL_MARKETING } from "@/lib/trial";
 export const LANDING_COPY = {
   hero: {
     eyebrow: "Your receptionist never calls in sick",
-    headline: "Canadian AI phone agents",
-    wordSwap: ["that book appointments.", " while you work.", " 24/7 — no missed calls."] as const,
+    headline: "That after-hours call is a lead.",
+    wordSwap: [" Are you answering it?", " Book while you work.", " 24/7 — no missed calls."] as const,
     subhead:
-      "GreetQ answers calls, books appointments, and greets every customer like a pro — so you don't have to.",
+      "GreetQ answers calls, books appointments, and greets every customer like a pro — Canadian-built, PIPEDA-aware, 30 free minutes to try.",
     ctaPrimary: "Start free trial",
     ctaSecondary: "Watch demo",
     footnote: `${TRIAL_MARKETING.exploreShort} · ${TRIAL_MARKETING.goLiveShort}`,
@@ -25,7 +25,6 @@ export const LANDING_COPY = {
   },
   stats: [
     { value: 24, suffix: "/7", label: "Always answering" },
-    { value: 99.9, suffix: "%", label: "Uptime SLA", decimals: 1 },
     { value: 30, suffix: " min", label: "Free trial included" },
     { value: 8, suffix: "+", label: "Industry templates" },
   ],
@@ -67,8 +66,8 @@ export const FEATURE_SPOTLIGHTS = [
     id: "api",
     eyebrow: "Developers & API",
     title: "Your call data, one GET away",
-    desc: "Pull transcripts, summaries, sentiment, and action items into any system with the REST API — or push events out with webhooks and Zapier.",
-    bullets: ["REST API with org-scoped keys", "Webhooks for call events", "Zapier & Make friendly payloads"],
+    desc: "Pull transcripts, summaries, sentiment, and action items into any system with the REST API — or push signed events to your webhook URL.",
+    bullets: ["REST API with org-scoped keys", "Webhooks for call.completed events", "Works with Zapier catch hooks and Make"],
     cta: { label: "Read the API docs", href: "/docs" },
     artifact: "code" as const,
   },
@@ -126,7 +125,7 @@ export const BENTO_FEATURES = [
   {
     id: "integrations",
     title: "Works With Your Tools",
-    desc: "HubSpot, Stripe, Telnyx, Twilio, Zapier — connect what you already use.",
+    desc: "HubSpot, Stripe, Telnyx, Twilio, Google Calendar — connect what you already use.",
     large: true,
   },
 ] as const;
@@ -145,7 +144,7 @@ export const HOW_IT_WORKS = [
   {
     step: 3,
     title: "Go live in minutes",
-    desc: "Connect your calendar, point your number at GreetQ, and start answering every call. Takes 5 minutes. No IT help needed.",
+    desc: "Connect your calendar, point your number at GreetQ, and start answering every call. Most teams go live the same day they subscribe.",
   },
 ] as const;
 
@@ -160,7 +159,7 @@ export const FEATURES_PAGE = [
     slug: "appointment-booking",
     title: "Smart Appointment Booking",
     desc: "Books directly into Google Calendar during the call. Callers pick a time; you get a confirmed appointment.",
-    detail: "Calendly integration coming soon. SMS confirmations keep no-shows down.",
+    detail: "Books into Google Calendar during the call. SMS confirmations on Growth and Pro plans.",
   },
   {
     slug: "custom-greetings",
@@ -195,8 +194,8 @@ export const FEATURES_PAGE = [
   {
     slug: "crm",
     title: "CRM Integrations",
-    desc: "HubSpot logging, webhook exports, and Zapier for 5,000+ apps.",
-    detail: "Salesforce and custom CRM connectors on Enterprise.",
+    desc: "HubSpot logging and signed webhook exports to your stack.",
+    detail: "Connect HubSpot in the dashboard. Route webhooks to Zapier, Make, or your own endpoint. Salesforce on Enterprise.",
   },
   {
     slug: "analytics",
@@ -206,8 +205,8 @@ export const FEATURES_PAGE = [
   },
   {
     slug: "bilingual",
-    title: "Bilingual Support (EN/FR)",
-    desc: "Because Canada. English fully supported; French expanding per agent.",
-    detail: "Spanish in beta. Contact us for Enterprise language requirements.",
+    title: "English voice (live) · French (roadmap)",
+    desc: "English voice agents are fully supported today. French voice is on our roadmap for Canadian operators.",
+    detail: "Spanish voice is in beta. Contact us for Enterprise language requirements.",
   },
 ] as const;

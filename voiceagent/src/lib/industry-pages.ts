@@ -43,7 +43,7 @@ const PAGES = {
       { q: "Can it book directly into our schedule?", a: "Yes — GreetQ books into Google Calendar live during the call and sends SMS confirmations. Practice-management integrations are available via API and webhooks." },
       { q: "What happens with a dental emergency?", a: "You define escalation rules. Urgent intents trigger an immediate warm transfer to your on-call line with a transcript and summary handed over." },
     ],
-    compliance: "PIPEDA-first handling with BC health-sector controls on Enterprise. US practices can enable HIPAA mode with a signed BAA.",
+    compliance: "PIPEDA-first handling with BC health-sector controls on Enterprise. US practices can enable HIPAA mode with a signed BAA. Call recording requires lawful consent in your jurisdiction.",
     testimonialIndustry: "Dental",
     related: ["salons", "legal"],
     cta: "Get started free for your clinic",
@@ -53,7 +53,7 @@ const PAGES = {
     title: "AI Receptionist for HVAC Companies",
     headline: "Qualify leads before dispatch",
     description:
-      "Capture address, urgency, and issue details on the first ring. GreetQ books service calls while your techs are on the job.",
+      "Capture address, urgency, and issue details on the first ring. Peak summer and winter volume handled 24/7 while techs are on jobs.",
     stat: { value: "$300+", label: "average value of a single missed service call" },
     points: [
       "Capture address and urgency",
@@ -83,7 +83,7 @@ const PAGES = {
     title: "AI Receptionist for Law Firms",
     headline: "Screen every call with full audit trail",
     description:
-      "GreetQ logs intent, captures consult requests, and warm-transfers with context — built for professional services compliance.",
+      "GreetQ logs intent, captures consult requests, and warm-transfers with context — full audit trail for professional services and client confidentiality.",
     stat: { value: "100%", label: "of calls logged with intent and transcript" },
     points: [
       "Intent logging for follow-up",
@@ -223,7 +223,9 @@ const PAGES = {
       { q: "Can it book by stylist and service?", a: "Yes — service durations and per-stylist calendars are configured in setup, so a cut-and-color books the right time with the right person." },
       { q: "What happens when clients cancel by phone?", a: "GreetQ cancels or reschedules, updates the calendar in real time, and logs the change — recovering slots you'd otherwise lose." },
       { q: "Will it sound like my salon?", a: "You set the greeting, tone, and personality. Preview the voice before going live." },
+      { q: "Quebec salons and Bill 96?", a: "English voice is live today. French voice and a fully French dashboard are on our roadmap — join the waitlist at /fr for updates." },
     ],
+    compliance: "PIPEDA-aware data handling. French-language product experience planned for Quebec operators.",
     testimonialIndustry: "Salon",
     related: ["restaurants", "dental"],
     cta: "Get started free for your salon",

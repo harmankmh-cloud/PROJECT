@@ -20,7 +20,7 @@ const COMPARISON = [
   { feature: "Call transcripts", greetq: true, human: false, competitor: true },
   { feature: "Under $100/mo", greetq: true, human: false, competitor: false },
   { feature: "Never calls in sick", greetq: true, human: false, competitor: true },
-  { feature: "Bilingual EN/FR", greetq: true, human: true, competitor: false },
+  { feature: "English voice (French roadmap)", greetq: "live", human: true, competitor: false },
 ] as const;
 
 /** Server-rendered features page body for SEO. */
@@ -91,7 +91,9 @@ export function FeaturesPageStatic() {
                 {COMPARISON.map((row) => (
                   <tr key={row.feature} className="border-b border-border/50">
                     <td className="p-4 text-text">{row.feature}</td>
-                    <td className="p-4 text-teal-400">{row.greetq ? "✓" : "—"}</td>
+                    <td className="p-4 text-teal-400">
+                      {typeof row.greetq === "string" ? row.greetq : row.greetq ? "✓" : "—"}
+                    </td>
                     <td className="p-4 text-muted">{row.human ? "✓" : "—"}</td>
                     <td className="p-4 text-muted">{row.competitor ? "✓" : "—"}</td>
                   </tr>

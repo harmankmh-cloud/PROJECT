@@ -1,5 +1,5 @@
-import type { Metadata } from "next";
 import { notFound } from "next/navigation";
+import { marketingMetadata } from "@/lib/seo/marketing-metadata";
 import { ComparisonPageTemplate } from "@/components/marketing/ComparisonPageTemplate";
 import { COMPARISON_PAGES, type ComparisonSlug } from "@/lib/comparison-pages";
 
@@ -13,15 +13,15 @@ export async function generateMetadata({
   params,
 }: {
   params: Promise<{ slug: string }>;
-}): Promise<Metadata> {
+}) {
   const { slug } = await params;
   const page = COMPARISON_PAGES[slug as ComparisonSlug];
-  if (!page) return { title: "Compare" };
-  return {
+  if (!page) return marketingMetadata({ title: "Compare", description: "Compare GreetQ", path: `/compare/${slug}` });
+  return marketingMetadata({
     title: page.title,
     description: page.summary,
-    alternates: { canonical: `/compare/${slug}` },
-  };
+    path: `/compare/${slug}`,
+  });
 }
 
 export default async function CompareSlugPage({

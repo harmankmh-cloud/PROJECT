@@ -1,3 +1,4 @@
+import dynamic from "next/dynamic";
 import Link from "next/link";
 import { LandingFooter } from "@/components/landing/LandingFooter";
 import { LandingNavbar } from "@/components/landing/LandingNavbar";
@@ -9,6 +10,10 @@ import { FAQ_ITEMS } from "@/lib/marketing-content";
 import { PLANS } from "@/lib/plans";
 import { BRAND } from "@/lib/brand";
 import { marketingMetadata } from "@/lib/seo/marketing-metadata";
+
+const PricingCalculator = dynamic(
+  () => import("@/components/landing/PricingCalculator").then((m) => ({ default: m.PricingCalculator }))
+);
 
 export const metadata = marketingMetadata({
   title: "Pricing",
@@ -50,6 +55,7 @@ export default function PricingPage() {
       <LandingNavbar />
       <main id="main-content" className="flex-1 pt-24">
         <PricingTableStatic />
+        <PricingCalculator />
         <section className="border-t border-border py-20">
           <div className="marketing-container mx-auto max-w-3xl">
             <h2 className="font-display mb-8 text-center text-2xl text-text">Pricing FAQ</h2>

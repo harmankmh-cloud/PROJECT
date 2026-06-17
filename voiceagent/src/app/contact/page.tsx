@@ -1,14 +1,15 @@
-import type { Metadata } from "next";
+import { marketingMetadata } from "@/lib/seo/marketing-metadata";
 import { LandingNavbar } from "@/components/landing/LandingNavbar";
 import { LandingFooter } from "@/components/landing/LandingFooter";
 import { ContactPageClient } from "@/components/landing/ContactPageClient";
 import { JsonLd } from "@/components/seo/JsonLd";
 import { BRAND } from "@/lib/brand";
 
-export const metadata: Metadata = {
+export const metadata = marketingMetadata({
   title: "Contact",
   description: "Get in touch with the GreetQ team. We don't ghost you.",
-};
+  path: "/contact",
+});
 
 export default function ContactPage() {
   return (
@@ -19,7 +20,7 @@ export default function ContactPage() {
           "@type": "ContactPage",
           name: `Contact ${BRAND.name}`,
           url: `https://${BRAND.domain}/contact`,
-          description: metadata.description,
+          description: "Get in touch with the GreetQ team. We don't ghost you.",
         }}
       />
       <LandingNavbar />

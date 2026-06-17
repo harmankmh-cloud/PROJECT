@@ -18,7 +18,7 @@ export const TRIAL_MARKETING = {
   goLiveShort: "14-day trial to go live",
   goLiveLong: "",
   authPanel: "30 trial minutes, no card. Go live with a 14-day trial when you're ready.",
-  cta: "Get started free",
+  cta: "Start free — 30 min, no card",
   goLiveCta: "Go live — 14-day trial",
 } as const;
 

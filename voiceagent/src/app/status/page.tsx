@@ -1,14 +1,15 @@
-import type { Metadata } from "next";
+import { marketingMetadata } from "@/lib/seo/marketing-metadata";
 import { MarketingFooterNew } from "@/components/marketing/MarketingFooterNew";
 import { MarketingNavbar } from "@/components/marketing/MarketingNavbar";
 import { SkipToContent } from "@/components/SkipToContent";
 import { BRAND } from "@/lib/brand";
 
-export const metadata: Metadata = {
+export const metadata = marketingMetadata({
   title: "System status",
   description: `Current operational status for ${BRAND.name} services.`,
-  alternates: { canonical: "/status" },
-};
+  path: "/status",
+});
+
 
 const COMPONENTS = [
   { name: "Voice API", status: "operational" },
@@ -59,8 +60,11 @@ export default function StatusPage() {
               </ul>
 
               <p className="mt-8 text-xs text-muted">
-                This page reflects our last manual check. For incident updates, contact{" "}
-                {BRAND.contact.email}. Enterprise SLAs define formal uptime commitments.
+                {embedUrl
+                  ? "Status data is provided by our external monitoring service."
+                  : "Set NEXT_PUBLIC_STATUS_PAGE_URL for live uptime from your monitor (Better Stack, UptimeRobot, etc.). Until then, this page reflects our last manual check."}{" "}
+                For incident updates, contact {BRAND.contact.email}. Enterprise SLAs define formal uptime
+                commitments when contracted.
               </p>
             </>
           )}

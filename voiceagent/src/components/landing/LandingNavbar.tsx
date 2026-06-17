@@ -25,6 +25,7 @@ import { BRAND } from "@/lib/brand";
 import { TRIAL_MARKETING } from "@/lib/trial";
 import { GlowButton } from "@/components/ui/GlowButton";
 import { LanguageSwitcher } from "@/components/landing/LanguageSwitcher";
+import { MARKETING_CHROME, type MarketingLocale } from "@/lib/marketing-chrome";
 
 type MenuItem = { href: string; label: string; desc: string; icon: React.ReactNode };
 
@@ -49,12 +50,6 @@ const INDUSTRIES_MENU: MenuItem[] = [
   { href: "/restaurants", label: "Restaurants", desc: "Reservations and hours, answered", icon: <UtensilsCrossed className="h-4 w-4" /> },
   { href: "/property-managers", label: "Property managers", desc: "Tenant calls routed and logged", icon: <Building2 className="h-4 w-4" /> },
 ];
-
-const TOP_LINKS = [
-  { href: "/pricing", label: "Pricing" },
-  { href: "/demo", label: "Demo" },
-  { href: "/blog", label: "Blog" },
-] as const;
 
 function DesktopDropdown({
   label,
@@ -161,7 +156,13 @@ function MobileGroup({
   );
 }
 
-export function LandingNavbar() {
+export function LandingNavbar({ locale = "en" }: { locale?: MarketingLocale }) {
+  const chrome = MARKETING_CHROME[locale];
+  const topLinks = [
+    { href: "/pricing", label: chrome.pricing },
+    { href: "/demo", label: chrome.demo },
+    { href: "/blog", label: chrome.blog },
+  ];
   const [scrolled, setScrolled] = useState(false);
   const [open, setOpen] = useState(false);
 
@@ -194,9 +195,9 @@ export function LandingNavbar() {
         </Link>
 
         <nav className="hidden items-center gap-7 lg:flex" aria-label="Main">
-          <DesktopDropdown label="Product" items={PRODUCT_MENU} />
-          <DesktopDropdown label="Industries" items={INDUSTRIES_MENU} wide />
-          {TOP_LINKS.map((item) => (
+          <DesktopDropdown label={chrome.product} items={PRODUCT_MENU} />
+          <DesktopDropdown label={chrome.industries} items={INDUSTRIES_MENU} wide />
+          {topLinks.map((item) => (
             <Link key={item.href} href={item.href} className="text-sm text-muted transition hover:text-text">
               {item.label}
             </Link>
@@ -206,9 +207,9 @@ export function LandingNavbar() {
         <div className="hidden items-center gap-3 lg:flex">
           <LanguageSwitcher />
           <Link href="/login" className="text-sm text-muted transition hover:text-text">
-            Sign in
+            {chrome.signIn}
           </Link>
-          <GlowButton href="/signup">{TRIAL_MARKETING.cta}</GlowButton>
+          <GlowButton href="/signup">{locale === "fr" ? chrome.cta : TRIAL_MARKETING.cta}</GlowButton>
         </div>
 
         <button
@@ -231,9 +232,9 @@ export function LandingNavbar() {
             </button>
           </div>
           <nav className="flex flex-col px-5 pb-16 pt-4" aria-label="Mobile">
-            <MobileGroup label="Product" items={PRODUCT_MENU} onNavigate={() => setOpen(false)} />
-            <MobileGroup label="Industries" items={INDUSTRIES_MENU} onNavigate={() => setOpen(false)} />
-            {TOP_LINKS.map((item) => (
+            <MobileGroup label={chrome.product} items={PRODUCT_MENU} onNavigate={() => setOpen(false)} />
+            <MobileGroup label={chrome.industries} items={INDUSTRIES_MENU} onNavigate={() => setOpen(false)} />
+            {topLinks.map((item) => (
               <Link
                 key={item.href}
                 href={item.href}
@@ -250,10 +251,10 @@ export function LandingNavbar() {
                 className="rounded-lg border border-border py-3 text-center text-text"
                 onClick={() => setOpen(false)}
               >
-                Sign in
+                {chrome.signIn}
               </Link>
               <GlowButton href="/signup" className="py-3">
-                {TRIAL_MARKETING.cta}
+                {locale === "fr" ? chrome.cta : TRIAL_MARKETING.cta}
               </GlowButton>
             </div>
           </nav>

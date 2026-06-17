@@ -199,7 +199,7 @@ export function SettingsTabs() {
         <Tabs.Content value="integrations" className="mt-6">
           <CardSection title="Integrations">
             <p className="text-sm text-muted">
-              Connect Google Calendar, Calendly, HubSpot, and more to automate bookings and CRM updates.
+              Connect Google Calendar and HubSpot today. Calendly is on the roadmap — use webhooks for other tools.
             </p>
             <Link href="/dashboard/integrations" className="btn-primary inline-flex mt-4">
               Manage integrations →

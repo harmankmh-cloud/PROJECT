@@ -1,4 +1,4 @@
-import type { Metadata } from "next";
+import { marketingMetadata } from "@/lib/seo/marketing-metadata";
 import Link from "next/link";
 import { ArrowRight } from "lucide-react";
 import { LandingFooter } from "@/components/landing/LandingFooter";
@@ -6,11 +6,11 @@ import { LandingNavbar } from "@/components/landing/LandingNavbar";
 import { SkipToContent } from "@/components/SkipToContent";
 import { BLOG_POSTS } from "@/lib/blog-posts";
 
-export const metadata: Metadata = {
+export const metadata = marketingMetadata({
   title: "Case studies",
   description: "How local businesses use GreetQ for call answering, booking, and compliance.",
-  alternates: { canonical: "/case-studies" },
-};
+  path: "/case-studies",
+});
 
 const CASE_STUDY_CARDS = [
   {
@@ -52,7 +52,8 @@ export default function CaseStudiesPage() {
             <p className="section-eyebrow mb-3">Case studies</p>
             <h1 className="font-display text-4xl text-ghost-white">Customer stories</h1>
             <p className="mx-auto mt-4 max-w-2xl text-on-surface-variant">
-              Real-world deployment patterns from dental, HVAC, and service businesses in Canada.
+              Deployment patterns from dental, HVAC, and service businesses — illustrative guides,
+              not named customer financial results.
             </p>
           </div>
 

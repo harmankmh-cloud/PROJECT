@@ -7,6 +7,9 @@ type MarketingMetadataInput = {
   title: string;
   description: string;
   path: string;
+  locale?: "en_CA" | "fr_CA";
+  robots?: Metadata["robots"];
+  ogType?: "website" | "article";
 };
 
 /** Page-level Open Graph + Twitter cards for marketing routes (overrides root layout defaults). */
@@ -14,18 +17,30 @@ export function marketingMetadata({
   title,
   description,
   path,
+  locale = "en_CA",
+  robots,
+  ogType = "website",
 }: MarketingMetadataInput): Metadata {
   const canonicalPath = path.startsWith("/") ? path : `/${path}`;
   const url = `${siteUrl}${canonicalPath}`;
   const socialTitle = title.includes(BRAND.name) ? title : `${title} · ${BRAND.name}`;
 
+  const languages =
+    locale === "fr_CA" || canonicalPath === "/fr"
+      ? { "en-CA": siteUrl, "fr-CA": `${siteUrl}/fr` }
+      : undefined;
+
   return {
     title,
     description,
-    alternates: { canonical: canonicalPath },
+    ...(robots ? { robots } : {}),
+    alternates: {
+      canonical: canonicalPath,
+      ...(languages ? { languages } : {}),
+    },
     openGraph: {
-      type: "website",
-      locale: "en_CA",
+      type: ogType,
+      locale,
       url,
       siteName: BRAND.name,
       title: socialTitle,

@@ -1,15 +1,16 @@
-import type { Metadata } from "next";
+import { marketingMetadata } from "@/lib/seo/marketing-metadata";
 import Link from "next/link";
 import { LandingFooter } from "@/components/landing/LandingFooter";
 import { LandingNavbar } from "@/components/landing/LandingNavbar";
 import { SkipToContent } from "@/components/SkipToContent";
 import { BRAND } from "@/lib/brand";
 
-export const metadata: Metadata = {
+export const metadata = marketingMetadata({
   title: "About",
   description: `Learn about ${BRAND.name} — a Vancouver-based voice AI platform for local businesses at ${BRAND.domain}.`,
-  alternates: { canonical: "/about" },
-};
+  path: "/about",
+});
+
 
 export default function AboutPage() {
   return (

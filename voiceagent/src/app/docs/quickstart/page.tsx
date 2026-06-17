@@ -1,12 +1,12 @@
-import type { Metadata } from "next";
+import { marketingMetadata } from "@/lib/seo/marketing-metadata";
 import { DocsSection, DocsShell } from "@/components/docs/DocsShell";
 import { DOCS_QUICKSTART } from "@/lib/docs-content";
 
-export const metadata: Metadata = {
+export const metadata = marketingMetadata({
   title: "Quickstart",
   description: "Connect telephony and go live with GreetQ in four steps.",
-  alternates: { canonical: "/docs/quickstart" },
-};
+  path: "/docs/quickstart",
+});
 
 export default function DocsQuickstartPage() {
   return (

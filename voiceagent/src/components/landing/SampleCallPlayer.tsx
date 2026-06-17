@@ -58,8 +58,11 @@ export function SampleCallPlayer() {
           <div className="mb-8 text-center">
             <p className="section-eyebrow mb-3">Hear it in action</p>
             <h2 className="font-display text-2xl text-text md:text-3xl">
-              A real booking call — no phone number required
+              Sample booking call — scripted preview
             </h2>
+            <p className="mt-2 text-sm text-muted">
+              This is a typical conversation flow, not a recording of a live call.
+            </p>
           </div>
 
           <div className="overflow-hidden rounded-xl border border-border bg-surface shadow-[0_8px_40px_rgba(0,0,0,0.35)]">
