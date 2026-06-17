@@ -1,13 +1,14 @@
-import type { Metadata } from "next";
+import { marketingMetadata } from "@/lib/seo/marketing-metadata";
 import { DocsSection, DocsShell } from "@/components/docs/DocsShell";
 import { DOCS_OVERVIEW } from "@/lib/docs-content";
 import { BRAND } from "@/lib/brand";
 
-export const metadata: Metadata = {
+export const metadata = marketingMetadata({
   title: "API overview",
   description: `Authentication, base URL, and rate limits for the ${BRAND.name} API.`,
-  alternates: { canonical: "/docs" },
-};
+  path: "/docs",
+});
+
 
 export default function DocsOverviewPage() {
   return (

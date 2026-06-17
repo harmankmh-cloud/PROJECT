@@ -1,11 +1,10 @@
 import Link from "next/link";
-import { Activity, Leaf, MapPin, ShieldCheck, Timer } from "lucide-react";
+import { Activity, Leaf, MapPin, ShieldCheck } from "lucide-react";
 
 const BADGES = [
   { icon: <ShieldCheck className="h-4 w-4 text-success" />, label: "PIPEDA-aware", href: "/security" },
   { icon: <Leaf className="h-4 w-4 text-success" />, label: "CASL tooling built in", href: "/security" },
   { icon: <MapPin className="h-4 w-4 text-violet-400" />, label: "Canadian-owned · Made in BC", href: "/about" },
-  { icon: <Timer className="h-4 w-4 text-violet-400" />, label: "99.9% uptime SLA", href: "/status" },
   { icon: <Activity className="h-4 w-4 text-violet-400" />, label: "System status", href: "/status" },
 ] as const;
 

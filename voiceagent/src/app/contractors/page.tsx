@@ -1,14 +1,14 @@
-import type { Metadata } from "next";
+import { marketingMetadata } from "@/lib/seo/marketing-metadata";
 import { IndustryPageTemplate } from "@/components/marketing/IndustryPageTemplate";
 import { INDUSTRY_PAGES } from "@/lib/industry-pages";
 
 const page = INDUSTRY_PAGES.contractors;
 
-export const metadata: Metadata = {
+export const metadata = marketingMetadata({
   title: page.title,
   description: page.description,
-  alternates: { canonical: "/contractors" },
-};
+  path: "/contractors",
+});
 
 export default function ContractorsPage() {
   return <IndustryPageTemplate slug="contractors" />;

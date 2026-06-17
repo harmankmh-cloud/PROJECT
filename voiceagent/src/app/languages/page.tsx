@@ -1,15 +1,16 @@
-import type { Metadata } from "next";
+import { marketingMetadata } from "@/lib/seo/marketing-metadata";
 import Link from "next/link";
 import { MarketingFooterNew } from "@/components/marketing/MarketingFooterNew";
 import { MarketingNavbar } from "@/components/marketing/MarketingNavbar";
 import { SkipToContent } from "@/components/SkipToContent";
 import { BRAND } from "@/lib/brand";
 
-export const metadata: Metadata = {
+export const metadata = marketingMetadata({
   title: "Languages",
   description: `Language support for ${BRAND.name} voice agents — English, Spanish beta, and French roadmap.`,
-  alternates: { canonical: "/languages" },
-};
+  path: "/languages",
+});
+
 
 const LANGUAGES = [
   {

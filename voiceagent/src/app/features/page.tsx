@@ -1,4 +1,4 @@
-import type { Metadata } from "next";
+import { marketingMetadata } from "@/lib/seo/marketing-metadata";
 import Link from "next/link";
 import { ArrowRight } from "lucide-react";
 import { FeaturesPageStatic } from "@/components/landing/FeaturesPageStatic";
@@ -6,12 +6,11 @@ import { LandingFooter } from "@/components/landing/LandingFooter";
 import { LandingNavbar } from "@/components/landing/LandingNavbar";
 import { SkipToContent } from "@/components/SkipToContent";
 
-export const metadata: Metadata = {
+export const metadata = marketingMetadata({
   title: "Features",
-  description:
-    "Everything your receptionist should do — AI call answering, booking, transcripts, CRM integrations, and bilingual support for Canadian businesses.",
-  alternates: { canonical: "/features" },
-};
+  description: "Everything your receptionist should do — AI call answering, booking, transcripts, CRM integrations, and English voice with French on the roadmap.",
+  path: "/features",
+});
 
 export default function FeaturesPage() {
   return (

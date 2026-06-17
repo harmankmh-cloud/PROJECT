@@ -82,10 +82,10 @@ export function DemoSalesPage() {
           transition={{ duration: 2.5, repeat: Infinity }}
         >
           <div className="flex items-center justify-between text-xs text-muted">
-            <span>Incoming call — demo</span>
-            <span className="flex items-center gap-1.5 text-teal-400">
-              <span className="pulse-dot bg-teal-400" />
-              Live
+            <span>Incoming call — sample preview</span>
+            <span className="flex items-center gap-1.5 text-violet-300">
+              <span className="pulse-dot bg-violet-400" />
+              Sample
             </span>
           </div>
           <div className="mt-6 flex justify-center">
@@ -114,9 +114,9 @@ export function DemoSalesPage() {
         </motion.div>
 
         <div>
-          <h2 className="font-display text-xl text-text">Book a live demo call</h2>
+          <h2 className="font-display text-xl text-text">Request a guided demo</h2>
           <p className="mt-2 text-sm text-muted">
-            We&apos;ll call you. Our AI answers so you can hear it yourself.
+            Leave your details and we&apos;ll schedule a call where you can hear GreetQ on a live line.
           </p>
           {submitted ? (
             <motion.div

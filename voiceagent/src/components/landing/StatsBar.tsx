@@ -24,7 +24,7 @@ export function StatsBar() {
             <InViewCountUp
               value={stat.value}
               suffix={stat.suffix}
-              decimals={"decimals" in stat ? stat.decimals : undefined}
+              decimals={"decimals" in stat ? (stat as { decimals: number }).decimals : undefined}
               label={stat.label}
             />
           </motion.div>

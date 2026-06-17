@@ -1,14 +1,14 @@
-import type { Metadata } from "next";
+import { marketingMetadata } from "@/lib/seo/marketing-metadata";
 import { MarketingFooterNew } from "@/components/marketing/MarketingFooterNew";
 import { MarketingNavbar } from "@/components/marketing/MarketingNavbar";
 import { TestimonialsGrid } from "@/components/marketing/TestimonialsGrid";
 import { SkipToContent } from "@/components/SkipToContent";
 
-export const metadata: Metadata = {
+export const metadata = marketingMetadata({
   title: "Testimonials",
   description: "What local businesses say about GreetQ AI receptionist.",
-  alternates: { canonical: "/testimonials" },
-};
+  path: "/testimonials",
+});
 
 export default function TestimonialsPage() {
   return (
@@ -22,8 +22,8 @@ export default function TestimonialsPage() {
             Operator feedback
           </h1>
           <p className="mx-auto mt-4 max-w-xl text-center text-sm text-on-surface-variant">
-            Notes from Canadian teams testing GreetQ for call answering and booking. Names are
-            abbreviated for privacy.
+            Representative feedback from early operators testing GreetQ. Not third-party verified
+            reviews — share your experience at /contact.
           </p>
           <TestimonialsGrid />
         </div>

@@ -1,16 +1,15 @@
-import type { Metadata } from "next";
+import { marketingMetadata } from "@/lib/seo/marketing-metadata";
 import Link from "next/link";
 import { MarketingFooterNew } from "@/components/marketing/MarketingFooterNew";
 import { MarketingNavbar } from "@/components/marketing/MarketingNavbar";
 import { SkipToContent } from "@/components/SkipToContent";
 import { INTEGRATIONS } from "@/lib/marketing-content";
 
-export const metadata: Metadata = {
+export const metadata = marketingMetadata({
   title: "Integrations",
-  description:
-    "Connect GreetQ with Telnyx, Twilio, Google Calendar, HubSpot, Stripe, and more — webhooks for 5,000+ apps.",
-  alternates: { canonical: "/integrations" },
-};
+  description: "Connect GreetQ with Telnyx, Twilio, Google Calendar, HubSpot, Stripe, and more — webhooks for 5,000+ apps.",
+  path: "/integrations",
+});
 
 export default function IntegrationsPage() {
   return (
@@ -34,12 +33,7 @@ export default function IntegrationsPage() {
                 >
                   {item.abbr}
                 </div>
-                <h2 className="font-display text-lg text-text">
-                  {item.name}
-                  {"soon" in item && item.soon && (
-                    <span className="ml-2 text-xs text-muted">(coming soon)</span>
-                  )}
-                </h2>
+                <h2 className="font-display text-lg text-text">{item.name}</h2>
                 <p className="mt-2 text-sm text-muted">{item.desc}</p>
               </div>
             ))}

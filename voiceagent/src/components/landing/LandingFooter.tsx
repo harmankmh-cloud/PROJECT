@@ -2,13 +2,15 @@ import Link from "next/link";
 import dynamic from "next/dynamic";
 import { BRAND } from "@/lib/brand";
 import { LANDING_COPY } from "@/lib/copy/landing";
+import { MARKETING_CHROME, type MarketingLocale } from "@/lib/marketing-chrome";
 import { TrustBar } from "./TrustBar";
+import { StatusBadge } from "./StatusBadge";
 
 const ConversionWidgets = dynamic(() =>
   import("./ConversionWidgets").then((m) => ({ default: m.ConversionWidgets }))
 );
 
-const COLUMNS = [
+const COLUMNS_EN = [
   {
     title: "Product",
     links: [
@@ -64,11 +66,21 @@ const COLUMNS = [
   },
 ] as const;
 
-export function LandingFooter() {
+export function LandingFooter({ locale = "en" }: { locale?: MarketingLocale }) {
+  const chrome = MARKETING_CHROME[locale];
+  const columns = [
+    { ...COLUMNS_EN[0], title: chrome.footerProduct },
+    { ...COLUMNS_EN[1], title: chrome.footerIndustries },
+    { ...COLUMNS_EN[2], title: chrome.footerCompany },
+    { ...COLUMNS_EN[3], title: chrome.footerTrust },
+  ];
   return (
     <footer className="border-t border-border bg-surface/50 py-14">
       <div className="marketing-container">
-        <TrustBar />
+        <div className="flex flex-col items-center gap-4">
+          <TrustBar />
+          <StatusBadge />
+        </div>
 
         <div className="mt-10 grid gap-10 sm:grid-cols-2 lg:grid-cols-5">
           <div className="lg:col-span-1">
@@ -77,7 +89,7 @@ export function LandingFooter() {
             <p className="mt-3 text-sm text-muted">{LANDING_COPY.footer.tagline} 🍁</p>
             <p className="mt-3 text-xs text-muted">{BRAND.location.label}</p>
           </div>
-          {COLUMNS.map((col) => (
+          {columns.map((col) => (
             <div key={col.title}>
               <h5 className="mb-4 text-sm font-semibold text-text">{col.title}</h5>
               <ul className="space-y-2.5 text-sm">

@@ -1,14 +1,14 @@
-import type { Metadata } from "next";
+import { marketingMetadata } from "@/lib/seo/marketing-metadata";
 import { IndustryPageTemplate } from "@/components/marketing/IndustryPageTemplate";
 import { INDUSTRY_PAGES } from "@/lib/industry-pages";
 
 const page = INDUSTRY_PAGES.hvac;
 
-export const metadata: Metadata = {
+export const metadata = marketingMetadata({
   title: page.title,
   description: page.description,
-  alternates: { canonical: "/hvac" },
-};
+  path: "/hvac",
+});
 
 export default function HvacPage() {
   return <IndustryPageTemplate slug="hvac" />;

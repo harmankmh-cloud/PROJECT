@@ -90,5 +90,20 @@ export function planConcurrentCalls(planKey: PlanKey): number {
 /** Stack cost per minute used for margin checks (not customer-facing). */
 export const PLANNED_COST_PER_MINUTE = 0.08;
 
+/** Pick the cheapest plan that covers the given monthly minute volume (or Pro if above Pro included). */
+export function recommendedPlanKey(minutes: number): PlanKey {
+  const order: PlanKey[] = ["starter", "growth", "pro"];
+  for (const key of order) {
+    if (minutes <= PLANS[key].includedMinutes) return key;
+  }
+  return "pro";
+}
+
+/** Receptionist hire benchmark (CAD/mo) for ROI comparisons — part-time front desk. */
+export const RECEPTIONIST_BENCHMARK_MONTHLY = 3500;
+
+/** Competitor flat-rate reference (CAD/mo) for pricing comparisons — verify periodically. */
+export const COMPETITOR_FLAT_RATE_MONTHLY = 199;
+
 /** Days of grace after payment failure before blocking production calls. */
 export const PAYMENT_GRACE_DAYS = 7;

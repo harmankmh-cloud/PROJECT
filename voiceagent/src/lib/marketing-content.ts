@@ -2,7 +2,7 @@ export const TRUST_STATS = [
   { value: "24/7", label: "AI coverage" },
   { value: "<2s", label: "Avg. answer time", note: "Median on Telnyx inbound" },
   { value: "100%", label: "Complete call records" },
-  { value: "99.9%", label: "Uptime SLA" },
+  { value: "Status", label: "System status" },
 ] as const;
 
 export const HOME_FEATURES = [
@@ -149,8 +149,7 @@ export const INTEGRATIONS = [
   { name: "HubSpot", abbr: "HS", color: "from-orange-500 to-orange-600", desc: "Post-call logging and contact updates" },
   { name: "Stripe", abbr: "ST", color: "from-violet-500 to-purple-600", desc: "Subscription + metered minute billing" },
   { name: "OpenRouter", abbr: "OR", color: "from-slate-600 to-slate-800", desc: "LLM backbone for natural conversations" },
-  { name: "Zapier", abbr: "ZP", color: "from-amber-500 to-orange-500", desc: "Connect 5,000+ apps via webhooks", soon: true },
-  { name: "Calendly", abbr: "CA", color: "from-blue-600 to-indigo-600", desc: "Scheduling links during live calls", soon: true },
+  { name: "Webhooks", abbr: "WH", color: "from-amber-500 to-orange-500", desc: "Signed outbound events — works with Zapier catch hooks and Make" },
 ] as const;
 
 export const TESTIMONIALS = [

@@ -1,15 +1,16 @@
-import type { Metadata } from "next";
+import { marketingMetadata } from "@/lib/seo/marketing-metadata";
 import { LandingFooter } from "@/components/landing/LandingFooter";
 import { LandingNavbar } from "@/components/landing/LandingNavbar";
 import { SkipToContent } from "@/components/SkipToContent";
 import { CHANGELOG } from "@/lib/changelog";
 import { BRAND } from "@/lib/brand";
 
-export const metadata: Metadata = {
+export const metadata = marketingMetadata({
   title: "Changelog",
   description: `What's new in ${BRAND.name} — product updates, improvements, and fixes.`,
-  alternates: { canonical: "/changelog" },
-};
+  path: "/changelog",
+});
+
 
 const TAG_STYLES: Record<string, string> = {
   New: "border-emerald-500/30 bg-emerald-500/10 text-emerald-400",

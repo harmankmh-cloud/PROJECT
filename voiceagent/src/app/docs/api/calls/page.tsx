@@ -1,12 +1,13 @@
-import type { Metadata } from "next";
+import { marketingMetadata } from "@/lib/seo/marketing-metadata";
 import { DocsShell } from "@/components/docs/DocsShell";
 import { DOCS_CALLS_API } from "@/lib/docs-content";
 
-export const metadata: Metadata = {
+export const metadata = marketingMetadata({
   title: "Calls API",
   description: "List recent calls for your organization via GET /api/v1/calls.",
-  alternates: { canonical: "/docs/api/calls" },
-};
+  path: "/docs/api/calls",
+});
+
 
 export default function DocsCallsApiPage() {
   const doc = DOCS_CALLS_API;

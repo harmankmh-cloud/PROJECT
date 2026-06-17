@@ -1,4 +1,4 @@
-import type { Metadata } from "next";
+import { marketingMetadata } from "@/lib/seo/marketing-metadata";
 import Link from "next/link";
 import { BadgeDollarSign, Headset, Layers, Rocket } from "lucide-react";
 import { LandingFooter } from "@/components/landing/LandingFooter";
@@ -7,11 +7,12 @@ import { SkipToContent } from "@/components/SkipToContent";
 import { GlowButton } from "@/components/ui/GlowButton";
 import { BRAND } from "@/lib/brand";
 
-export const metadata: Metadata = {
+export const metadata = marketingMetadata({
   title: "Partners & resellers",
   description: `Agencies and consultants: offer ${BRAND.name} AI receptionists to your local-business clients with partner pricing and white-label options.`,
-  alternates: { canonical: "/partners" },
-};
+  path: "/partners",
+});
+
 
 const BENEFITS = [
   {

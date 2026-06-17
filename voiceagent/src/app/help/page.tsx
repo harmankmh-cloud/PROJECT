@@ -1,5 +1,5 @@
 import Link from "next/link";
-import type { Metadata } from "next";
+import { marketingMetadata } from "@/lib/seo/marketing-metadata";
 import { HelpHub } from "@/components/help/HelpHub";
 import { MarketingFooterNew } from "@/components/marketing/MarketingFooterNew";
 import { MarketingNavbar } from "@/components/marketing/MarketingNavbar";
@@ -9,11 +9,12 @@ import { JsonLd } from "@/components/seo/JsonLd";
 import { BRAND } from "@/lib/brand";
 import { HELP_ARTICLES } from "@/lib/help-articles";
 
-export const metadata: Metadata = {
+export const metadata = marketingMetadata({
   title: "Help center",
   description: `Knowledge base and contact for ${BRAND.name} — getting started, billing, telephony, compliance, and API.`,
-  alternates: { canonical: "/help" },
-};
+  path: "/help",
+});
+
 
 export default async function HelpPage({
   searchParams,

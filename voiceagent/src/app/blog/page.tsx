@@ -1,15 +1,15 @@
-import type { Metadata } from "next";
+import { marketingMetadata } from "@/lib/seo/marketing-metadata";
 import Link from "next/link";
 import { LandingFooter } from "@/components/landing/LandingFooter";
 import { LandingNavbar } from "@/components/landing/LandingNavbar";
 import { SkipToContent } from "@/components/SkipToContent";
 import { BLOG_POSTS } from "@/lib/blog-posts";
 
-export const metadata: Metadata = {
+export const metadata = marketingMetadata({
   title: "Blog",
   description: "Guides on AI receptionists, voice AI for local businesses, and PIPEDA compliance.",
-  alternates: { canonical: "/blog" },
-};
+  path: "/blog",
+});
 
 export default function BlogPage() {
   return (

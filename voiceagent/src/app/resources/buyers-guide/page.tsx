@@ -1,4 +1,4 @@
-import type { Metadata } from "next";
+import { marketingMetadata } from "@/lib/seo/marketing-metadata";
 import Link from "next/link";
 import { LandingFooter } from "@/components/landing/LandingFooter";
 import { LandingNavbar } from "@/components/landing/LandingNavbar";
@@ -6,12 +6,11 @@ import { SkipToContent } from "@/components/SkipToContent";
 import { GlowButton } from "@/components/ui/GlowButton";
 import { BRAND } from "@/lib/brand";
 
-export const metadata: Metadata = {
+export const metadata = marketingMetadata({
   title: "AI Receptionist Buyer's Guide",
-  description:
-    "How to evaluate AI phone receptionists for Canadian businesses — pricing traps, compliance checklist, and demo questions.",
-  alternates: { canonical: "/resources/buyers-guide" },
-};
+  description: "How to evaluate AI phone receptionists for Canadian businesses — pricing traps, compliance checklist, and demo questions.",
+  path: "/resources/buyers-guide",
+});
 
 const SECTIONS = [
   {

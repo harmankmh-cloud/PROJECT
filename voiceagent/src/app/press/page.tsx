@@ -1,15 +1,16 @@
-import type { Metadata } from "next";
+import { marketingMetadata } from "@/lib/seo/marketing-metadata";
 import { MarketingFooterNew } from "@/components/marketing/MarketingFooterNew";
 import { MarketingNavbar } from "@/components/marketing/MarketingNavbar";
 import { SkipToContent } from "@/components/SkipToContent";
 import { PRESS_KIT } from "@/lib/press-kit";
 import { BRAND } from "@/lib/brand";
 
-export const metadata: Metadata = {
+export const metadata = marketingMetadata({
   title: "Press kit",
   description: `Media assets and boilerplate for ${BRAND.name}.`,
-  alternates: { canonical: "/press" },
-};
+  path: "/press",
+});
+
 
 export default function PressPage() {
   return (

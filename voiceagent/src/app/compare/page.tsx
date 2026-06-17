@@ -1,4 +1,4 @@
-import type { Metadata } from "next";
+import { marketingMetadata } from "@/lib/seo/marketing-metadata";
 import Link from "next/link";
 import { MarketingFooterNew } from "@/components/marketing/MarketingFooterNew";
 import { MarketingNavbar } from "@/components/marketing/MarketingNavbar";
@@ -8,11 +8,12 @@ import { COMPARISON_HUB, COMPARISON_PAGES } from "@/lib/comparison-pages";
 import { COMPARISON_MATRIX } from "@/lib/comparison-matrix";
 import { BRAND } from "@/lib/brand";
 
-export const metadata: Metadata = {
+export const metadata = marketingMetadata({
   title: "Compare GreetQ",
   description: `See how ${BRAND.name} compares to Retell, Bland.ai, JustCall, and hiring a receptionist.`,
-  alternates: { canonical: "/compare" },
-};
+  path: "/compare",
+});
+
 
 export default function CompareHubPage() {
   return (

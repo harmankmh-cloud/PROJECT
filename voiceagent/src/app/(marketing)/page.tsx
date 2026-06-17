@@ -1,4 +1,4 @@
-import type { Metadata } from "next";
+import { marketingMetadata } from "@/lib/seo/marketing-metadata";
 import dynamic from "next/dynamic";
 import { LandingFooter } from "@/components/landing/LandingFooter";
 import { LandingHero } from "@/components/landing/LandingHero";
@@ -39,12 +39,11 @@ const FinalCtaBanner = dynamic(
   () => import("@/components/landing/FinalCtaBanner").then((m) => ({ default: m.FinalCtaBanner }))
 );
 
-export const metadata: Metadata = {
+export const metadata = marketingMetadata({
   title: "Your AI Receptionist. Always On.",
-  description:
-    "GreetQ answers calls, books appointments, and greets every customer like a pro — so you don't have to.",
-  alternates: { canonical: "/" },
-};
+  description: "GreetQ answers calls, books appointments, and greets every customer like a pro — so you don't have to.",
+  path: "/",
+});
 
 export default function HomePage() {
   const siteUrl = `https://${BRAND.domain}`;

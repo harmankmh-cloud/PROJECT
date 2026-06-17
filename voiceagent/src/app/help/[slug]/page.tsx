@@ -1,5 +1,5 @@
-import type { Metadata } from "next";
 import Link from "next/link";
+import { marketingMetadata } from "@/lib/seo/marketing-metadata";
 import { notFound } from "next/navigation";
 import { MarketingFooterNew } from "@/components/marketing/MarketingFooterNew";
 import { MarketingNavbar } from "@/components/marketing/MarketingNavbar";
@@ -16,15 +16,16 @@ export async function generateMetadata({
   params,
 }: {
   params: Promise<{ slug: string }>;
-}): Promise<Metadata> {
+}) {
   const { slug } = await params;
   const article = getHelpArticle(slug);
-  if (!article) return { title: "Help" };
-  return {
+  if (!article) return marketingMetadata({ title: "Help", description: "Help center", path: `/help/${slug}` });
+  return marketingMetadata({
     title: article.title,
     description: article.excerpt,
-    alternates: { canonical: `/help/${slug}` },
-  };
+    path: `/help/${slug}`,
+    ogType: "article",
+  });
 }
 
 export default async function HelpArticlePage({

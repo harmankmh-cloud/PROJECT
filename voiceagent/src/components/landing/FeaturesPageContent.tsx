@@ -26,7 +26,7 @@ const COMPARISON = [
   { feature: "Call transcripts", greetq: true, human: false, competitor: true },
   { feature: "Under $100/mo", greetq: true, human: false, competitor: false },
   { feature: "Never calls in sick", greetq: true, human: false, competitor: true },
-  { feature: "Bilingual EN/FR", greetq: true, human: true, competitor: false },
+  { feature: "English voice (French roadmap)", greetq: "live", human: true, competitor: false },
 ] as const;
 
 export function FeaturesPageContent() {

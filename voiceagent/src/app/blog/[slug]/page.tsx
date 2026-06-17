@@ -1,5 +1,5 @@
-import type { Metadata } from "next";
 import Link from "next/link";
+import { marketingMetadata } from "@/lib/seo/marketing-metadata";
 import { notFound } from "next/navigation";
 import { MarketingFooterNew } from "@/components/marketing/MarketingFooterNew";
 import { MarketingNavbar } from "@/components/marketing/MarketingNavbar";
@@ -14,15 +14,16 @@ export async function generateMetadata({
   params,
 }: {
   params: Promise<{ slug: string }>;
-}): Promise<Metadata> {
+}) {
   const { slug } = await params;
   const post = BLOG_POSTS.find((p) => p.slug === slug);
-  if (!post) return { title: "Post not found" };
-  return {
+  if (!post) return marketingMetadata({ title: "Post not found", description: "Blog post", path: `/blog/${slug}` });
+  return marketingMetadata({
     title: post.title,
     description: post.excerpt,
-    alternates: { canonical: `/blog/${slug}` },
-  };
+    path: `/blog/${slug}`,
+    ogType: "article",
+  });
 }
 
 export default async function BlogPostPage({ params }: { params: Promise<{ slug: string }> }) {

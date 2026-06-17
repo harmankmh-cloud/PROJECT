@@ -1,4 +1,4 @@
-import type { Metadata } from "next";
+import { marketingMetadata } from "@/lib/seo/marketing-metadata";
 import Link from "next/link";
 import { Calendar, MessageSquareText, PhoneIncoming, ShieldCheck } from "lucide-react";
 import { LandingFooter } from "@/components/landing/LandingFooter";
@@ -7,12 +7,15 @@ import { SkipToContent } from "@/components/SkipToContent";
 import { FrWaitlistForm } from "@/components/landing/FrWaitlistForm";
 import { GlowButton } from "@/components/ui/GlowButton";
 import { BRAND } from "@/lib/brand";
+import { MARKETING_CHROME } from "@/lib/marketing-chrome";
 
-export const metadata: Metadata = {
+export const metadata = marketingMetadata({
   title: "Réceptionniste IA pour entreprises canadiennes",
-  description: `${BRAND.name} répond à vos appels 24h/24, prend les rendez-vous et répond aux questions courantes — conçu pour les entreprises canadiennes. Support vocal en français à venir.`,
-  alternates: { canonical: "/fr" },
-};
+  description: `${BRAND.name} répond à vos appels 24h/24, prend les rendez-vous et répond aux questions courantes — conçu pour les entreprises canadiennes.`,
+  path: "/fr",
+  locale: "fr_CA",
+});
+
 
 const FEATURES = [
   {
@@ -41,8 +44,11 @@ export default function FrenchLandingPage() {
   return (
     <div className="dark-mesh-bg grid-pattern flex min-h-screen flex-col" lang="fr">
       <SkipToContent />
-      <LandingNavbar />
+      <LandingNavbar locale="fr" />
       <main id="main-content" className="flex-1 pb-16 pt-24">
+        <p className="marketing-container mx-auto mb-6 max-w-3xl rounded-lg border border-violet-500/30 bg-violet-500/10 px-4 py-3 text-center text-sm text-muted">
+          {MARKETING_CHROME.fr.frenchBanner}
+        </p>
         <section className="marketing-container mx-auto max-w-3xl text-center">
           <p className="section-eyebrow mb-3">🍁 Pour les entreprises canadiennes</p>
           <Link href="/" className="text-sm text-violet-400 transition hover:text-violet-300">
@@ -95,7 +101,7 @@ export default function FrenchLandingPage() {
           </div>
         </section>
       </main>
-      <LandingFooter />
+      <LandingFooter locale="fr" />
     </div>
   );
 }
