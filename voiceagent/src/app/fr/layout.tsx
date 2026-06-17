@@ -1,6 +1,10 @@
-import { marketingMetadata } from "@/lib/seo/marketing-metadata";
-import { BRAND } from "@/lib/brand";
+import { FrDocumentLang } from "@/components/landing/FrDocumentLang";
 
 export default function FrLayout({ children }: { children: React.ReactNode }) {
-  return children;
+  return (
+    <>
+      <FrDocumentLang />
+      {children}
+    </>
+  );
 }
