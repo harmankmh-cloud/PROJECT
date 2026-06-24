@@ -1,0 +1,48 @@
+version: 2
+updates:
+  - package-ecosystem: "npm"
+    directory: "/"
+    schedule:
+      interval: "weekly"
+      day: "monday"
+      time: "03:00"
+    reviewers:
+      - "harmankmh-cloud"
+    labels:
+      - "dependencies"
+
+  - package-ecosystem: "npm"
+    directory: "/reviewflow"
+    schedule:
+      interval: "weekly"
+    reviewers:
+      - "harmankmh-cloud"
+    labels:
+      - "dependencies"
+
+  - package-ecosystem: "npm"
+    directory: "/voiceagent"
+    schedule:
+      interval: "weekly"
+    reviewers:
+      - "harmankmh-cloud"
+    labels:
+      - "dependencies"
+
+  - package-ecosystem: "npm"
+    directory: "/servelocal"
+    schedule:
+      interval: "weekly"
+    reviewers:
+      - "harmankmh-cloud"
+    labels:
+      - "dependencies"
+
+  - package-ecosystem: "npm"
+    directory: "/route-max"
+    schedule:
+      interval: "weekly"
+    reviewers:
+      - "harmankmh-cloud"
+    labels:
+      - "dependencies"
