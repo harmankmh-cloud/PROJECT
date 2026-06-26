@@ -58,8 +58,13 @@ export const TESTIMONIALS: {
   rating: number;
 }[] = [];
 
-export const HERO_PROS = [
-  { name: "Dave's Plumbing", trade: "Plumber", city: "Abbotsford", rating: 4.9, reviews: 47, available: true },
-  { name: "Valley Electric", trade: "Electrician", city: "Chilliwack", rating: 4.8, reviews: 32, available: true },
-  { name: "Coast HVAC", trade: "HVAC", city: "Surrey", rating: 5.0, reviews: 18, available: false },
-] as const;
+// Hero pros are populated from live Supabase data via getApprovedProviders().
+// No hardcoded placeholder businesses — the FeaturedProsCarousel hides itself when empty.
+export const HERO_PROS: {
+  name: string;
+  trade: string;
+  city: string;
+  rating: number;
+  reviews: number;
+  available: boolean;
+}[] = [];
