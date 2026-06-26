@@ -16,5 +16,6 @@ export function stripePriceIds() {
   return {
     setup: process.env.STRIPE_PRICE_SETUP || "",
     monthly: process.env.STRIPE_PRICE_MONTHLY || defaultStripePriceMonthly(),
+    calllocal: process.env.STRIPE_PRICE_CALLLOCAL || "",
   };
 }
