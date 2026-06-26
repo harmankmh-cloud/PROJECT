@@ -19,8 +19,8 @@ export function PricingSection() {
             Simple, honest pricing
           </h2>
           <p className="mx-auto mt-3 max-w-xl text-sm text-muted">
-            Start with 50 free reviews. When you're ready to grow, upgrade to Pro for just $39/mo — less than half
-            of NiceJob (${RATELOCAL_COMPETITORS.niceJob}/mo) and a fraction of Podium
+            Start with 50 free reviews. When you&apos;re ready to grow, upgrade to Pro for just $39/mo — less than
+            half of NiceJob (${RATELOCAL_COMPETITORS.niceJob}/mo) and a fraction of Podium
             (${RATELOCAL_COMPETITORS.podium}+/mo).
           </p>
         </FadeInSection>

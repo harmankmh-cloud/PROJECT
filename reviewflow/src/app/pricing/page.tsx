@@ -70,7 +70,7 @@ export default function PricingPage() {
             Start free. Then grow with <span className="coral-underline text-primary">$39/mo</span> — everything included
           </h1>
           <p className="mx-auto mt-5 max-w-2xl text-lg leading-relaxed text-muted">
-            Start with 50 free review requests — no credit card needed. When you're ready to scale, unlock everything for just $39/mo with no setup fee.
+            Start with 50 free review requests — no credit card needed. When you&apos;re ready to scale, unlock everything for just $39/mo with no setup fee.
           </p>
           <div className="mt-8 flex flex-col justify-center gap-3 sm:flex-row">
             <ShimmerButton href="/signup" className="px-8 py-3.5 text-base">
