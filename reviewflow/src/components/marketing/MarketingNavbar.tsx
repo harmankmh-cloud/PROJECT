@@ -4,6 +4,7 @@ import Link from "next/link";
 import { Menu, Star, X } from "lucide-react";
 import { useEffect, useState } from "react";
 import { ClientOnly } from "@/components/ui/ClientOnly";
+import { ShimmerButton } from "@/components/ui/ShimmerButton";
 import { MARKETING } from "@/content/copy";
 import { BRAND } from "@/lib/brand";
 
@@ -26,10 +27,15 @@ export function MarketingNavbar() {
 
   return (
     <header className={`site-header ${scrolled ? "site-header-scrolled" : ""}`}>
-      <div className="marketing-container flex h-16 items-center justify-between">
-        <Link href="/" className="flex items-center gap-2 font-display text-lg text-text">
-          <Star className="h-5 w-5 fill-primary text-primary" />
-          {BRAND.name}
+      <div className="marketing-container flex min-h-16 items-center justify-between gap-4 py-3">
+        <Link href="/" className="flex items-center gap-3 font-display text-lg text-text">
+          <span className="flex h-10 w-10 items-center justify-center rounded-2xl border border-primary/15 bg-primary/5">
+            <Star className="h-5 w-5 fill-primary text-primary" />
+          </span>
+          <span>
+            <span className="block">{BRAND.name}</span>
+            <span className="block text-xs font-medium text-muted">{BRAND.tagline}</span>
+          </span>
         </Link>
 
         <nav className="hidden items-center gap-8 md:flex" aria-label="Main">
@@ -43,13 +49,13 @@ export function MarketingNavbar() {
           </Link>
         </nav>
 
-        <Link href="/signup" className="btn-primary-pill hidden text-sm md:inline-flex">
+        <ShimmerButton href="/signup" className="hidden text-sm md:inline-flex">
           {MARKETING.nav.cta}
-        </Link>
+        </ShimmerButton>
 
         <button
           type="button"
-          className="rounded-lg border border-border p-2 md:hidden"
+          className="rounded-2xl border border-border bg-white/80 p-2 md:hidden"
           aria-label="Open menu"
           onClick={() => setOpen(true)}
         >
@@ -59,14 +65,14 @@ export function MarketingNavbar() {
 
       <ClientOnly>
         {open && (
-          <div className="fixed inset-0 z-50 bg-white md:hidden">
-            <div className="flex items-center justify-between p-5">
+          <div className="fixed inset-0 z-50 bg-white/95 backdrop-blur md:hidden">
+            <div className="marketing-container flex items-center justify-between py-5">
               <span className="font-display text-lg">{BRAND.name}</span>
               <button type="button" aria-label="Close" onClick={() => setOpen(false)}>
                 <X className="h-6 w-6" />
               </button>
             </div>
-            <nav className="flex flex-col gap-2 px-5">
+            <nav className="marketing-container flex flex-col gap-2">
               {NAV.map((item) => (
                 <Link
                   key={item.href}
@@ -80,9 +86,9 @@ export function MarketingNavbar() {
               <Link href="/login" className="py-3 text-lg" onClick={() => setOpen(false)}>
                 {MARKETING.nav.login}
               </Link>
-              <Link href="/signup" className="btn-primary-pill mt-4 py-3 text-center" onClick={() => setOpen(false)}>
+              <ShimmerButton href="/signup" className="mt-4 justify-center py-3 text-center" onClick={() => setOpen(false)}>
                 {MARKETING.nav.cta}
-              </Link>
+              </ShimmerButton>
             </nav>
           </div>
         )}

@@ -4,10 +4,11 @@ import { BentoFeatures } from "@/components/marketing/BentoFeatures";
 import { HeroSection } from "@/components/marketing/HeroSection";
 import { HowItWorks } from "@/components/marketing/HowItWorks";
 import { IndustriesSection } from "@/components/marketing/IndustriesSection";
-import { MarketingFooter } from "@/components/marketing/MarketingFooter";
-import { MarketingNavbar } from "@/components/marketing/MarketingNavbar";
+import { MarketingPageShell } from "@/components/marketing/MarketingPageShell";
 import { PricingSection } from "@/components/marketing/PricingSection";
+import { ResultsSection } from "@/components/marketing/ResultsSection";
 import { StatsBar } from "@/components/marketing/StatsBar";
+import { TestimonialsSection } from "@/components/marketing/TestimonialsSection";
 import { WhyItsSafeSection } from "@/components/marketing/WhyItsSafeSection";
 import { BRAND } from "@/lib/brand";
 import { FAQ_ITEMS } from "@/lib/marketing-content";
@@ -52,14 +53,15 @@ export default function HomePage() {
   };
 
   return (
-    <main className="marketing-page min-h-screen bg-white">
-      <MarketingNavbar />
+    <MarketingPageShell>
       <HeroSection />
       <StatsBar />
       <HowItWorks />
       <WhyItsSafeSection />
       <BentoFeatures />
       <IndustriesSection />
+      <TestimonialsSection />
+      <ResultsSection />
       <PricingSection />
 
       <section className="border-t border-border/80 py-20 md:py-28" id="faq">
@@ -73,7 +75,6 @@ export default function HomePage() {
       </section>
 
       <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }} />
-      <MarketingFooter />
-    </main>
+    </MarketingPageShell>
   );
 }
