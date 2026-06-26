@@ -13,7 +13,7 @@ export function MarketingFooter() {
         <p className="mx-auto mt-2 max-w-md text-sm text-white/80">
           Start your free trial — setup takes about 5 minutes.
         </p>
-        <ShimmerButton href="/signup" className="mt-6 bg-white text-primary before:from-white/70 before:via-white before:to-white/70">
+        <ShimmerButton href="/signup" tone="light" className="mt-6">
           Start Free Trial
         </ShimmerButton>
       </div>

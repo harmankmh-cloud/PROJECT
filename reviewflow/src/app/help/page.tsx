@@ -9,7 +9,7 @@ const HELP_CARD_ITEMS = [
   [
     "💳",
     "Billing support",
-    "Plan questions, annual billing, or account changes — send the details once and we will sort it out.",
+    "Plan questions, annual billing, or account changes — send the details once and we'll sort it out.",
   ],
   [
     "💡",

@@ -385,6 +385,17 @@ select {
     transform: rotate(18deg) translateX(420%);
   }
 
+  .marketing-page .btn-shimmer-light {
+    @apply bg-white text-primary;
+    box-shadow:
+      0 16px 34px rgba(255, 255, 255, 0.18),
+      inset 0 1px 0 rgba(255, 255, 255, 0.8);
+  }
+
+  .marketing-page .btn-shimmer-light::before {
+    background: linear-gradient(120deg, rgba(255, 255, 255, 0.92), rgba(255, 255, 255, 0.76), rgba(255, 255, 255, 0.92));
+  }
+
   .marketing-page .btn-primary-pill:hover {
     box-shadow: 0 6px 22px rgba(244, 63, 94, 0.35);
   }
