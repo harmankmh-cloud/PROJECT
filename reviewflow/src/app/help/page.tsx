@@ -21,6 +21,20 @@ const HELP_CARD_ITEMS = [
 export const metadata = {
   title: `Help & contact · ${BRAND.name}`,
   description: `Get help with ${BRAND.name}, send a suggestion, or report an issue.`,
+  alternates: { canonical: "/help" },
+  openGraph: {
+    title: `Help & contact · ${BRAND.name}`,
+    description: `Get help with ${BRAND.name}, send a suggestion, or report an issue.`,
+    url: `https://${BRAND.domain}/help`,
+    siteName: BRAND.name,
+    locale: "en_CA",
+    type: "website",
+  },
+  twitter: {
+    card: "summary_large_image",
+    title: `Help & contact · ${BRAND.name}`,
+    description: `Get help with ${BRAND.name}, send a suggestion, or report an issue.`,
+  },
 };
 
 export default function HelpPage() {

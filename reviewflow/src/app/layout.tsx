@@ -54,7 +54,6 @@ export const metadata: Metadata = {
     description:
       "QR-powered review collection for local businesses. Route unhappy customers privately, help happy ones post on Google in seconds.",
   },
-  alternates: { canonical: appUrl },
   ...(process.env.GOOGLE_SITE_VERIFICATION
     ? { verification: { google: process.env.GOOGLE_SITE_VERIFICATION } }
     : {}),

@@ -12,6 +12,21 @@ export const metadata: Metadata = {
   description:
     "RateLocal pricing: start with 50 free review requests, no credit card needed. Upgrade to Pro for $39/mo — everything included, no setup fee, 14-day money-back guarantee.",
   alternates: { canonical: "/pricing" },
+  openGraph: {
+    title: `Pricing — 50 Free Reviews, Then $39/mo · ${BRAND.name}`,
+    description:
+      "Start with 50 free review requests, no credit card needed. Pro is $39/mo — everything included, no setup fee, 14-day money-back guarantee.",
+    url: `https://${BRAND.domain}/pricing`,
+    siteName: BRAND.name,
+    locale: "en_CA",
+    type: "website",
+  },
+  twitter: {
+    card: "summary_large_image",
+    title: `Pricing — 50 Free Reviews, Then $39/mo · ${BRAND.name}`,
+    description:
+      "Start with 50 free review requests. Pro is $39/mo — everything included, no setup fee, 14-day money-back guarantee.",
+  },
 };
 
 const jsonLd = {
