@@ -4,6 +4,7 @@ import { PricingSection } from "@/components/marketing/PricingSection";
 import { ResultsSection } from "@/components/marketing/ResultsSection";
 import { MarketingPageShell } from "@/components/marketing/MarketingPageShell";
 import { ShimmerButton } from "@/components/ui/ShimmerButton";
+import { Reveal } from "@/components/ui/Reveal";
 import { BRAND } from "@/lib/brand";
 import { PRICING } from "@/lib/plans";
 
@@ -80,10 +81,12 @@ export default function PricingPage() {
         <div className="pointer-events-none absolute -left-16 top-10 h-72 w-72 rounded-full bg-primary/10 blur-3xl" />
         <div className="pointer-events-none absolute -right-16 bottom-0 h-64 w-64 rounded-full bg-accent/10 blur-3xl" />
         <div className="marketing-container relative text-center">
-          <p className="section-eyebrow mx-auto mb-5 w-fit">Pricing</p>
-          <h1 className="font-display text-4xl text-text md:text-5xl lg:text-[3.35rem]">
-            Start free. Then grow with <span className="coral-underline text-primary">$39/mo</span> — everything included
-          </h1>
+          <Reveal>
+            <p className="section-eyebrow mx-auto mb-5 w-fit">Pricing</p>
+            <h1 className="font-display text-4xl text-text md:text-5xl lg:text-[3.35rem]">
+              Start free. Then grow with <span className="coral-underline text-primary">$39/mo</span> — everything included
+            </h1>
+          </Reveal>
           <p className="mx-auto mt-5 max-w-2xl text-lg leading-relaxed text-muted">
             Start with 50 free review requests — no credit card needed. When you&apos;re ready to scale, unlock everything for just $39/mo with no setup fee.
           </p>

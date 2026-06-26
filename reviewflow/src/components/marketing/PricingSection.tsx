@@ -3,6 +3,7 @@
 import Link from "next/link";
 import { Check, X } from "lucide-react";
 import { FadeInSection } from "@/components/ui/FadeInSection";
+import { GlassCard } from "@/components/ui/GlassCard";
 import { MARKETING } from "@/content/copy";
 import {
   RATELOCAL_CHECKOUT_NOTE,
@@ -27,13 +28,14 @@ export function PricingSection() {
         <div className="mx-auto grid max-w-3xl gap-6 md:grid-cols-2">
           {MARKETING.pricing.tiers.map((tier, i) => (
             <FadeInSection key={tier.key} delay={i * 0.1}>
-              <div
-                className={`card-glow card-surface relative flex h-full flex-col ${
-                  tier.popular ? "pricing-popular border-2 border-primary shadow-lg shadow-primary/10" : ""
+              <GlassCard
+                glow
+                className={`relative flex h-full flex-col ${
+                  tier.popular ? "pricing-popular border-2 border-gold shadow-lg shadow-gold/10" : ""
                 }`}
               >
                 {tier.popular && (
-                  <span className="absolute -top-3 left-1/2 -translate-x-1/2 rounded-full bg-primary px-4 py-1 text-xs font-bold text-white shadow-md shadow-primary/30">
+                  <span className="absolute -top-3 left-1/2 -translate-x-1/2 rounded-full bg-gold px-4 py-1 text-xs font-bold text-[#1a1530] shadow-md shadow-gold/30">
                     Everything Included
                   </span>
                 )}
@@ -44,12 +46,12 @@ export function PricingSection() {
                   {tier.monthly > 0 && <span className="text-base font-normal text-muted">/mo</span>}
                 </p>
                 {"stripeNote" in tier && tier.stripeNote && (
-                  <p className="mt-2 text-xs font-medium text-primary">{tier.stripeNote}</p>
+                  <p className="mt-2 text-xs font-medium text-gold">{tier.stripeNote}</p>
                 )}
                 <ul className="mt-6 flex-1 space-y-2.5 text-sm">
                   {tier.features.map((f) => (
                     <li key={f} className="flex items-start gap-2.5 text-text">
-                      <Check className="mt-0.5 h-4 w-4 shrink-0 text-primary" />
+                      <Check className="mt-0.5 h-4 w-4 shrink-0 text-gold" />
                       {f}
                     </li>
                   ))}
@@ -61,17 +63,17 @@ export function PricingSection() {
                   ))}
                 </ul>
                 {"limitNote" in tier && tier.limitNote && (
-                  <p className="mt-4 rounded-xl bg-primary/5 px-3 py-2 text-xs text-muted">{tier.limitNote}</p>
+                  <p className="mt-4 rounded-xl bg-white/5 px-3 py-2 text-xs text-muted">{tier.limitNote}</p>
                 )}
                 <Link
                   href="/signup"
                   className={`mt-8 block py-3.5 text-center text-sm font-semibold ${
-                    tier.popular ? "btn-primary-pill" : "btn-ghost"
+                    tier.popular ? "rl-btn-gold rounded-[14px]" : "btn-ghost"
                   }`}
                 >
                   {tier.cta}
                 </Link>
-              </div>
+              </GlassCard>
             </FadeInSection>
           ))}
         </div>

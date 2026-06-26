@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import Link from "next/link";
 import { MarketingPageShell } from "@/components/marketing/MarketingPageShell";
 import { ShimmerButton } from "@/components/ui/ShimmerButton";
+import { Reveal } from "@/components/ui/Reveal";
 import { BRAND } from "@/lib/brand";
 
 export const metadata: Metadata = {
@@ -29,10 +30,12 @@ export default function AboutPage() {
       <section className="mesh-bg relative overflow-hidden pb-16 pt-24 md:pb-20 md:pt-28">
         <div className="pointer-events-none absolute -right-12 top-8 h-64 w-64 rounded-full bg-primary/10 blur-3xl" />
         <div className="marketing-container relative max-w-3xl">
-          <p className="section-eyebrow mb-5 w-fit">About us</p>
-          <h1 className="font-display text-4xl text-text md:text-5xl">
-            Honest reviews for the local shops that earn them
-          </h1>
+          <Reveal>
+            <p className="section-eyebrow mb-5 w-fit">About us</p>
+            <h1 className="font-display text-4xl text-text md:text-5xl">
+              Honest reviews for the local shops that earn them
+            </h1>
+          </Reveal>
           <div className="mt-6 space-y-5 text-lg leading-relaxed text-muted">
             <p>
               {BRAND.name} is built in the Fraser Valley for British Columbia&apos;s local

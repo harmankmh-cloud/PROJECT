@@ -981,21 +981,22 @@ select {
     background-color: transparent;
   }
 
-  /* Legal pages (privacy/terms) reuse fixed slate/brand text utilities in their
-   * markup; re-map them to the dark palette inside the dark legal wrapper. */
-  .rl-legal :is(.text-slate-600, .text-slate-700) {
+  /* Legal pages (privacy/terms) and inner marketing pages reuse fixed
+   * slate/brand text utilities in their markup; re-map them to the dark
+   * palette inside the dark wrappers. */
+  :is(.rl-legal, .marketing-page) :is(.text-slate-600, .text-slate-700) {
     color: #c7c4e6;
   }
 
-  .rl-legal .text-slate-500 {
+  :is(.rl-legal, .marketing-page) .text-slate-500 {
     color: var(--rl-muted);
   }
 
-  .rl-legal :is(.text-brand-950, .text-brand-900) {
+  :is(.rl-legal, .marketing-page) :is(.text-brand-950, .text-brand-900) {
     color: var(--rl-ink);
   }
 
-  .rl-legal .text-gold-600 {
+  :is(.rl-legal, .marketing-page) .text-gold-600 {
     color: var(--rl-gold);
   }
 }
