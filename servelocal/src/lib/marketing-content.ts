@@ -180,51 +180,20 @@ export function getGuideExtended(slug: string) {
   return GUIDE_EXTENDED[slug] || EXTENDED_GUIDE_EXTENDED[slug];
 }
 
-export const LANDING_TESTIMONIALS = [
-  {
-    id: "1",
-    name: "Sarah M.",
-    city: "Surrey, BC",
-    quote:
-      "Found a plumber in under 10 minutes. He showed up same day, fixed our leak, and the price was exactly what was quoted. No surprises.",
-    rating: 5,
-    service: "Plumbing",
-  },
-  {
-    id: "2",
-    name: "James K.",
-    city: "Vancouver, BC",
-    quote:
-      "We needed our entire kitchen rewired before a renovation. ServeLocal matched us with three electricians — we picked the best fit and saved $800.",
-    rating: 5,
-    service: "Electrical",
-  },
-  {
-    id: "3",
-    name: "Priya R.",
-    city: "Burnaby, BC",
-    quote:
-      "The house cleaner we found through ServeLocal is incredible. She's been coming weekly for 6 months. Booking is seamless every time.",
-    rating: 5,
-    service: "Cleaning",
-  },
-  {
-    id: "4",
-    name: "Marc T.",
-    city: "Langley, BC",
-    quote:
-      "Had our roof replaced before winter. The roofer was licensed, insured, and finished in two days. Highly recommend checking reviews first.",
-    rating: 5,
-    service: "Roofing",
-  },
-] as const;
+/**
+ * Real homeowner testimonials only. Empty until verified reviews are collected —
+ * the carousel hides itself when this is empty so we never show fabricated quotes.
+ */
+export const LANDING_TESTIMONIALS: {
+  id: string;
+  name: string;
+  city: string;
+  quote: string;
+  rating: number;
+  service: string;
+}[] = [];
 
-export const LANDING_STATS = [
-  { value: 50000, suffix: "+", label: "Jobs Completed" },
-  { value: 12000, suffix: "+", label: "Verified Pros" },
-  { value: 4.9, suffix: "★", label: "Average Rating", decimals: 1 },
-  { value: 48, suffix: "hr", label: "Avg Response" },
-] as const;
+export const LANDING_STATS: { value: number; suffix: string; label: string; decimals?: number }[] = [];
 
 export function guidePricePreview(slug: string, guide?: { low: number; high: number; unit: string; commonJobs?: { range: string }[] }) {
   if (!guide) return null;

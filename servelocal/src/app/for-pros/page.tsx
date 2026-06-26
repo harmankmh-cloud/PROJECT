@@ -3,8 +3,7 @@ import Link from "next/link";
 import { ArrowRight, Calendar, DollarSign, TrendingUp, Zap } from "lucide-react";
 import { MarketingPageShell } from "@/components/layout/MarketingPageShell";
 import { ForProsSection } from "@/components/landing/ForProsSection";
-import { StatsBar } from "@/components/landing/StatsBar";
-import { TestimonialsCarousel } from "@/components/landing/TestimonialsCarousel";
+import { StatsBarSection } from "@/components/landing/StatsBarSection";
 import { FadeUp } from "@/components/motion/FadeUp";
 import { ShimmerButton } from "@/components/ui/ShimmerButton";
 import { PricingCards } from "@/components/PricingCards";
@@ -13,7 +12,7 @@ import { pageMetadata } from "@/lib/seo";
 export const metadata: Metadata = pageMetadata({
   title: "Grow Your Business — Get Local Leads",
   description:
-    "Join 12,000+ Canadian contractors on ServeLocal. More leads, no subscription lock-in, flexible schedule, get paid fast.",
+    "List your trade on ServeLocal and get local homeowner leads. Flat $29/mo Featured, no per-lead fees, your phone on your profile. Built for Canada.",
   path: "/for-pros",
 });
 
@@ -26,7 +25,7 @@ const BENEFITS = [
   {
     icon: DollarSign,
     title: "No Subscription",
-    body: "Start free. Pay only when you want featured placement — no per-lead fees up to $75.",
+    body: "Start free. Pay only when you want featured placement — no per-lead fees, ever.",
   },
   {
     icon: Calendar,
@@ -40,15 +39,9 @@ const BENEFITS = [
   },
 ] as const;
 
-const SUCCESS_STORIES = [
-  { name: "Mike T.", trade: "Plumber", city: "Surrey", earned: "$4,200/mo", quote: "Went from 2 jobs a week to 8. ServeLocal pays for itself in one lead." },
-  { name: "Lisa K.", trade: "Cleaner", city: "Vancouver", earned: "$2,800/mo", quote: "Finally a platform that doesn't nickel-and-dime me on every click." },
-  { name: "Raj P.", trade: "Electrician", city: "Burnaby", earned: "$6,100/mo", quote: "The Top Pro badge alone doubled my inbound calls." },
-] as const;
-
 const FAQ = [
-  { q: "How much does it cost?", a: "Free to list. Featured is $29/mo CAD, Premium is $99/mo. No per-lead fees on the Starter plan." },
-  { q: "How do credits work?", a: "Premium pros get lead credits for high-intent job matches. Each accepted lead costs 1 credit. Credits refresh monthly." },
+  { q: "How much does it cost?", a: "Free to list. Featured is $29/mo CAD — that's it. No per-lead fees, ever." },
+  { q: "Do you charge per lead?", a: "No. Unlike per-lead platforms, you keep every lead. Homeowners see your phone on your profile and contact you directly." },
   { q: "When do I get paid?", a: "Homeowner payments are held in escrow until job completion, then released to your Stripe Connect account within 2 business days." },
 ] as const;
 
@@ -66,8 +59,7 @@ export default function ForProsPage() {
               <span className="text-primary">Get Local Leads.</span>
             </h1>
             <p className="mx-auto mt-5 max-w-2xl text-lg text-muted">
-              Join 12,000+ pros already earning on ServeLocal. Set your rates, get matched with
-              homeowners, and get paid fast — built for Canada.
+              Set your rates, get matched with homeowners, and get paid fast — built for Canada.
             </p>
             <div className="mt-8 flex flex-wrap justify-center gap-4">
               <ShimmerButton href="/signup/pro" size="lg">
@@ -85,7 +77,7 @@ export default function ForProsPage() {
         </div>
       </section>
 
-      <StatsBar />
+      <StatsBarSection />
 
       <section className="px-4 py-16 sm:px-8">
         <div className="mx-auto max-w-7xl">
@@ -120,27 +112,6 @@ export default function ForProsPage() {
         </div>
       </section>
 
-      <section className="px-4 py-16 sm:px-8">
-        <div className="mx-auto max-w-7xl">
-          <FadeUp className="text-center">
-            <h2 className="font-display text-3xl font-black text-foreground">Pro success stories</h2>
-          </FadeUp>
-          <div className="mt-10 grid gap-6 lg:grid-cols-3">
-            {SUCCESS_STORIES.map((story) => (
-              <FadeUp key={story.name}>
-                <div className="card-glow rounded-[14px] border border-border bg-surface p-6">
-                  <p className="text-2xl font-black text-primary">{story.earned}</p>
-                  <p className="mt-1 text-sm font-semibold text-foreground">
-                    {story.name} · {story.trade} · {story.city}
-                  </p>
-                  <p className="mt-3 text-sm italic text-muted">&ldquo;{story.quote}&rdquo;</p>
-                </div>
-              </FadeUp>
-            ))}
-          </div>
-        </div>
-      </section>
-
       <section className="border-t border-border px-4 py-16 sm:px-8">
         <div className="mx-auto max-w-3xl">
           <FadeUp className="text-center">
@@ -163,7 +134,6 @@ export default function ForProsPage() {
       </section>
 
       <ForProsSection />
-      <TestimonialsCarousel />
     </MarketingPageShell>
   );
 }

@@ -3,7 +3,6 @@
 import CountUp from "react-countup";
 import { useInView } from "framer-motion";
 import { useRef } from "react";
-import { LANDING_STATS } from "@/lib/marketing-content";
 import { FadeUp } from "@/components/motion/FadeUp";
 
 type PlatformStats = {
@@ -20,33 +19,35 @@ type StatItem = {
   decimals?: number;
 };
 
+/**
+ * Build stats from live Supabase counts only. Any stat with a zero count is
+ * omitted entirely so we never render a hollow "0+" claim.
+ */
 function buildStats(platformStats?: PlatformStats): StatItem[] {
-  if (!platformStats || platformStats.providers < 5) {
-    return [
-      { value: platformStats?.providers ?? 0, suffix: "+", label: "Pros listed across BC" },
-      { value: platformStats?.cities ?? 12, suffix: "", label: "Cities we're growing in" },
-      { value: 4.8, suffix: "★", label: "Target pro rating", decimals: 1 },
-      { value: 24, suffix: "hr", label: "Manual match window" },
-    ];
+  if (!platformStats) return [];
+  const items: StatItem[] = [];
+  if (platformStats.verified > 0) {
+    items.push({ value: platformStats.verified, suffix: "+", label: "Verified pros" });
   }
-
-  return [
-    { value: platformStats.providers, suffix: "+", label: "Verified Pros" },
-    { value: platformStats.verified, suffix: "+", label: "Credential-reviewed" },
-    {
-      value: platformStats.reviews > 0 ? 4.8 : 4.5,
-      suffix: "★",
-      label: "Average Rating",
-      decimals: 1,
-    },
-    { value: 24, suffix: "hr", label: "Avg match response" },
-  ];
+  if (platformStats.providers > 0) {
+    items.push({ value: platformStats.providers, suffix: "+", label: "Pros listed across BC" });
+  }
+  if (platformStats.reviews > 0) {
+    items.push({ value: platformStats.reviews, suffix: "+", label: "Homeowner reviews" });
+  }
+  if (platformStats.cities > 0) {
+    items.push({ value: platformStats.cities, suffix: "", label: "BC cities served" });
+  }
+  return items;
 }
 
 export function StatsBar({ platformStats }: { platformStats?: PlatformStats }) {
   const ref = useRef<HTMLDivElement>(null);
   const inView = useInView(ref, { once: true, margin: "-80px" });
   const stats = buildStats(platformStats);
+
+  // Nothing live to show yet — render nothing rather than placeholder numbers.
+  if (stats.length === 0) return null;
 
   return (
     <section ref={ref} className="border-y border-border bg-gradient-to-r from-amber-500/5 via-transparent to-sky-500/5 px-4 py-12 sm:px-8">

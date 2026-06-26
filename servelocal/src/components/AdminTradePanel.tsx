@@ -211,7 +211,6 @@ export function AdminTradePanel({
                   >
                     <option value="free">Free</option>
                     <option value="featured">Featured $29 founding</option>
-                    <option value="premium">Premium $99</option>
                   </select>
                 </div>
                 <div className="flex flex-wrap gap-2">

@@ -1,5 +1,4 @@
 import Link from "next/link";
-import { Globe, Share2 } from "lucide-react";
 import { LanguageToggle } from "@/components/ui/LanguageToggle";
 import { SERVE_LOCAL } from "@/lib/constants";
 
@@ -40,12 +39,7 @@ const LEGAL_LINKS = [
   { href: "/privacy", label: "Privacy" },
 ] as const;
 
-const SOCIAL = [
-  { href: "https://facebook.com", icon: Share2, label: "Facebook" },
-  { href: "https://instagram.com", icon: Globe, label: "Instagram" },
-  { href: "https://twitter.com", icon: Share2, label: "Twitter" },
-  { href: "https://linkedin.com", icon: Globe, label: "LinkedIn" },
-] as const;
+const SOCIAL: { href: string; label: string }[] = [];
 
 const i18nEnabled = process.env.NEXT_PUBLIC_I18N_ENABLED === "true";
 
@@ -64,20 +58,22 @@ export function MarketingFooter() {
           <p className="mt-3 inline-flex items-center gap-1.5 rounded-full border border-border bg-background px-3 py-1 text-xs font-medium text-foreground">
             🍁 Proudly Canadian
           </p>
-          <div className="mt-4 flex gap-3">
-            {SOCIAL.map(({ href, icon: Icon, label }) => (
-              <a
-                key={label}
-                href={href}
-                target="_blank"
-                rel="noopener noreferrer"
-                aria-label={label}
-                className="inline-flex h-9 w-9 items-center justify-center rounded-full border border-border text-muted transition hover:border-amber-400/50 hover:text-foreground"
-              >
-                <Icon className="h-4 w-4" />
-              </a>
-            ))}
-          </div>
+          {SOCIAL.length > 0 && (
+            <div className="mt-4 flex gap-3">
+              {SOCIAL.map(({ href, label }) => (
+                <a
+                  key={label}
+                  href={href}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  aria-label={label}
+                  className="inline-flex h-9 items-center justify-center rounded-full border border-border px-3 text-xs text-muted transition hover:border-amber-400/50 hover:text-foreground"
+                >
+                  {label}
+                </a>
+              ))}
+            </div>
+          )}
         </div>
 
         <div>

@@ -7,7 +7,7 @@ export const SITE_FAQS = [
   },
   {
     q: "How do tradies get listed?",
-    a: "Apply at Get listed with your business details. Our team reviews applications within 1–2 business days. Starter listings are free; Featured and Premium plans add placement and badges.",
+    a: "Apply at Get listed with your business details. Our team reviews applications within 1–2 business days. Starter listings are free; the Featured plan adds placement and badges.",
   },
   {
     q: "How is ServeLocal different from Thumbtack or HomeStars?",
