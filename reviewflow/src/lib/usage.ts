@@ -6,6 +6,16 @@ export function startOfCurrentMonthIso(): string {
   return new Date(now.getFullYear(), now.getMonth(), 1).toISOString();
 }
 
+export function startOfCurrentWeekIso(): string {
+  const now = new Date();
+  const dayOfWeek = now.getDay(); // 0 = Sunday
+  const daysFromMonday = dayOfWeek === 0 ? 6 : dayOfWeek - 1;
+  const monday = new Date(now);
+  monday.setHours(0, 0, 0, 0);
+  monday.setDate(monday.getDate() - daysFromMonday);
+  return monday.toISOString();
+}
+
 export async function countReviewsThisMonth(
   supabase: SupabaseClient,
   businessId: string
@@ -15,6 +25,19 @@ export async function countReviewsThisMonth(
     .select("*", { count: "exact", head: true })
     .eq("business_id", businessId)
     .gte("created_at", startOfCurrentMonthIso());
+
+  return count || 0;
+}
+
+export async function countReviewsThisWeek(
+  supabase: SupabaseClient,
+  businessId: string
+): Promise<number> {
+  const { count } = await supabase
+    .from("feedback_events")
+    .select("*", { count: "exact", head: true })
+    .eq("business_id", businessId)
+    .gte("created_at", startOfCurrentWeekIso());
 
   return count || 0;
 }

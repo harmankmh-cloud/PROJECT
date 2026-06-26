@@ -7,7 +7,7 @@ import { buildReviewUrl, getAppUrl } from "@/lib/app-url-server";
 import { getDashboardData } from "@/lib/dashboard-data";
 
 export default async function DashboardPage() {
-  const { business, feedback, feedbackTotal, stats, usage } = await getDashboardData();
+  const { business, feedback, feedbackTotal, stats, usage, reviewsThisWeek } = await getDashboardData();
 
   if (!business) {
     return (
@@ -36,6 +36,7 @@ export default async function DashboardPage() {
               feedbackTotal={feedbackTotal}
               usage={usage}
               reviewUrl={reviewUrl}
+              reviewsThisWeek={reviewsThisWeek ?? 0}
             />
           </div>
         </main>

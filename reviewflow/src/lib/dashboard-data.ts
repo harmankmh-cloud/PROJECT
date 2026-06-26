@@ -9,7 +9,7 @@ import type {
 import { resolvePlan } from "@/lib/business-plan";
 import { FEEDBACK_PAGE_SIZE } from "@/lib/constants";
 import { monthlyLimitForPlan, PLAN_LIMITS } from "@/lib/plans";
-import { countReviewsThisMonth } from "@/lib/usage";
+import { countReviewsThisMonth, countReviewsThisWeek } from "@/lib/usage";
 
 async function countEvents(businessId: string, eventType: string) {
   const supabase = await createClient();
@@ -69,6 +69,7 @@ export async function getDashboardData() {
     publicDrafts,
     ownerNotifications,
     reviewsThisMonth,
+    reviewsThisWeek,
   ] = await Promise.all([
     supabase.from("prompt_templates").select("*").eq("business_id", business.id),
     supabase
@@ -86,6 +87,7 @@ export async function getDashboardData() {
     countEvents(business.id, "copy_review"),
     countEvents(business.id, "owner_notification"),
     countReviewsThisMonth(supabase, business.id),
+    countReviewsThisWeek(supabase, business.id),
   ]);
 
   const legacyPrivate = await countEvents(business.id, "private_feedback");
@@ -116,5 +118,6 @@ export async function getDashboardData() {
     feedbackTotal: feedbackCountResult.count || 0,
     stats,
     usage,
+    reviewsThisWeek,
   };
 }

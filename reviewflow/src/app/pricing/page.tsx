@@ -27,11 +27,11 @@ const jsonLd = {
       "@type": "Offer",
       name: "Free",
       price: "0",
-      priceCurrency: "CAD",
+      priceCurrency: PRICING.currency,
       priceSpecification: {
         "@type": "UnitPriceSpecification",
         price: "0",
-        priceCurrency: "CAD",
+        priceCurrency: PRICING.currency,
         referenceQuantity: { "@type": "QuantitativeValue", value: "1", unitCode: "MON" },
       },
       description: "50 review requests included, no credit card required.",
@@ -42,11 +42,11 @@ const jsonLd = {
       "@type": "Offer",
       name: "Pro",
       price: `${PRICING.monthlyUsd}`,
-      priceCurrency: "CAD",
+      priceCurrency: PRICING.currency,
       priceSpecification: {
         "@type": "UnitPriceSpecification",
         price: `${PRICING.monthlyUsd}`,
-        priceCurrency: "CAD",
+        priceCurrency: PRICING.currency,
         referenceQuantity: { "@type": "QuantitativeValue", value: "1", unitCode: "MON" },
       },
       description:

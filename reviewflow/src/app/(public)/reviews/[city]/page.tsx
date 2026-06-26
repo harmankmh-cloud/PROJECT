@@ -41,18 +41,20 @@ export default async function CityPage({
   const { city: slug } = await params;
   const city = getCityBySlug(slug);
   if (!city) notFound();
+  const cityData = city as NonNullable<typeof city>;
+
 
   const siteUrl = `https://${BRAND.domain}`;
   const jsonLd = {
     "@context": "https://schema.org",
     "@type": "LocalBusiness",
     name: BRAND.name,
-    description: `Review collection software for ${city.name} local businesses`,
-    url: `${siteUrl}/reviews/${city.slug}`,
+    description: `Review collection software for ${cityData.name} local businesses`,
+    url: `${siteUrl}/reviews/${cityData.slug}`,
     areaServed: {
       "@type": "City",
-      name: city.name,
-      containedInPlace: { "@type": "AdministrativeArea", name: city.region },
+      name: cityData.name,
+      containedInPlace: { "@type": "AdministrativeArea", name: cityData.region },
     },
     offers: {
       "@type": "Offer",
@@ -73,14 +75,14 @@ export default async function CityPage({
         <div className="marketing-container relative">
           <div className="mx-auto max-w-3xl text-center">
             <p className="section-eyebrow mx-auto mb-5 w-fit">
-              <MapPin className="inline h-3.5 w-3.5" /> {city.name}, {city.region}
+              <MapPin className="inline h-3.5 w-3.5" /> {cityData.name}, {cityData.region}
             </p>
             <h1 className="font-display text-4xl leading-[1.1] text-text md:text-5xl lg:text-[3.35rem]">
               More Google Reviews for{" "}
-              <span className="coral-underline text-primary">{city.name}</span> Businesses — Automatically
+              <span className="coral-underline text-primary">{cityData.name}</span> Businesses — Automatically
             </h1>
             <p className="mx-auto mt-6 max-w-2xl text-lg leading-relaxed text-muted">
-              {city.localFlavour} {BRAND.name} turns your happy customers into 5-star Google reviews using AI prompts and a simple QR code flow.
+              {cityData.localFlavour} {BRAND.name} turns your happy customers into 5-star Google reviews using AI prompts and a simple QR code flow.
             </p>
             <div className="mt-8 flex flex-col justify-center gap-3 sm:flex-row">
               <ShimmerButton href="/signup" className="px-8 py-3.5 text-base">
@@ -99,7 +101,7 @@ export default async function CityPage({
       <section className="border-y border-border/80 bg-surface/50 py-12">
         <div className="marketing-container">
           <div className="grid gap-6 text-center md:grid-cols-3">
-            {city.stats.map((stat) => (
+            {cityData.stats.map((stat) => (
               <div key={stat.label} className="stat-chip">
                 <p className="font-display text-3xl text-primary">{stat.value}</p>
                 <p className="mt-1.5 text-sm text-muted">{stat.label}</p>
@@ -113,16 +115,16 @@ export default async function CityPage({
       <section className="py-16 md:py-24">
         <div className="marketing-container">
           <div className="mx-auto max-w-3xl text-center">
-            <p className="section-eyebrow mx-auto mb-4 w-fit">Who we help in {city.name}</p>
+            <p className="section-eyebrow mx-auto mb-4 w-fit">Who we help in {cityData.name}</p>
             <h2 className="font-display text-3xl text-text md:text-4xl">
-              Built for every {city.name} business type
+              Built for every {cityData.name} business type
             </h2>
             <p className="mx-auto mt-4 max-w-xl text-muted">
               From auto shops on Fraser Highway to downtown salons — {BRAND.name} works for any local business that wants more Google reviews.
             </p>
           </div>
           <div className="mt-10 flex flex-wrap justify-center gap-3">
-            {city.topIndustries.map((industry) => (
+            {cityData.topIndustries.map((industry) => (
               <span
                 key={industry}
                 className="inline-flex items-center gap-2 rounded-full border border-border/80 bg-white px-5 py-2.5 text-sm font-medium text-text shadow-sm"
@@ -149,7 +151,7 @@ export default async function CityPage({
               {
                 n: "1",
                 title: "Set up in 5 minutes",
-                text: `Paste your ${city.name} Google Maps link and your review page is live. Print the QR or share by SMS.`,
+                text: `Paste your ${cityData.name} Google Maps link and your review page is live. Print the QR or share by SMS.`,
               },
               {
                 n: "2",
@@ -178,7 +180,7 @@ export default async function CityPage({
           <div className="mx-auto max-w-3xl">
             <p className="section-eyebrow mb-4 w-fit">100% Google-compliant</p>
             <h2 className="font-display text-3xl text-text md:text-4xl">
-              Safe for your {city.name} business reputation
+              Safe for your {cityData.name} business reputation
             </h2>
             <p className="mt-4 max-w-2xl text-muted">
               We never fake reviews or incentivize ratings. {BRAND.name} only helps real customers share their real experience — the way Google intends.
@@ -207,7 +209,7 @@ export default async function CityPage({
         <div className="marketing-container max-w-3xl">
           <p className="section-eyebrow mx-auto mb-4 w-fit">FAQ</p>
           <h2 className="font-display mb-12 text-center text-3xl text-text md:text-4xl">
-            Common questions from {city.name} businesses
+            Common questions from {cityData.name} businesses
           </h2>
           <FaqAccordion items={FAQ_ITEMS} />
         </div>
@@ -217,10 +219,10 @@ export default async function CityPage({
       <section className="footer-cta-strip py-16">
         <div className="marketing-container text-center text-white">
           <h2 className="font-display text-3xl md:text-4xl">
-            Start collecting {city.name} reviews today
+            Start collecting {cityData.name} reviews today
           </h2>
           <p className="mx-auto mt-4 max-w-xl text-white/80">
-            50 free reviews — no credit card, no setup fee. Just more Google stars for your {city.name} business.
+            50 free reviews — no credit card, no setup fee. Just more Google stars for your {cityData.name} business.
           </p>
           <ShimmerButton href="/signup" className="mt-8 px-10 py-4 text-base btn-shimmer-light">
             Get Started Free
