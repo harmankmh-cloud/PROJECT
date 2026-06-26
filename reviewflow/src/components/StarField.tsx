@@ -128,13 +128,13 @@ function Stars({ count, reduced }: { count: number; reduced: boolean }) {
     // Slow auto-rotation.
     pts.rotation.y += delta * 0.03;
     pts.rotation.x += delta * 0.008;
-    // Eased parallax toward the cursor + a touch of scroll drift.
-    const targetX = pointer.current.y * 0.12;
-    const targetY = pointer.current.x * 0.2;
-    pts.rotation.x += (targetX - pts.rotation.x % (Math.PI * 2)) * 0.0008;
-    pts.position.x += (targetY * 2 - pts.position.x) * 0.04;
-    pts.position.y += (-scrollY.current / size.height) * 1.2 - pts.position.y;
-    pts.position.y *= 0.96;
+    // Eased parallax toward the cursor + a touch of scroll drift. Applied to
+    // position (bounded) rather than the unbounded auto-rotation, so the two
+    // motions don't fight each other.
+    const targetX = pointer.current.x * 0.4;
+    const targetY = pointer.current.y * 0.25 + (-scrollY.current / size.height) * 1.2;
+    pts.position.x += (targetX - pts.position.x) * 0.04;
+    pts.position.y += (targetY - pts.position.y) * 0.04;
   });
 
   return (
@@ -160,7 +160,9 @@ function Stars({ count, reduced }: { count: number; reduced: boolean }) {
 
 export default function StarField() {
   const reduced = usePrefersReducedMotion();
-  const [count, setCount] = useState(1200);
+  const [count, setCount] = useState(() =>
+    typeof window !== "undefined" && window.innerWidth < 820 ? 500 : 1200,
+  );
 
   useEffect(() => {
     const compute = () => setCount(window.innerWidth < 820 ? 500 : 1200);
