@@ -344,6 +344,8 @@ h2 {
     background 150ms ease,
     box-shadow 150ms ease;
   clip-path: polygon(0 0, calc(100% - 8px) 0, 100% 8px, 100% 100%, 8px 100%, 0 calc(100% - 8px));
+  /* Slightly inset padding to compensate for clipped corners */
+  padding-inline: 22px;
 }
 
 .button:hover,
@@ -1159,6 +1161,69 @@ textarea:focus {
 
   h1 {
     font-size: clamp(2rem, 10vw, 3.5rem);
+  }
+}
+
+/* ============================================================
+   ACCESSIBILITY — REDUCED MOTION
+   ============================================================ */
+
+@media (prefers-reduced-motion: reduce) {
+  .scan-line {
+    display: none;
+  }
+
+  .brand__mark {
+    animation: none;
+  }
+
+  .hero::after {
+    animation: none;
+  }
+
+  .button,
+  .button--ghost,
+  .nav__links a,
+  .status-button,
+  .delete-stop,
+  .ghost-button,
+  .library-card__select,
+  .library-card__delete,
+  .timeline-item,
+  .checklist label,
+  input,
+  select,
+  textarea {
+    transition: none;
+  }
+
+  .hero__content {
+    animation: none;
+  }
+}
+
+/* ============================================================
+   ACCESSIBILITY — HIGH CONTRAST / FORCED COLOURS
+   ============================================================ */
+
+@media (forced-colors: active) {
+  h1 {
+    -webkit-text-fill-color: ButtonText;
+    background: none;
+    filter: none;
+    color: ButtonText;
+  }
+
+  .stat-card::before,
+  .panel::before,
+  .stat-card::after,
+  .panel::after {
+    display: none;
+  }
+
+  .bg-grid,
+  .scan-line {
+    display: none;
   }
 }
 
