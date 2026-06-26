@@ -120,13 +120,13 @@ export function LinearStripeLanding() {
 
   return (
     <>
-      {/* Fixed dark backdrop + hero-only 3D starfield (sits behind all content). */}
+      {/* Fixed dark backdrop + hero-only 3D starfield (sits behind hero content). */}
       <div aria-hidden className="rl-dark fixed inset-0 -z-10" />
-      <StarField />
       <main className="relative z-10 min-h-screen text-ink">
         <MarketingNavbar />
 
       <section className="relative overflow-hidden border-b border-white/10">
+        <StarField />
         <div className="landing-radial absolute inset-x-0 top-0 h-[24rem]" />
         <div className="mx-auto flex min-h-[calc(100dvh-4rem)] max-w-7xl flex-col justify-center gap-16 px-6 py-24 lg:px-8 lg:py-28">
           <div className="grid items-center gap-16 lg:grid-cols-[1.05fr_0.95fr]">

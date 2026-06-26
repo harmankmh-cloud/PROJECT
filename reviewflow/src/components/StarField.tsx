@@ -1,7 +1,7 @@
 "use client";
 
 /**
- * StarField — fixed, full-screen 3D star background for the homepage hero.
+ * StarField — absolute, hero-scoped 3D star background for the homepage hero.
  *
  * Pure `@react-three/fiber` + `three` (no drei). ~1200 glowing gold + white
  * star sprites floating in 3D depth with a slow auto-rotation and subtle
@@ -175,7 +175,7 @@ export default function StarField() {
     <div
       aria-hidden
       style={{
-        position: "fixed",
+        position: "absolute",
         inset: 0,
         zIndex: 0,
         pointerEvents: "none",
