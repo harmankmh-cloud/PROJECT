@@ -7,9 +7,9 @@ import { ShimmerButton } from "@/components/ui/ShimmerButton";
 import { BRAND } from "@/lib/brand";
 
 export const metadata: Metadata = {
-  title: "Pricing — $39/mo, no setup fee",
+  title: "Pricing — 50 Free Reviews, Then $39/mo",
   description:
-    "Simple pricing for RateLocal — $39/mo, no setup fee, 14-day money-back guarantee. Cheaper than NiceJob and Podium. QR review collection for BC local businesses.",
+    "RateLocal pricing: start with 50 free review requests, no credit card needed. Upgrade to Pro for $39/mo — everything included, no setup fee, 14-day money-back guarantee.",
   alternates: { canonical: "/pricing" },
 };
 
@@ -22,10 +22,10 @@ export default function PricingPage() {
         <div className="marketing-container relative text-center">
           <p className="section-eyebrow mx-auto mb-5 w-fit">Pricing</p>
           <h1 className="font-display text-4xl text-text md:text-5xl lg:text-[3.35rem]">
-            One plan for shops that want more <span className="coral-underline text-primary">Google reviews</span>
+            Start free. Then grow with <span className="coral-underline text-primary">$39/mo</span> — everything included
           </h1>
           <p className="mx-auto mt-5 max-w-2xl text-lg leading-relaxed text-muted">
-            {BRAND.name} keeps pricing simple: start free, upgrade when you want AI prompts and unlimited requests, and never pay a setup fee.
+            Start with 50 free review requests — no credit card needed. When you're ready to scale, unlock everything for just $39/mo with no setup fee.
           </p>
           <div className="mt-8 flex flex-col justify-center gap-3 sm:flex-row">
             <ShimmerButton href="/signup" className="px-8 py-3.5 text-base">

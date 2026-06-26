@@ -49,6 +49,10 @@ export const FAQ_ITEMS = [
     a: "No — RateLocal helps real customers leave honest reviews. We never ask for fake reviews. Happy customers choose their rating and can edit the AI draft before posting on Google.",
   },
   {
+    q: "How many reviews do I get for free?",
+    a: "You get 50 review requests completely free — no credit card required. Once you hit that limit, upgrading to Pro ($39/mo) removes all limits and unlocks AI prompts, analytics, and more.",
+  },
+  {
     q: "Does this work on Android and iPhone?",
     a: "Yes. Customers scan your QR with any phone camera — no app download required. The review page works in Safari, Chrome, and Samsung Internet.",
   },
