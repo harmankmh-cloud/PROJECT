@@ -117,24 +117,6 @@ export const LISTING_PLANS = [
       "No per-lead fees — ever",
     ],
   },
-  {
-    id: "premium" as const,
-    name: "Premium Elite",
-    priceLabel: "$99/mo",
-    setupLabel: "Waitlist",
-    monthlyLabel: "Join waitlist — we're onboarding Featured pros first",
-    waitlistOnly: true,
-    highlight: false,
-    features: [
-      "Top placement in your category",
-      "Verified + insurance badge",
-      "Emergency/24-7 badge option",
-      "Unlimited portfolio photos",
-      "Cost guide featured pro slot",
-      "Monthly performance report",
-      "No per-lead fees — ever",
-    ],
-  },
 ] as const;
 
 export const COST_GUIDES: Record<

@@ -14,11 +14,6 @@ export const SERVELOCAL_PRICING = {
     duration: FOUNDING_PRO.duration,
     spotsPerCity: FOUNDING_PRO.spotsPerCity,
   },
-  premium: {
-    monthlyUsd: 99,
-    /** Early stage: sell Featured + free Starter; Premium is waitlist-only in UI. */
-    waitlistOnly: true,
-  },
   competitors: {
     thumbtackLead: "$25–75 per shared lead",
     homeStars: "$299+/mo",

@@ -13,12 +13,15 @@ export function TestimonialsCarousel() {
   const containerRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
-    if (paused) return;
+    if (paused || LANDING_TESTIMONIALS.length === 0) return;
     const timer = setInterval(() => {
       setOffset((o) => (o + 1) % LANDING_TESTIMONIALS.length);
     }, 4000);
     return () => clearInterval(timer);
   }, [paused]);
+
+  // No fabricated testimonials — hide the section until real reviews exist.
+  if (LANDING_TESTIMONIALS.length === 0) return null;
 
   return (
     <section className="border-t border-border bg-surface/50 px-4 py-16 sm:px-8">

@@ -36,8 +36,8 @@ export function ForProsSection() {
                 Are you a contractor?
               </h3>
               <p className="mt-2 flex-1 text-sm leading-relaxed text-muted">
-                Get leads in your area, set your own rates, and get paid fast. Join 12,000+ pros
-                already earning on ServeLocal.
+                Get leads in your area, set your own rates, and get paid fast — flat $29/mo, no
+                per-lead fees.
               </p>
               <Link
                 href="/join"

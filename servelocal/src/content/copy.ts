@@ -49,36 +49,14 @@ export const COST_ESTIMATES = [
   { slug: "roofer", label: "Roof inspection", range: "$200–$500" },
 ] as const;
 
-export const TESTIMONIALS = [
-  {
-    name: "Sarah M.",
-    city: "Abbotsford",
-    trade: "Plumber",
-    quote: "Found a licensed plumber in under an hour. Called direct — no lead fees, no runaround.",
-    rating: 5,
-  },
-  {
-    name: "James T.",
-    city: "Surrey",
-    trade: "Electrician",
-    quote: "Posted my panel upgrade job and got three solid quotes the same day.",
-    rating: 5,
-  },
-  {
-    name: "Priya K.",
-    city: "Chilliwack",
-    trade: "HVAC",
-    quote: "Finally a BC directory that feels local. Verified badges gave me confidence.",
-    rating: 5,
-  },
-  {
-    name: "Mike R.",
-    city: "Langley",
-    trade: "Landscaper",
-    quote: "Hired a landscaper through ServeLocal — straightforward and trustworthy.",
-    rating: 4,
-  },
-] as const;
+// Real homeowner testimonials only — empty until verified reviews are collected.
+export const TESTIMONIALS: {
+  name: string;
+  city: string;
+  trade: string;
+  quote: string;
+  rating: number;
+}[] = [];
 
 export const HERO_PROS = [
   { name: "Dave's Plumbing", trade: "Plumber", city: "Abbotsford", rating: 4.9, reviews: 47, available: true },
