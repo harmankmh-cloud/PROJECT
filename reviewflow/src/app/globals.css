@@ -33,6 +33,75 @@
   --color-mint-500: #22c55e;
   --color-cream: #f9fafb;
   --color-cream-dark: #f3f4f6;
+
+  /* ─────────────────────────────────────────────────────────────────────────
+   * RateLocal design-system tokens (Option A foundation).
+   * These reference the raw `--*` custom properties defined in the `:root` /
+   * `.dark` blocks below, so utilities resolve dynamically with the active
+   * theme. Names are intentionally collision-free with the legacy palette
+   * above, so existing pages are unaffected (additive, not destructive).
+   * ───────────────────────────────────────────────────────────────────────── */
+  --color-background: var(--background);
+  --color-surface-elevated: var(--surface-elevated);
+  --color-border-subtle: var(--border-subtle);
+  --color-text-primary: var(--text-primary);
+  --color-text-secondary: var(--text-secondary);
+  --color-text-tertiary: var(--text-tertiary);
+  --color-brand: var(--brand);
+  --color-brand-muted: var(--brand-muted);
+  --color-accent-emerald: var(--accent);
+  --color-accent-muted: var(--accent-muted);
+  --color-destructive: var(--destructive);
+  --color-warning-amber: var(--warning);
+
+  /* Semantic radii (match the brief: cards 16px, inputs 12px, pills) */
+  --radius-card: 1rem;
+  --radius-input: 0.75rem;
+  --radius-pill: 9999px;
+
+  /* Motion: ease-out-expo per the brief's animation principles */
+  --ease-out-expo: cubic-bezier(0.23, 1, 0.32, 1);
+}
+
+/* ───────────────────────────────────────────────────────────────────────────
+ * RateLocal design-system raw tokens.
+ * `:root` holds light-mode values (default); `.dark` overrides with dark-mode
+ * values. The `ThemeToggle` component toggles the `.dark` class on <html> and
+ * defaults to the user's system preference. Hex values match the design brief
+ * exactly. These are additive and do not alter the legacy `--color-*` palette.
+ * ───────────────────────────────────────────────────────────────────────────*/
+:root {
+  --background: #ffffff;
+  --surface: #f8f8fa;
+  --surface-elevated: #ffffff;
+  --border: #e4e4e7;
+  --border-subtle: #f0f0f2;
+  --text-primary: #09090b;
+  --text-secondary: #71717a;
+  --text-tertiary: #a1a1aa;
+  --brand: #2563eb;
+  --brand-muted: rgba(37, 99, 235, 0.1);
+  --accent: #059669;
+  --accent-muted: rgba(5, 150, 105, 0.1);
+  --destructive: #dc2626;
+  --warning: #d97706;
+}
+
+.dark {
+  --background: #0a0a0b;
+  --surface: #121214;
+  --surface-elevated: #1c1c1f;
+  --border: #27272a;
+  --border-subtle: #1f1f22;
+  --text-primary: #fafafa;
+  --text-secondary: #a1a1aa;
+  --text-tertiary: #52525b;
+  --brand: #3b82f6;
+  --brand-muted: rgba(59, 130, 246, 0.15);
+  --accent: #10b981;
+  --accent-muted: rgba(16, 185, 129, 0.15);
+  --destructive: #ef4444;
+  --warning: #f59e0b;
 }
 
 html {
@@ -69,6 +138,53 @@ select {
 }
 
 @layer components {
+  /* ─── RateLocal design-system utilities (Option A foundation) ─────────────
+   * Typography scale, surfaces, glass and glow effects built on the new
+   * design tokens. Opt-in via these classes or the `*-brand`, `bg-background`,
+   * `text-text-primary` (etc.) Tailwind utilities. Additive to the legacy kit.
+   * ────────────────────────────────────────────────────────────────────────*/
+  .ds-hero {
+    @apply text-5xl font-bold tracking-tight md:text-7xl lg:text-8xl;
+    line-height: 0.95;
+  }
+
+  .ds-h1 {
+    @apply text-4xl font-semibold leading-tight tracking-tight md:text-5xl;
+  }
+
+  .ds-h2 {
+    @apply text-3xl font-semibold leading-tight tracking-tight md:text-4xl;
+  }
+
+  .ds-body {
+    @apply text-base leading-relaxed text-text-secondary;
+  }
+
+  .ds-data {
+    font-variant-numeric: tabular-nums;
+    font-weight: 600;
+  }
+
+  .ds-card {
+    @apply rounded-2xl border border-border bg-surface-elevated p-6;
+  }
+
+  .ds-glass {
+    @apply rounded-2xl border border-border;
+    background-color: color-mix(in srgb, var(--surface) 80%, transparent);
+    -webkit-backdrop-filter: blur(24px);
+    backdrop-filter: blur(24px);
+  }
+
+  .ds-glow-brand {
+    box-shadow: 0 0 40px -10px var(--brand-muted);
+  }
+
+  .ds-focus-ring {
+    @apply outline-none ring-2 ring-brand ring-offset-2;
+    --tw-ring-offset-color: var(--background);
+  }
+
   .font-display {
     font-family: var(--font-jakarta), system-ui, sans-serif;
     font-weight: 700;
