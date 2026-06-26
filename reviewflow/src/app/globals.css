@@ -897,6 +897,107 @@ select {
       background-color: #0f0d0e;
     }
   }
+
+  /* ── RateLocal "Nightfall": always-on dark theme for the public site ──────
+   * Re-scopes the shared design tokens + surface helpers to the dark gold
+   * palette so existing inner-page markup (pricing/about/help) renders on the
+   * dark theme by default — not only under prefers-color-scheme: dark. Placed
+   * last in the layer so it wins over the light + media-query rules above.
+   * ────────────────────────────────────────────────────────────────────────*/
+  .marketing-page {
+    --color-bg: #0a0a1a;
+    --color-surface: #12102b;
+    --color-border: rgba(255, 255, 255, 0.12);
+    --color-text: #f4f3ff;
+    --color-muted: #9a98c4;
+    --color-primary: #ffc24b;
+    --color-primary-light: #ffd884;
+    --color-accent: #ffc24b;
+    --color-star: #ffc24b;
+    color: var(--rl-ink);
+  }
+
+  .marketing-page .font-display {
+    font-family: var(--font-space-grotesk), system-ui, sans-serif;
+    font-weight: 600;
+    letter-spacing: -0.02em;
+  }
+
+  .marketing-page .mesh-bg {
+    background-color: transparent;
+    background-image:
+      radial-gradient(ellipse 70% 50% at 15% -10%, rgba(120, 90, 255, 0.22) 0, transparent 55%),
+      radial-gradient(ellipse 55% 45% at 92% 4%, rgba(255, 194, 75, 0.1) 0, transparent 50%);
+  }
+
+  .marketing-page .text-gradient {
+    background: linear-gradient(120deg, #ffc24b 0%, #ffd884 60%, #ffffff 100%);
+    -webkit-background-clip: text;
+    background-clip: text;
+    color: transparent;
+  }
+
+  .marketing-page .card-surface,
+  .marketing-page .surface-card,
+  .marketing-page .surface-card-hover,
+  .marketing-page .card-glow,
+  .marketing-page .stat-chip {
+    background-color: var(--rl-glass-bg);
+    border-color: var(--rl-glass-border);
+    color: var(--rl-ink);
+    -webkit-backdrop-filter: blur(16px);
+    backdrop-filter: blur(16px);
+    box-shadow: none;
+  }
+
+  .marketing-page .btn-shimmer,
+  .marketing-page .btn-shimmer-light {
+    color: #1a1530;
+    background-image: linear-gradient(135deg, #ffc24b 0%, #ffd884 100%);
+  }
+
+  .marketing-page .btn-ghost {
+    background-color: transparent;
+    border-color: rgba(255, 255, 255, 0.18);
+    color: var(--rl-ink);
+  }
+
+  .marketing-page .btn-ghost:hover {
+    background-color: rgba(255, 255, 255, 0.06);
+    border-color: rgba(255, 194, 75, 0.4);
+  }
+
+  .marketing-page .pricing-popular {
+    background: linear-gradient(180deg, rgba(255, 194, 75, 0.1) 0%, transparent 45%);
+  }
+
+  .marketing-page .input-field {
+    background-color: rgba(255, 255, 255, 0.04);
+    border-color: rgba(255, 255, 255, 0.14);
+    color: var(--rl-ink);
+  }
+
+  .marketing-page footer .bg-white {
+    background-color: transparent;
+  }
+
+  /* Legal pages (privacy/terms) reuse fixed slate/brand text utilities in their
+   * markup; re-map them to the dark palette inside the dark legal wrapper. */
+  .rl-legal :is(.text-slate-600, .text-slate-700) {
+    color: #c7c4e6;
+  }
+
+  .rl-legal .text-slate-500 {
+    color: var(--rl-muted);
+  }
+
+  .rl-legal :is(.text-brand-950, .text-brand-900) {
+    color: var(--rl-ink);
+  }
+
+  .rl-legal .text-gold-600 {
+    color: var(--rl-gold);
+  }
 }
 
 @keyframes pulse-glow {

@@ -7,7 +7,6 @@ import {
   Car,
   Check,
   ChevronRight,
-  Menu,
   MessageSquareMore,
   MonitorPlay,
   QrCode,
@@ -18,22 +17,20 @@ import {
   Store,
   UtensilsCrossed,
   Wrench,
-  X,
 } from "lucide-react";
+import dynamic from "next/dynamic";
 import Link from "next/link";
 import { useState } from "react";
 import { Badge } from "@/components/ui/Badge";
 import { Button } from "@/components/ui/Button";
 import { Card } from "@/components/ui/Card";
 import { Switch } from "@/components/ui/Switch";
+import { MarketingNavbar } from "@/components/marketing/MarketingNavbar";
+import { MagneticButton } from "@/components/ui/MagneticButton";
 import { BRAND } from "@/lib/brand";
 
-const NAV_ITEMS = [
-  { href: "#product", label: "Product" },
-  { href: "#pricing", label: "Pricing" },
-  { href: "#demo", label: "Demo" },
-  { href: "#about", label: "About" },
-] as const;
+// 3D starfield is hero-only and lazy-loaded so it never blocks first paint or SSR.
+const StarField = dynamic(() => import("@/components/StarField"), { ssr: false });
 
 const CITIES = ["Vancouver", "Surrey", "Abbotsford", "Kelowna", "Victoria", "Burnaby"];
 
@@ -111,7 +108,6 @@ const PRICING_PLAN = {
 } as const;
 
 export function LinearStripeLanding() {
-  const [menuOpen, setMenuOpen] = useState(false);
   const [billing, setBilling] = useState<"monthly" | "yearly">("monthly");
   const [demoStage, setDemoStage] = useState<"qr" | "rating" | "review" | "feedback">("qr");
   const [selectedStars, setSelectedStars] = useState(0);
@@ -123,81 +119,14 @@ export function LinearStripeLanding() {
   };
 
   return (
-    <main className="min-h-screen bg-[#0A0A0B] text-[#FAFAFA]">
-      <header className="sticky top-0 z-50 border-b border-[#27272A]/80 bg-[#0A0A0B]/80 backdrop-blur-xl">
-        <div className="mx-auto flex h-16 max-w-7xl items-center justify-between px-6 lg:px-8">
-          <Link href="/" className="flex items-center gap-3">
-            <span className="flex h-10 w-10 items-center justify-center rounded-2xl border border-[#3B82F6]/20 bg-[#3B82F6]/10 text-[#3B82F6]">
-              <Star className="h-5 w-5 fill-current" />
-            </span>
-            <span className="text-lg font-semibold tracking-tight">{BRAND.name}</span>
-          </Link>
+    <>
+      {/* Fixed dark backdrop + hero-only 3D starfield (sits behind all content). */}
+      <div aria-hidden className="rl-dark fixed inset-0 -z-10" />
+      <StarField />
+      <main className="relative z-10 min-h-screen text-ink">
+        <MarketingNavbar />
 
-          <nav className="hidden items-center gap-7 text-sm text-[#A1A1AA] md:flex">
-            {NAV_ITEMS.map((item) => (
-              <Link key={item.href} href={item.href} className="transition hover:text-[#FAFAFA]">
-                {item.label}
-              </Link>
-            ))}
-          </nav>
-
-          <div className="hidden items-center gap-3 md:flex">
-            <Link href="/login" className="text-sm font-medium text-[#A1A1AA] transition hover:text-[#FAFAFA]">
-              Sign in
-            </Link>
-            <Button pill className="button-shimmer rounded-full bg-[#3B82F6] px-5 py-2.5 text-sm text-white hover:bg-blue-500">
-              Get Started — Free
-            </Button>
-          </div>
-
-          <button
-            type="button"
-            className="rounded-full border border-[#27272A]/80 p-2 text-[#A1A1AA] md:hidden"
-            aria-label="Open navigation"
-            onClick={() => setMenuOpen(true)}
-          >
-            <Menu className="h-5 w-5" />
-          </button>
-        </div>
-
-        <AnimatePresence>
-          {menuOpen ? (
-            <motion.div
-              initial={{ opacity: 0, y: -12 }}
-              animate={{ opacity: 1, y: 0 }}
-              exit={{ opacity: 0, y: -12 }}
-              className="border-t border-[#27272A]/80 bg-[#0A0A0B]/95 px-6 py-4 backdrop-blur md:hidden"
-            >
-              <div className="flex items-center justify-between">
-                <span className="text-sm font-semibold">Navigate</span>
-                <button type="button" className="rounded-full border border-[#27272A]/80 p-2" onClick={() => setMenuOpen(false)}>
-                  <X className="h-4 w-4" />
-                </button>
-              </div>
-              <div className="mt-4 flex flex-col gap-3">
-                {NAV_ITEMS.map((item, index) => (
-                  <motion.div
-                    key={item.href}
-                    initial={{ opacity: 0, x: -6 }}
-                    animate={{ opacity: 1, x: 0 }}
-                    transition={{ delay: 0.04 * index }}
-                  >
-                    <Link href={item.href} className="block py-2 text-sm text-[#A1A1AA]" onClick={() => setMenuOpen(false)}>
-                      {item.label}
-                    </Link>
-                  </motion.div>
-                ))}
-                <Link href="/signup" className="mt-2 inline-flex w-full justify-center rounded-full bg-[#3B82F6] px-4 py-3 text-sm font-semibold text-white" onClick={() => setMenuOpen(false)}>
-                  Get Started — Free
-                </Link>
-              </div>
-            </motion.div>
-          ) : null}
-        </AnimatePresence>
-      </header>
-
-      <section className="relative overflow-hidden border-b border-[#27272A]/80">
-        <div className="landing-grid absolute inset-0" />
+      <section className="relative overflow-hidden border-b border-white/10">
         <div className="landing-radial absolute inset-x-0 top-0 h-[24rem]" />
         <div className="mx-auto flex min-h-[calc(100dvh-4rem)] max-w-7xl flex-col justify-center gap-16 px-6 py-24 lg:px-8 lg:py-28">
           <div className="grid items-center gap-16 lg:grid-cols-[1.05fr_0.95fr]">
@@ -207,22 +136,41 @@ export function LinearStripeLanding() {
               transition={{ duration: 0.8, ease: "circOut" }}
               className="max-w-3xl"
             >
-              <Badge variant="default" className="rounded-full border border-[#3B82F6]/20 bg-[#3B82F6]/10 px-3 py-1 text-[0.7rem] uppercase tracking-[0.3em] text-[#3B82F6]">
+              <Badge variant="default" className="rounded-full border border-gold/25 bg-gold/10 px-3 py-1 text-[0.7rem] uppercase tracking-[0.3em] text-gold">
                 Reputation management for BC local businesses
               </Badge>
-              <h1 className="mt-6 text-5xl font-semibold leading-[0.95] tracking-tight text-[#FAFAFA] sm:text-6xl lg:text-8xl">
-                Turn every visit into a <span className="text-[#3B82F6]">5★</span> Google review.
+              <h1 className="mt-6 font-grotesk text-5xl font-semibold leading-[0.95] tracking-tight text-ink sm:text-6xl lg:text-8xl">
+                {["Turn every visit", "into a 5★ review"].map((line, i) => (
+                  <motion.span
+                    key={line}
+                    className="block"
+                    initial={shouldReduceMotion ? false : { opacity: 0, y: "0.6em" }}
+                    animate={shouldReduceMotion ? { opacity: 1 } : { opacity: 1, y: 0 }}
+                    transition={{ duration: 0.8, delay: 0.15 + i * 0.12, ease: [0.23, 1, 0.32, 1] }}
+                  >
+                    {i === 1 ? (
+                      <>
+                        into a <span className="rl-text-gold-gradient">5★</span> review
+                      </>
+                    ) : (
+                      line
+                    )}
+                  </motion.span>
+                ))}
               </h1>
-              <p className="mt-6 max-w-2xl text-lg leading-relaxed text-[#A1A1AA] sm:text-xl">
+              <p className="mt-6 max-w-2xl text-lg leading-relaxed text-muted-soft sm:text-xl">
                 AI-powered QR prompts that route unhappy customers privately and guide happy ones to Google — in seconds. No fake reviews. No risk. Built for BC.
               </p>
-              <div className="mt-10 flex flex-col gap-3 sm:flex-row">
-                <Button pill className="button-shimmer rounded-full bg-[#3B82F6] px-8 py-4 text-base text-white hover:bg-blue-500">
+              <div className="mt-10 flex flex-col items-start gap-3 sm:flex-row sm:items-center">
+                <MagneticButton href="/signup" className="px-9 py-4 text-base">
                   Start Free Trial
-                </Button>
-                <Button variant="ghost" pill className="rounded-full border border-[#27272A]/80 bg-transparent px-8 py-4 text-base text-[#A1A1AA] hover:border-[#3B82F6]/30 hover:text-[#FAFAFA]">
+                </MagneticButton>
+                <Link
+                  href="#demo"
+                  className="inline-flex items-center gap-2 rounded-[14px] border border-white/15 bg-white/[0.04] px-8 py-4 text-base text-muted-soft transition hover:border-gold/30 hover:text-ink"
+                >
                   See live demo <ChevronRight className="h-4 w-4" />
-                </Button>
+                </Link>
               </div>
               <div className="mt-12 flex flex-wrap items-center gap-3 rounded-full border border-[#27272A]/70 bg-[#121214]/60 px-4 py-3 backdrop-blur">
                 <span className="text-sm font-medium text-[#FAFAFA]">Trusted by 200+ local businesses</span>
@@ -628,6 +576,7 @@ export function LinearStripeLanding() {
           </div>
         </div>
       </footer>
-    </main>
+      </main>
+    </>
   );
 }
