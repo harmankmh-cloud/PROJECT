@@ -2,6 +2,8 @@ import Link from "next/link";
 import { SupportForm } from "@/components/SupportForm";
 import { MarketingPageShell } from "@/components/marketing/MarketingPageShell";
 import { ShimmerButton } from "@/components/ui/ShimmerButton";
+import { GlassCard } from "@/components/ui/GlassCard";
+import { Reveal } from "@/components/ui/Reveal";
 import { BRAND } from "@/lib/brand";
 
 const HELP_CARD_ITEMS = [
@@ -21,6 +23,20 @@ const HELP_CARD_ITEMS = [
 export const metadata = {
   title: `Help & contact · ${BRAND.name}`,
   description: `Get help with ${BRAND.name}, send a suggestion, or report an issue.`,
+  alternates: { canonical: "/help" },
+  openGraph: {
+    title: `Help & contact · ${BRAND.name}`,
+    description: `Get help with ${BRAND.name}, send a suggestion, or report an issue.`,
+    url: `https://${BRAND.domain}/help`,
+    siteName: BRAND.name,
+    locale: "en_CA",
+    type: "website",
+  },
+  twitter: {
+    card: "summary_large_image",
+    title: `Help & contact · ${BRAND.name}`,
+    description: `Get help with ${BRAND.name}, send a suggestion, or report an issue.`,
+  },
 };
 
 export default function HelpPage() {
@@ -30,8 +46,10 @@ export default function HelpPage() {
         <div className="pointer-events-none absolute -right-12 top-8 h-64 w-64 rounded-full bg-primary/10 blur-3xl" />
         <div className="marketing-container relative max-w-5xl">
           <div className="mx-auto max-w-3xl text-center">
-            <p className="section-eyebrow mx-auto mb-5 w-fit">Help center</p>
-            <h1 className="font-display text-4xl text-text md:text-5xl">Questions, fixes, or product ideas — talk to the team</h1>
+            <Reveal>
+              <p className="section-eyebrow mx-auto mb-5 w-fit">Help center</p>
+              <h1 className="font-display text-4xl text-text md:text-5xl">Questions, fixes, or product ideas — talk to the team</h1>
+            </Reveal>
             <p className="mt-4 text-lg text-muted">
               Reach the {BRAND.name} team for setup questions, billing, QR-code help, or suggestions that would make the product better for your shop.
             </p>
@@ -75,9 +93,15 @@ export default function HelpPage() {
               </div>
             </aside>
 
-            <div id="support-form">
-              <SupportForm />
-            </div>
+            <GlassCard id="support-form">
+              <div>
+                <h2 className="font-display text-xl text-text">Send us a message</h2>
+                <p className="mt-1 text-sm text-muted">Questions, ideas, or issues — we read every one.</p>
+              </div>
+              <div className="mt-5">
+                <SupportForm compact />
+              </div>
+            </GlassCard>
           </div>
 
           <p className="mt-8 text-center text-sm text-muted">

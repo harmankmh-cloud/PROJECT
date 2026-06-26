@@ -1,6 +1,6 @@
 import type { Metadata } from "next";
 import localFont from "next/font/local";
-import { Inter, Plus_Jakarta_Sans } from "next/font/google";
+import { Inter, Plus_Jakarta_Sans, Space_Grotesk } from "next/font/google";
 import { AppProviders } from "@/components/providers/AppProviders";
 import { Toaster } from "@/components/ui/Toast";
 import { BRAND } from "@/lib/brand";
@@ -26,6 +26,12 @@ const satoshi = localFont({
 const inter = Inter({
   variable: "--font-inter",
   subsets: ["latin"],
+});
+
+const spaceGrotesk = Space_Grotesk({
+  variable: "--font-space-grotesk",
+  subsets: ["latin"],
+  weight: ["400", "500", "600", "700"],
 });
 
 const appUrl =
@@ -54,7 +60,6 @@ export const metadata: Metadata = {
     description:
       "QR-powered review collection for local businesses. Route unhappy customers privately, help happy ones post on Google in seconds.",
   },
-  alternates: { canonical: appUrl },
   ...(process.env.GOOGLE_SITE_VERIFICATION
     ? { verification: { google: process.env.GOOGLE_SITE_VERIFICATION } }
     : {}),
@@ -75,7 +80,7 @@ export default function RootLayout({
   return (
     <html
       lang="en-CA"
-      className={`${jakarta.variable} ${satoshi.variable} ${inter.variable} h-full`}
+      className={`${jakarta.variable} ${satoshi.variable} ${inter.variable} ${spaceGrotesk.variable} h-full`}
     >
       <body className="min-h-full font-sans antialiased">
         <AppProviders>

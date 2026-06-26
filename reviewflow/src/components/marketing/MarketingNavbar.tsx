@@ -1,17 +1,14 @@
 "use client";
 
 import Link from "next/link";
-import { Menu, Star, X } from "lucide-react";
+import { Menu, X } from "lucide-react";
 import { useEffect, useState } from "react";
 import { ClientOnly } from "@/components/ui/ClientOnly";
-import { ShimmerButton } from "@/components/ui/ShimmerButton";
-import { MARKETING } from "@/content/copy";
-import { BRAND } from "@/lib/brand";
+import { BrandLogo } from "@/components/BrandLogo";
 
 const NAV = [
-  { href: "/#how-it-works", label: MARKETING.nav.howItWorks },
-  { href: "/#pricing", label: MARKETING.nav.pricing },
-  { href: "/#industries", label: MARKETING.nav.industries },
+  { href: "/pricing", label: "Pricing" },
+  { href: "/help", label: "Help" },
 ] as const;
 
 export function MarketingNavbar() {
@@ -26,36 +23,40 @@ export function MarketingNavbar() {
   }, []);
 
   return (
-    <header className={`site-header ${scrolled ? "site-header-scrolled" : ""}`}>
-      <div className="marketing-container flex min-h-16 items-center justify-between gap-4 py-3">
-        <Link href="/" className="flex items-center gap-3 font-display text-lg text-text">
-          <span className="flex h-10 w-10 items-center justify-center rounded-2xl border border-primary/15 bg-primary/5">
-            <Star className="h-5 w-5 fill-primary text-primary" />
-          </span>
-          <span>
-            <span className="block">{BRAND.name}</span>
-            <span className="block text-xs font-medium text-muted">{BRAND.tagline}</span>
-          </span>
-        </Link>
+    <header
+      className={`sticky top-0 z-50 border-b transition-colors duration-300 ${
+        scrolled
+          ? "border-white/10 bg-[rgba(10,10,26,0.72)] backdrop-blur-xl"
+          : "border-transparent bg-transparent"
+      }`}
+    >
+      <div className="mx-auto flex min-h-16 max-w-7xl items-center justify-between gap-4 px-5 py-3 sm:px-8">
+        <BrandLogo light />
 
-        <nav className="hidden items-center gap-8 md:flex" aria-label="Main">
+        <nav className="hidden items-center gap-1 md:flex" aria-label="Main">
           {NAV.map((item) => (
-            <Link key={item.href} href={item.href} className="nav-link">
+            <Link
+              key={item.href}
+              href={item.href}
+              className="rounded-lg px-3 py-2 text-sm font-medium text-ink/70 transition hover:bg-white/10 hover:text-ink"
+            >
               {item.label}
             </Link>
           ))}
-          <Link href="/login" className="nav-link">
-            {MARKETING.nav.login}
+          <Link
+            href="/login"
+            className="rounded-lg px-3 py-2 text-sm font-medium text-ink/90 transition hover:bg-white/10"
+          >
+            Sign in
+          </Link>
+          <Link href="/signup" className="rl-btn-gold ml-1 inline-flex items-center px-5 py-2.5 text-sm">
+            Start free →
           </Link>
         </nav>
 
-        <ShimmerButton href="/signup" className="hidden text-sm md:inline-flex">
-          {MARKETING.nav.cta}
-        </ShimmerButton>
-
         <button
           type="button"
-          className="rounded-2xl border border-border bg-white/80 p-2 md:hidden"
+          className="rounded-xl border border-white/15 bg-white/5 p-2 text-ink md:hidden"
           aria-label="Open menu"
           onClick={() => setOpen(true)}
         >
@@ -65,30 +66,38 @@ export function MarketingNavbar() {
 
       <ClientOnly>
         {open && (
-          <div className="fixed inset-0 z-50 bg-white/95 backdrop-blur md:hidden">
-            <div className="marketing-container flex items-center justify-between py-5">
-              <span className="font-display text-lg">{BRAND.name}</span>
-              <button type="button" aria-label="Close" onClick={() => setOpen(false)}>
+          <div className="fixed inset-0 z-50 rl-dark md:hidden">
+            <div className="mx-auto flex max-w-7xl items-center justify-between px-5 py-5 sm:px-8">
+              <BrandLogo light />
+              <button type="button" aria-label="Close" onClick={() => setOpen(false)} className="text-ink">
                 <X className="h-6 w-6" />
               </button>
             </div>
-            <nav className="marketing-container flex flex-col gap-2">
+            <nav className="mx-auto flex max-w-7xl flex-col gap-1 px-5 sm:px-8" aria-label="Mobile">
               {NAV.map((item) => (
                 <Link
                   key={item.href}
                   href={item.href}
-                  className="py-3 text-lg"
+                  className="rounded-lg px-3 py-3 text-lg font-medium text-ink/80 transition hover:bg-white/10 hover:text-ink"
                   onClick={() => setOpen(false)}
                 >
                   {item.label}
                 </Link>
               ))}
-              <Link href="/login" className="py-3 text-lg" onClick={() => setOpen(false)}>
-                {MARKETING.nav.login}
+              <Link
+                href="/login"
+                className="rounded-lg px-3 py-3 text-lg font-medium text-ink/90 transition hover:bg-white/10"
+                onClick={() => setOpen(false)}
+              >
+                Sign in
               </Link>
-              <ShimmerButton href="/signup" className="mt-4 justify-center py-3 text-center" onClick={() => setOpen(false)}>
-                {MARKETING.nav.cta}
-              </ShimmerButton>
+              <Link
+                href="/signup"
+                className="rl-btn-gold mt-3 inline-flex justify-center px-5 py-3 text-center"
+                onClick={() => setOpen(false)}
+              >
+                Start free →
+              </Link>
             </nav>
           </div>
         )}

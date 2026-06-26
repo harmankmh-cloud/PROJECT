@@ -7,6 +7,20 @@ import { COMPANY } from "@/lib/marketing-content";
 export const metadata: Metadata = {
   title: "Privacy Policy",
   description: `How ${BRAND.name} collects, uses, and protects your personal information in British Columbia.`,
+  alternates: { canonical: "/privacy" },
+  openGraph: {
+    title: `Privacy Policy · ${BRAND.name}`,
+    description: `How ${BRAND.name} collects, uses, and protects your personal information in British Columbia.`,
+    url: `https://${BRAND.domain}/privacy`,
+    siteName: BRAND.name,
+    locale: "en_CA",
+    type: "website",
+  },
+  twitter: {
+    card: "summary_large_image",
+    title: `Privacy Policy · ${BRAND.name}`,
+    description: `How ${BRAND.name} collects, uses, and protects your personal information in British Columbia.`,
+  },
 };
 
 export default function PrivacyPage() {

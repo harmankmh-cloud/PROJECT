@@ -9,7 +9,7 @@ export function MarketingPageShell({
   className?: string;
 }) {
   return (
-    <main className={`marketing-page min-h-screen bg-white ${className}`}>
+    <main className={`marketing-page rl-dark min-h-screen ${className}`}>
       <MarketingNavbar />
       {children}
       <MarketingFooter />

@@ -61,6 +61,41 @@
 
   /* Motion: ease-out-expo per the brief's animation principles */
   --ease-out-expo: cubic-bezier(0.23, 1, 0.32, 1);
+
+  /* ─────────────────────────────────────────────────────────────────────────
+   * RateLocal "Nightfall" dark redesign tokens.
+   * Exposed as Tailwind color utilities (bg-night, text-gold, text-ink, …).
+   * Names are collision-free with the legacy palette above so existing pages
+   * are unaffected. `muted` is intentionally exposed as `muted-soft` because a
+   * legacy `--color-muted` (#6b7280) is already used by 50+ light-mode views.
+   * ───────────────────────────────────────────────────────────────────────── */
+  --color-night: #0a0a1a;
+  --color-night2: #12102b;
+  --color-gold: #ffc24b;
+  --color-gold-soft: #ffd884;
+  --color-ink: #f4f3ff;
+  --color-muted-soft: #9a98c4;
+  --color-violet-glow: rgba(120, 90, 255, 0.22);
+
+  /* Display font for the redesign (body stays Inter). */
+  --font-grotesk: var(--font-space-grotesk);
+
+  /* Redesign radii: cards 20px, buttons 14px. */
+  --radius-rl-card: 20px;
+  --radius-rl-btn: 14px;
+}
+
+/* Raw redesign custom properties (glass recipe + convenience aliases). */
+:root {
+  --rl-night: #0a0a1a;
+  --rl-night2: #12102b;
+  --rl-gold: #ffc24b;
+  --rl-gold-soft: #ffd884;
+  --rl-ink: #f4f3ff;
+  --rl-muted: #9a98c4;
+  --rl-violet-glow: rgba(120, 90, 255, 0.22);
+  --rl-glass-bg: rgba(22, 20, 46, 0.55);
+  --rl-glass-border: rgba(255, 255, 255, 0.12);
 }
 
 /* ───────────────────────────────────────────────────────────────────────────
@@ -193,6 +228,60 @@ select {
 
   .text-gradient {
     background: linear-gradient(to right, #22c55e, #16a34a);
+    -webkit-background-clip: text;
+    background-clip: text;
+    color: transparent;
+  }
+
+  /* ─── RateLocal "Nightfall" dark redesign helpers ─────────────────────────
+   * `.rl-dark` is the dark surface default for the public/marketing site. It
+   * is scoped to a class (not the global <body>) so the authenticated app,
+   * dashboard and admin keep their light theme.
+   * ────────────────────────────────────────────────────────────────────────*/
+  .rl-dark {
+    background-color: var(--rl-night);
+    background-image:
+      radial-gradient(ellipse 70% 50% at 15% -10%, rgba(120, 90, 255, 0.22) 0, transparent 55%),
+      radial-gradient(ellipse 60% 45% at 90% 0%, rgba(255, 194, 75, 0.1) 0, transparent 50%),
+      linear-gradient(180deg, var(--rl-night) 0%, var(--rl-night2) 100%);
+    color: var(--rl-ink);
+    background-attachment: fixed;
+  }
+
+  .font-grotesk {
+    font-family: var(--font-space-grotesk), system-ui, sans-serif;
+    letter-spacing: -0.02em;
+  }
+
+  /* Glassmorphism card recipe from the brief. */
+  .rl-glass {
+    border-radius: var(--radius-rl-card);
+    background-color: var(--rl-glass-bg);
+    border: 1px solid var(--rl-glass-border);
+    -webkit-backdrop-filter: blur(16px);
+    backdrop-filter: blur(16px);
+  }
+
+  /* Gold gradient primary button (magnetic CTA base). */
+  .rl-btn-gold {
+    border-radius: var(--radius-rl-btn);
+    background-image: linear-gradient(135deg, var(--rl-gold) 0%, var(--rl-gold-soft) 100%);
+    color: #1a1530;
+    font-weight: 600;
+    box-shadow:
+      0 10px 30px -10px rgba(255, 194, 75, 0.5),
+      inset 0 1px 0 rgba(255, 255, 255, 0.35);
+    transition: box-shadow 0.3s var(--ease-out-expo);
+  }
+
+  .rl-btn-gold:hover {
+    box-shadow:
+      0 16px 40px -8px rgba(255, 194, 75, 0.6),
+      inset 0 1px 0 rgba(255, 255, 255, 0.45);
+  }
+
+  .rl-text-gold-gradient {
+    background: linear-gradient(120deg, var(--rl-gold) 0%, var(--rl-gold-soft) 60%, #fff 100%);
     -webkit-background-clip: text;
     background-clip: text;
     color: transparent;
@@ -807,6 +896,108 @@ select {
     .marketing-page footer .bg-white {
       background-color: #0f0d0e;
     }
+  }
+
+  /* ── RateLocal "Nightfall": always-on dark theme for the public site ──────
+   * Re-scopes the shared design tokens + surface helpers to the dark gold
+   * palette so existing inner-page markup (pricing/about/help) renders on the
+   * dark theme by default — not only under prefers-color-scheme: dark. Placed
+   * last in the layer so it wins over the light + media-query rules above.
+   * ────────────────────────────────────────────────────────────────────────*/
+  .marketing-page {
+    --color-bg: #0a0a1a;
+    --color-surface: #12102b;
+    --color-border: rgba(255, 255, 255, 0.12);
+    --color-text: #f4f3ff;
+    --color-muted: #9a98c4;
+    --color-primary: #ffc24b;
+    --color-primary-light: #ffd884;
+    --color-accent: #ffc24b;
+    --color-star: #ffc24b;
+    color: var(--rl-ink);
+  }
+
+  .marketing-page .font-display {
+    font-family: var(--font-space-grotesk), system-ui, sans-serif;
+    font-weight: 600;
+    letter-spacing: -0.02em;
+  }
+
+  .marketing-page .mesh-bg {
+    background-color: transparent;
+    background-image:
+      radial-gradient(ellipse 70% 50% at 15% -10%, rgba(120, 90, 255, 0.22) 0, transparent 55%),
+      radial-gradient(ellipse 55% 45% at 92% 4%, rgba(255, 194, 75, 0.1) 0, transparent 50%);
+  }
+
+  .marketing-page .text-gradient {
+    background: linear-gradient(120deg, #ffc24b 0%, #ffd884 60%, #ffffff 100%);
+    -webkit-background-clip: text;
+    background-clip: text;
+    color: transparent;
+  }
+
+  .marketing-page .card-surface,
+  .marketing-page .surface-card,
+  .marketing-page .surface-card-hover,
+  .marketing-page .card-glow,
+  .marketing-page .stat-chip {
+    background-color: var(--rl-glass-bg);
+    border-color: var(--rl-glass-border);
+    color: var(--rl-ink);
+    -webkit-backdrop-filter: blur(16px);
+    backdrop-filter: blur(16px);
+    box-shadow: none;
+  }
+
+  .marketing-page .btn-shimmer,
+  .marketing-page .btn-shimmer-light {
+    color: #1a1530;
+    background-image: linear-gradient(135deg, #ffc24b 0%, #ffd884 100%);
+  }
+
+  .marketing-page .btn-ghost {
+    background-color: transparent;
+    border-color: rgba(255, 255, 255, 0.18);
+    color: var(--rl-ink);
+  }
+
+  .marketing-page .btn-ghost:hover {
+    background-color: rgba(255, 255, 255, 0.06);
+    border-color: rgba(255, 194, 75, 0.4);
+  }
+
+  .marketing-page .pricing-popular {
+    background: linear-gradient(180deg, rgba(255, 194, 75, 0.1) 0%, transparent 45%);
+  }
+
+  .marketing-page .input-field {
+    background-color: rgba(255, 255, 255, 0.04);
+    border-color: rgba(255, 255, 255, 0.14);
+    color: var(--rl-ink);
+  }
+
+  .marketing-page footer .bg-white {
+    background-color: transparent;
+  }
+
+  /* Legal pages (privacy/terms) and inner marketing pages reuse fixed
+   * slate/brand text utilities in their markup; re-map them to the dark
+   * palette inside the dark wrappers. */
+  :is(.rl-legal, .marketing-page) :is(.text-slate-600, .text-slate-700) {
+    color: #c7c4e6;
+  }
+
+  :is(.rl-legal, .marketing-page) .text-slate-500 {
+    color: var(--rl-muted);
+  }
+
+  :is(.rl-legal, .marketing-page) :is(.text-brand-950, .text-brand-900) {
+    color: var(--rl-ink);
+  }
+
+  :is(.rl-legal, .marketing-page) .text-gold-600 {
+    color: var(--rl-gold);
   }
 }
 

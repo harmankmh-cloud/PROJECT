@@ -7,6 +7,20 @@ import { COMPANY } from "@/lib/marketing-content";
 export const metadata: Metadata = {
   title: "Terms of Service",
   description: `Terms of use for ${BRAND.name} — review tools for local businesses in British Columbia.`,
+  alternates: { canonical: "/terms" },
+  openGraph: {
+    title: `Terms of Service · ${BRAND.name}`,
+    description: `Terms of use for ${BRAND.name} — review tools for local businesses in British Columbia.`,
+    url: `https://${BRAND.domain}/terms`,
+    siteName: BRAND.name,
+    locale: "en_CA",
+    type: "website",
+  },
+  twitter: {
+    card: "summary_large_image",
+    title: `Terms of Service · ${BRAND.name}`,
+    description: `Terms of use for ${BRAND.name} — review tools for local businesses in British Columbia.`,
+  },
 };
 
 export default function TermsPage() {
@@ -58,8 +72,13 @@ export default function TermsPage() {
       <section className="space-y-3">
         <h2 className="text-lg font-semibold text-brand-950">Fees</h2>
         <p className="text-sm leading-relaxed text-slate-600">
-          Paid plans are billed as shown at signup. Fees are non-refundable except where required by BC consumer
-          law.
+          Paid plans are billed as shown at signup. New paid subscriptions include a 14-day
+          money-back guarantee: if you cancel within 14 days of your first payment, contact us at{" "}
+          <a href={`mailto:${COMPANY.email}`} className="font-semibold text-gold-600 hover:underline">
+            {COMPANY.email}
+          </a>{" "}
+          for a full refund of that payment. After the 14-day window, fees are non-refundable
+          except where required by BC consumer law.
         </p>
       </section>
 
