@@ -1,4 +1,5 @@
 import type { MetadataRoute } from "next";
+import { CITIES } from "@/data/cities";
 
 function getBaseUrl(): string {
   const envUrl = process.env.NEXT_PUBLIC_APP_URL?.trim();
@@ -11,6 +12,13 @@ function getBaseUrl(): string {
 export default function sitemap(): MetadataRoute.Sitemap {
   const baseUrl = getBaseUrl();
   const lastModified = new Date();
+
+  const cityPages: MetadataRoute.Sitemap = CITIES.map((city) => ({
+    url: `${baseUrl}/reviews/${city.slug}`,
+    lastModified,
+    changeFrequency: "monthly" as const,
+    priority: 0.75,
+  }));
 
   return [
     {
@@ -55,5 +63,6 @@ export default function sitemap(): MetadataRoute.Sitemap {
       changeFrequency: "yearly",
       priority: 0.4,
     },
+    ...cityPages,
   ];
 }

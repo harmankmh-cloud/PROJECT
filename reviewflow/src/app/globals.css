@@ -562,6 +562,71 @@ select {
   .scrollbar-hide::-webkit-scrollbar {
     display: none;
   }
+
+  /* ── Marketing page: dark mode ─────────────────────────────────────────── */
+  @media (prefers-color-scheme: dark) {
+    .marketing-page {
+      --color-bg: #0f0d0e;
+      --color-surface: #1a1618;
+      --color-border: #2e2a2c;
+      --color-text: #f5f0f0;
+      --color-muted: #9e9496;
+    }
+
+    .marketing-page .mesh-bg {
+      background-color: #0f0d0e;
+      background-image:
+        radial-gradient(ellipse 80% 55% at 15% -5%, rgba(244, 63, 94, 0.14) 0, transparent 55%),
+        radial-gradient(ellipse 55% 45% at 92% 8%, rgba(234, 179, 8, 0.08) 0, transparent 50%),
+        radial-gradient(ellipse 40% 30% at 50% 100%, rgba(244, 63, 94, 0.05) 0, transparent 60%);
+    }
+
+    .marketing-page .card-surface,
+    .marketing-page .surface-card,
+    .marketing-page .card-glow {
+      background-color: #1a1618;
+      border-color: #2e2a2c;
+    }
+
+    .marketing-page .stat-chip {
+      background-color: #1a1618;
+      border-color: #2e2a2c;
+    }
+
+    .marketing-page .site-header {
+      background-color: rgba(15, 13, 14, 0.8);
+      border-color: transparent;
+    }
+
+    .marketing-page .site-header-scrolled {
+      background-color: rgba(15, 13, 14, 0.92);
+      border-color: rgba(46, 42, 44, 0.8);
+    }
+
+    .marketing-page .pricing-popular {
+      background: linear-gradient(180deg, rgba(244, 63, 94, 0.08) 0%, #1a1618 40%);
+    }
+
+    .marketing-page .trust-pill {
+      background-color: rgba(255, 255, 255, 0.05);
+      border-color: rgba(46, 42, 44, 0.9);
+    }
+
+    .marketing-page .btn-ghost {
+      background-color: transparent;
+      border-color: rgba(46, 42, 44, 0.9);
+      color: var(--color-text);
+    }
+
+    .marketing-page .btn-ghost:hover {
+      background-color: rgba(255, 255, 255, 0.06);
+      border-color: rgba(244, 63, 94, 0.4);
+    }
+
+    .marketing-page footer .bg-white {
+      background-color: #0f0d0e;
+    }
+  }
 }
 
 @keyframes pulse-glow {

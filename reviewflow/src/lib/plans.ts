@@ -12,10 +12,12 @@ export const PLAN_LIMITS: Record<PlanId, { label: string; monthlyReviews: number
 export const PRICING = {
   // Setup fee waived by default to remove signup friction. Set setupUsd/setupCents
   // back above 0 (and provide STRIPE_PRICE_SETUP) to re-enable a one-time charge.
+  // Note: variable names use "Usd" suffix by convention; actual currency charged is CAD.
   setupUsd: 0,
   monthlyUsd: 39,
   setupCents: 0,
   monthlyCents: 3900,
+  currency: "CAD",
 };
 
 /** Whether a one-time setup fee is charged at checkout. */

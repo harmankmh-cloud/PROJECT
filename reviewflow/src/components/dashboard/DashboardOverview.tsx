@@ -7,6 +7,8 @@ import { Badge } from "@/components/ui/Badge";
 import { CountUp } from "@/components/ui/CountUp";
 import { ClientOnly } from "@/components/ui/ClientOnly";
 import { useToast } from "@/components/ui/Toast";
+import { SetupChecklist } from "@/components/SetupChecklist";
+import { UpgradeNudge } from "@/components/dashboard/UpgradeNudge";
 import { DASHBOARD } from "@/content/copy";
 import { copyToClipboard } from "@/lib/copy";
 import type { Business, DashboardStats, FeedbackEvent, UsageSummary } from "@/lib/types";
@@ -23,6 +25,7 @@ type Props = {
   feedbackTotal: number;
   usage: UsageSummary | null;
   reviewUrl: string;
+  reviewsThisWeek: number;
 };
 
 export function DashboardOverview({
@@ -32,6 +35,7 @@ export function DashboardOverview({
   feedbackTotal,
   usage,
   reviewUrl,
+  reviewsThisWeek,
 }: Props) {
   const toast = useToast();
   const conversion =
@@ -74,6 +78,15 @@ export function DashboardOverview({
         <h1 className="font-display mt-1 text-3xl text-text">{business.name}</h1>
       </header>
 
+      {usage && <UpgradeNudge usage={usage} />}
+
+      <SetupChecklist
+        businessName={business.name}
+        reviewUrl={reviewUrl}
+        hasGoogleLink={!!business.google_review_url}
+        hasFeedback={feedback.length > 0}
+      />
+
       <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
         {statCards.map((card) => {
           const Icon = card.icon;
@@ -96,6 +109,20 @@ export function DashboardOverview({
           );
         })}
       </div>
+
+      {reviewsThisWeek >= 3 && (
+        <div className="flex items-center gap-4 rounded-2xl border border-success-bg bg-success-bg px-6 py-4">
+          <span className="text-2xl">🎉</span>
+          <div>
+            <p className="font-semibold text-success">
+              {reviewsThisWeek} review{reviewsThisWeek === 1 ? "" : "s"} this week — great momentum!
+            </p>
+            <p className="mt-0.5 text-sm text-success/80">
+              Keep it up — businesses that collect consistently rank higher on Google Maps.
+            </p>
+          </div>
+        </div>
+      )}
 
       <div className="grid gap-3 sm:grid-cols-2 lg:grid-cols-4">
         <Link href="/dashboard/share" className="btn-ghost flex items-center gap-2 py-3">

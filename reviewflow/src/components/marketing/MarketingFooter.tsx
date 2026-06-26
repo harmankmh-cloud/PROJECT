@@ -4,6 +4,7 @@ import { MARKETING } from "@/content/copy";
 import { BRAND } from "@/lib/brand";
 import { FAQ_ITEMS } from "@/lib/marketing-content";
 import { ShimmerButton } from "@/components/ui/ShimmerButton";
+import { CITIES } from "@/data/cities";
 
 export function MarketingFooter() {
   return (
@@ -18,8 +19,8 @@ export function MarketingFooter() {
         </ShimmerButton>
       </div>
       <div className="border-t border-border/80 bg-white py-14">
-        <div className="marketing-container grid gap-10 sm:grid-cols-2 lg:grid-cols-4">
-          <div>
+        <div className="marketing-container grid gap-10 sm:grid-cols-2 lg:grid-cols-5">
+          <div className="lg:col-span-2">
             <p className="font-display text-lg text-text">{BRAND.name}</p>
             <p className="mt-2 text-sm leading-relaxed text-muted">{BRAND.tagline}</p>
             <div className="mt-4 space-y-2 text-sm text-muted">
@@ -54,6 +55,18 @@ export function MarketingFooter() {
             </ul>
           </div>
           <div>
+            <p className="text-sm font-semibold text-text">BC Cities</p>
+            <ul className="mt-4 space-y-2.5 text-sm text-muted">
+              {CITIES.map((city) => (
+                <li key={city.slug}>
+                  <Link href={`/reviews/${city.slug}`} className="transition hover:text-primary">
+                    {city.name}
+                  </Link>
+                </li>
+              ))}
+            </ul>
+          </div>
+          <div>
             <p className="text-sm font-semibold text-text">Company</p>
             <ul className="mt-4 space-y-2.5 text-sm text-muted">
               <li>
@@ -71,12 +84,7 @@ export function MarketingFooter() {
                   Privacy
                 </Link>
               </li>
-            </ul>
-          </div>
-          <div>
-            <p className="text-sm font-semibold text-text">FAQ</p>
-            <ul className="mt-4 space-y-2.5 text-sm text-muted">
-              {FAQ_ITEMS.slice(0, 3).map((item) => (
+              {FAQ_ITEMS.slice(0, 2).map((item) => (
                 <li key={item.q}>
                   <Link href="/#faq" className="transition hover:text-primary">
                     {item.q}
