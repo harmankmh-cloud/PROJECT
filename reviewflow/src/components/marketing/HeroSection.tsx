@@ -3,8 +3,11 @@
 import Link from "next/link";
 import { ArrowRight, Check, ChevronDown } from "lucide-react";
 import { FadeInSection } from "@/components/ui/FadeInSection";
+import { ShimmerButton } from "@/components/ui/ShimmerButton";
 import { MARKETING } from "@/content/copy";
 import { HeroDemoWidget } from "./HeroDemoWidget";
+
+const MICRO_PROOF = ["No setup fee", "14-day money-back guarantee", "Works with QR, SMS, and email"];
 
 export function HeroSection() {
   return (
@@ -22,14 +25,21 @@ export function HeroSection() {
             </h1>
             <p className="mt-6 max-w-xl text-lg leading-relaxed text-muted">{MARKETING.hero.subtext}</p>
             <div className="mt-8 flex flex-col gap-3 sm:flex-row">
-              <Link href="/signup" className="btn-primary-pill inline-flex gap-2 px-8 py-3.5 text-base">
+              <ShimmerButton href="/signup" className="px-8 py-3.5 text-base">
                 {MARKETING.hero.ctaPrimary}
-                <ArrowRight className="h-4 w-4" />
-              </Link>
+              </ShimmerButton>
               <Link href="/#how-it-works" className="btn-ghost inline-flex gap-2 px-8 py-3.5 text-base">
                 {MARKETING.hero.ctaSecondary}
                 <ChevronDown className="h-4 w-4" />
               </Link>
+            </div>
+            <div className="mt-5 flex flex-wrap gap-3 text-sm text-muted">
+              {MICRO_PROOF.map((item) => (
+                <span key={item} className="inline-flex items-center gap-2">
+                  <ArrowRight className="h-3.5 w-3.5 text-primary" />
+                  {item}
+                </span>
+              ))}
             </div>
             <div className="mt-8 flex flex-wrap gap-2">
               {MARKETING.hero.trustBadges.map((badge) => (

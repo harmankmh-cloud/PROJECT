@@ -1,7 +1,7 @@
 import Link from "next/link";
 import { SupportForm } from "@/components/SupportForm";
-import { MarketingHeader } from "@/components/MarketingHeader";
-import { SiteFooter } from "@/components/SiteFooter";
+import { MarketingPageShell } from "@/components/marketing/MarketingPageShell";
+import { ShimmerButton } from "@/components/ui/ShimmerButton";
 import { BRAND } from "@/lib/brand";
 
 export const metadata = {
@@ -11,49 +11,73 @@ export const metadata = {
 
 export default function HelpPage() {
   return (
-    <main className="min-h-screen bg-[#f8f9fc]">
-      <section className="hero-dark relative overflow-hidden pb-10 pt-6 sm:pb-12 sm:pt-8">
-        <div className="hero-glow right-0 top-0 h-48 w-48 bg-gold-600/10" />
-        <div className="relative mx-auto max-w-3xl px-4 sm:px-8">
-          <MarketingHeader />
-          <div className="mt-10">
-            <p className="text-xs font-semibold uppercase tracking-widest text-white/50">Help center</p>
-            <h1 className="font-display mt-2 text-4xl text-white">Help & suggestions</h1>
-            <p className="mt-3 text-lg text-white/55">
-              Talk to the {BRAND.name} team — questions about your account, QR codes, billing, or ideas to
-              make the product better.
+    <MarketingPageShell>
+      <section className="mesh-bg relative overflow-hidden pb-16 pt-24 md:pb-20 md:pt-28">
+        <div className="pointer-events-none absolute -right-12 top-8 h-64 w-64 rounded-full bg-primary/10 blur-3xl" />
+        <div className="marketing-container relative max-w-5xl">
+          <div className="mx-auto max-w-3xl text-center">
+            <p className="section-eyebrow mx-auto mb-5 w-fit">Help center</p>
+            <h1 className="font-display text-4xl text-text md:text-5xl">Questions, fixes, or product ideas — talk to the team</h1>
+            <p className="mt-4 text-lg text-muted">
+              Reach the {BRAND.name} team for setup questions, billing, QR-code help, or suggestions that would make the product better for your shop.
             </p>
+            <div className="mt-8 flex flex-col justify-center gap-3 sm:flex-row">
+              <ShimmerButton href="#support-form" className="px-8 py-3.5 text-base">
+                Send a message
+              </ShimmerButton>
+              <Link href={`mailto:${BRAND.contact.email}`} className="btn-ghost px-8 py-3.5 text-base">
+                Email {BRAND.contact.email}
+              </Link>
+            </div>
           </div>
         </div>
       </section>
 
-      <div className="mx-auto max-w-3xl px-4 pb-16 sm:px-8">
-        <div className="mt-10 grid gap-6 sm:grid-cols-3">
+      <section className="py-16">
+        <div className="marketing-container max-w-5xl">
+          <div className="grid gap-6 md:grid-cols-3">
           {[
-            ["💬", "Help", "Stuck on setup or not sure how something works"],
-            ["💡", "Ideas", "Features you'd love for your shop"],
-            ["🐛", "Issues", "Something broken — we'll fix it"],
+            ["💬", "Fast product help", "Stuck on setup, review links, or QR sharing? We can walk you through it."],
+            ["💳", "Billing support", "Plan questions, annual billing, or account changes — send the details once and we will sort it out."],
+            ["💡", "Real product feedback", "Tell us what would help your shop collect more reviews with less friction."],
           ].map(([icon, title, text]) => (
-            <div key={title} className="surface-card-hover p-5 text-center">
+            <div key={title} className="card-glow card-surface p-6 text-center">
               <p className="text-2xl">{icon}</p>
-              <p className="mt-2 font-semibold text-brand-950">{title}</p>
-              <p className="mt-1 text-xs text-slate-500">{text}</p>
+              <p className="mt-3 font-display text-lg text-text">{title}</p>
+              <p className="mt-2 text-sm leading-relaxed text-muted">{text}</p>
             </div>
           ))}
-        </div>
+          </div>
 
-        <div className="mt-10">
-          <SupportForm />
-        </div>
+          <div className="mt-10 grid gap-6 lg:grid-cols-[0.72fr_1fr]">
+            <aside className="card-glow card-surface h-fit">
+              <p className="section-eyebrow mb-4 w-fit">Before you send</p>
+              <h2 className="font-display text-2xl text-text">What to include</h2>
+              <ul className="mt-5 space-y-3 text-sm leading-relaxed text-muted">
+                <li>• Your business name and the email on your account</li>
+                <li>• The page or feature you are using when the issue happens</li>
+                <li>• Any screenshots, error text, or steps to reproduce it</li>
+                <li>• Whether the issue is urgent because it is blocking review collection</li>
+              </ul>
+              <div className="mt-6 rounded-2xl border border-border/80 bg-surface/60 p-4">
+                <p className="text-sm font-semibold text-text">Prefer direct email?</p>
+                <p className="mt-2 text-sm text-muted">{BRAND.contact.email}</p>
+              </div>
+            </aside>
 
-        <p className="mt-8 text-center text-sm text-slate-500">
-          Already have an account?{" "}
-          <Link href="/dashboard/help" className="font-semibold text-gold-600 hover:underline">
-            Open help from your dashboard
-          </Link>
-        </p>
-      </div>
-      <SiteFooter />
-    </main>
+            <div id="support-form">
+              <SupportForm />
+            </div>
+          </div>
+
+          <p className="mt-8 text-center text-sm text-muted">
+            Already have an account?{" "}
+            <Link href="/dashboard/help" className="font-semibold text-primary hover:underline">
+              Open help from your dashboard
+            </Link>
+          </p>
+        </div>
+      </section>
+    </MarketingPageShell>
   );
 }
