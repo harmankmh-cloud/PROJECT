@@ -34,7 +34,7 @@ export function MarketingNavbar() {
           </span>
           <span>
             <span className="block">{BRAND.name}</span>
-            <span className="block text-xs font-medium text-muted">More Google reviews for BC businesses</span>
+            <span className="block text-xs font-medium text-muted">{BRAND.tagline}</span>
           </span>
         </Link>
 

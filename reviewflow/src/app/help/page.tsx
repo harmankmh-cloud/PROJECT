@@ -4,6 +4,20 @@ import { MarketingPageShell } from "@/components/marketing/MarketingPageShell";
 import { ShimmerButton } from "@/components/ui/ShimmerButton";
 import { BRAND } from "@/lib/brand";
 
+const HELP_CARD_ITEMS = [
+  ["💬", "Fast product help", "Stuck on setup, review links, or QR sharing? We can walk you through it."],
+  [
+    "💳",
+    "Billing support",
+    "Plan questions, annual billing, or account changes — send the details once and we will sort it out.",
+  ],
+  [
+    "💡",
+    "Real product feedback",
+    "Tell us what would help your shop collect more reviews with less friction.",
+  ],
+] as const;
+
 export const metadata = {
   title: `Help & contact · ${BRAND.name}`,
   description: `Get help with ${BRAND.name}, send a suggestion, or report an issue.`,
@@ -36,17 +50,13 @@ export default function HelpPage() {
       <section className="py-16">
         <div className="marketing-container max-w-5xl">
           <div className="grid gap-6 md:grid-cols-3">
-          {[
-            ["💬", "Fast product help", "Stuck on setup, review links, or QR sharing? We can walk you through it."],
-            ["💳", "Billing support", "Plan questions, annual billing, or account changes — send the details once and we will sort it out."],
-            ["💡", "Real product feedback", "Tell us what would help your shop collect more reviews with less friction."],
-          ].map(([icon, title, text]) => (
-            <div key={title} className="card-glow card-surface p-6 text-center">
-              <p className="text-2xl">{icon}</p>
-              <p className="mt-3 font-display text-lg text-text">{title}</p>
-              <p className="mt-2 text-sm leading-relaxed text-muted">{text}</p>
-            </div>
-          ))}
+            {HELP_CARD_ITEMS.map(([icon, title, text]) => (
+              <div key={title} className="card-glow card-surface p-6 text-center">
+                <p className="text-2xl">{icon}</p>
+                <p className="mt-3 font-display text-lg text-text">{title}</p>
+                <p className="mt-2 text-sm leading-relaxed text-muted">{text}</p>
+              </div>
+            ))}
           </div>
 
           <div className="mt-10 grid gap-6 lg:grid-cols-[0.72fr_1fr]">
