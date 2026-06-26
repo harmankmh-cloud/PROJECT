@@ -4,6 +4,19 @@ CallLocal lives inside RateLocal: **Dashboard → CallLocal** (`/dashboard/calls
 
 When a customer calls your Twilio number and you don't answer within ~22 seconds, they get an **automatic SMS** (and you can get a text too).
 
+CallLocal is a paid **$10/mo add-on**. Customers subscribe themselves from
+**Dashboard → CallLocal** (it's added to their existing plan via Stripe). Live
+call routing only happens once a business has an active CallLocal subscription
+(`businesses.calllocal_subscribed`).
+
+---
+
+## 0. Stripe add-on price
+
+1. In **Stripe → Product catalog**, create a recurring **$10/mo (CAD)** price for CallLocal.
+2. Copy its **Price ID** (`price_…`) into `STRIPE_PRICE_CALLLOCAL` (Vercel env + `.env.local`).
+3. If `STRIPE_PRICE_CALLLOCAL` is blank, the add-on cannot be purchased.
+
 ---
 
 ## 1. Run SQL in Supabase
@@ -11,6 +24,8 @@ When a customer calls your Twilio number and you don't answer within ~22 seconds
 Open **Supabase → SQL Editor** and run:
 
 `supabase/calllocal.sql`
+
+(For an existing database, also run `supabase/migration-calllocal-addon.sql` to add the `calllocal_subscribed` column.)
 
 ---
 

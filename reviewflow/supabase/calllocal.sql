@@ -1,5 +1,10 @@
 -- CallLocal (missed-call SMS) — run in Supabase SQL Editor after schema.sql
 
+-- CallLocal is a paid $10/mo add-on. `businesses.calllocal_subscribed` is kept
+-- in sync from the Stripe webhook and gates live call routing.
+alter table businesses
+  add column if not exists calllocal_subscribed boolean not null default false;
+
 create table if not exists calllocal_settings (
   business_id uuid primary key references businesses(id) on delete cascade,
   enabled boolean not null default false,

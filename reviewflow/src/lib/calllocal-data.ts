@@ -50,11 +50,14 @@ export async function getCallLocalSettingsByTwilioNumber(twilioPhone: string) {
 
   const { data: business } = await admin
     .from("businesses")
-    .select("id, name, slug")
+    .select("id, name, slug, calllocal_subscribed")
     .eq("id", settings.business_id)
     .maybeSingle();
 
   if (!business) return null;
+
+  // Require an active CallLocal add-on subscription to route live calls.
+  if (!business.calllocal_subscribed) return null;
 
   return { settings: settings as CallLocalSettings, business };
 }
@@ -81,8 +84,20 @@ export async function ensureCallLocalSettingsRow(businessId: string) {
   return created as CallLocalSettings;
 }
 
-export async function getRecentCallEvents(businessId: string, limit = 30): Promise<CallEventRow[]> {
+export async function isCallLocalSubscribed(businessId: string): Promise<boolean> {
   const admin = createServiceClient();
+  if (!admin) return false;
+
+  const { data } = await admin
+    .from("businesses")
+    .select("calllocal_subscribed")
+    .eq("id", businessId)
+    .maybeSingle();
+
+  return Boolean(data?.calllocal_subscribed);
+}
+
+export async function getRecentCallEvents(businessId: string, limit = 30): Promise<CallEventRow[]> {  const admin = createServiceClient();
   if (!admin) return [];
 
   const { data } = await admin

@@ -4,9 +4,11 @@ import { buildReviewUrl, getAppUrl } from "@/lib/app-url-server";
 import {
   ensureCallLocalSettingsRow,
   getRecentCallEvents,
+  isCallLocalSubscribed,
 } from "@/lib/calllocal-data";
 import { getDashboardData } from "@/lib/dashboard-data";
 import { isTwilioConfigured } from "@/lib/twilio";
+import { CALLLOCAL_ADDON } from "@/lib/plans";
 
 export default async function CallLocalPage() {
   const { business } = await getDashboardData();
@@ -14,6 +16,7 @@ export default async function CallLocalPage() {
 
   const settings = await ensureCallLocalSettingsRow(business.id);
   const recentCalls = await getRecentCallEvents(business.id);
+  const subscribed = await isCallLocalSubscribed(business.id);
   const appUrl = await getAppUrl();
   const reviewUrl = buildReviewUrl(appUrl, business.slug);
 
@@ -33,6 +36,8 @@ export default async function CallLocalPage() {
           initialSettings={settings}
           recentCalls={recentCalls}
           twilioConfigured={isTwilioConfigured()}
+          subscribed={subscribed}
+          addonPriceUsd={CALLLOCAL_ADDON.monthlyUsd}
         />
       </div>
     </main>

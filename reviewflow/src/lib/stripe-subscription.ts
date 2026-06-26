@@ -2,6 +2,34 @@ import "server-only";
 
 import type Stripe from "stripe";
 import { createServiceClient } from "@/lib/supabase/admin";
+import { subscriptionHasActiveCallLocal } from "@/lib/calllocal-addon";
+
+export { subscriptionHasActiveCallLocal };
+
+/** Persist the CallLocal add-on entitlement flag for a business. */
+export async function setCallLocalSubscribed(
+  businessId: string,
+  subscribed: boolean
+): Promise<{ ok: boolean; error?: string }> {
+  const admin = createServiceClient();
+  if (!admin) {
+    return { ok: false, error: "SUPABASE_SERVICE_ROLE_KEY missing in .env.local" };
+  }
+
+  const { error } = await admin
+    .from("businesses")
+    .update({ calllocal_subscribed: subscribed, updated_at: new Date().toISOString() })
+    .eq("id", businessId);
+
+  if (error) {
+    const hint = error.message.includes("calllocal_subscribed")
+      ? " Run supabase/migration-calllocal-addon.sql in the Supabase SQL Editor, then try again."
+      : "";
+    return { ok: false, error: `${error.message}.${hint}` };
+  }
+
+  return { ok: true };
+}
 
 export async function updateBusinessFromSubscription(
   businessId: string,

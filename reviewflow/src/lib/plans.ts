@@ -23,6 +23,17 @@ export const PRICING = {
 /** Whether a one-time setup fee is charged at checkout. */
 export const SETUP_FEE_ENABLED = PRICING.setupCents > 0;
 
+/**
+ * CallLocal (missed-call text-back) optional add-on.
+ * Single source of truth for the add-on price. Billed on top of the Pro plan.
+ * Currency matches PRICING.currency (CAD); "Usd" suffix kept for naming consistency.
+ */
+export const CALLLOCAL_ADDON = {
+  monthlyUsd: 10,
+  monthlyCents: 1000,
+  currency: PRICING.currency,
+} as const;
+
 export function planFromSubscriptionStatus(
   status: string | null | undefined,
   hasPaidSetup: boolean

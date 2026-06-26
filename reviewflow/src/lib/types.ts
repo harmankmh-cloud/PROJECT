@@ -16,6 +16,7 @@ export type Business = {
   stripe_subscription_id?: string | null;
   subscription_status?: string | null;
   setup_paid_at?: string | null;
+  calllocal_subscribed?: boolean | null;
   created_at: string;
   updated_at: string;
 };

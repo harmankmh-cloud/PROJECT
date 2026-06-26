@@ -25,12 +25,16 @@ export function CallLocalPanel({
   initialSettings,
   recentCalls,
   twilioConfigured,
+  subscribed,
+  addonPriceUsd,
 }: {
   businessName: string;
   reviewUrl: string;
   initialSettings: Settings | null;
   recentCalls: CallRow[];
   twilioConfigured: boolean;
+  subscribed: boolean;
+  addonPriceUsd: number;
 }) {
   const router = useRouter();
   const [enabled, setEnabled] = useState(initialSettings?.enabled ?? false);
@@ -43,9 +47,32 @@ export function CallLocalPanel({
   const [loading, setLoading] = useState(false);
   const [message, setMessage] = useState("");
   const [error, setError] = useState("");
+  const [subscribing, setSubscribing] = useState(false);
 
   const twilioNumber = initialSettings?.twilio_phone_e164;
-  const isLive = enabled && twilioNumber && ringPhone;
+  const isLive = subscribed && enabled && twilioNumber && ringPhone;
+
+  async function handleSubscribe() {
+    setSubscribing(true);
+    setError("");
+    setMessage("");
+    try {
+      const response = await fetch("/api/stripe/calllocal", { method: "POST" });
+      const data = await response.json();
+      if (!response.ok) throw new Error(data.error || "Could not start checkout");
+      if (data.url) {
+        window.location.href = data.url as string;
+        return;
+      }
+      // Added to existing subscription — refresh to reflect entitlement.
+      setMessage("CallLocal add-on activated.");
+      router.refresh();
+    } catch (err) {
+      setError(err instanceof Error ? err.message : "Could not start checkout");
+    } finally {
+      setSubscribing(false);
+    }
+  }
 
   async function handleSave(e: React.FormEvent) {
     e.preventDefault();
@@ -92,6 +119,31 @@ export function CallLocalPanel({
             </p>
           )}
 
+          {!subscribed && (
+            <div className="rounded-xl border border-teal-300/40 bg-teal-50/60 p-5">
+              <p className="text-xs font-bold uppercase tracking-widest text-teal-700">Optional add-on</p>
+              <p className="mt-1 text-lg font-semibold text-brand-950">
+                Add CallLocal for ${addonPriceUsd}/mo
+              </p>
+              <p className="mt-1 text-sm text-slate-600">
+                Turn missed calls into texted-back customers. Added to your existing plan — cancel anytime
+                from billing.
+              </p>
+              {error && <p className="mt-3 text-sm text-rose-600">{error}</p>}
+              {message && <p className="mt-3 text-sm text-emerald-700">{message}</p>}
+              <button
+                type="button"
+                onClick={handleSubscribe}
+                disabled={subscribing}
+                className="btn-gold mt-4 px-6 py-3 disabled:opacity-60"
+              >
+                {subscribing ? "Starting…" : `Add CallLocal — $${addonPriceUsd}/mo`}
+              </button>
+            </div>
+          )}
+
+          {subscribed && (
+          <>
           <div className="flex flex-wrap items-center gap-3">
             <span
               className={`rounded-full px-3 py-1 text-xs font-semibold ${
@@ -170,6 +222,8 @@ export function CallLocalPanel({
               {loading ? "Saving…" : "Save CallLocal settings"}
             </button>
           </form>
+          </>
+          )}
         </div>
       </div>
 
