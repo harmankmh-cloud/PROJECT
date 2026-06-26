@@ -5,6 +5,7 @@ import { ResultsSection } from "@/components/marketing/ResultsSection";
 import { MarketingPageShell } from "@/components/marketing/MarketingPageShell";
 import { ShimmerButton } from "@/components/ui/ShimmerButton";
 import { BRAND } from "@/lib/brand";
+import { PRICING } from "@/lib/plans";
 
 export const metadata: Metadata = {
   title: "Pricing — 50 Free Reviews, Then $39/mo",
@@ -13,9 +14,53 @@ export const metadata: Metadata = {
   alternates: { canonical: "/pricing" },
 };
 
+const jsonLd = {
+  "@context": "https://schema.org",
+  "@type": "Product",
+  name: `${BRAND.name} Pro`,
+  description:
+    "Review collection software for BC local businesses — AI prompts, QR poster, SMS templates, analytics, and private feedback routing.",
+  url: `https://${BRAND.domain}/pricing`,
+  brand: { "@type": "Brand", name: BRAND.name },
+  offers: [
+    {
+      "@type": "Offer",
+      name: "Free",
+      price: "0",
+      priceCurrency: "CAD",
+      priceSpecification: {
+        "@type": "UnitPriceSpecification",
+        price: "0",
+        priceCurrency: "CAD",
+        referenceQuantity: { "@type": "QuantitativeValue", value: "1", unitCode: "MON" },
+      },
+      description: "50 review requests included, no credit card required.",
+      eligibleQuantity: { "@type": "QuantitativeValue", value: 50 },
+      availability: "https://schema.org/InStock",
+    },
+    {
+      "@type": "Offer",
+      name: "Pro",
+      price: `${PRICING.monthlyUsd}`,
+      priceCurrency: "CAD",
+      priceSpecification: {
+        "@type": "UnitPriceSpecification",
+        price: `${PRICING.monthlyUsd}`,
+        priceCurrency: "CAD",
+        referenceQuantity: { "@type": "QuantitativeValue", value: "1", unitCode: "MON" },
+      },
+      description:
+        "Unlimited review requests, AI prompt generator, QR poster, SMS templates, analytics, private feedback routing, and 14-day money-back guarantee.",
+      availability: "https://schema.org/InStock",
+    },
+  ],
+};
+
 export default function PricingPage() {
   return (
     <MarketingPageShell>
+      <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }} />
+
       <section className="mesh-bg relative overflow-hidden pb-16 pt-24 md:pb-24 md:pt-28">
         <div className="pointer-events-none absolute -left-16 top-10 h-72 w-72 rounded-full bg-primary/10 blur-3xl" />
         <div className="pointer-events-none absolute -right-16 bottom-0 h-64 w-64 rounded-full bg-accent/10 blur-3xl" />
