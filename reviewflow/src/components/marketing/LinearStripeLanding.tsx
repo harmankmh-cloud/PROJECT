@@ -7,13 +7,11 @@ import {
   Car,
   Check,
   ChevronRight,
-  Globe2,
   Menu,
   MessageSquareMore,
   MonitorPlay,
   QrCode,
   Scissors,
-  Send,
   Shield,
   Sparkles,
   Star,
@@ -27,14 +25,14 @@ import { useState } from "react";
 import { Badge } from "@/components/ui/Badge";
 import { Button } from "@/components/ui/Button";
 import { Card } from "@/components/ui/Card";
-import { Switch } from "@/components/ui/Switch";
+import { MARKETING } from "@/content/copy";
 import { BRAND } from "@/lib/brand";
 
 const NAV_ITEMS = [
   { href: "#product", label: "Product" },
   { href: "#pricing", label: "Pricing" },
   { href: "#demo", label: "Demo" },
-  { href: "#about", label: "About" },
+  { href: "/about", label: "About" },
 ] as const;
 
 const CITIES = ["Vancouver", "Surrey", "Abbotsford", "Kelowna", "Victoria", "Burnaby"];
@@ -95,36 +93,12 @@ const TESTIMONIALS = [
   },
 ] as const;
 
-const PRICING_TIERS = [
-  {
-    name: "Starter",
-    price: "$0",
-    description: "Perfect for shops testing review collection with zero setup friction.",
-    features: ["Branded QR code", "Basic review dashboard", "Email follow-ups"],
-    cta: "Start free",
-    highlight: false,
-  },
-  {
-    name: "Growth",
-    price: "$29",
-    description: "Best for teams that want more reviews, more replies, and clearer insights.",
-    features: ["AI review drafts", "Private complaint routing", "Analytics and review reminders"],
-    cta: "Start 14-day free trial",
-    highlight: true,
-  },
-  {
-    name: "Pro",
-    price: "$79",
-    description: "For multi-location teams that want deeper support and white-label workflows.",
-    features: ["Multi-location management", "Priority support", "White-glove onboarding"],
-    cta: "Book a demo",
-    highlight: false,
-  },
-] as const;
+// Pricing is sourced from MARKETING.pricing.tiers (src/content/copy.ts) so the
+// homepage and the /pricing page always show the same single source of truth.
+const PRICING_TIERS = MARKETING.pricing.tiers;
 
 export function LinearStripeLanding() {
   const [menuOpen, setMenuOpen] = useState(false);
-  const [billing, setBilling] = useState<"monthly" | "yearly">("monthly");
   const [demoStage, setDemoStage] = useState<"qr" | "rating" | "review" | "feedback">("qr");
   const [selectedStars, setSelectedStars] = useState(0);
   const shouldReduceMotion = useReducedMotion();
@@ -537,28 +511,26 @@ export function LinearStripeLanding() {
         <div className="mx-auto max-w-7xl px-6 lg:px-8">
           <div className="mx-auto max-w-3xl text-center">
             <p className="text-sm font-semibold uppercase tracking-[0.3em] text-[#3B82F6]">Pricing</p>
-            <h2 className="mt-4 text-3xl font-semibold tracking-tight text-[#FAFAFA] sm:text-4xl">Simple pricing for local teams of every size.</h2>
-            <p className="mt-4 text-lg leading-relaxed text-[#A1A1AA]">Switch between monthly and yearly billing. No setup fee. Cancel anytime.</p>
-            <div className="mt-8 flex items-center justify-center gap-4 rounded-full border border-[#27272A]/80 bg-[#121214]/70 px-4 py-3">
-              <span className={`text-sm font-medium ${billing === "monthly" ? "text-[#FAFAFA]" : "text-[#A1A1AA]"}`}>Monthly</span>
-              <Switch checked={billing === "yearly"} onCheckedChange={(value) => setBilling(value ? "yearly" : "monthly")} />
-              <span className={`text-sm font-medium ${billing === "yearly" ? "text-[#FAFAFA]" : "text-[#A1A1AA]"}`}>Yearly</span>
-            </div>
+            <h2 className="mt-4 text-3xl font-semibold tracking-tight text-[#FAFAFA] sm:text-4xl">Simple, honest pricing.</h2>
+            <p className="mt-4 text-lg leading-relaxed text-[#A1A1AA]">Start with 50 free reviews. Upgrade to Pro for one flat price. No setup fee. Cancel anytime.</p>
           </div>
 
-          <div className="mt-12 grid gap-6 lg:grid-cols-3">
+          <div className="mt-12 grid gap-6 md:mx-auto md:max-w-4xl md:grid-cols-2">
             {PRICING_TIERS.map((tier, index) => (
-              <motion.div key={tier.name} initial={shouldReduceMotion ? false : { opacity: 0, y: 20 }} whileInView={shouldReduceMotion ? { opacity: 1 } : { opacity: 1, y: 0 }} viewport={{ once: true, margin: "-100px" }} transition={{ duration: 0.5, delay: index * 0.08, ease: "circOut" }}>
-                <Card className={`h-full border ${tier.highlight ? "border-[#3B82F6]/40 bg-[#3B82F6]/5 shadow-2xl shadow-blue-500/10" : "border-[#27272A]/80 bg-[#121214]/70"}`}>
+              <motion.div key={tier.key} initial={shouldReduceMotion ? false : { opacity: 0, y: 20 }} whileInView={shouldReduceMotion ? { opacity: 1 } : { opacity: 1, y: 0 }} viewport={{ once: true, margin: "-100px" }} transition={{ duration: 0.5, delay: index * 0.08, ease: "circOut" }}>
+                <Card className={`flex h-full flex-col border ${tier.popular ? "border-[#3B82F6]/40 bg-[#3B82F6]/5 shadow-2xl shadow-blue-500/10" : "border-[#27272A]/80 bg-[#121214]/70"}`}>
                   <div className="flex items-center justify-between">
                     <h3 className="text-xl font-semibold text-[#FAFAFA]">{tier.name}</h3>
-                    {tier.highlight ? <Badge variant="default" className="rounded-full bg-[#3B82F6]/10 px-3 py-1 text-[#3B82F6]">Most popular</Badge> : null}
+                    {tier.popular ? <Badge variant="default" className="rounded-full bg-[#3B82F6]/10 px-3 py-1 text-[#3B82F6]">Most popular</Badge> : null}
                   </div>
                   <p className="mt-4 text-sm leading-relaxed text-[#A1A1AA]">{tier.description}</p>
                   <div className="mt-6 flex items-end gap-1">
-                    <span className="text-4xl font-semibold tracking-tight text-[#FAFAFA]">{tier.price}</span>
-                    <span className="pb-1 text-sm text-[#A1A1AA]">/mo</span>
+                    <span className="text-4xl font-semibold tracking-tight text-[#FAFAFA]">${tier.monthly}</span>
+                    {tier.monthly > 0 && <span className="pb-1 text-sm text-[#A1A1AA]">/mo</span>}
                   </div>
+                  {"stripeNote" in tier && tier.stripeNote ? (
+                    <p className="mt-2 text-xs font-medium text-[#3B82F6]">{tier.stripeNote}</p>
+                  ) : null}
                   <ul className="mt-8 space-y-3 text-sm text-[#A1A1AA]">
                     {tier.features.map((feature) => (
                       <li key={feature} className="flex items-start gap-2">
@@ -566,10 +538,19 @@ export function LinearStripeLanding() {
                         <span>{feature}</span>
                       </li>
                     ))}
+                    {tier.missing.map((feature) => (
+                      <li key={feature} className="flex items-start gap-2 text-[#71717A]">
+                        <X className="mt-0.5 h-4 w-4 shrink-0 opacity-60" />
+                        <span>{feature}</span>
+                      </li>
+                    ))}
                   </ul>
-                  <Button pill className={`button-shimmer mt-8 w-full rounded-full px-5 py-3.5 text-sm ${tier.highlight ? "bg-[#3B82F6] text-white hover:bg-blue-500" : "border border-[#27272A]/80 bg-transparent text-[#A1A1AA] hover:border-[#3B82F6]/30 hover:text-[#FAFAFA]"}`}>
+                  {"limitNote" in tier && tier.limitNote ? (
+                    <p className="mt-4 rounded-xl bg-[#3B82F6]/5 px-3 py-2 text-xs text-[#A1A1AA]">{tier.limitNote}</p>
+                  ) : null}
+                  <Link href="/signup" className={`button-shimmer mt-8 block w-full rounded-full px-5 py-3.5 text-center text-sm font-semibold ${tier.popular ? "bg-[#3B82F6] text-white hover:bg-blue-500" : "border border-[#27272A]/80 bg-transparent text-[#A1A1AA] hover:border-[#3B82F6]/30 hover:text-[#FAFAFA]"}`}>
                     {tier.cta}
-                  </Button>
+                  </Link>
                 </Card>
               </motion.div>
             ))}
@@ -624,7 +605,6 @@ export function LinearStripeLanding() {
             <ul className="mt-4 space-y-3 text-sm text-[#A1A1AA]">
               <li><Link href="/about" className="transition hover:text-[#FAFAFA]">About</Link></li>
               <li><Link href="/help" className="transition hover:text-[#FAFAFA]">Support</Link></li>
-              <li><Link href="/privacy" className="transition hover:text-[#FAFAFA]">Privacy</Link></li>
             </ul>
           </div>
 
@@ -632,15 +612,7 @@ export function LinearStripeLanding() {
             <p className="text-sm font-semibold uppercase tracking-[0.25em] text-[#A1A1AA]">Legal</p>
             <ul className="mt-4 space-y-3 text-sm text-[#A1A1AA]">
               <li><Link href="/terms" className="transition hover:text-[#FAFAFA]">Terms</Link></li>
-              <li><Link href="/privacy" className="transition hover:text-[#FAFAFA]">Cookie policy</Link></li>
-              <li className="flex items-center gap-3 pt-2">
-                <Link href="https://twitter.com" aria-label="Twitter" className="rounded-full border border-[#27272A]/80 p-2 transition hover:border-[#3B82F6]/30 hover:text-[#FAFAFA]">
-                  <Send className="h-4 w-4" />
-                </Link>
-                <Link href="https://linkedin.com" aria-label="LinkedIn" className="rounded-full border border-[#27272A]/80 p-2 transition hover:border-[#3B82F6]/30 hover:text-[#FAFAFA]">
-                  <Globe2 className="h-4 w-4" />
-                </Link>
-              </li>
+              <li><Link href="/privacy" className="transition hover:text-[#FAFAFA]">Privacy</Link></li>
             </ul>
           </div>
         </div>

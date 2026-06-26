@@ -4,9 +4,22 @@ import { LegalLayout } from "@/components/LegalLayout";
 import { BRAND } from "@/lib/brand";
 import { COMPANY } from "@/lib/marketing-content";
 
+const privacyDescription = `How ${BRAND.name} collects, uses, and protects your personal information in British Columbia.`;
+
 export const metadata: Metadata = {
   title: "Privacy Policy",
-  description: `How ${BRAND.name} collects, uses, and protects your personal information in British Columbia.`,
+  description: privacyDescription,
+  alternates: { canonical: "/privacy" },
+  openGraph: {
+    title: `Privacy Policy — ${BRAND.name}`,
+    description: privacyDescription,
+    url: `https://${BRAND.domain}/privacy`,
+  },
+  twitter: {
+    card: "summary_large_image",
+    title: `Privacy Policy — ${BRAND.name}`,
+    description: privacyDescription,
+  },
 };
 
 export default function PrivacyPage() {

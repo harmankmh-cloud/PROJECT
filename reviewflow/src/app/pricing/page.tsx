@@ -7,11 +7,23 @@ import { ShimmerButton } from "@/components/ui/ShimmerButton";
 import { BRAND } from "@/lib/brand";
 import { PRICING } from "@/lib/plans";
 
+const pricingDescription =
+  "RateLocal pricing: start with 50 free review requests, no credit card needed. Upgrade to Pro for $39/mo — everything included, no setup fee, 14-day money-back guarantee.";
+
 export const metadata: Metadata = {
   title: "Pricing — 50 Free Reviews, Then $39/mo",
-  description:
-    "RateLocal pricing: start with 50 free review requests, no credit card needed. Upgrade to Pro for $39/mo — everything included, no setup fee, 14-day money-back guarantee.",
+  description: pricingDescription,
   alternates: { canonical: "/pricing" },
+  openGraph: {
+    title: `Pricing — ${BRAND.name}`,
+    description: pricingDescription,
+    url: `https://${BRAND.domain}/pricing`,
+  },
+  twitter: {
+    card: "summary_large_image",
+    title: `Pricing — ${BRAND.name}`,
+    description: pricingDescription,
+  },
 };
 
 const jsonLd = {
