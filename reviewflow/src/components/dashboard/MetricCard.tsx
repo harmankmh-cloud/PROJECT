@@ -1,6 +1,7 @@
 "use client";
 
 import { ArrowDownRight, ArrowUpRight } from "lucide-react";
+import { useId } from "react";
 import { Area, AreaChart, ResponsiveContainer } from "recharts";
 import { cn } from "@/lib/utils";
 
@@ -33,6 +34,7 @@ export function MetricCard({
 }) {
   const sparkData = sparkline?.map((v, i) => ({ i, v })) ?? [];
   const trendUp = trend?.direction === "up";
+  const gradientId = useId();
 
   return (
     <div
@@ -73,7 +75,7 @@ export function MetricCard({
           <ResponsiveContainer width="100%" height="100%">
             <AreaChart data={sparkData} margin={{ top: 2, right: 0, bottom: 0, left: 0 }}>
               <defs>
-                <linearGradient id="metricSpark" x1="0" y1="0" x2="0" y2="1">
+                <linearGradient id={gradientId} x1="0" y1="0" x2="0" y2="1">
                   <stop offset="0%" stopColor="var(--brand)" stopOpacity={0.3} />
                   <stop offset="100%" stopColor="var(--brand)" stopOpacity={0} />
                 </linearGradient>
@@ -83,7 +85,7 @@ export function MetricCard({
                 dataKey="v"
                 stroke="var(--brand)"
                 strokeWidth={2}
-                fill="url(#metricSpark)"
+                fill={`url(#${gradientId})`}
                 isAnimationActive
                 animationDuration={800}
               />
