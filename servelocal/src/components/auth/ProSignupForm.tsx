@@ -72,12 +72,6 @@ export function ProSignupForm() {
         return;
       }
 
-      await fetch("/api/user-profile", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ role: "pro", display_name: data.name }),
-      });
-
       await redirectAfterAuth("/auth/after-login?as=pro");
     });
 
