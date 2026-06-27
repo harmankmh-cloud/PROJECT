@@ -23,6 +23,10 @@ export async function updateSession(request: NextRequest) {
           return request.cookies.getAll();
         },
         setAll(cookiesToSet) {
+          // Cookies must be set on the request so the updated values are
+          // forwarded to the new NextResponse, and on supabaseResponse so
+          // they are sent back to the browser. Both sides are needed for
+          // the session token refresh to propagate correctly.
           cookiesToSet.forEach(({ name, value, options }) =>
             request.cookies.set(name, value, options)
           );
