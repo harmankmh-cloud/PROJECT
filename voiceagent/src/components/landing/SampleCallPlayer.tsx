@@ -43,6 +43,7 @@ export function SampleCallPlayer() {
   const [audioReady, setAudioReady] = useState(false);
   const [useAudio, setUseAudio] = useState(false);
   const [playing, setPlaying] = useState(false);
+  const [audioPosition, setAudioPosition] = useState(0);
   const [step, setStep] = useState(-1);
 
   useEffect(() => {
@@ -55,16 +56,35 @@ export function SampleCallPlayer() {
     const onError = () => {
       setUseAudio(false);
     };
-    const onEnded = () => setPlaying(false);
+    const onPlay = () => {
+      setPlaying(true);
+    };
+    const onPause = () => {
+      setPlaying(false);
+      setAudioPosition(audio.currentTime);
+    };
+    const onEnded = () => {
+      setPlaying(false);
+      setAudioPosition(audio.currentTime);
+    };
+    const onTimeUpdate = () => {
+      setAudioPosition(audio.currentTime);
+    };
     audio.addEventListener("canplaythrough", onCanPlay);
     audio.addEventListener("error", onError);
+    audio.addEventListener("play", onPlay);
+    audio.addEventListener("pause", onPause);
     audio.addEventListener("ended", onEnded);
+    audio.addEventListener("timeupdate", onTimeUpdate);
     audioRef.current = audio;
     return () => {
       audio.pause();
       audio.removeEventListener("canplaythrough", onCanPlay);
       audio.removeEventListener("error", onError);
+      audio.removeEventListener("play", onPlay);
+      audio.removeEventListener("pause", onPause);
       audio.removeEventListener("ended", onEnded);
+      audio.removeEventListener("timeupdate", onTimeUpdate);
       audioRef.current = null;
     };
   }, [audioSrc]);
@@ -80,7 +100,7 @@ export function SampleCallPlayer() {
     return () => clearTimeout(timer);
   }, [playing, step, useAudio]);
 
-  const done = useAudio ? !playing && audioRef.current?.currentTime !== 0 : step >= SCRIPT.length - 1 && !playing;
+  const done = useAudio ? !playing && audioPosition > 0 : step >= SCRIPT.length - 1 && !playing;
 
   function togglePlay() {
     if (useAudio && audioRef.current) {
@@ -98,6 +118,7 @@ export function SampleCallPlayer() {
   function replay() {
     if (useAudio && audioRef.current) {
       audioRef.current.currentTime = 0;
+      setAudioPosition(0);
       void audioRef.current.play().then(() => setPlaying(true));
       return;
     }
@@ -176,7 +197,7 @@ export function SampleCallPlayer() {
             </div>
 
             <div className="flex items-center justify-center gap-3 border-t border-border/60 p-4">
-              {done && (useAudio ? audioRef.current?.paused : true) ? (
+              {done ? (
                 <button
                   type="button"
                   onClick={replay}
