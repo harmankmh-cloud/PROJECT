@@ -1,18 +1,8 @@
 import type { Metadata, Viewport } from "next";
-import { Inter } from "next/font/google";
-import { GeistSans } from "geist/font/sans";
-import { GeistMono } from "geist/font/mono";
 import { DeferredSiteWidgets } from "@/components/DeferredSiteWidgets";
 import { MarketingProviders } from "@/components/providers/MarketingProviders";
 import { BRAND } from "@/lib/brand";
 import "./globals.css";
-
-const inter = Inter({
-  variable: "--font-inter",
-  subsets: ["latin"],
-  weight: ["400", "500", "600"],
-  display: "swap",
-});
 
 const siteUrl = `https://${BRAND.domain}`;
 const description =
@@ -57,14 +47,16 @@ export const viewport: Viewport = {
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (
-    <html
-      lang="en"
-      className={`${GeistSans.variable} ${inter.variable} ${GeistMono.variable} scroll-smooth`}
-    >
+    <html lang="en" className="scroll-smooth">
       <head>
         <style
           dangerouslySetInnerHTML={{
             __html: `
+              :root {
+                --font-inter: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+                --font-geist-sans: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+                --font-geist-mono: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
+              }
               html, body { background:#0a0a0a !important; color:#fafafa !important; }
               h1, h2, h3, h4, p, a, button, li, span, label { color: inherit; }
               .text-text, h1, h2 { color: #fafafa; }

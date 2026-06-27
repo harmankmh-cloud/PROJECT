@@ -1,4 +1,3 @@
-import { GeistMono } from "geist/font/mono";
 import { redirect } from "next/navigation";
 import { DashboardShell } from "@/components/DashboardShell";
 import { PwaRegister } from "@/components/PwaRegister";
@@ -19,8 +18,12 @@ export default async function DashboardLayout({ children }: { children: React.Re
   const { user, org } = ctx;
 
   return (
-    <div className={GeistMono.variable}>
-      <DashboardProviders>
+   <div
+     style={{
+       "--font-geist-mono": "ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace",
+     } as React.CSSProperties}
+   >
+     <DashboardProviders>
         <PwaRegister />
         <DashboardShell
           orgName={org?.name}
