@@ -69,12 +69,6 @@ export function HomeownerSignupForm() {
         return;
       }
 
-      await fetch("/api/user-profile", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ role: "homeowner", display_name: data.name, phone: null }),
-      });
-
       await redirectAfterAuth("/auth/after-login?as=homeowner");
     });
 
