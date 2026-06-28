@@ -5,6 +5,20 @@ import { slugify } from "@/lib/slugify";
 import { parseServiceProvider, parseServiceProviders, sortProviders } from "@/lib/schemas/db";
 import type { ProviderFilters, ServiceCategory, ServiceProvider } from "@/lib/types";
 
+type PublicProviderQuery<T> = {
+  not(column: string, operator: string, value: unknown): T;
+  neq(column: string, value: unknown): T;
+  or(filters: string): T;
+};
+
+function withPublicProviderFilters<T extends PublicProviderQuery<T>>(query: T): T {
+  return query
+    .not("owner_user_id", "is", null)
+    .or("email.is.null,email.not.ilike.%.example")
+    .not("phone", "like", "604-555-%")
+    .neq("display_name", "Harman plumbing");
+}
+
 export async function getServiceCategories(): Promise<ServiceCategory[]> {
   const admin = createDbClient();
   if (!admin) return DEFAULT_SERVICE_CATEGORIES;
@@ -87,7 +101,9 @@ export async function getApprovedProviders(
   const from = page * pageSize;
   const to = from + pageSize - 1;
 
-  let query = admin.from("service_providers").select("*").eq("status", "approved");
+  let query = withPublicProviderFilters(
+    admin.from("service_providers").select("*").eq("status", "approved")
+  );
 
   if (filters.citySlug) query = query.eq("city_slug", filters.citySlug);
   if (filters.categorySlug) query = query.eq("category_slug", filters.categorySlug);
@@ -156,6 +172,10 @@ export async function getProviderBySlug(slug: string) {
     .select("*")
     .eq("slug", slug)
     .eq("status", "approved")
+    .not("owner_user_id", "is", null)
+    .or("email.is.null,email.not.ilike.%.example")
+    .not("phone", "like", "604-555-%")
+    .neq("display_name", "Harman plumbing")
     .maybeSingle();
 
   return data ? parseServiceProvider(data) : null;
@@ -176,28 +196,35 @@ export async function getPlatformStats() {
   }
 
   try {
-    const [{ count: providers }, { count: verified }, { count: reviews }] = await Promise.all([
-      admin.from("service_providers").select("*", { count: "exact", head: true }).eq("status", "approved"),
-      admin
-        .from("service_providers")
-        .select("*", { count: "exact", head: true })
-        .eq("status", "approved")
-        .eq("verified", true),
+    const [{ count: providers }, { count: verified }, { count: reviews }, { data: cities }] = await Promise.all([
+      withPublicProviderFilters(
+        admin.from("service_providers").select("*", { count: "exact", head: true }).eq("status", "approved")
+      ),
+      withPublicProviderFilters(
+        admin
+          .from("service_providers")
+          .select("*", { count: "exact", head: true })
+          .eq("status", "approved")
+          .eq("verified", true)
+      ),
       admin.from("provider_reviews").select("*", { count: "exact", head: true }).eq("status", "approved"),
+      withPublicProviderFilters(
+        admin.from("service_providers").select("city_slug").eq("status", "approved")
+      ),
     ]);
+    const cityCount = new Set((cities || []).map((row) => row.city_slug).filter(Boolean)).size;
 
     return {
       providers: providers || 0,
       verified: verified || 0,
       reviews: reviews || 0,
-      cities: 8,
+      cities: cityCount,
     };
   } catch {
-    const { count: providers } = await admin
-      .from("service_providers")
-      .select("*", { count: "exact", head: true })
-      .eq("status", "approved");
-    return { providers: providers || 0, verified: 0, reviews: 0, cities: 8 };
+    const { count: providers } = await withPublicProviderFilters(
+      admin.from("service_providers").select("*", { count: "exact", head: true }).eq("status", "approved")
+    );
+    return { providers: providers || 0, verified: 0, reviews: 0, cities: providers ? 1 : 0 };
   }
 }
 

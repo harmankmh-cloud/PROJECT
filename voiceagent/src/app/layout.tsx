@@ -35,6 +35,10 @@ export const metadata: Metadata = {
     description,
     images: ["/opengraph-image"],
   },
+  // TODO: Set GOOGLE_SITE_VERIFICATION in production to the token from Google Search Console.
+  verification: process.env.GOOGLE_SITE_VERIFICATION
+    ? { google: process.env.GOOGLE_SITE_VERIFICATION }
+    : undefined,
 };
 
 export const viewport: Viewport = {

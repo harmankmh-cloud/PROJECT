@@ -6,12 +6,12 @@ import { Reveal } from "@/components/ui/Reveal";
 import { BRAND } from "@/lib/brand";
 
 export const metadata: Metadata = {
-  title: `About ${BRAND.name}`,
-  description: `${BRAND.name} is a BC-built review-collection tool that helps local businesses earn honest Google reviews and route private feedback before it goes public.`,
-  alternates: { canonical: "/about" },
+  title: "About",
+  description: `${BRAND.name} is a founder-led review-collection tool for BC and Fraser Valley local businesses that want honest Google reviews without fake social proof.`,
+  alternates: { canonical: `https://${BRAND.domain}/about` },
   openGraph: {
-    title: `About ${BRAND.name}`,
-    description: `${BRAND.name} is a BC-built review-collection tool that helps local businesses earn honest Google reviews and route private feedback before it goes public.`,
+    title: "About",
+    description: `${BRAND.name} is a founder-led review-collection tool for BC and Fraser Valley local businesses that want honest Google reviews without fake social proof.`,
     url: `https://${BRAND.domain}/about`,
     siteName: BRAND.name,
     locale: "en_CA",
@@ -19,8 +19,8 @@ export const metadata: Metadata = {
   },
   twitter: {
     card: "summary_large_image",
-    title: `About ${BRAND.name}`,
-    description: `${BRAND.name} is a BC-built review-collection tool that helps local businesses earn honest Google reviews and route private feedback before it goes public.`,
+    title: "About",
+    description: `${BRAND.name} is a founder-led review-collection tool for BC and Fraser Valley local businesses that want honest Google reviews without fake social proof.`,
   },
 };
 
@@ -44,7 +44,8 @@ export default function AboutPage() {
               competitors with louder online reputations, not better work.
             </p>
             <p>
-              Our tools make it effortless to ask for a review at the right moment: a branded QR
+              RateLocal is early and founder-led, so customers get practical setup help instead of
+              a heavy platform or long contract. Our tools make it easier to ask for a review at the right moment: a branded QR
               poster, AI-assisted review drafts, and SMS and email follow-ups. Just as important,
               we route unhappy customers to a private feedback channel first — so you can fix
               problems before they become public one-star reviews.

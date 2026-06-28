@@ -1,6 +1,7 @@
 import type { Metadata, Viewport } from "next";
 import { Inter, JetBrains_Mono, Plus_Jakarta_Sans } from "next/font/google";
 import { SERVE_LOCAL } from "@/lib/constants";
+import { canonicalBaseUrl } from "@/lib/seo";
 import { AppProviders } from "@/components/providers/AppProviders";
 import { SuggestionButton } from "@/components/SuggestionButton";
 import { GoogleAnalytics } from "@/components/GoogleAnalytics";
@@ -23,8 +24,10 @@ const geistMono = JetBrains_Mono({
   weight: ["400", "500"],
 });
 
-const appUrl =
-  process.env.NEXT_PUBLIC_APP_URL?.replace(/\/$/, "") || "https://www.servelocal.ca";
+const appUrl = canonicalBaseUrl;
+const defaultDescription =
+  "Find trusted local trades in BC. Browse plumbers, electricians, and more — call direct, no middleman.";
+const defaultImage = `${appUrl}/opengraph-image`;
 
 export const metadata: Metadata = {
   metadataBase: new URL(appUrl),
@@ -32,22 +35,26 @@ export const metadata: Metadata = {
     default: `${SERVE_LOCAL.name} — ${SERVE_LOCAL.tagline}`,
     template: `%s · ${SERVE_LOCAL.name}`,
   },
-  description:
-    "Find trusted local trades in BC. Browse plumbers, electricians, and more — call direct, no middleman.",
+  description: defaultDescription,
+  alternates: { canonical: appUrl },
+  verification: {
+    // TODO: Set GOOGLE_SITE_VERIFICATION to the Search Console token before launch verification.
+    google: process.env.GOOGLE_SITE_VERIFICATION,
+  },
   openGraph: {
     title: `${SERVE_LOCAL.name} — ${SERVE_LOCAL.tagline}`,
-    description:
-      "Find trusted local trades in BC. Browse plumbers, electricians, and more — call direct, no middleman.",
+    description: defaultDescription,
     url: appUrl,
     siteName: SERVE_LOCAL.name,
     locale: "en_CA",
     type: "website",
+    images: [{ url: defaultImage, width: 1200, height: 630, alt: SERVE_LOCAL.name }],
   },
   twitter: {
     card: "summary_large_image",
     title: `${SERVE_LOCAL.name} — ${SERVE_LOCAL.tagline}`,
-    description:
-      "Find trusted local trades in BC. Browse plumbers, electricians, and more — call direct, no middleman.",
+    description: defaultDescription,
+    images: [defaultImage],
   },
 };
 

@@ -78,7 +78,7 @@ export const MARKETING = {
     h1Suffix: "— Automatically",
     subtext:
       "RateLocal helps BC businesses collect more 5-star Google reviews using AI-powered prompts. No fake reviews. No risk. Just results.",
-    ctaPrimary: "Start Free Trial",
+    ctaPrimary: "Start Free",
     ctaSecondary: "See How It Works ↓",
     trustBadges: [
       "Google-Safe Method ✓",
@@ -162,7 +162,7 @@ export const MARKETING = {
           "Private feedback routing",
           "Basic dashboard",
         ],
-        missing: ["AI prompts", "SMS templates", "Analytics", "Unlimited requests"],
+        missing: ["AI prompts", "SMS templates", "Analytics", "Requests beyond 50"],
         cta: "Start Free",
         popular: false,
         limitNote: "After 50 reviews, upgrade to Pro to keep collecting.",

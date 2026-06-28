@@ -35,7 +35,7 @@ export function marketingMetadata({
     description,
     ...(robots ? { robots } : {}),
     alternates: {
-      canonical: canonicalPath,
+      canonical: url,
       ...(languages ? { languages } : {}),
     },
     openGraph: {

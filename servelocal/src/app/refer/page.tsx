@@ -31,7 +31,7 @@ export default function ReferPage() {
           <div className="rounded-[14px] border border-border bg-surface p-6">
             <h2 className="font-semibold text-foreground">Refer a tradie</h2>
             <p className="mt-2 text-sm text-muted">
-              Send them to our free listing — Founding Featured is {FOUNDING_PRO.featuredPrice} ({FOUNDING_PRO.duration}
+              Send them to our free listing — Featured Pro is {FOUNDING_PRO.featuredPrice} ({FOUNDING_PRO.duration}
               ), still cheaper than one Thumbtack lead.
             </p>
             <ShimmerButton href="/join" size="sm" className="mt-4">

@@ -7,9 +7,9 @@ import { COMPANY } from "@/lib/marketing-content";
 export const metadata: Metadata = {
   title: "Terms of Service",
   description: `Terms of use for ${BRAND.name} — review tools for local businesses in British Columbia.`,
-  alternates: { canonical: "/terms" },
+  alternates: { canonical: `https://${BRAND.domain}/terms` },
   openGraph: {
-    title: `Terms of Service · ${BRAND.name}`,
+    title: "Terms of Service",
     description: `Terms of use for ${BRAND.name} — review tools for local businesses in British Columbia.`,
     url: `https://${BRAND.domain}/terms`,
     siteName: BRAND.name,
@@ -18,7 +18,7 @@ export const metadata: Metadata = {
   },
   twitter: {
     card: "summary_large_image",
-    title: `Terms of Service · ${BRAND.name}`,
+    title: "Terms of Service",
     description: `Terms of use for ${BRAND.name} — review tools for local businesses in British Columbia.`,
   },
 };

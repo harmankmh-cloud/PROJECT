@@ -122,6 +122,9 @@ export function IndustryPageTemplate({ slug }: { slug: IndustrySlug }) {
         {testimonial ? (
           <section className="marketing-container mx-auto mt-20 max-w-3xl">
             <blockquote className="rounded-xl border border-violet-500/20 bg-violet-500/5 p-8 text-center">
+              <p className="mb-3 text-xs font-semibold uppercase tracking-wide text-violet-300">
+                Illustrative example — not a real customer
+              </p>
               <p className="text-lg leading-relaxed text-text">&ldquo;{testimonial.quote}&rdquo;</p>
               <footer className="mt-4 text-sm text-muted">
                 <span className="font-medium text-text">{testimonial.name}</span>

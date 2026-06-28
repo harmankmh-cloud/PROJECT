@@ -21,11 +21,11 @@ const HELP_CARD_ITEMS = [
 ] as const;
 
 export const metadata = {
-  title: `Help & contact · ${BRAND.name}`,
+  title: "Help & Contact",
   description: `Get help with ${BRAND.name}, send a suggestion, or report an issue.`,
-  alternates: { canonical: "/help" },
+  alternates: { canonical: `https://${BRAND.domain}/help` },
   openGraph: {
-    title: `Help & contact · ${BRAND.name}`,
+    title: "Help & Contact",
     description: `Get help with ${BRAND.name}, send a suggestion, or report an issue.`,
     url: `https://${BRAND.domain}/help`,
     siteName: BRAND.name,
@@ -34,7 +34,7 @@ export const metadata = {
   },
   twitter: {
     card: "summary_large_image",
-    title: `Help & contact · ${BRAND.name}`,
+    title: "Help & Contact",
     description: `Get help with ${BRAND.name}, send a suggestion, or report an issue.`,
   },
 };

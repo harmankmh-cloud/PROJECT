@@ -5,8 +5,8 @@ import { TestimonialsGrid } from "@/components/marketing/TestimonialsGrid";
 import { SkipToContent } from "@/components/SkipToContent";
 
 export const metadata = marketingMetadata({
-  title: "Testimonials",
-  description: "What local businesses say about GreetQ AI receptionist.",
+  title: "Sample product scenarios",
+  description: "Illustrative examples showing how GreetQ AI receptionist workflows can support local businesses.",
   path: "/testimonials",
 });
 
@@ -17,13 +17,12 @@ export default function TestimonialsPage() {
       <MarketingNavbar />
       <main id="main-content" className="flex-1 pb-16 pt-24">
         <div className="marketing-container">
-          <p className="section-eyebrow mb-3 text-center">Testimonials</p>
+          <p className="section-eyebrow mb-3 text-center">Sample scenarios</p>
           <h1 className="font-display text-center text-4xl text-ghost-white">
-            Operator feedback
+            Illustrative product examples
           </h1>
           <p className="mx-auto mt-4 max-w-xl text-center text-sm text-on-surface-variant">
-            Representative feedback from early operators testing GreetQ. Not third-party verified
-            reviews — share your experience at /contact.
+            These are sample workflows, not customer testimonials or third-party verified reviews.
           </p>
           <TestimonialsGrid />
         </div>

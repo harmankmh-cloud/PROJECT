@@ -8,11 +8,11 @@ import { Input } from "@/components/ui/Input";
 import { SampleCallPlayer } from "@/components/landing/SampleCallPlayer";
 
 const INDUSTRIES = [
-  { id: "salon", label: "Salon", greeting: "Hi! Thanks for calling Glow Studio. How can I help you book today?" },
-  { id: "clinic", label: "Clinic", greeting: "Hello, Pacific Dental. I can help schedule an appointment or answer questions." },
-  { id: "restaurant", label: "Restaurant", greeting: "Thanks for calling Harbour Bistro! Reservations or takeout?" },
-  { id: "auto", label: "Auto Shop", greeting: "North Shore Auto — I can book service or check availability for you." },
-  { id: "law", label: "Law Office", greeting: "Harbour Legal intake. I can take your details and schedule a consultation." },
+  { id: "salon", label: "Salon", greeting: "Hi! Thanks for calling the sample salon. How can I help you book today?" },
+  { id: "clinic", label: "Clinic", greeting: "Hello, sample clinic. I can help schedule an appointment or answer questions." },
+  { id: "restaurant", label: "Restaurant", greeting: "Thanks for calling the sample restaurant. Reservations or takeout?" },
+  { id: "auto", label: "Auto Shop", greeting: "Sample auto shop — I can book service or check availability for you." },
+  { id: "law", label: "Law Office", greeting: "Sample law office intake. I can take your details and schedule a consultation." },
 ] as const;
 
 const SCRIPT_LINES = [

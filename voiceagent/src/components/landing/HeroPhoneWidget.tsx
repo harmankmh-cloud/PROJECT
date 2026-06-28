@@ -16,7 +16,7 @@ export function HeroPhoneWidget() {
             Live
           </span>
         </div>
-        <p className="mt-4 font-display text-2xl text-text">Sarah M.</p>
+        <p className="mt-4 font-display text-2xl text-text">Sample caller</p>
         <p className="mt-1 text-sm text-muted">Booking a Thursday appointment</p>
         <div className="mt-6 flex h-10 items-end justify-center gap-1" aria-hidden>
           {Array.from({ length: 10 }).map((_, i) => (
@@ -30,7 +30,7 @@ export function HeroPhoneWidget() {
         <div className="mt-6 rounded-xl bg-bg/60 p-3 text-xs leading-relaxed text-muted">
           <p className="text-teal-400">GreetQ</p>
           <p className="mt-1 text-text">
-            Hi Sarah! I can book you for Thursday — 2 PM or 4:30 PM works. Which do you prefer?
+            Hi! I can book you for Thursday — 2 PM or 4:30 PM works. Which do you prefer?
           </p>
         </div>
         <div className="mt-5 flex justify-center">
