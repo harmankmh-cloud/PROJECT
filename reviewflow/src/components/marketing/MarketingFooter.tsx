@@ -11,13 +11,13 @@ export function MarketingFooter() {
       <div className="border-b border-white/10 px-6 py-14 text-center">
         <p className="font-grotesk text-2xl text-ink md:text-3xl">{MARKETING.footer.strip}</p>
         <p className="mx-auto mt-2 max-w-md text-sm text-muted-soft">
-          Start your free trial — setup takes about 5 minutes.
+          Start free — setup takes about 5 minutes.
         </p>
         <Link
           href="/signup"
           className="rl-btn-gold mt-6 inline-flex items-center justify-center px-7 py-3 text-sm"
         >
-          Start Free Trial →
+          Start Free →
         </Link>
       </div>
 
@@ -89,7 +89,7 @@ export function MarketingFooter() {
               </li>
               {FAQ_ITEMS.slice(0, 2).map((item) => (
                 <li key={item.q}>
-                  <Link href="/#faq" className="transition hover:text-gold">
+                  <Link href="/help" className="transition hover:text-gold">
                     {item.q}
                   </Link>
                 </li>

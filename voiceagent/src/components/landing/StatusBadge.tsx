@@ -3,10 +3,17 @@ import Link from "next/link";
 type StatusState = "operational" | "unknown";
 
 /** Footer status pill — links to /status. Reflects whether an external monitor is configured. */
-export function StatusBadge() {
+export function StatusBadge({ locale = "en" }: { locale?: "en" | "fr" }) {
   const hasMonitor = Boolean(process.env.NEXT_PUBLIC_STATUS_PAGE_URL?.trim());
   const state: StatusState = hasMonitor ? "operational" : "unknown";
-  const label = state === "operational" ? "All systems operational" : "System status";
+  const label =
+    state === "operational"
+      ? locale === "fr"
+        ? "Tous les systèmes sont opérationnels"
+        : "All systems operational"
+      : locale === "fr"
+        ? "État du système"
+        : "System status";
   const dotClass = state === "operational" ? "bg-success" : "bg-muted";
 
   return (

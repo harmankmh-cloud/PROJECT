@@ -10,9 +10,9 @@ import { pageMetadata } from "@/lib/seo";
 import { HOW_OTHERS_START } from "@/lib/tradie-program";
 
 export const metadata: Metadata = pageMetadata({
-  title: "Get Listed — Free + Founding Pro $29/mo",
+  title: "Get Listed — Free + Featured Pro $29/mo",
   description:
-    "List your trade on ServeLocal. Free starter listing, job alerts, Founding Pro from $29/mo CAD.",
+    "List your trade on ServeLocal. Free starter listing, job alerts, Featured Pro from $29/mo CAD.",
   path: "/join",
 });
 

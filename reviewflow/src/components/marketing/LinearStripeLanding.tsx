@@ -24,9 +24,9 @@ import { useState } from "react";
 import { Badge } from "@/components/ui/Badge";
 import { Button } from "@/components/ui/Button";
 import { Card } from "@/components/ui/Card";
-import { Switch } from "@/components/ui/Switch";
 import { MarketingNavbar } from "@/components/marketing/MarketingNavbar";
 import { MagneticButton } from "@/components/ui/MagneticButton";
+import { MARKETING } from "@/content/copy";
 import { BRAND } from "@/lib/brand";
 
 // 3D starfield is hero-only and lazy-loaded so it never blocks first paint or SSR.
@@ -60,55 +60,28 @@ const HOW_IT_WORKS = [
   },
 ] as const;
 
-const TESTIMONIALS = [
+const EARLY_ACCESS_NOTES = [
   {
-    initials: "JS",
-    name: "Jamie Singh",
-    business: "Northshore Dental",
-    quote:
-      "We went from chasing reviews to collecting them automatically. The private routing alone saved our reputation.",
-    rating: 5,
+    title: "Founder-led setup",
+    description:
+      "Early customers get hands-on help connecting their Google review link, QR poster, and first review request flow.",
     rotation: "-2deg",
   },
   {
-    initials: "MR",
-    name: "Mina Rios",
-    business: "Elm Street Salon",
-    quote:
-      "The AI review drafts feel natural, and our team spends less time writing follow-ups and more time serving clients.",
-    rating: 5,
+    title: "Built for BC shops",
+    description:
+      "RateLocal is focused on local service teams in British Columbia, starting with the Fraser Valley.",
     rotation: "0deg",
   },
   {
-    initials: "DT",
-    name: "Derek Tran",
-    business: "Harbor Auto Clinic",
-    quote:
-      "Our review volume jumped in two weeks. The QR flow feels effortless for every customer, even the busy ones.",
-    rating: 5,
+    title: "No fake proof",
+    description:
+      "We do not publish invented customer names, ratings, or review lifts. Real results will be shared when customers approve them.",
     rotation: "2deg",
   },
 ] as const;
 
-const PRICING_PLAN = {
-  name: "Pro",
-  monthlyPrice: "$39",
-  yearlyPrice: "$390",
-  description: "Everything included — one flat price, no hidden fees.",
-  features: [
-    "Unlimited review requests",
-    "AI review drafts",
-    "Private complaint routing",
-    "QR poster + SMS & email templates",
-    "Analytics and review reminders",
-    "$0 setup fee",
-    "14-day money-back guarantee",
-  ],
-  cta: "Start 14-day free trial",
-} as const;
-
 export function LinearStripeLanding() {
-  const [billing, setBilling] = useState<"monthly" | "yearly">("monthly");
   const [demoStage, setDemoStage] = useState<"qr" | "rating" | "review" | "feedback">("qr");
   const [selectedStars, setSelectedStars] = useState(0);
   const shouldReduceMotion = useReducedMotion();
@@ -163,7 +136,7 @@ export function LinearStripeLanding() {
               </p>
               <div className="mt-10 flex flex-col items-start gap-3 sm:flex-row sm:items-center">
                 <MagneticButton href="/signup" className="px-9 py-4 text-base">
-                  Start Free Trial
+                  Start Free
                 </MagneticButton>
                 <Link
                   href="#demo"
@@ -173,11 +146,11 @@ export function LinearStripeLanding() {
                 </Link>
               </div>
               <div className="mt-12 flex flex-wrap items-center gap-3 rounded-full border border-[#27272A]/70 bg-[#121214]/60 px-4 py-3 backdrop-blur">
-                <span className="text-sm font-medium text-[#FAFAFA]">Trusted by 200+ local businesses</span>
+                <span className="text-sm font-medium text-[#FAFAFA]">Founder-led early access for BC local businesses</span>
                 <span className="h-1 w-1 rounded-full bg-[#27272A]" />
                 <div className="flex items-center gap-2 text-sm text-[#A1A1AA]">
                   <Star className="h-4 w-4 fill-current text-[#3B82F6]" />
-                  <span>4.9/5 average rating</span>
+                  <span>50 free review requests to start</span>
                 </div>
                 <div className="ml-2 flex items-center gap-3 text-sm text-[#A1A1AA]">
                   {BUSINESS_TYPES.map((type) => {
@@ -250,7 +223,7 @@ export function LinearStripeLanding() {
         </div>
       </section>
 
-      <section id="product" className="border-b border-[#27272A]/80 bg-[#121214] py-24">
+      <section id="how-it-works" className="border-b border-[#27272A]/80 bg-[#121214] py-24">
         <div className="mx-auto max-w-7xl px-6 lg:px-8">
           <motion.div
             initial={shouldReduceMotion ? false : { opacity: 0, y: 24 }}
@@ -294,7 +267,7 @@ export function LinearStripeLanding() {
         </div>
       </section>
 
-      <section id="about" className="border-b border-[#27272A]/80 bg-[#0A0A0B] py-24">
+      <section id="features" className="border-b border-[#27272A]/80 bg-[#0A0A0B] py-24">
         <div className="mx-auto grid max-w-7xl gap-12 px-6 lg:grid-cols-[0.95fr_1.05fr] lg:px-8">
           <motion.div
             initial={shouldReduceMotion ? false : { opacity: 0, y: 24 }}
@@ -303,16 +276,16 @@ export function LinearStripeLanding() {
             transition={{ duration: 0.6, ease: "circOut" }}
             className="lg:sticky lg:top-24 lg:h-fit"
           >
-            <p className="text-sm font-semibold uppercase tracking-[0.3em] text-[#3B82F6]">Social proof</p>
+            <p className="text-sm font-semibold uppercase tracking-[0.3em] text-[#3B82F6]">Early access</p>
             <h2 className="mt-4 text-3xl font-semibold tracking-tight text-[#FAFAFA] sm:text-4xl">
-              Local businesses are winning with real reviews.
+              Built carefully with local operators, not fake testimonials.
             </h2>
             <p className="mt-4 text-lg leading-relaxed text-[#A1A1AA]">
-              Customers trust businesses that respond, and shops trust RateLocal because the flow feels natural and easy to manage.
+              RateLocal is founder-led and early. The goal is simple: help BC shops ask for honest reviews without adding another complicated tool.
             </p>
             <div className="mt-8 rounded-3xl border border-[#27272A]/80 bg-[#121214]/70 p-6">
-              <p className="text-4xl font-semibold tracking-tight text-[#FAFAFA]">4.9x</p>
-              <p className="mt-2 text-sm text-[#A1A1AA]">more Google reviews collected on average after launching QR prompts.</p>
+              <p className="text-4xl font-semibold tracking-tight text-[#FAFAFA]">50</p>
+              <p className="mt-2 text-sm text-[#A1A1AA]">free review requests included so you can test the flow before upgrading.</p>
             </div>
             <div className="mt-6 overflow-hidden rounded-full border border-[#27272A]/80 bg-[#121214]/70 px-4 py-3">
               <div className="marquee-track flex w-max items-center gap-8 text-sm font-medium uppercase tracking-[0.25em] text-[#A1A1AA]">
@@ -326,30 +299,25 @@ export function LinearStripeLanding() {
           </motion.div>
 
           <div className="space-y-4">
-            {TESTIMONIALS.map((testimonial, index) => (
+            {EARLY_ACCESS_NOTES.map((note, index) => (
               <motion.div
-                key={testimonial.name}
+                key={note.title}
                 initial={shouldReduceMotion ? false : { opacity: 0, y: 20 }}
                 whileInView={shouldReduceMotion ? { opacity: 1 } : { opacity: 1, y: 0 }}
                 viewport={{ once: true, margin: "-100px" }}
                 transition={{ duration: 0.5, delay: index * 0.08, ease: "circOut" }}
               >
-                <Card className="border border-[#27272A]/80 bg-[#121214]/70 p-8" style={{ transform: testimonial.rotation }}>
+                <Card className="border border-[#27272A]/80 bg-[#121214]/70 p-8" style={{ transform: note.rotation }}>
                   <div className="flex items-center gap-4">
                     <div className="flex h-12 w-12 items-center justify-center rounded-full bg-gradient-to-br from-[#3B82F6] to-[#10B981] text-sm font-semibold text-white">
-                      {testimonial.initials}
+                      {index + 1}
                     </div>
                     <div>
-                      <p className="font-semibold text-[#FAFAFA]">{testimonial.name}</p>
-                      <p className="text-sm text-[#A1A1AA]">{testimonial.business}</p>
+                      <p className="font-semibold text-[#FAFAFA]">{note.title}</p>
+                      <p className="text-sm text-[#A1A1AA]">Early-access program</p>
                     </div>
                   </div>
-                  <p className="mt-6 text-base leading-relaxed text-[#A1A1AA]">“{testimonial.quote}”</p>
-                  <div className="mt-6 flex items-center gap-1 text-[#3B82F6]">
-                    {Array.from({ length: testimonial.rating }).map((_, starIndex) => (
-                      <Star key={starIndex} className="h-4 w-4 fill-current" />
-                    ))}
-                  </div>
+                  <p className="mt-6 text-base leading-relaxed text-[#A1A1AA]">{note.description}</p>
                 </Card>
               </motion.div>
             ))}
@@ -474,39 +442,37 @@ export function LinearStripeLanding() {
           <div className="mx-auto max-w-3xl text-center">
             <p className="text-sm font-semibold uppercase tracking-[0.3em] text-[#3B82F6]">Pricing</p>
             <h2 className="mt-4 text-3xl font-semibold tracking-tight text-[#FAFAFA] sm:text-4xl">Simple, honest pricing.</h2>
-            <p className="mt-4 text-lg leading-relaxed text-[#A1A1AA]">One plan, everything included. No setup fee. 14-day money-back guarantee.</p>
-            <div className="mt-8 flex items-center justify-center gap-4 rounded-full border border-[#27272A]/80 bg-[#121214]/70 px-4 py-3">
-              <span className={`text-sm font-medium ${billing === "monthly" ? "text-[#FAFAFA]" : "text-[#A1A1AA]"}`}>Monthly</span>
-              <Switch checked={billing === "yearly"} onCheckedChange={(value) => setBilling(value ? "yearly" : "monthly")} />
-              <span className={`text-sm font-medium ${billing === "yearly" ? "text-[#FAFAFA]" : "text-[#A1A1AA]"}`}>Yearly</span>
-            </div>
+            <p className="mt-4 text-lg leading-relaxed text-[#A1A1AA]">Start with 50 free review requests. Upgrade to Pro for $39/mo when you are ready for unlimited requests and AI prompts.</p>
           </div>
 
-          <div className="mx-auto mt-12 max-w-md">
-            <motion.div initial={shouldReduceMotion ? false : { opacity: 0, y: 20 }} whileInView={shouldReduceMotion ? { opacity: 1 } : { opacity: 1, y: 0 }} viewport={{ once: true, margin: "-100px" }} transition={{ duration: 0.5, ease: "circOut" }}>
-              <Card className="h-full border border-[#3B82F6]/40 bg-[#3B82F6]/5 shadow-2xl shadow-blue-500/10">
+          <div className="mx-auto mt-12 grid max-w-3xl gap-6 md:grid-cols-2">
+            {MARKETING.pricing.tiers.map((tier, index) => (
+            <motion.div key={tier.key} initial={shouldReduceMotion ? false : { opacity: 0, y: 20 }} whileInView={shouldReduceMotion ? { opacity: 1 } : { opacity: 1, y: 0 }} viewport={{ once: true, margin: "-100px" }} transition={{ duration: 0.5, delay: index * 0.08, ease: "circOut" }}>
+              <Card className={`h-full border ${tier.popular ? "border-[#3B82F6]/40 bg-[#3B82F6]/5 shadow-2xl shadow-blue-500/10" : "border-[#27272A]/80 bg-[#121214]/70"}`}>
                 <div className="flex items-center justify-between">
-                  <h3 className="text-xl font-semibold text-[#FAFAFA]">{PRICING_PLAN.name}</h3>
-                  <Badge variant="default" className="rounded-full bg-[#3B82F6]/10 px-3 py-1 text-[#3B82F6]">Everything included</Badge>
+                  <h3 className="text-xl font-semibold text-[#FAFAFA]">{tier.name}</h3>
+                  {tier.popular ? <Badge variant="default" className="rounded-full bg-[#3B82F6]/10 px-3 py-1 text-[#3B82F6]">Everything included</Badge> : null}
                 </div>
-                <p className="mt-4 text-sm leading-relaxed text-[#A1A1AA]">{PRICING_PLAN.description}</p>
+                <p className="mt-4 text-sm leading-relaxed text-[#A1A1AA]">{tier.description}</p>
                 <div className="mt-6 flex items-end gap-1">
-                  <span className="text-4xl font-semibold tracking-tight text-[#FAFAFA]">{billing === "yearly" ? PRICING_PLAN.yearlyPrice : PRICING_PLAN.monthlyPrice}</span>
-                  <span className="pb-1 text-sm text-[#A1A1AA]">{billing === "yearly" ? "/yr" : "/mo"}</span>
+                  <span className="text-4xl font-semibold tracking-tight text-[#FAFAFA]">${tier.monthly}</span>
+                  {tier.monthly > 0 ? <span className="pb-1 text-sm text-[#A1A1AA]">/mo</span> : null}
                 </div>
                 <ul className="mt-8 space-y-3 text-sm text-[#A1A1AA]">
-                  {PRICING_PLAN.features.map((feature) => (
+                  {tier.features.map((feature) => (
                     <li key={feature} className="flex items-start gap-2">
                       <Check className="mt-0.5 h-4 w-4 shrink-0 text-[#3B82F6]" />
                       <span>{feature}</span>
                     </li>
                   ))}
                 </ul>
-                <Button pill className="button-shimmer mt-8 w-full rounded-full bg-[#3B82F6] px-5 py-3.5 text-sm text-white hover:bg-blue-500">
-                  {PRICING_PLAN.cta}
-                </Button>
+                {"limitNote" in tier && tier.limitNote ? <p className="mt-4 rounded-xl bg-white/5 px-3 py-2 text-xs text-[#A1A1AA]">{tier.limitNote}</p> : null}
+                <Link href="/signup" className={`mt-8 block rounded-full px-5 py-3.5 text-center text-sm font-semibold ${tier.popular ? "button-shimmer bg-[#3B82F6] text-white hover:bg-blue-500" : "border border-[#27272A]/80 text-[#A1A1AA] transition hover:border-[#3B82F6]/30 hover:text-[#FAFAFA]"}`}>
+                  {tier.cta}
+                </Link>
               </Card>
             </motion.div>
+            ))}
           </div>
         </div>
       </section>
@@ -516,7 +482,7 @@ export function LinearStripeLanding() {
           <motion.div initial={shouldReduceMotion ? false : { opacity: 0, y: 20 }} whileInView={shouldReduceMotion ? { opacity: 1 } : { opacity: 1, y: 0 }} viewport={{ once: true, margin: "-100px" }} transition={{ duration: 0.6, ease: "circOut" }}>
             <p className="text-sm font-semibold uppercase tracking-[0.3em] text-[#3B82F6]">Closer</p>
             <h2 className="mt-4 text-3xl font-semibold tracking-tight text-[#FAFAFA] sm:text-4xl">Start collecting reviews today.</h2>
-            <p className="mt-4 text-lg leading-relaxed text-[#A1A1AA]">Join 200+ BC businesses. No credit card required.</p>
+            <p className="mt-4 text-lg leading-relaxed text-[#A1A1AA]">Start with 50 free review requests. No credit card required.</p>
             <div className="mt-8 flex flex-col justify-center gap-3 sm:flex-row">
               <Button pill className="button-shimmer rounded-full bg-[#3B82F6] px-10 py-5 text-lg text-white hover:bg-blue-500">
                 Get Started for Free
@@ -547,7 +513,7 @@ export function LinearStripeLanding() {
           <div>
             <p className="text-sm font-semibold uppercase tracking-[0.25em] text-[#A1A1AA]">Product</p>
             <ul className="mt-4 space-y-3 text-sm text-[#A1A1AA]">
-              <li><Link href="#product" className="transition hover:text-[#FAFAFA]">How it works</Link></li>
+              <li><Link href="#how-it-works" className="transition hover:text-[#FAFAFA]">How it works</Link></li>
               <li><Link href="#demo" className="transition hover:text-[#FAFAFA]">Interactive demo</Link></li>
               <li><Link href="#pricing" className="transition hover:text-[#FAFAFA]">Pricing</Link></li>
             </ul>

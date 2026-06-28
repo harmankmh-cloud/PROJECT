@@ -58,12 +58,11 @@ export default function HomePage() {
         logo: `${siteUrl}/icon`,
       },
       {
-        "@type": "SoftwareApplication",
+        "@type": "WebSite",
         name: BRAND.name,
-        applicationCategory: "BusinessApplication",
-        operatingSystem: "Web",
         url: siteUrl,
-        offers: { "@type": "Offer", price: "79", priceCurrency: "CAD" },
+        description: BRAND.tagline,
+        publisher: { "@type": "Organization", name: BRAND.legalName },
       },
     ],
   };

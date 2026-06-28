@@ -23,10 +23,19 @@ export async function generateMetadata({
   const city = getCityBySlug(slug);
   if (!city) return {};
   return {
-    title: `Get More Google Reviews in ${city.name}, BC — ${BRAND.name}`,
+    title: `Get More Google Reviews in ${city.name}, BC`,
     description: `${BRAND.name} helps ${city.name} businesses collect more 5-star Google reviews using AI prompts. Start free — 50 reviews included, no credit card.`,
-    alternates: { canonical: `/reviews/${city.slug}` },
+    alternates: { canonical: `https://${BRAND.domain}/reviews/${city.slug}` },
     openGraph: {
+      title: `More Google Reviews for ${city.name} Businesses`,
+      description: `Turn happy ${city.name} customers into 5-star Google reviews automatically.`,
+      url: `https://${BRAND.domain}/reviews/${city.slug}`,
+      siteName: BRAND.name,
+      locale: "en_CA",
+      type: "website",
+    },
+    twitter: {
+      card: "summary_large_image",
       title: `More Google Reviews for ${city.name} Businesses`,
       description: `Turn happy ${city.name} customers into 5-star Google reviews automatically.`,
     },

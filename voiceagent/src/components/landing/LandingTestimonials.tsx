@@ -24,10 +24,11 @@ export function LandingTestimonials() {
     <section className="py-20 md:py-24" id="testimonials">
       <div className="marketing-container">
         <h2 className="font-display mb-3 text-center text-3xl text-text">
-          What operators tell us
+          Illustrative product scenarios
         </h2>
         <p className="mx-auto mb-12 max-w-xl text-center text-sm text-muted">
-          Representative feedback from early Canadian adopters — not paid endorsements.
+          Sample quotes showing possible GreetQ workflows — illustrative examples, not real
+          customers or endorsements.
         </p>
         <motion.div
           ref={ref}

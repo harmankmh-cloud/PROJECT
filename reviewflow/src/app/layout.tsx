@@ -53,13 +53,16 @@ export const metadata: Metadata = {
     siteName: BRAND.name,
     locale: "en_CA",
     type: "website",
+    images: [{ url: "/og-image.svg", width: 1200, height: 630, alt: `${BRAND.name} preview` }],
   },
   twitter: {
     card: "summary_large_image",
     title: `${BRAND.name} — ${BRAND.tagline}`,
     description:
       "QR-powered review collection for local businesses. Route unhappy customers privately, help happy ones post on Google in seconds.",
+    images: ["/og-image.svg"],
   },
+  // TODO: set GOOGLE_SITE_VERIFICATION to the Google Search Console token for ratelocal.ca.
   ...(process.env.GOOGLE_SITE_VERIFICATION
     ? { verification: { google: process.env.GOOGLE_SITE_VERIFICATION } }
     : {}),

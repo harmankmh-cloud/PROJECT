@@ -1,0 +1,10 @@
+<svg width="1200" height="630" viewBox="0 0 1200 630" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <rect width="1200" height="630" fill="#0A0A0B"/>
+  <circle cx="930" cy="120" r="260" fill="#3B82F6" opacity="0.18"/>
+  <circle cx="220" cy="520" r="240" fill="#F5C542" opacity="0.16"/>
+  <rect x="84" y="84" width="1032" height="462" rx="36" fill="#121214" stroke="#27272A" stroke-width="2"/>
+  <text x="140" y="205" fill="#F5C542" font-family="Arial, sans-serif" font-size="34" font-weight="700" letter-spacing="4">RATELOCAL</text>
+  <text x="140" y="305" fill="#FAFAFA" font-family="Arial, sans-serif" font-size="72" font-weight="800">Turn visits into</text>
+  <text x="140" y="390" fill="#FAFAFA" font-family="Arial, sans-serif" font-size="72" font-weight="800">Google reviews</text>
+  <text x="140" y="470" fill="#A1A1AA" font-family="Arial, sans-serif" font-size="32">QR prompts, AI drafts, and private feedback for BC businesses.</text>
+</svg>

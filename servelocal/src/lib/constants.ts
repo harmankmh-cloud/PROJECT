@@ -105,7 +105,7 @@ export const LISTING_PLANS = [
     name: "Featured Pro",
     priceLabel: "$29/mo",
     strikePrice: "$49/mo",
-    setupLabel: "Founding Pro",
+    setupLabel: "Featured Pro",
     monthlyLabel: "Founding rate · cancel anytime",
     highlight: true,
     features: [

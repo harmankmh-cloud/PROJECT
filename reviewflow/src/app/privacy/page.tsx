@@ -7,9 +7,9 @@ import { COMPANY } from "@/lib/marketing-content";
 export const metadata: Metadata = {
   title: "Privacy Policy",
   description: `How ${BRAND.name} collects, uses, and protects your personal information in British Columbia.`,
-  alternates: { canonical: "/privacy" },
+  alternates: { canonical: `https://${BRAND.domain}/privacy` },
   openGraph: {
-    title: `Privacy Policy · ${BRAND.name}`,
+    title: "Privacy Policy",
     description: `How ${BRAND.name} collects, uses, and protects your personal information in British Columbia.`,
     url: `https://${BRAND.domain}/privacy`,
     siteName: BRAND.name,
@@ -18,7 +18,7 @@ export const metadata: Metadata = {
   },
   twitter: {
     card: "summary_large_image",
-    title: `Privacy Policy · ${BRAND.name}`,
+    title: "Privacy Policy",
     description: `How ${BRAND.name} collects, uses, and protects your personal information in British Columbia.`,
   },
 };

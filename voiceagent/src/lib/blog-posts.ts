@@ -65,16 +65,16 @@ export const BLOG_POSTS = [
     ],
   },
   {
-    slug: "north-shore-hvac-case-study",
-    title: "Case Study: North Shore HVAC After-Hours Leads",
+    slug: "sample-hvac-after-hours-guide",
+    title: "Illustrative Guide: HVAC After-Hours Leads",
     excerpt:
-      "How an HVAC owner captured emergency calls without a night dispatcher.",
+      "How an HVAC company could capture emergency calls without a night dispatcher.",
     date: "2026-06-09",
     readMinutes: 5,
     body: [
-      "North Shore HVAC missed after-hours calls when techs were on site. Voicemail meant callers moved to the next Google result.",
-      "They deployed GreetQ with a knowledge doc for service areas, emergency fees, and booking windows. Telnyx inbound pointed to GreetQ in one afternoon.",
-      "Within the first week, transcripts showed intent breakdown: 40% scheduling, 35% pricing FAQ, 25% urgent dispatch. SMS summaries let the owner callback hot leads within minutes.",
+      "This illustrative HVAC workflow starts with after-hours calls arriving while technicians are on site. Voicemail can mean callers move to the next Google result.",
+      "The company could configure GreetQ with a knowledge doc for service areas, emergency fees, and booking windows, then route inbound calls through a connected carrier.",
+      "The dashboard can show sample intent breakdowns and SMS summaries so the owner can prioritize urgent leads quickly.",
     ],
   },
 ] as const;

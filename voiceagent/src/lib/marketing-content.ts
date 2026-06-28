@@ -108,8 +108,8 @@ export const USE_CASES = [
   {
     industry: "Salons & spas",
     headline: "Book appointments while stylists stay with clients",
-    outcome: "Fewer missed evening bookings — our salon customers report smoother after-hours scheduling.",
-    outcomeAttribution: "Elena R., Salon Manager, Glow Studio Collective",
+    outcome: "Capture evening booking requests with an AI receptionist before staff follow up.",
+    outcomeAttribution: "Illustrative salon workflow — not a real customer",
     points: ["Answer after-hours booking requests", "Capture caller intent and preferred times"],
     image: SALON_IMAGE,
     variant: "salon" as const,
@@ -155,36 +155,35 @@ export const INTEGRATIONS = [
 export const TESTIMONIALS = [
   {
     quote:
-      "We stopped missing evening calls. The agent books consults and only transfers when it needs a human.",
-    name: "Sarah M.",
-    role: "Operations Director",
-    company: "Pacific Dental Group",
+      "A dental clinic could use GreetQ to answer evening calls, collect intake details, and route only complex issues to staff.",
+    name: "Sample dental operator",
+    role: "Illustrative example",
+    company: "Not a real customer",
     industry: "Dental",
-    location: "Abbotsford, BC",
-    caseStudyHref: "/dental",
+    location: "Canada",
   },
   {
     quote:
-      "Setup took an afternoon — sandbox, knowledge docs, then we pointed our Telnyx number. Analytics showed intent trends within a week.",
-    name: "James K.",
-    role: "Owner",
-    company: "North Shore HVAC",
+      "A home-services team could test a sandbox call, add knowledge-base answers, and review sample intent trends before launch.",
+    name: "Sample HVAC operator",
+    role: "Illustrative example",
+    company: "Not a real customer",
     industry: "Home services",
   },
   {
     quote:
-      "Our front desk used to juggle phones during color services. Now the AI handles booking and we step in for complex consults.",
-    name: "Elena R.",
-    role: "Salon Manager",
-    company: "Glow Studio Collective",
+      "A salon could let GreetQ answer booking questions while staff stay focused on appointments and step in for complex consults.",
+    name: "Sample salon operator",
+    role: "Illustrative example",
+    company: "Not a real customer",
     industry: "Salon",
   },
   {
     quote:
-      "HubSpot logging after every call means our team follows up with context. The audit trail helped us pass a client security review.",
-    name: "David L.",
-    role: "Managing Partner",
-    company: "Harbour Legal Services",
+      "A professional-services firm could send call summaries to its CRM so follow-up starts with context and a clear audit trail.",
+    name: "Sample professional-services operator",
+    role: "Illustrative example",
+    company: "Not a real customer",
     industry: "Professional services",
   },
 ] as const;

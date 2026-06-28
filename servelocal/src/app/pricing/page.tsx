@@ -7,9 +7,9 @@ import { pageMetadata } from "@/lib/seo";
 import { FOUNDING_PRO } from "@/lib/tradie-program";
 
 export const metadata: Metadata = pageMetadata({
-  title: "Pro Plans — Founding Pro from $29/mo",
+  title: "Pro Plans — Featured Pro from $29/mo",
   description:
-    "ServeLocal plans for BC trades. Free listing, Founding Featured $29/mo with job alerts and top placement. No per-lead fees.",
+    "ServeLocal plans for BC trades. Free listing, Featured Pro $29/mo with job alerts and top placement. No per-lead fees.",
   path: "/pricing",
 });
 
@@ -44,7 +44,7 @@ export default function PricingPage() {
             <li>✓ No per-lead fees for customers</li>
           </ul>
           <p className="mt-6 text-xs text-muted">
-            Founding Featured rate ({FOUNDING_PRO.featuredPrice}) for early listings — regular price {FOUNDING_PRO.featuredRegular} when founding spots fill. Pay via card after approval (Stripe). Cancel anytime.
+            Featured Pro founding rate ({FOUNDING_PRO.featuredPrice}) for early listings — regular price {FOUNDING_PRO.featuredRegular} when founding spots fill. Pay via card after approval (Stripe). Cancel anytime.
           </p>
         </div>
       </div>

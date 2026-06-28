@@ -5,10 +5,7 @@ import { Check, X } from "lucide-react";
 import { FadeInSection } from "@/components/ui/FadeInSection";
 import { GlassCard } from "@/components/ui/GlassCard";
 import { MARKETING } from "@/content/copy";
-import {
-  RATELOCAL_CHECKOUT_NOTE,
-  RATELOCAL_COMPETITORS,
-} from "@/lib/pricing-display";
+import { RATELOCAL_CHECKOUT_NOTE } from "@/lib/pricing-display";
 
 export function PricingSection() {
   return (
@@ -20,9 +17,7 @@ export function PricingSection() {
             Simple, honest pricing
           </h2>
           <p className="mx-auto mt-3 max-w-xl text-sm text-muted">
-            Start with 50 free reviews. When you&apos;re ready to grow, upgrade to Pro for just $39/mo — less than
-            half of NiceJob (${RATELOCAL_COMPETITORS.niceJob}/mo) and a fraction of Podium
-            (${RATELOCAL_COMPETITORS.podium}+/mo).
+            Start with 50 free review requests. When you&apos;re ready to grow, upgrade to Pro for $39/mo with no setup fee.
           </p>
         </FadeInSection>
         <div className="mx-auto grid max-w-3xl gap-6 md:grid-cols-2">

@@ -127,8 +127,8 @@ export function DashboardShowcase() {
             See every call. Skip every recording.
           </h2>
           <p className="mx-auto mt-4 max-w-2xl text-muted">
-            This is the actual product — call volume, intents, sentiment, and quality scores in one
-            view.
+            Illustrative product preview — sample call volume, intents, sentiment, and quality
+            scores in one view.
           </p>
         </div>
 

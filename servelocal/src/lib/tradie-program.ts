@@ -1,12 +1,12 @@
 /** Launch program — scarcity + value props for tradie signup. */
 
 export const FOUNDING_PRO = {
-  label: "Founding Pro",
+  label: "Featured Pro",
   spotsPerCity: 5,
   featuredPrice: "$29/mo",
   featuredRegular: "$49/mo",
   duration: "first 6 months",
-  badge: "Founding Pro",
+  badge: "Featured Pro",
 } as const;
 
 export const TRADIE_VALUE_PROPS = [
@@ -35,7 +35,7 @@ export const TRADIE_VALUE_PROPS = [
 export const TRADIE_COMPARISON = [
   { name: "Thumbtack / Angi", cost: "$25–75 per lead", note: "Shared with 4–5 pros — pay even if you lose the job" },
   { name: "HomeStars Pro", cost: "$299+/mo + lead fees", note: "National platform, heavy sales calls" },
-  { name: "ServeLocal Founding Pro", cost: "$29/mo flat", note: "Your listing, your phone, job alerts included" },
+  { name: "ServeLocal Featured Pro", cost: "$29/mo flat", note: "Your listing, your phone, job alerts included" },
 ] as const;
 
 export const HOW_OTHERS_START = [

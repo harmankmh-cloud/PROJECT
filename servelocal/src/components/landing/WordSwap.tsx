@@ -16,7 +16,7 @@ export function WordSwap() {
   }, []);
 
   return (
-    <span className="relative inline-flex min-w-[10ch] justify-center text-primary lg:justify-start">
+    <span className="relative inline-flex min-w-[10ch] justify-center text-primary lg:justify-start" aria-live="polite">
       <AnimatePresence mode="wait">
         <motion.span
           key={WORDS[index]}
@@ -24,12 +24,11 @@ export function WordSwap() {
           animate={{ opacity: 1, y: 0 }}
           exit={{ opacity: 0, y: -20 }}
           transition={{ duration: 0.35, ease: [0.22, 1, 0.36, 1] }}
-          className="absolute left-0 bg-gradient-to-r from-amber-500 to-amber-400 bg-clip-text text-transparent"
+          className="bg-gradient-to-r from-amber-500 to-amber-400 bg-clip-text text-transparent"
         >
           {WORDS[index]}
         </motion.span>
       </AnimatePresence>
-      <span className="invisible">{WORDS[index]}</span>
     </span>
   );
 }

@@ -14,12 +14,12 @@ export const metadata = marketingMetadata({
 
 const CASE_STUDY_CARDS = [
   {
-    slug: "north-shore-hvac-case-study",
+    slug: "sample-hvac-after-hours-guide",
     industry: "HVAC",
     metric: "25%",
     metricLabel: "of calls were urgent dispatch — caught instead of lost to voicemail",
     insight:
-      "Within the first week, transcripts showed the intent breakdown: 40% scheduling, 35% pricing FAQ, 25% urgent dispatch. SMS summaries let the owner call hot leads back within minutes.",
+      "Illustrative dashboard data can show intent breakdowns such as scheduling, pricing FAQs, and urgent dispatch so owners can prioritize hot leads.",
   },
   {
     slug: "ai-receptionist-bc-dental-clinics",

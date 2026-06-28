@@ -11,10 +11,10 @@ import { MarketingPageShell } from "@/components/layout/MarketingPageShell";
 import { EmptyDirectoryState } from "@/components/search/EmptyDirectoryState";
 import { SERVE_LOCAL } from "@/lib/constants";
 import { getApprovedProviders, getServiceCategories } from "@/lib/data";
-import { pageMetadata } from "@/lib/seo";
+import { canonicalBaseUrl, jsonLdScript, pageMetadata } from "@/lib/seo";
 
 export const metadata: Metadata = pageMetadata({
-  title: "ServeLocal — Find Trusted Local Pros in Minutes",
+  title: "Find Trusted Local Pros in Minutes",
   description:
     "ServeLocal connects Canadian homeowners with vetted, reviewed contractors — fast booking, upfront pricing, zero stress. Serving Canada, starting in BC.",
   path: "/",
@@ -30,8 +30,14 @@ export default async function HomePage() {
   for (const p of featured) {
     proCounts[p.category_slug] = (proCounts[p.category_slug] ?? 0) + 1;
   }
+  const platformStats = {
+    providers: featured.length,
+    verified: featured.filter((p) => p.verified).length,
+    reviews: featured.reduce((sum, p) => sum + (p.review_count ?? 0), 0),
+    cities: new Set(featured.map((p) => p.city_slug)).size,
+  };
 
-  const siteUrl = process.env.NEXT_PUBLIC_APP_URL?.replace(/\/$/, "") || "https://www.servelocal.ca";
+  const siteUrl = canonicalBaseUrl;
   const jsonLd = {
     "@context": "https://schema.org",
     "@graph": [
@@ -70,11 +76,11 @@ export default async function HomePage() {
           </div>
         </section>
       )}
-      <StatsBarSection />
+      <StatsBarSection platformStats={platformStats} />
       <CategorySpotlight />
       <TestimonialsCarousel />
       <ForProsSection />
-      <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }} />
+      <script type="application/ld+json" dangerouslySetInnerHTML={jsonLdScript(jsonLd)} />
     </MarketingPageShell>
   );
 }
