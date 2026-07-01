@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import { BrandPromiseSection } from "@/components/landing/BrandPromiseSection";
 import { CategoryGrid } from "@/components/landing/CategoryGrid";
 import { CategorySpotlight } from "@/components/landing/CategorySpotlight";
 import { FeaturedProsCarousel } from "@/components/landing/FeaturedProsCarousel";
@@ -14,9 +15,9 @@ import { getApprovedProviders, getServiceCategories } from "@/lib/data";
 import { canonicalBaseUrl, jsonLdScript, pageMetadata } from "@/lib/seo";
 
 export const metadata: Metadata = pageMetadata({
-  title: "Find Trusted Local Pros in Minutes",
+  title: "Hire trusted local pros in BC | ServeLocal",
   description:
-    "ServeLocal connects Canadian homeowners with vetted, reviewed contractors — fast booking, upfront pricing, zero stress. Serving Canada, starting in BC.",
+    "ServeLocal helps BC homeowners quickly find trusted local contractors with clear profiles, real reviews, and a simpler way to get jobs done.",
   path: "/",
 });
 
@@ -47,7 +48,7 @@ export default async function HomePage() {
         url: siteUrl,
         logo: `${siteUrl}/icon`,
         areaServed: "Canada",
-        description: "Canada's trusted home services marketplace",
+        description: "Homeowner-first local services marketplace built in BC.",
       },
       {
         "@type": "WebSite",
@@ -65,6 +66,7 @@ export default async function HomePage() {
   return (
     <MarketingPageShell>
       <HeroSection />
+      <BrandPromiseSection />
       <CategoryGrid categories={categories} proCounts={proCounts} />
       <HowItWorks />
       {featured.length > 0 ? (

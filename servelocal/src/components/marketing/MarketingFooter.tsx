@@ -53,10 +53,11 @@ export function MarketingFooter() {
             <span className="text-primary">.</span>
           </p>
           <p className="mt-2 max-w-sm text-sm text-muted">
-            Canada&apos;s trusted home services marketplace. Vetted pros, upfront pricing, zero stress.
+            Homeowner-first marketplace for local trades in BC. Clearer profiles, real feedback,
+            and a faster way to hire.
           </p>
           <p className="mt-3 inline-flex items-center gap-1.5 rounded-full border border-border bg-background px-3 py-1 text-xs font-medium text-foreground">
-            🍁 Proudly Canadian
+            🍁 Built in BC, serving Canada
           </p>
           {SOCIAL.length > 0 && (
             <div className="mt-4 flex gap-3">

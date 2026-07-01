@@ -8,20 +8,20 @@ import { StaggerGrid, StaggerItem } from "@/components/motion/StaggerGrid";
 const STEPS = [
   {
     step: "1",
-    title: "Describe Your Project",
-    body: "Tell us what you need — service type, location, and timeline. Takes under 2 minutes.",
+    title: "Describe the job",
+    body: "Share the trade, location, and timeline so local pros can respond with the right context.",
     icon: ClipboardList,
   },
   {
     step: "2",
-    title: "Get Matched with Local Pros",
-    body: "We send your request to up to 5 verified pros in your area. Compare quotes side by side.",
+    title: "Compare trusted local options",
+    body: "Browse reviewed profiles, check service areas, and shortlist pros that fit your project.",
     icon: Users,
   },
   {
     step: "3",
-    title: "Book, Pay, Done",
-    body: "Pick your pro, book a time, and pay securely. Payment held until the job is complete.",
+    title: "Hire with confidence",
+    body: "Contact your chosen pro, confirm timing, and move forward with a clear plan.",
     icon: CheckCircle2,
   },
 ] as const;
@@ -33,7 +33,7 @@ export function HowItWorks() {
         <FadeUp className="text-center">
           <p className="font-label text-primary">How it works</p>
           <h2 className="font-display mt-2 text-3xl font-black text-foreground sm:text-4xl">
-            Three steps to done
+            Three steps from search to solved
           </h2>
         </FadeUp>
 

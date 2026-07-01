@@ -17,8 +17,8 @@ export function ForProsSection() {
                 Need something fixed?
               </h3>
               <p className="mt-2 flex-1 text-sm leading-relaxed text-muted">
-                Post your project free and get matched with verified local pros. Compare quotes,
-                read reviews, and book with confidence.
+                Post your project and get connected with local pros that match your needs. Compare
+                profiles, read homeowner feedback, and choose confidently.
               </p>
               <ShimmerButton href="/request" className="mt-6">
                 Post a Job Free
@@ -36,8 +36,8 @@ export function ForProsSection() {
                 Are you a contractor?
               </h3>
               <p className="mt-2 flex-1 text-sm leading-relaxed text-muted">
-                Get leads in your area, set your own rates, and get paid fast — flat $29/mo, no
-                per-lead fees.
+                Grow your business with homeowner leads in your service area, clearer profile
+                visibility, and straightforward monthly plans.
               </p>
               <Link
                 href="/join"
