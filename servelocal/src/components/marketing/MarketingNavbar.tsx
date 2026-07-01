@@ -1,6 +1,7 @@
 "use client";
 
 import Link from "next/link";
+import { usePathname } from "next/navigation";
 import { useEffect, useState } from "react";
 import { Menu, X } from "lucide-react";
 import { ThemeToggle } from "@/components/ui/ThemeToggle";
@@ -16,8 +17,10 @@ const NAV_LINKS = [
 ] as const;
 
 export function MarketingNavbar() {
+  const pathname = usePathname();
   const [scrolled, setScrolled] = useState(false);
   const [mobileOpen, setMobileOpen] = useState(false);
+  const heroMode = pathname === "/" && !scrolled;
 
   useEffect(() => {
     const onScroll = () => setScrolled(window.scrollY > 12);
@@ -30,18 +33,25 @@ export function MarketingNavbar() {
     <header
       className={cn(
         "sticky top-0 z-50 border-b transition duration-300",
-        scrolled
+        scrolled || pathname !== "/"
           ? "border-border bg-background/92 backdrop-blur-xl shadow-sm"
-          : "border-transparent bg-transparent"
+          : "border-white/15 bg-transparent"
       )}
     >
       <div className="mx-auto flex max-w-7xl items-center justify-between gap-4 px-4 py-4 sm:px-8">
         <Link href="/" className="flex items-center gap-2">
-          <span className="font-display text-xl font-black tracking-tight text-foreground">
+          <span className={cn("font-display text-xl font-black tracking-tight", heroMode ? "text-white" : "text-foreground")}>
             ServeLocal
             <span className="text-primary">.</span>
           </span>
-          <span className="hidden rounded-full border border-border bg-surface px-2 py-0.5 text-xs text-muted sm:inline">
+          <span
+            className={cn(
+              "hidden rounded-full px-2 py-0.5 text-xs sm:inline",
+              heroMode
+                ? "border border-white/20 bg-white/10 text-slate-100"
+                : "border border-border bg-surface text-muted"
+            )}
+          >
             🍁 BC first
           </span>
         </Link>
@@ -51,7 +61,10 @@ export function MarketingNavbar() {
             <Link
               key={link.href}
               href={link.href}
-              className="text-sm font-medium text-muted transition hover:text-foreground"
+              className={cn(
+                "text-sm font-medium transition",
+                heroMode ? "text-slate-100 hover:text-white" : "text-muted hover:text-foreground"
+              )}
             >
               {link.label}
             </Link>
@@ -62,7 +75,12 @@ export function MarketingNavbar() {
           <ThemeToggle className="hidden sm:inline-flex" />
           <Link
             href="/join"
-            className="hidden items-center justify-center rounded-full border border-border px-4 py-2 text-sm font-semibold text-foreground transition hover:border-amber-400/50 hover:bg-surface lg:inline-flex"
+            className={cn(
+              "hidden items-center justify-center rounded-full px-4 py-2 text-sm font-semibold transition lg:inline-flex",
+              heroMode
+                ? "border border-white/25 bg-white/10 text-white hover:border-white/40 hover:bg-white/20"
+                : "border border-border text-foreground hover:border-amber-400/50 hover:bg-surface"
+            )}
           >
             Join as a Pro
           </Link>
@@ -71,14 +89,22 @@ export function MarketingNavbar() {
           </ShimmerButton>
           <Link
             href="/login"
-            className="hidden items-center justify-center rounded-full border border-border px-4 py-2 text-sm font-semibold text-foreground transition hover:border-amber-400/50 hover:bg-surface sm:inline-flex"
+            className={cn(
+              "hidden items-center justify-center rounded-full px-4 py-2 text-sm font-semibold transition sm:inline-flex",
+              heroMode
+                ? "border border-white/25 bg-white/10 text-white hover:border-white/40 hover:bg-white/20"
+                : "border border-border text-foreground hover:border-amber-400/50 hover:bg-surface"
+            )}
           >
             Sign In
           </Link>
           <button
             type="button"
             onClick={() => setMobileOpen(!mobileOpen)}
-            className="inline-flex h-9 w-9 items-center justify-center rounded-full border border-border text-foreground md:hidden"
+            className={cn(
+              "inline-flex h-9 w-9 items-center justify-center rounded-full border md:hidden",
+              heroMode ? "border-white/30 text-white" : "border-border text-foreground"
+            )}
             aria-label={mobileOpen ? "Close menu" : "Open menu"}
           >
             {mobileOpen ? <X className="h-5 w-5" /> : <Menu className="h-5 w-5" />}

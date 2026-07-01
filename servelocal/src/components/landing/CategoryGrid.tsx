@@ -53,7 +53,7 @@ export function CategoryGrid({ categories, proCounts = {}, defaultCity = "surrey
   });
 
   return (
-    <section className="px-4 py-16 sm:px-8">
+    <section className="bg-surface/70 px-4 py-16 sm:px-8">
       <div className="mx-auto max-w-7xl">
         <FadeUp>
           <p className="font-label text-primary">Popular services in BC</p>
@@ -70,16 +70,18 @@ export function CategoryGrid({ categories, proCounts = {}, defaultCity = "surrey
               <StaggerItem key={cat.slug}>
                 <Link
                   href={`/services/${cat.slug}?city=${defaultCity}`}
-                  className={cn(
-                    "card-glow group flex flex-col items-center gap-3 rounded-[14px] border border-border bg-surface p-6 text-center shadow-sm transition duration-300 hover:-translate-y-1"
-                  )}
+                  className={cn("card-glow group relative overflow-hidden rounded-[14px] border border-border bg-background p-6 text-center shadow-sm transition duration-300 hover:-translate-y-1 hover:border-amber-400/40")}
                 >
-                  <span className="flex h-12 w-12 items-center justify-center rounded-xl bg-amber-400/15 text-primary transition group-hover:bg-amber-400/25 group-hover:shadow-[0_0_20px_-4px_rgba(245,158,11,0.4)]">
+                  <div className="absolute inset-x-0 top-0 h-1 bg-gradient-to-r from-amber-300/70 via-amber-400/60 to-sky-300/70 opacity-0 transition group-hover:opacity-100" />
+                  <span className="mx-auto flex h-12 w-12 items-center justify-center rounded-xl bg-amber-400/15 text-primary transition group-hover:bg-amber-400/25 group-hover:shadow-[0_0_24px_-4px_rgba(245,158,11,0.45)]">
                     <Icon className="h-6 w-6" />
                   </span>
-                  <span className="font-semibold text-foreground">{cat.name}</span>
-                  <span className="font-label text-muted">
+                  <span className="mt-3 block font-semibold text-foreground">{cat.name}</span>
+                  <span className="mt-1 block font-label text-muted">
                     {count > 0 ? `${count} pros near you` : "Find pros near you"}
+                  </span>
+                  <span className="mt-4 inline-flex items-center text-xs font-semibold text-primary transition group-hover:gap-1">
+                    Browse {cat.name.toLowerCase()} &rarr;
                   </span>
                 </Link>
               </StaggerItem>

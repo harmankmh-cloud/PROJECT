@@ -1,5 +1,6 @@
 import { BadgeCheck, Shield, Star } from "lucide-react";
 import { FadeUp } from "@/components/motion/FadeUp";
+import { cn } from "@/lib/utils";
 
 const BADGES = [
   { icon: BadgeCheck, label: "Profile details reviewed" },
@@ -7,17 +8,22 @@ const BADGES = [
   { icon: Star, label: "Real homeowner feedback" },
 ] as const;
 
-export function TrustBadges() {
+export function TrustBadges({ dark = false }: { dark?: boolean }) {
   return (
     <FadeUp className="flex flex-wrap items-center justify-center gap-4 sm:gap-6">
       {BADGES.map(({ icon: Icon, label }) => (
         <div
           key={label}
-          className="inline-flex items-center gap-2 rounded-full border border-border bg-surface px-4 py-2 text-sm font-medium text-foreground shadow-sm"
+          className={cn(
+            "inline-flex items-center gap-2 rounded-full px-4 py-2 text-sm font-medium shadow-sm",
+            dark
+              ? "border border-white/20 bg-white/10 text-slate-100"
+              : "border border-border bg-surface text-foreground"
+          )}
         >
-          <Icon className="h-4 w-4 text-primary" />
+          <Icon className={cn("h-4 w-4", dark ? "text-amber-300" : "text-primary")} />
           {label}
-          <span className="text-success">✓</span>
+          <span className={dark ? "text-emerald-300" : "text-success"}>✓</span>
         </div>
       ))}
     </FadeUp>
