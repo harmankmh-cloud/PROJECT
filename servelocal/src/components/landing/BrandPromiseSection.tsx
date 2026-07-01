@@ -41,33 +41,33 @@ const PILLARS = [
 
 export function BrandPromiseSection() {
   return (
-    <section className="border-y border-border bg-gradient-to-br from-slate-950 via-slate-900 to-slate-800 px-4 py-16 sm:px-8">
+    <section className="px-4 py-16 sm:px-8 sm:py-20">
       <div className="mx-auto max-w-7xl">
         <FadeUp className="text-center">
-          <p className="font-label text-amber-200">The ServeLocal standard</p>
-          <h2 className="font-display mt-2 text-3xl font-black text-white sm:text-4xl">
-            A brand built on homeowner trust
+          <p className="sl-eyebrow">The ServeLocal standard</p>
+          <h2 className="font-display mt-4 text-3xl font-black tracking-tight text-white sm:text-4xl lg:text-5xl">
+            A brand built on <span className="sl-gradient-text">homeowner trust</span>
           </h2>
-          <p className="mx-auto mt-3 max-w-2xl text-sm leading-relaxed text-slate-300 sm:text-base">
+          <p className="mx-auto mt-4 max-w-2xl text-sm leading-relaxed text-slate-400 sm:text-base">
             Every surface is designed for confidence: clearer listings, faster matching, and a
             direct path from search to booked work.
           </p>
         </FadeUp>
 
-        <StaggerGrid className="mt-10 grid gap-4 md:grid-cols-2">
+        <StaggerGrid className="mt-12 grid gap-4 md:grid-cols-2">
           {PILLARS.map(({ icon: Icon, title, body, href, cta }) => (
             <StaggerItem key={title}>
-              <div className="card-glow flex h-full flex-col rounded-[14px] border border-white/15 bg-white/10 p-6 shadow-[0_12px_40px_-20px_rgba(15,23,42,0.9)] backdrop-blur">
-                <span className="inline-flex h-11 w-11 items-center justify-center rounded-xl bg-amber-300/20 text-amber-200">
+              <div className="sl-card sl-card-hover flex h-full flex-col p-6">
+                <span className="sl-icon-tile h-11 w-11">
                   <Icon className="h-5 w-5" />
                 </span>
                 <h3 className="font-display mt-4 text-xl font-bold text-white">{title}</h3>
-                <p className="mt-2 flex-1 text-sm leading-relaxed text-slate-300">{body}</p>
+                <p className="mt-2 flex-1 text-sm leading-relaxed text-slate-400">{body}</p>
                 <Link
                   href={href}
-                  className="mt-5 inline-flex items-center text-sm font-semibold text-amber-200 transition hover:text-amber-100"
+                  className="mt-5 inline-flex items-center gap-1 text-sm font-semibold text-violet-300 transition hover:gap-2 hover:text-violet-200"
                 >
-                  {cta} →
+                  {cta} &rarr;
                 </Link>
               </div>
             </StaggerItem>

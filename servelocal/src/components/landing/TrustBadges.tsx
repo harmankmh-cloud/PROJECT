@@ -21,7 +21,7 @@ export function TrustBadges({ dark = false }: { dark?: boolean }) {
               : "border border-border bg-surface text-foreground"
           )}
         >
-          <Icon className={cn("h-4 w-4", dark ? "text-amber-300" : "text-primary")} />
+          <Icon className={cn("h-4 w-4", dark ? "text-violet-300" : "text-primary")} />
           {label}
           <span className={dark ? "text-emerald-300" : "text-success"}>✓</span>
         </div>

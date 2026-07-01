@@ -64,7 +64,7 @@ export default async function HomePage() {
   };
 
   return (
-    <MarketingPageShell>
+    <MarketingPageShell tone="dark">
       <HeroSection />
       <BrandPromiseSection />
       <CategoryGrid categories={categories} proCounts={proCounts} />
@@ -72,7 +72,7 @@ export default async function HomePage() {
       {featured.length > 0 ? (
         <FeaturedProsCarousel providers={featured} categories={categories} />
       ) : (
-        <section className="border-t border-border px-4 py-16 sm:px-8">
+        <section className="border-t border-white/10 px-4 py-16 sm:px-8">
           <div className="mx-auto max-w-3xl">
             <EmptyDirectoryState citySlug="abbotsford" />
           </div>

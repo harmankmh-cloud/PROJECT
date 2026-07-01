@@ -380,6 +380,58 @@ select {
       linear-gradient(rgba(255, 255, 255, 0.04) 1px, transparent 1px),
       linear-gradient(90deg, rgba(255, 255, 255, 0.04) 1px, transparent 1px);
   }
+
+  /* ServeLocal marketing theme — Sentry-inspired dark violet system.
+     Scoped to homepage (opt-in via tone="dark"); does not touch global tokens. */
+  .sl-dark {
+    background:
+      radial-gradient(78% 55% at 12% -6%, rgba(124, 92, 255, 0.34), transparent 60%),
+      radial-gradient(60% 48% at 92% 4%, rgba(255, 74, 168, 0.20), transparent 58%),
+      radial-gradient(55% 42% at 68% 108%, rgba(255, 122, 59, 0.16), transparent 55%),
+      linear-gradient(180deg, #0e0819 0%, #150c26 48%, #0e0819 100%);
+    color: #f4f2fb;
+  }
+
+  .sl-grid-overlay {
+    background-image:
+      linear-gradient(rgba(255, 255, 255, 0.05) 1px, transparent 1px),
+      linear-gradient(90deg, rgba(255, 255, 255, 0.05) 1px, transparent 1px);
+    background-size: 46px 46px;
+    -webkit-mask-image: radial-gradient(ellipse 80% 60% at 50% 0%, #000 30%, transparent 75%);
+    mask-image: radial-gradient(ellipse 80% 60% at 50% 0%, #000 30%, transparent 75%);
+  }
+
+  .sl-eyebrow {
+    @apply inline-flex items-center gap-2 rounded-full border border-white/15 bg-white/[0.06] px-3 py-1.5 text-xs font-semibold tracking-wide text-violet-200 backdrop-blur;
+  }
+
+  .sl-chip {
+    @apply inline-flex items-center gap-1.5 rounded-full border border-white/12 bg-white/[0.05] px-3 py-1 text-xs font-medium text-slate-200;
+  }
+
+  .sl-card {
+    @apply rounded-2xl border border-white/10 bg-white/[0.035] shadow-[0_20px_60px_-30px_rgba(10,6,20,0.9)] backdrop-blur transition duration-300;
+  }
+
+  .sl-card-hover {
+    @apply hover:-translate-y-1 hover:border-violet-400/40 hover:bg-white/[0.06] hover:shadow-[0_30px_80px_-30px_rgba(124,92,255,0.5)];
+  }
+
+  .sl-btn-primary {
+    @apply relative inline-flex items-center justify-center gap-2 rounded-full bg-[#7c5cff] px-6 py-3 text-sm font-semibold text-white shadow-[0_14px_44px_-12px_rgba(124,92,255,0.85)] transition duration-200 hover:-translate-y-0.5 hover:bg-[#8f72ff] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-violet-300 focus-visible:ring-offset-2 focus-visible:ring-offset-[#0e0819];
+  }
+
+  .sl-btn-ghost {
+    @apply inline-flex items-center justify-center gap-2 rounded-full border border-white/20 bg-white/[0.05] px-6 py-3 text-sm font-semibold text-white backdrop-blur transition duration-200 hover:-translate-y-0.5 hover:border-white/40 hover:bg-white/10;
+  }
+
+  .sl-gradient-text {
+    @apply bg-gradient-to-r from-[#b6a2ff] via-[#ff8fd0] to-[#ffb27a] bg-clip-text text-transparent;
+  }
+
+  .sl-icon-tile {
+    @apply inline-flex items-center justify-center rounded-xl border border-white/12 bg-gradient-to-br from-violet-500/25 to-fuchsia-500/10 text-violet-200;
+  }
 }
 
 @keyframes shimmer {

@@ -43,20 +43,38 @@ const SOCIAL: { href: string; label: string }[] = [];
 
 const i18nEnabled = process.env.NEXT_PUBLIC_I18N_ENABLED === "true";
 
-export function MarketingFooter() {
+export function MarketingFooter({ tone = "light" }: { tone?: "light" | "dark" }) {
+  const onDark = tone === "dark";
+  const linkCls = onDark
+    ? "text-slate-400 transition hover:text-white"
+    : "text-muted transition hover:text-primary";
+  const headCls = onDark ? "font-label text-slate-300" : "font-label text-muted";
+
   return (
-    <footer className="border-t border-border bg-surface px-4 py-14 sm:px-8">
+    <footer
+      className={
+        onDark
+          ? "border-t border-white/10 bg-transparent px-4 py-14 sm:px-8"
+          : "border-t border-border bg-surface px-4 py-14 sm:px-8"
+      }
+    >
       <div className="mx-auto grid max-w-7xl gap-10 sm:grid-cols-2 lg:grid-cols-6">
         <div className="lg:col-span-2">
-          <p className="font-display text-xl font-black text-foreground">
+          <p className={`font-display text-xl font-black ${onDark ? "text-white" : "text-foreground"}`}>
             {SERVE_LOCAL.name}
-            <span className="text-primary">.</span>
+            <span className={onDark ? "text-violet-400" : "text-primary"}>.</span>
           </p>
-          <p className="mt-2 max-w-sm text-sm text-muted">
+          <p className={`mt-2 max-w-sm text-sm ${onDark ? "text-slate-400" : "text-muted"}`}>
             Homeowner-first marketplace for local trades in BC. Clearer profiles, real feedback,
             and a faster way to hire.
           </p>
-          <p className="mt-3 inline-flex items-center gap-1.5 rounded-full border border-border bg-background px-3 py-1 text-xs font-medium text-foreground">
+          <p
+            className={
+              onDark
+                ? "mt-3 inline-flex items-center gap-1.5 rounded-full border border-white/15 bg-white/5 px-3 py-1 text-xs font-medium text-slate-200"
+                : "mt-3 inline-flex items-center gap-1.5 rounded-full border border-border bg-background px-3 py-1 text-xs font-medium text-foreground"
+            }
+          >
             🍁 Built in BC, serving Canada
           </p>
           {SOCIAL.length > 0 && (
@@ -78,11 +96,11 @@ export function MarketingFooter() {
         </div>
 
         <div>
-          <p className="font-label text-muted">Homeowners</p>
+          <p className={headCls}>Homeowners</p>
           <ul className="mt-3 space-y-2 text-sm">
             {HOMEOWNER_LINKS.map((link) => (
               <li key={link.href}>
-                <Link href={link.href} className="text-muted transition hover:text-primary">
+                <Link href={link.href} className={linkCls}>
                   {link.label}
                 </Link>
               </li>
@@ -91,11 +109,11 @@ export function MarketingFooter() {
         </div>
 
         <div>
-          <p className="font-label text-muted">Local Trade Cost Guides</p>
+          <p className={headCls}>Local Trade Cost Guides</p>
           <ul className="mt-3 space-y-2 text-sm">
             {COST_GUIDE_LINKS.map((link) => (
               <li key={link.href}>
-                <Link href={link.href} className="text-muted transition hover:text-primary">
+                <Link href={link.href} className={linkCls}>
                   {link.label}
                 </Link>
               </li>
@@ -104,11 +122,11 @@ export function MarketingFooter() {
         </div>
 
         <div>
-          <p className="font-label text-muted">Contractors</p>
+          <p className={headCls}>Contractors</p>
           <ul className="mt-3 space-y-2 text-sm">
             {CONTRACTOR_LINKS.map((link) => (
               <li key={link.href}>
-                <Link href={link.href} className="text-muted transition hover:text-primary">
+                <Link href={link.href} className={linkCls}>
                   {link.label}
                 </Link>
               </li>
@@ -117,11 +135,11 @@ export function MarketingFooter() {
         </div>
 
         <div>
-          <p className="font-label text-muted">Company</p>
+          <p className={headCls}>Company</p>
           <ul className="mt-3 space-y-2 text-sm">
             {COMPANY_LINKS.map((link) => (
               <li key={link.href}>
-                <Link href={link.href} className="text-muted transition hover:text-primary">
+                <Link href={link.href} className={linkCls}>
                   {link.label}
                 </Link>
               </li>
@@ -130,14 +148,20 @@ export function MarketingFooter() {
         </div>
       </div>
 
-      <div className="mx-auto mt-10 flex max-w-7xl flex-wrap items-center justify-between gap-4 border-t border-border pt-8">
-        <p className="text-xs text-muted">
+      <div
+        className={`mx-auto mt-10 flex max-w-7xl flex-wrap items-center justify-between gap-4 border-t pt-8 ${onDark ? "border-white/10" : "border-border"}`}
+      >
+        <p className={`text-xs ${onDark ? "text-slate-400" : "text-muted"}`}>
           © {new Date().getFullYear()} {SERVE_LOCAL.name}. Serving Canada — starting in BC.
         </p>
         <div className="flex flex-wrap items-center gap-4">
           {i18nEnabled && <LanguageToggle />}
           {LEGAL_LINKS.map((link) => (
-            <Link key={link.href} href={link.href} className="text-xs text-muted hover:text-foreground">
+            <Link
+              key={link.href}
+              href={link.href}
+              className={`text-xs ${onDark ? "text-slate-400 hover:text-white" : "text-muted hover:text-foreground"}`}
+            >
               {link.label}
             </Link>
           ))}
