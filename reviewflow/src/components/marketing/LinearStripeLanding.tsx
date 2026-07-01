@@ -4,43 +4,24 @@ import { AnimatePresence, motion, useReducedMotion } from "framer-motion";
 import {
   ArrowRight,
   BadgeCheck,
-  Car,
   Check,
-  ChevronRight,
-  MessageSquareMore,
   MonitorPlay,
   QrCode,
-  Scissors,
   Shield,
   Sparkles,
   Star,
-  Store,
-  UtensilsCrossed,
-  Wrench,
 } from "lucide-react";
-import dynamic from "next/dynamic";
 import Link from "next/link";
 import { useState } from "react";
 import { Badge } from "@/components/ui/Badge";
 import { Button } from "@/components/ui/Button";
 import { Card } from "@/components/ui/Card";
 import { MarketingNavbar } from "@/components/marketing/MarketingNavbar";
-import { MagneticButton } from "@/components/ui/MagneticButton";
+import { SoftAuroraHero } from "@/components/marketing/SoftAuroraHero";
 import { MARKETING } from "@/content/copy";
 import { BRAND } from "@/lib/brand";
 
-// 3D starfield is hero-only and lazy-loaded so it never blocks first paint or SSR.
-const StarField = dynamic(() => import("@/components/StarField"), { ssr: false });
-
 const CITIES = ["Vancouver", "Surrey", "Abbotsford", "Kelowna", "Victoria", "Burnaby"];
-
-const BUSINESS_TYPES = [
-  { icon: UtensilsCrossed, label: "Restaurant" },
-  { icon: Scissors, label: "Salon" },
-  { icon: Wrench, label: "Contractor" },
-  { icon: Car, label: "Auto" },
-  { icon: Store, label: "Retail" },
-] as const;
 
 const HOW_IT_WORKS = [
   {
@@ -98,130 +79,7 @@ export function LinearStripeLanding() {
       <main className="relative z-10 min-h-screen text-ink">
         <MarketingNavbar />
 
-      <section className="relative overflow-hidden border-b border-white/10">
-        <StarField />
-        <div className="landing-radial absolute inset-x-0 top-0 h-[24rem]" />
-        <div className="mx-auto flex min-h-[calc(100dvh-4rem)] max-w-7xl flex-col justify-center gap-16 px-6 py-24 lg:px-8 lg:py-28">
-          <div className="grid items-center gap-16 lg:grid-cols-[1.05fr_0.95fr]">
-            <motion.div
-              initial={shouldReduceMotion ? false : { opacity: 0, y: 24 }}
-              animate={shouldReduceMotion ? { opacity: 1 } : { opacity: 1, y: 0 }}
-              transition={{ duration: 0.8, ease: "circOut" }}
-              className="max-w-3xl"
-            >
-              <Badge variant="default" className="rounded-full border border-gold/25 bg-gold/10 px-3 py-1 text-[0.7rem] uppercase tracking-[0.3em] text-gold">
-                Reputation management for BC local businesses
-              </Badge>
-              <h1 className="mt-6 font-grotesk text-5xl font-semibold leading-[0.95] tracking-tight text-ink sm:text-6xl lg:text-8xl">
-                {["Turn every visit", "into a 5★ review"].map((line, i) => (
-                  <motion.span
-                    key={line}
-                    className="block"
-                    initial={shouldReduceMotion ? false : { opacity: 0, y: "0.6em" }}
-                    animate={shouldReduceMotion ? { opacity: 1 } : { opacity: 1, y: 0 }}
-                    transition={{ duration: 0.8, delay: 0.15 + i * 0.12, ease: [0.23, 1, 0.32, 1] }}
-                  >
-                    {i === 1 ? (
-                      <>
-                        into a <span className="rl-text-gold-gradient">5★</span> review
-                      </>
-                    ) : (
-                      line
-                    )}
-                  </motion.span>
-                ))}
-              </h1>
-              <p className="mt-6 max-w-2xl text-lg leading-relaxed text-muted-soft sm:text-xl">
-                AI-powered QR prompts that route unhappy customers privately and guide happy ones to Google — in seconds. No fake reviews. No risk. Built for BC.
-              </p>
-              <div className="mt-10 flex flex-col items-start gap-3 sm:flex-row sm:items-center">
-                <MagneticButton href="/signup" className="px-9 py-4 text-base">
-                  Start Free
-                </MagneticButton>
-                <Link
-                  href="#demo"
-                  className="inline-flex items-center gap-2 rounded-[14px] border border-white/15 bg-white/[0.04] px-8 py-4 text-base text-muted-soft transition hover:border-gold/30 hover:text-ink"
-                >
-                  See live demo <ChevronRight className="h-4 w-4" />
-                </Link>
-              </div>
-              <div className="mt-12 flex flex-wrap items-center gap-3 rounded-full border border-[#27272A]/70 bg-[#121214]/60 px-4 py-3 backdrop-blur">
-                <span className="text-sm font-medium text-[#FAFAFA]">Founder-led early access for BC local businesses</span>
-                <span className="h-1 w-1 rounded-full bg-[#27272A]" />
-                <div className="flex items-center gap-2 text-sm text-[#A1A1AA]">
-                  <Star className="h-4 w-4 fill-current text-[#3B82F6]" />
-                  <span>50 free review requests to start</span>
-                </div>
-                <div className="ml-2 flex items-center gap-3 text-sm text-[#A1A1AA]">
-                  {BUSINESS_TYPES.map((type) => {
-                    const Icon = type.icon;
-                    return (
-                      <span key={type.label} className="flex items-center gap-1.5 rounded-full border border-[#27272A]/70 px-2.5 py-1">
-                        <Icon className="h-3.5 w-3.5" />
-                        {type.label}
-                      </span>
-                    );
-                  })}
-                </div>
-              </div>
-            </motion.div>
-
-            <motion.div
-              initial={shouldReduceMotion ? false : { opacity: 0, y: 24 }}
-              animate={shouldReduceMotion ? { opacity: 1 } : { opacity: 1, y: 0 }}
-              transition={{ duration: 0.8, delay: 0.1, ease: "circOut" }}
-              className="mx-auto w-full max-w-xl"
-            >
-              <div className="rounded-[2rem] border border-[#27272A]/80 bg-[#121214]/80 p-4 shadow-2xl shadow-black/20 backdrop-blur">
-                <div className="rounded-[1.75rem] border border-[#27272A]/70 bg-[#0A0A0B]/90 p-6">
-                  <div className="flex items-center justify-between">
-                    <div>
-                      <p className="text-sm font-semibold text-[#FAFAFA]">Customer review flow</p>
-                      <p className="text-sm text-[#A1A1AA]">QR scan • AI draft • private routing</p>
-                    </div>
-                    <Badge variant="success" className="rounded-full bg-[#3B82F6]/10 px-3 py-1 text-[#3B82F6]">
-                      Live preview
-                    </Badge>
-                  </div>
-                  <div className="hero-float mt-6 rounded-[1.5rem] border border-[#27272A]/70 bg-[#121214]/80 p-5">
-                    <div className="grid gap-4 lg:grid-cols-[0.9fr_1.1fr]">
-                      <div className="rounded-[1.25rem] border border-[#27272A]/70 bg-[#0A0A0B]/90 p-5">
-                        <div className="rounded-2xl border border-dashed border-[#3B82F6]/30 bg-[#3B82F6]/5 p-4 text-center">
-                          <QrCode className="mx-auto h-10 w-10 text-[#3B82F6]" />
-                          <p className="mt-3 text-sm font-semibold text-[#FAFAFA]">Scan to review</p>
-                          <p className="mt-1 text-xs text-[#A1A1AA]">Branded, mobile-first</p>
-                        </div>
-                        <div className="mt-4 rounded-2xl border border-[#27272A]/70 bg-[#121214]/80 p-3 text-sm text-[#A1A1AA]">
-                          <div className="flex items-center justify-between">
-                            <span>Thanks for visiting</span>
-                            <BadgeCheck className="h-4 w-4 text-[#3B82F6]" />
-                          </div>
-                          <p className="mt-2 font-semibold text-[#FAFAFA]">How was your visit?</p>
-                        </div>
-                      </div>
-                      <div className="rounded-[1.25rem] border border-[#27272A]/70 bg-[#0A0A0B]/90 p-5">
-                        <div className="flex items-center gap-2 text-sm text-[#A1A1AA]">
-                          <MessageSquareMore className="h-4 w-4 text-[#3B82F6]" />
-                          Review request ready
-                        </div>
-                        <div className="mt-4 rounded-2xl border border-[#27272A]/70 bg-[#121214]/80 p-4 shadow-sm">
-                          <p className="text-sm text-[#FAFAFA]">“The team made me feel welcome from start to finish. I’d recommend them again.”</p>
-                        </div>
-                        <div className="mt-4 flex items-center gap-2">
-                          {[1, 2, 3, 4, 5].map((star) => (
-                            <Star key={star} className="h-4 w-4 fill-current text-[#3B82F6]" />
-                          ))}
-                        </div>
-                        <p className="mt-4 text-sm text-[#A1A1AA]">AI-generated draft, ready to post to Google in one tap.</p>
-                      </div>
-                    </div>
-                  </div>
-                </div>
-              </div>
-            </motion.div>
-          </div>
-        </div>
-      </section>
+      <SoftAuroraHero />
 
       <section id="how-it-works" className="border-b border-[#27272A]/80 bg-[#121214] py-24">
         <div className="mx-auto max-w-7xl px-6 lg:px-8">
