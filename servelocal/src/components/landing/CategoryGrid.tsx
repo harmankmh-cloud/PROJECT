@@ -56,9 +56,9 @@ export function CategoryGrid({ categories, proCounts = {}, defaultCity = "surrey
     <section className="px-4 py-16 sm:px-8">
       <div className="mx-auto max-w-7xl">
         <FadeUp>
-          <p className="font-label text-primary">Popular services</p>
+          <p className="font-label text-primary">Popular services in BC</p>
           <h2 className="font-display mt-2 text-3xl font-black text-foreground sm:text-4xl">
-            Browse by category
+            Start with the right trade
           </h2>
         </FadeUp>
 
@@ -92,7 +92,7 @@ export function CategoryGrid({ categories, proCounts = {}, defaultCity = "surrey
             href="/search"
             className="text-sm font-semibold text-primary transition hover:text-primary-light"
           >
-            View All 200+ Services →
+            View all services →
           </Link>
         </FadeUp>
       </div>

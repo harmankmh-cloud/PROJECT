@@ -9,7 +9,8 @@ import { cn } from "@/lib/utils";
 
 const NAV_LINKS = [
   { href: "/search", label: "Find Pros" },
-  { href: "/#how-it-works", label: "How It Works" },
+  { href: "/#how-it-works", label: "How it works" },
+  { href: "/pricing", label: "Pricing" },
   { href: "/for-pros", label: "For Pros" },
   { href: "/blog", label: "Blog" },
 ] as const;
@@ -30,7 +31,7 @@ export function MarketingNavbar() {
       className={cn(
         "sticky top-0 z-50 border-b transition duration-300",
         scrolled
-          ? "border-border bg-background/90 backdrop-blur-xl shadow-sm"
+          ? "border-border bg-background/92 backdrop-blur-xl shadow-sm"
           : "border-transparent bg-transparent"
       )}
     >
@@ -40,7 +41,9 @@ export function MarketingNavbar() {
             ServeLocal
             <span className="text-primary">.</span>
           </span>
-          <span className="hidden text-xs text-muted sm:inline">🍁 Canada</span>
+          <span className="hidden rounded-full border border-border bg-surface px-2 py-0.5 text-xs text-muted sm:inline">
+            🍁 BC first
+          </span>
         </Link>
 
         <nav className="hidden items-center gap-6 md:flex">
@@ -57,6 +60,12 @@ export function MarketingNavbar() {
 
         <div className="flex items-center gap-2 sm:gap-3">
           <ThemeToggle className="hidden sm:inline-flex" />
+          <Link
+            href="/join"
+            className="hidden items-center justify-center rounded-full border border-border px-4 py-2 text-sm font-semibold text-foreground transition hover:border-amber-400/50 hover:bg-surface lg:inline-flex"
+          >
+            Join as a Pro
+          </Link>
           <ShimmerButton href="/request" size="sm" className="hidden sm:inline-flex">
             Post a Job
           </ShimmerButton>
@@ -90,6 +99,9 @@ export function MarketingNavbar() {
                 {link.label}
               </Link>
             ))}
+            <Link href="/join" onClick={() => setMobileOpen(false)} className="text-sm font-medium text-muted">
+              Join as a Pro
+            </Link>
             <div className="flex items-center gap-3 pt-2">
               <ThemeToggle />
               <ShimmerButton
