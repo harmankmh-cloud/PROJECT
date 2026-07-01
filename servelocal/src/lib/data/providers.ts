@@ -208,9 +208,14 @@ export async function getPlatformStats() {
           .eq("verified", true)
       ),
       admin.from("provider_reviews").select("*", { count: "exact", head: true }).eq("status", "approved"),
-      withPublicProviderFilters(
-        admin.from("service_providers").select("city_slug").eq("status", "approved")
-      ),
+      admin
+        .from("service_providers")
+        .select("city_slug")
+        .eq("status", "approved")
+        .not("owner_user_id", "is", null)
+        .or("email.is.null,email.not.ilike.%.example")
+        .not("phone", "like", "604-555-%")
+        .neq("display_name", "Harman plumbing"),
     ]);
     const cityCount = new Set((cities || []).map((row) => row.city_slug).filter(Boolean)).size;
 
