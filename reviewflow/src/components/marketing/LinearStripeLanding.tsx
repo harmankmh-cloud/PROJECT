@@ -32,7 +32,6 @@ import { BRAND } from "@/lib/brand";
 // 3D starfield is hero-only and lazy-loaded so it never blocks first paint or SSR.
 const StarField = dynamic(() => import("@/components/StarField"), { ssr: false });
 
-const CITIES = ["Vancouver", "Surrey", "Abbotsford", "Kelowna", "Victoria", "Burnaby"];
 
 const BUSINESS_TYPES = [
   { icon: UtensilsCrossed, label: "Restaurant" },
@@ -286,15 +285,6 @@ export function LinearStripeLanding() {
             <div className="mt-8 rounded-3xl border border-[#27272A]/80 bg-[#121214]/70 p-6">
               <p className="text-4xl font-semibold tracking-tight text-[#FAFAFA]">50</p>
               <p className="mt-2 text-sm text-[#A1A1AA]">free review requests included so you can test the flow before upgrading.</p>
-            </div>
-            <div className="mt-6 max-w-full overflow-hidden rounded-full border border-[#27272A]/80 bg-[#121214]/70 px-4 py-3">
-              <div className="marquee-track flex w-max items-center gap-8 text-sm font-medium uppercase tracking-[0.25em] text-[#A1A1AA]">
-                {[...CITIES, ...CITIES].map((city, index) => (
-                  <span key={`${city}-${index}`} className="whitespace-nowrap">
-                    {city}
-                  </span>
-                ))}
-              </div>
             </div>
           </motion.div>
 
