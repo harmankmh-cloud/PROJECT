@@ -101,8 +101,8 @@ export function LinearStripeLanding() {
       <section className="relative overflow-hidden border-b border-white/10">
         <StarField />
         <div className="landing-radial absolute inset-x-0 top-0 h-[24rem]" />
-        <div className="mx-auto flex min-h-[calc(100dvh-4rem)] max-w-7xl flex-col justify-center gap-16 px-6 py-24 lg:px-8 lg:py-28">
-          <div className="grid items-center gap-16 lg:grid-cols-[1.05fr_0.95fr]">
+        <div className="mx-auto flex min-h-[calc(100dvh-4rem)] max-w-7xl flex-col justify-center gap-16 px-6 py-24 md:px-8 md:py-28">
+          <div className="grid items-center gap-16 md:grid-cols-[1.05fr_0.95fr]">
             <motion.div
               initial={shouldReduceMotion ? false : { opacity: 0, y: 24 }}
               animate={shouldReduceMotion ? { opacity: 1 } : { opacity: 1, y: 0 }}
@@ -152,7 +152,7 @@ export function LinearStripeLanding() {
                   <Star className="h-4 w-4 fill-current text-[#3B82F6]" />
                   <span>50 free review requests to start</span>
                 </div>
-                <div className="ml-2 flex items-center gap-3 text-sm text-[#A1A1AA]">
+                <div className="ml-2 flex flex-wrap items-center gap-3 text-sm text-[#A1A1AA]">
                   {BUSINESS_TYPES.map((type) => {
                     const Icon = type.icon;
                     return (
@@ -184,7 +184,7 @@ export function LinearStripeLanding() {
                     </Badge>
                   </div>
                   <div className="hero-float mt-6 rounded-[1.5rem] border border-[#27272A]/70 bg-[#121214]/80 p-5">
-                    <div className="grid gap-4 lg:grid-cols-[0.9fr_1.1fr]">
+                    <div className="grid gap-4 md:grid-cols-[0.9fr_1.1fr]">
                       <div className="rounded-[1.25rem] border border-[#27272A]/70 bg-[#0A0A0B]/90 p-5">
                         <div className="rounded-2xl border border-dashed border-[#3B82F6]/30 bg-[#3B82F6]/5 p-4 text-center">
                           <QrCode className="mx-auto h-10 w-10 text-[#3B82F6]" />
@@ -224,7 +224,7 @@ export function LinearStripeLanding() {
       </section>
 
       <section id="how-it-works" className="border-b border-[#27272A]/80 bg-[#121214] py-24">
-        <div className="mx-auto max-w-7xl px-6 lg:px-8">
+        <div className="mx-auto max-w-7xl px-6 md:px-8">
           <motion.div
             initial={shouldReduceMotion ? false : { opacity: 0, y: 24 }}
             whileInView={shouldReduceMotion ? { opacity: 1 } : { opacity: 1, y: 0 }}
@@ -268,13 +268,13 @@ export function LinearStripeLanding() {
       </section>
 
       <section id="features" className="border-b border-[#27272A]/80 bg-[#0A0A0B] py-24">
-        <div className="mx-auto grid max-w-7xl gap-12 px-6 lg:grid-cols-[0.95fr_1.05fr] lg:px-8">
+        <div className="mx-auto grid max-w-7xl gap-12 px-6 md:grid-cols-[0.95fr_1.05fr] md:px-8">
           <motion.div
             initial={shouldReduceMotion ? false : { opacity: 0, y: 24 }}
             whileInView={shouldReduceMotion ? { opacity: 1 } : { opacity: 1, y: 0 }}
             viewport={{ once: true, margin: "-100px" }}
             transition={{ duration: 0.6, ease: "circOut" }}
-            className="lg:sticky lg:top-24 lg:h-fit"
+            className="min-w-0 md:sticky md:top-24 md:h-fit"
           >
             <p className="text-sm font-semibold uppercase tracking-[0.3em] text-[#3B82F6]">Early access</p>
             <h2 className="mt-4 text-3xl font-semibold tracking-tight text-[#FAFAFA] sm:text-4xl">
@@ -287,7 +287,7 @@ export function LinearStripeLanding() {
               <p className="text-4xl font-semibold tracking-tight text-[#FAFAFA]">50</p>
               <p className="mt-2 text-sm text-[#A1A1AA]">free review requests included so you can test the flow before upgrading.</p>
             </div>
-            <div className="mt-6 overflow-hidden rounded-full border border-[#27272A]/80 bg-[#121214]/70 px-4 py-3">
+            <div className="mt-6 max-w-full overflow-hidden rounded-full border border-[#27272A]/80 bg-[#121214]/70 px-4 py-3">
               <div className="marquee-track flex w-max items-center gap-8 text-sm font-medium uppercase tracking-[0.25em] text-[#A1A1AA]">
                 {[...CITIES, ...CITIES].map((city, index) => (
                   <span key={`${city}-${index}`} className="whitespace-nowrap">
@@ -326,7 +326,7 @@ export function LinearStripeLanding() {
       </section>
 
       <section id="demo" className="border-b border-[#27272A]/80 bg-[#121214] py-24">
-        <div className="mx-auto max-w-7xl px-6 lg:px-8">
+        <div className="mx-auto max-w-7xl px-6 md:px-8">
           <motion.div
             initial={shouldReduceMotion ? false : { opacity: 0, y: 24 }}
             whileInView={shouldReduceMotion ? { opacity: 1 } : { opacity: 1, y: 0 }}
@@ -340,7 +340,7 @@ export function LinearStripeLanding() {
             </h2>
           </motion.div>
 
-          <div className="mt-12 grid gap-6 lg:grid-cols-[0.9fr_1.1fr]">
+          <div className="mt-12 grid gap-6 md:grid-cols-[0.9fr_1.1fr]">
             <Card className="border border-[#27272A]/80 bg-[#0A0A0B]/70 p-8">
               <div className="flex items-center gap-3 text-[#3B82F6]">
                 <MonitorPlay className="h-5 w-5" />
@@ -356,7 +356,7 @@ export function LinearStripeLanding() {
             </Card>
 
             <Card className="border border-[#27272A]/80 bg-[#0A0A0B]/80 p-6">
-              <div className="grid gap-6 lg:grid-cols-[0.95fr_1.05fr]">
+              <div className="grid gap-6 md:grid-cols-[0.95fr_1.05fr]">
                 <div className="rounded-[1.5rem] border border-[#27272A]/70 bg-[#121214]/70 p-5">
                   <div className="flex items-center justify-between">
                     <div>
@@ -438,7 +438,7 @@ export function LinearStripeLanding() {
       </section>
 
       <section id="pricing" className="bg-[#0A0A0B] py-24">
-        <div className="mx-auto max-w-7xl px-6 lg:px-8">
+        <div className="mx-auto max-w-7xl px-6 md:px-8">
           <div className="mx-auto max-w-3xl text-center">
             <p className="text-sm font-semibold uppercase tracking-[0.3em] text-[#3B82F6]">Pricing</p>
             <h2 className="mt-4 text-3xl font-semibold tracking-tight text-[#FAFAFA] sm:text-4xl">Simple, honest pricing.</h2>
@@ -478,7 +478,7 @@ export function LinearStripeLanding() {
       </section>
 
       <section className="border-t border-[#27272A]/80 bg-[radial-gradient(circle_at_center,rgba(59,130,246,0.15),transparent_70%)] py-24">
-        <div className="mx-auto max-w-4xl px-6 text-center lg:px-8">
+        <div className="mx-auto max-w-4xl px-6 text-center md:px-8">
           <motion.div initial={shouldReduceMotion ? false : { opacity: 0, y: 20 }} whileInView={shouldReduceMotion ? { opacity: 1 } : { opacity: 1, y: 0 }} viewport={{ once: true, margin: "-100px" }} transition={{ duration: 0.6, ease: "circOut" }}>
             <p className="text-sm font-semibold uppercase tracking-[0.3em] text-[#3B82F6]">Closer</p>
             <h2 className="mt-4 text-3xl font-semibold tracking-tight text-[#FAFAFA] sm:text-4xl">Start collecting reviews today.</h2>
@@ -496,7 +496,7 @@ export function LinearStripeLanding() {
       </section>
 
       <footer className="border-t border-[#27272A]/80 bg-[#121214] py-12">
-        <div className="mx-auto grid max-w-7xl gap-10 px-6 lg:grid-cols-4 lg:px-8">
+        <div className="mx-auto grid max-w-7xl gap-10 px-6 md:grid-cols-4 md:px-8">
           <div>
             <div className="flex items-center gap-3">
               <span className="flex h-10 w-10 items-center justify-center rounded-2xl border border-[#3B82F6]/20 bg-[#3B82F6]/10 text-[#3B82F6]">
@@ -535,7 +535,7 @@ export function LinearStripeLanding() {
             </ul>
           </div>
         </div>
-        <div className="mx-auto mt-10 flex max-w-7xl flex-col gap-4 border-t border-[#27272A]/80 px-6 pt-6 text-sm text-[#A1A1AA] lg:flex-row lg:items-center lg:justify-between lg:px-8">
+        <div className="mx-auto mt-10 flex max-w-7xl flex-col gap-4 border-t border-[#27272A]/80 px-6 pt-6 text-sm text-[#A1A1AA] md:flex-row md:items-center md:justify-between md:px-8">
           <p>© 2026 {BRAND.name}. Made in British Columbia.</p>
           <div className="flex items-center gap-4">
             <span className="flex items-center gap-2"><BadgeCheck className="h-4 w-4 text-[#3B82F6]" /> Privacy-first review collection</span>
